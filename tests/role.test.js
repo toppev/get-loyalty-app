@@ -1,0 +1,157 @@
+const role = require('../src/models/role');
+const mongoose = require('mongoose');
+
+const Business = require('../src/models/business');
+const userService = require('../src/services/userService');
+const productService = require('../src/services/productService');
+const campaignService = require('../src/services/campaignService');
+
+const params = { reqParams: {} };
+const otherParams = { reqParams: {} };
+
+beforeAll(async () => {
+    const url = 'mongodb://127.0.0.1/kantis-test-role'
+    await mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
+    await mongoose.connection.db.dropDatabase();
+
+    // TODO: stop using services or reduce usage if not necessary
+    const businessId = (await new Business({}).save()).id;
+    params.reqParams.businessId = businessId;
+
+    const userId = (await userService.create({})).id;
+    params.userId = userId;
+    params.reqParams.userId = userId;
+
+    params.reqParams.productId = (await productService.create(businessId, { name: 'Pizza' })).id;
+    params.reqParams.campaignId = (await campaignService.create(businessId, { name: 'Sick Campaign' })).id;
+    const purchases = await userService.addPurchase(userId, businessId, { category: '5e2721e1dab8355d82d53379' });
+    params.reqParams.purchaseId = purchases[0].id;
+
+    const otherBusinessId = (await new Business({}).save()).id;
+    otherParams.reqParams.businessId = otherBusinessId;
+
+    const otherUserId = (await userService.create({})).id;
+    otherParams.userId = userId;
+    otherParams.reqParams.userId = otherUserId;
+
+    otherParams.reqParams.productId = (await productService.create(otherBusinessId, { name: 'Pizza' })).id;
+    otherParams.reqParams.campaignId = (await campaignService.create(otherBusinessId, { name: 'Sick Campaign' })).id;
+    otherParams.reqParams.purchaseId = (await userService.addPurchase(userId, otherBusinessId, { category: '5e2721e1dab8355d82d53379' }))[0].id;
+});
+
+// Not all but many permissions are tested here
+// TODO purchases
+
+// ADMIN
+describe('admin', () => {
+    it('should have permission to test:example ', () => {
+        expect.assertions(1);
+        return expect(role.can('admin', 'test:example', params)).resolves.toBeTruthy();
+    });
+
+    it('should have permission to test:* ', () => {
+        expect.assertions(1);
+        return expect(role.can('admin', 'test:*', params)).resolves.toBeTruthy();
+    });
+
+    it('should have permission to * ', () => {
+        expect.assertions(1);
+        return expect(role.can('admin', '*', params)).resolves.toBeTruthy();
+    });
+});
+
+// BUSINESS
+describe('business', () => {
+    it('should have permission to campaign:update', () => {
+        expect.assertions(1);
+        return expect(role.can('business', 'campaign:create', params)).resolves.toBeTruthy();
+    });
+
+    it('should have permission to product:*', () => {
+        expect.assertions(1);
+        return expect(role.can('business', 'product:*', params)).resolves.toBeTruthy();
+    });
+
+    it('should have permission to purchase:create', () => {
+        expect.assertions(1);
+        return expect(role.can('business', 'purchase:create', params)).resolves.toBeTruthy();
+    });
+
+    it('should not should have permission to *', () => {
+        expect.assertions(1);
+        return expect(role.can('business', '*', params)).resolves.toBeFalsy();
+    });
+
+    it('should not should have permission to user:*', () => {
+        expect.assertions(1);
+        return expect(role.can('business', '*', params)).resolves.toBeFalsy();
+    });
+
+    // Modifying other business stuff
+    it('should not should have permission to campaign:update other', () => {
+        const fakeNews = JSON.parse(JSON.stringify(params));
+        fakeNews.reqParams.campaignId = otherParams.reqParams.campaignId;
+        expect.assertions(1);
+        return expect(role.can('business', 'campaign:create', fakeNews)).resolves.toBeFalsy();
+    });
+
+    it('should not should have permission to product:* other', () => {
+        const fakeNews = JSON.parse(JSON.stringify(params));
+        fakeNews.reqParams.productId = otherParams.reqParams.productId;
+        expect.assertions(1);
+        return expect(role.can('business', 'product:*', fakeNews)).resolves.toBeFalsy();
+    });
+
+    // Because role is always taken from the user's role in that business (specified in url params)
+    // we can just let the user modify purchases as only the user's "customerData"
+    // that matches the businessId url param is modified (and user has permission from that business)
+    // For products etc the 
+    //
+    // hence checking if role has permission would return true alwas (only for purchases)
+    /*
+    it('should not should have permission to purchase:create other', async () => {
+        const fakeNews = JSON.parse(JSON.stringify(params));
+        fakeNews.reqParams.purchaseId = otherParams.reqParams.purchaseId;
+        expect.assertions(1);
+        return expect(role.can('business', 'purchase:create', fakeNews)).resolves.toBeFalsy();
+    });
+    */
+});
+
+// USER
+describe('user', () => {
+    it('should not should have permission to *', () => {
+        expect.assertions(1);
+        return expect(role.can('user', '*', params)).resolves.toBeFalsy();
+    });
+
+    it('should not should have permission to campaign:*', () => {
+        expect.assertions(1);
+        return expect(role.can('user', 'campaign:*', params)).resolves.toBeFalsy();
+    });
+
+    it('should not should have permission to product:*', () => {
+        expect.assertions(1);
+        return expect(role.can('user', 'product:*', params)).resolves.toBeFalsy();
+    });
+
+    it('should not should have permission to purchase:*', () => {
+        expect.assertions(1);
+        return expect(role.can('user', 'purchase:*', params)).resolves.toBeFalsy();
+    });
+
+    it('should have permission to product:list', () => {
+        expect.assertions(1);
+        return expect(role.can('user', 'product:list', params)).resolves.toBeTruthy();
+    });
+
+    it('should have permission to campaign:list', () => {
+        expect.assertions(1);
+        return expect(role.can('user', 'campaign:list', params)).resolves.toBeTruthy();
+    });
+
+    it('should have permission to user:create', () => {
+        expect.assertions(1);
+        return expect(role.can('user', 'user:create', params)).resolves.toBeTruthy();
+    });
+});
