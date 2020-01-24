@@ -19,10 +19,13 @@ module.exports = {
 };
 
 async function forgotPassword(email) {
-    const userId = await User.findOne({
+    const user = await User.findOne({
         email: email
-    }).select('_id');
-    // Don't let the user know if the email exists
+    });
+    if (user.authentication.service && user.authentication.service !== 'local') {
+        throw new Error('Only users using local authentication can reset their password');
+    }
+    const userId = user.id;
     if (userId) {
         const buffer = crypto.randomBytes(16);
         const token = buffer.toString('hex');
