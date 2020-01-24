@@ -8,8 +8,10 @@ passport.use(new LocalStrategy({
 },
     async function (email, password, next) {
         return User.findOne({ email }).then(user => {
-            // TODO: only if they didn't use oauth2
             if (user) {
+                if (user.authentication.service && user.authentication.service !== 'local') {
+                    return next(null, false, { message: 'Incorrect authentication method.' });
+                }
                 if (!user.password) {
                     return next(null, false, { message: 'No password found.' });
                 }

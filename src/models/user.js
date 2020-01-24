@@ -50,6 +50,15 @@ const userSchema = new Schema({
     birthday: {
         type: Date
     },
+    authentication: {
+        // The service used
+        service: {
+            type: String,
+        },
+        profile: {
+            type: Object,
+        }
+    },
     customerData: [{
         business: {
             type: Schema.Types.ObjectId,
