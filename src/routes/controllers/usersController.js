@@ -9,7 +9,7 @@ const userValidator = validation.validate(validation.userValidator);
 // TODO authenticate middleware
 
 // Not logged in, no perms
-router.get('/resetpassword/:uuid', resetPassword);
+router.get('/resetpassword/:token', resetPassword);
 router.post('/forgotpassword', forgotPassword);
 // For convenience
 router.post('/login', authenticator, login);
@@ -60,7 +60,7 @@ function forgotPassword(req, res, next) {
 }
 
 function resetPassword(req, res, next) {
-    userService.resetPassword(req.params.uuid)
+    userService.resetPassword(req.params.token)
         .then(user => {
             req.login(user, function (err) {
                 if (err) {

@@ -11,8 +11,8 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-async function emailPasswordReset(email, uuid) {
-    const url = config.baseUrl + '/resetpassword/' + uuid;
+async function emailPasswordReset(email, token) {
+    const url = config.baseUrl + '/resetpassword/' + token;
     const mailOptions = {
         from: config.email,
         to: email,

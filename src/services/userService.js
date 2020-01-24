@@ -1,7 +1,7 @@
 const User = require('../models/user');
-const uuidv4 = require('uuid/v4');
 const emailPasswordReset = require('../helpers/mailer');
 const ResetPassword = require('../models/passwordReset');
+const crypto = require('crypto');
 
 module.exports = {
     getAll,
@@ -24,23 +24,24 @@ async function forgotPassword(email) {
     }).select('_id');
     // Don't let the user know if the email exists
     if (userId) {
-        const uuid = uuidv4();
+        const buffer = crypto.randomBytes(16);
+        const token = buffer.toString('hex');
+        console.log(token)
         const reset = new ResetPassword({
-            // Hashed before saving to DB
-            uuid,
+            token,
             userId
         });
         await reset.save();
         // TODO: enable
-        //emailPasswordReset(email, uuid);
+        //emailPasswordReset(email, token);
     }
 }
 
-async function resetPassword(uuid) {
-    if (!uuid) {
-        throw 'No UUID parameter specified.';
+async function resetPassword(token) {
+    if (!token) {
+        throw 'No token parameter specified.';
     }
-    const request = await ResetPassword.findByUUID(uuid);
+    const request = await ResetPassword.findByToken(token);
     if (!request) {
         throw 'Invalid password reset request link.';
     }

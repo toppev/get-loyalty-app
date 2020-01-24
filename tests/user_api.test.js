@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const userService = require('../src/services/userService');
 const User = require('../src/models/user');
 const ResetPassword = require('../src/models/passwordReset');
-const uuidv4 = require('uuid/v4');
 const app = require('../app');
 const api = require('supertest')(app);
 
@@ -36,16 +35,17 @@ describe('Not logged in user should', () => {
             .set('Accept', 'application/json')
             .expect(200);
         const reset = await ResetPassword.findOne({})
-        expect(reset.uuid).toEqual(expect.anything());
+        expect(reset.token).toEqual(expect.anything());
         expect(reset.userId).toEqual(expect.anything());
     });
 
     it('resetPassword', async () => {
-        const uuid = uuidv4();
-        const reset = new ResetPassword({ uuid, userId });
+        const buffer = require('crypto').randomBytes(16);
+        const token = buffer.toString('hex');
+        const reset = new ResetPassword({ token, userId });
         await reset.save();
         const res = await api
-            .get('/user/resetPassword/' + uuid)
+            .get('/user/resetPassword/' + token)
             .expect(200);
         expect(res.body).toEqual({ success: true });
     });
