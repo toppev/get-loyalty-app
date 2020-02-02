@@ -5,9 +5,9 @@ module.exports = {
     updatePurchase,
     deletePurchase,
     getPurchases,
-    businessFromPurchase
+    businessFromPurchase,
+    updateCustomerProperties
 }
-
 
 async function findCustomerData(user, businessId) {
     const data = user.customerData.find(_item => _item.business == businessId);
@@ -22,8 +22,8 @@ async function findCustomerData(user, businessId) {
  */
 async function updateCustomerProperties(userId, businessId, updateProperties) {
     const user = await User.findById(userId);
-    const props = await findCustomerData(user, businessId).properties;
-    Object.assign(props, updateProperties);
+    const props = (await findCustomerData(user, businessId)).properties;
+    const data = Object.assign(props, updateProperties);
     await user.save();
     return data;
 }
@@ -53,6 +53,20 @@ async function businessFromPurchase(purchaseId) {
         return null;
     }
     return await findCustomerDataFromPurchase(user, purchaseId).business;
+}
+
+/**
+ * Finds one element from customerData that contains the given purchaseId
+ * @param {object} user the user who owns the purchase
+ * @param {(string|object)} purchaseId the purchase's id
+ */
+async function findCustomerDataFromPurchase(user, purchaseId) {
+    for (let i in user.customerData) {
+        const data = user.customerData[i];
+        if (data.purchases && data.purchases.findIndex(_p => _p._id == purchaseId) > -1) {
+            return data;
+        }
+    }
 }
 
 async function updatePurchase(purchaseId, purchase) {

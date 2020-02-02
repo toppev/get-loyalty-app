@@ -4,12 +4,22 @@ const permit = require('../../middlewares/permitMiddleware');
 
 const validation = require('../../helpers/validation');
 const purchaseValidator = validation.validate(validation.purchaseValidator);
+const propertiesValidator = validation.validate(validation.customerPropertiesValidator);
 
-router.post('/', permit('purchase:create'), purchaseValidator, newPurchase);
-router.patch('/:purchaseId', permit('purchase:update'), purchaseValidator, updatePurchase);
-router.delete('/:purchaseId', permit('purchase:delete'), deletePurchase);
+router.patch('/customer/:userId', permit('customer:update'), propertiesValidator, updateCustomerProperties);
+
+router.post('/purchase/', permit('purchase:create'), purchaseValidator, newPurchase);
+router.patch('/purchase/:purchaseId', permit('purchase:update'), purchaseValidator, updatePurchase);
+router.delete('/purchase/:purchaseId', permit('purchase:delete'), deletePurchase);
 
 module.exports = router;
+
+function updateCustomerProperties(req, res, next) {
+    const userId = req.params.userId;
+    customerService.updateCustomerProperties(userId, req.params.businessId, req.body)
+        .then(properties => res.json(properties))
+        .catch(err => next(err));
+}
 
 function newPurchase(req, res, next) {
     const businessId = req.params.businessId;

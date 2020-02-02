@@ -15,7 +15,8 @@ const roles = {
             // These must be checked
             'campaign:*': _ownCampaignOnly,
             'product:*': _ownProductOnly,
-            'purchase:*': _ownCustomerPurchaseOnly
+            'purchase:*': _ownCustomerPurchaseOnly,
+            'customer:update': true
         },
     },
     user: {

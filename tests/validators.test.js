@@ -292,3 +292,15 @@ describe('purchase', () => {
     });
 
 });
+
+// CUSTOMER PROPERTIES
+describe('customer properties', () => {
+
+    it('should validate', () => {
+        const data = {
+            points: 100
+        }
+        expect.assertions(1);
+        return expect(validators.customerPropertiesValidator(data)).resolves.toBe(data);
+    });
+})

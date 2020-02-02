@@ -269,6 +269,16 @@ const purchaseValidator = ajv.compile({
     }
 });
 
+const customerPropertiesValidator = ajv.compile({
+    "$async": true,
+    "additionalProperties": false,
+    "properties": {
+        "points": {
+            "type": "number",
+        }
+    }
+});
+
 module.exports = {
     validate,
     userValidator,
@@ -276,5 +286,6 @@ module.exports = {
     businessRoleValidator,
     productValidator,
     campaignValidator,
-    purchaseValidator
+    purchaseValidator,
+    customerPropertiesValidator
 }

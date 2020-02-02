@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const users = require('./controllers/usersController');
-const purchase = require('./controllers/purchaseController');
+const customer = require('./controllers/customerController');
 const products = require('./controllers/productController');
 const campaigns = require('./controllers/campaignController');
 const business = require('./controllers/businessController');
@@ -28,7 +28,9 @@ router.use('/business', business);
 // and admin panel will be easy to implement
 router.use('/business/:businessId/campaign', requireLogin, campaigns);
 router.use('/business/:businessId/product', requireLogin, products);
-router.use('/business/:businessId/purchase', requireLogin, purchase);
+// Unlike other controllers, rest of the path is defined in customerController.js
+// Because there are multiple different routes in there
+router.use('/business/:businessId', requireLogin, customer);
 
 router.get('/', (req, res) => {
   res.status(200).json({ message: 'Connected!' });
