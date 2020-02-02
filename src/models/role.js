@@ -1,6 +1,6 @@
 const campaignService = require('../services/campaignService');
 const productService = require('../services/productService');
-const userService = require('../services/userService');
+const customerService = require('../services/customerService');
 
 // Roles and permsissions
 // * is a wildcard
@@ -55,7 +55,7 @@ async function _ownCampaignOnly(params) {
  */
 async function _ownCustomerPurchaseOnly(params) {
     const reqParams = params.reqParams;
-    const businessId = await userService.businessFromPurchase(reqParams.purchaseId);
+    const businessId = await customerService.businessFromPurchase(reqParams.purchaseId);
     return !businessId || (businessId == reqParams.businessId);
 }
 

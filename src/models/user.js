@@ -79,9 +79,12 @@ const userSchema = new Schema({
             default: 'user'
         },
         purchases: [purchaseSchema],
-        points: {
-            type: Number,
-            default: 0
+        // Other customer properties that business can modify freely
+        properties: {
+            points: {
+                type: Number,
+                default: 0
+            }
         }
     }],
 });
