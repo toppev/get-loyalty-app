@@ -98,7 +98,6 @@ describe('business', () => {
                 ]
             }
         }
-        validators.businessValidator(data).catch(err => console.log(err))
         expect.assertions(1);
         return expect(validators.businessValidator(data)).resolves.toBe(data);
     });

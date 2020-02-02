@@ -74,7 +74,7 @@ describe('Logged in user with permission can', () => {
             .send(data)
             .set('Cookie', cookie)
             .expect(200);
-        console.log(res.body);
+        expect(res.body.points).toBe(data.points);
     });
 
 });

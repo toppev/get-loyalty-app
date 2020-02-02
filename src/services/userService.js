@@ -24,7 +24,6 @@ async function forgotPassword(email) {
     if (userId) {
         const buffer = crypto.randomBytes(16);
         const token = buffer.toString('hex');
-        console.log(token)
         const reset = new ResetPassword({
             token,
             userId
