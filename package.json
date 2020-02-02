@@ -24,7 +24,8 @@
     "nodemailer": "^6.4.2",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
-    "validator": "^12.1.0"
+    "validator": "^12.1.0",
+    "winston": "^3.2.1"
   },
   "devDependencies": {
     "eslint": "^6.7.2",

@@ -4,8 +4,9 @@ const parser = require('body-parser');
 const routes = require('./src/routes/routes');
 const mongoose = require('mongoose');
 const passport = require('passport');
-var cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser')
 const morgan = require('morgan');
+const logger = require('./src/config/logger');
 
 require('dotenv').config()
 
@@ -16,7 +17,8 @@ mongoose.connect(process.env.MONGO_URI, {
 });
 console.log("Connected to mongo database");
 
-app.use(morgan('[:date[clf]] ":method :url" :status :res[content-length] ":user-agent" - :response-time ms'));
+app.use(morgan('":method :url" :status (len: :res[content-length]) ":user-agent" - :response-time ms',
+    { stream: logger.stream }));
 app.use(cookieParser());
 app.use(parser.urlencoded({
     extended: false
