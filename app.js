@@ -5,6 +5,7 @@ const routes = require('./src/routes/routes');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const cookieParser = require('cookie-parser')
+const cors = require('cors')
 const morgan = require('morgan');
 const logger = require('./src/config/logger');
 
@@ -24,6 +25,7 @@ app.use(parser.urlencoded({
     extended: false
 }));
 app.use(parser.json());
+app.use(cors());
 
 require('./src/config/passport');
 
