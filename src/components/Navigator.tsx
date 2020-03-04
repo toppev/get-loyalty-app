@@ -1,26 +1,26 @@
-import React from 'react';
-import clsx from 'clsx';
-import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
-import Drawer, { DrawerProps } from '@material-ui/core/Drawer';
+import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
+import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import HomeIcon from '@material-ui/icons/Home';
-import PeopleIcon from '@material-ui/icons/People';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import AccountBox from '@material-ui/icons/AccountBox';
 import AppsIcon from '@material-ui/icons/Apps';
+import CloseIcon from '@material-ui/icons/Close';
+import HomeIcon from '@material-ui/icons/Home';
+import PhoneIcon from '@material-ui/icons/MobileFriendly';
 import PagesIcon from '@material-ui/icons/Pages';
-import RedeemIcon from '@material-ui/icons/Redeem';
+import PeopleIcon from '@material-ui/icons/People';
 import PermMediaOutlinedIcon from '@material-ui/icons/PhotoSizeSelectActual';
 import PublicIcon from '@material-ui/icons/Public';
+import RedeemIcon from '@material-ui/icons/Redeem';
 import SettingsIcon from '@material-ui/icons/Settings';
-import PhoneIcon from '@material-ui/icons/MobileFriendly';
-import { Omit } from '@material-ui/types';
+import clsx from 'clsx';
+import React from 'react';
 import { NavLink } from "react-router-dom";
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
 
 const drawerWidth = 240;
 
@@ -45,12 +45,13 @@ const categories = [
     {
         id: 'Other',
         children: [
+            { id: 'My Account', icon: <AccountBox />, to: '/account' },
             { id: 'Other Settings', icon: <SettingsIcon />, to: '/settings' },
         ],
     },
 ];
 
-const styles = (theme: Theme) =>
+const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         categoryHeader: {
             paddingTop: theme.spacing(2),
@@ -123,15 +124,16 @@ const styles = (theme: Theme) =>
         drawerPaper: {
 
         }
-    });
+    }));
 
-export interface NavigatorProps extends Omit<DrawerProps, 'classes'>, WithStyles<typeof styles> {
+export interface NavigatorProps {
 
     handleDrawerToggle: Function
+    open: boolean
 }
 
 function Navigator(props: NavigatorProps) {
-    const { classes } = props;
+    const classes = useStyles();
 
     const drawer = (<List disablePadding>
         <ListItem className={clsx(classes.kantisApp, classes.item, classes.itemCategory)}>
@@ -224,4 +226,4 @@ function Navigator(props: NavigatorProps) {
     );
 }
 
-export default withStyles(styles)(Navigator);
+export default Navigator;
