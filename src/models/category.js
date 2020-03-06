@@ -20,6 +20,9 @@ const categorySchema = new Schema({
         type: [String],
         index: true
     },
+    official: {
+        type: Boolean
+    },
     // TODO: should it be like
     // en: ["drink"], fi: ["juoma"]
     // or

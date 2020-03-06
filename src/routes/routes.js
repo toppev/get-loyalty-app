@@ -4,7 +4,7 @@ const customer = require('./controllers/customerController');
 const products = require('./controllers/productController');
 const campaigns = require('./controllers/campaignController');
 const business = require('./controllers/businessController');
-
+const category = require('./controllers/categoryController');
 
 const requireLogin = (req, res, next) => {
   if (req.isAuthenticated()) {
@@ -24,6 +24,7 @@ router.use('/user', requireLogin.unless({
 }), users);
 
 router.use('/business', business);
+router.use('/category', category)
 // So we can easily validate permissions with one middleware (using businessId param)
 // and admin panel will be easy to implement
 router.use('/business/:businessId/campaign', requireLogin, campaigns);
