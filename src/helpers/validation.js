@@ -76,9 +76,17 @@ const businessValidator = ajv.compile({
         "public": {
             "type": "object",
             "properties": {
+                "name": {
+                    "type": "string",
+                    "maxLength": 100
+                },
                 "address": {
                     "type": "string",
                     "maxLength": 100
+                },
+                "description": {
+                    "type": "string",
+                    "maxLength": 300
                 },
                 "openingHours": {
                     "type": "array",
@@ -88,13 +96,8 @@ const businessValidator = ajv.compile({
                             "maximum": 7,
                             "minimum": 1
                         },
-                        "opens": {
+                        "hours": {
                             "type": "string",
-                            "format": "time"
-                        },
-                        "closes": {
-                            "type": "string",
-                            "format": "time"
                         },
                         "validFrom": {
                             "type": "string",
