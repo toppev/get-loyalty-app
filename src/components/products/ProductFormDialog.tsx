@@ -1,4 +1,4 @@
-import { createStyles, Dialog, DialogContent, IconButton, makeStyles, Theme, Typography } from "@material-ui/core";
+import { createStyles, Dialog, DialogContent, IconButton, makeStyles, Theme } from "@material-ui/core";
 import CloseIcon from '@material-ui/icons/Close';
 import React from "react";
 import ProductForm, { ProductFormProps } from "./ProductForm";

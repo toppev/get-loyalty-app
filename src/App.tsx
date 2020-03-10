@@ -1,15 +1,18 @@
 import { CssBaseline, isWidthUp, withWidth } from '@material-ui/core';
 import { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
-import React, { lazy, Suspense, useState } from 'react';
+import React, { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import './App.css';
 import Navigator from './components/Navigator';
-import Product from './components/products/Product';
-import ProductContext, { defaultProductContext } from './components/products/ProductContext';
+import ProductContext from './components/products/ProductContext';
+import { useProductOperations } from './components/products/ProductHook';
 import AppContext, { defaultAppContext } from './context/AppContext';
 import Header from './Header';
+import PageEditor from './components/pages/PageEditor';
 // Lazy Pages
+const OverviewPage = lazy(() => import('./components/overview/OverviewPage'));
 const ProductPage = lazy(() => import('./components/products/ProductPage'));
+const PagesPage = lazy(() => import('./components/pages/PagesPage'));
 
 interface Props {
   width: Breakpoint
@@ -41,15 +44,17 @@ class App extends React.Component<Props, State> {
       header: {
         paddingRight: notMobile && navDrawerOpen ? paddingLeftDrawerOpen : 0
       },
-      body: {
+      bodyDiv: {
         margin: '80px 20px 20px 15px',
         paddingLeft: notMobile ? paddingLeftDrawerOpen + 15 : 0
       },
     };
 
     return (
-      <>
+      <div style={styles.bodyDiv}>
+
         <CssBaseline />
+
         <Router>
           {
             // TODO: Remove the testing
@@ -60,44 +65,42 @@ class App extends React.Component<Props, State> {
             <div onClick={() => !notMobile && this.handleDrawerToggle.bind(this)()}>
               <Navigator handleDrawerToggle={this.handleDrawerToggle.bind(this)} open={navDrawerOpen} />
             </div>
-            <body style={styles.body}>
-              {
-                //  <LoginDialog/>
-              }
-              <Suspense fallback={<div>Loading...</div>}>
-                <Switch>
-                  <Route exact path="/">
-                    <Home />
-                  </Route>
-                  <Route path="/register">
-                  </Route>
-                  <Route path="/products">
-                    <DefaultProductsPage />
-                  </Route>
-                  <Route path="/campaigns">
+            {
+              //  <LoginDialog/>
+            }
+            <Suspense fallback={<div>Loading...</div>}>
+              <Switch>
+                <Route exact path="/">
+                  <OverviewPage />
+                </Route>
+                <Route path="/register">
+                </Route>
+                <Route path="/products">
+                  <DefaultProductsPage />
+                </Route>
+                <Route path="/campaigns">
 
-                  </Route>
-                  <Route path="/customers">
+                </Route>
+                <Route path="/customers">
 
-                  </Route>
-                  <Route path="/theme">
+                </Route>
+                <Route path="/theme">
 
-                  </Route>
-                  <Route path="/pages">
+                </Route>
+                <Route path="/pages">
+                  <PageEditor/>
+                </Route>
+                <Route path="/demo">
 
-                  </Route>
-                  <Route path="/demo">
+                </Route>
+                <Route path="/settings">
 
-                  </Route>
-                  <Route path="/settings">
-
-                  </Route>
-                </Switch>
-              </Suspense>
-            </body>
+                </Route>
+              </Switch>
+            </Suspense>
           </AppContext.Provider>
         </Router >
-      </>
+      </div>
     );
   }
 }
@@ -111,34 +114,6 @@ function DefaultProductsPage() {
       <ProductPage />
     </ProductContext.Provider>
   )
-}
-
-export function useProductOperations(initialProducts: Product[] = defaultProductContext.products) {
-
-  const [products, setProducts] = useState<Product[]>(initialProducts);
-
-  const addProducts = (newProducts: Product[]) => {
-    setProducts([...newProducts, ...products]);
-  }
-
-  const deleteProduct = (product: Product) => {
-    setProducts(products.filter(p => p !== product));
-  }
-
-  const updateProduct = (product: Product) => {
-    setProducts(products.map(el => el._id === product._id ? product : el));
-  }
-
-  return { products, setProducts, addProducts, deleteProduct, updateProduct }
-}
-
-
-function Home() {
-  return (
-    <div>
-      <h2>Home</h2>
-    </div>
-  );
 }
 
 

@@ -1,9 +1,8 @@
-import { Button, createStyles, Grid, LinearProgress, makeStyles, MenuItem, Theme, Typography, Select } from "@material-ui/core";
+import { Button, createStyles, Grid, LinearProgress, makeStyles, MenuItem, Select, Theme, Typography } from "@material-ui/core";
 import { Field, Form, Formik, FormikHelpers } from "formik";
-import React, { useState } from "react";
+import React from "react";
 
 interface Props {
-    open: boolean,
     initialFields: KeyValue,
     options: string[]
     onSubmit: (mappings: KeyValue, actions: FormikHelpers<KeyValue>) => void
@@ -16,10 +15,10 @@ export interface KeyValue {
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         submitButton: {
-            margin: '20px'
+            margin: '30px 0px 10px 0px'
         },
         content: {
-            marginTop: '35px',
+            marginTop: '20px',
             alignItems: 'center',
             display: 'flex',
             flexDirection: 'column',
@@ -29,18 +28,30 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         option: {
 
-        }
+        },
+        columnName: {
+            marginRight: '25px',
+            fontStyle: 'italic'
+        },
+        field: {
+            marginLeft: '25px'
+        },
+        submitDiv: {
+            textAlign: 'center',
+        },
     }));
 
 export default function (props: Props) {
 
-    const [mapping, setMapping] = useState(props.initialFields)
-
     const classes = useStyles();
 
-    return props.open ? (
+    return (
         <div className={classes.content}>
             <Typography variant="h5">Column Mapping</Typography>
+            <br />
+            Please select where the value of each columns belongs.
+            <br />
+            Select "None" to exclude the field.
             <Formik
                 initialValues={props.initialFields}
                 onSubmit={props.onSubmit}
@@ -52,16 +63,18 @@ export default function (props: Props) {
                             <Grid
                                 className={classes.row}
                                 container
+                                spacing={3}
                                 direction="row"
-                                justify="flex-start"
+                                justify="center"
                                 alignItems="center"
                                 key={key}
                             >
-                                <Grid item xs={4} sm={4}>
-                                    <Typography align="left">{key}</Typography>
+                                <Grid item xs={12} sm={5}>
+                                    <Typography className={classes.columnName} align="justify">{key}</Typography>
                                 </Grid>
-                                <Grid item xs={4} sm={4}>
+                                <Grid item xs={12} sm={5}>
                                     < Field
+                                        className={classes.field}
                                         component={Select}
                                         type="text"
                                         name={key}
@@ -82,19 +95,20 @@ export default function (props: Props) {
                             </Grid>
                         )
                     })}
-                    <Button
-                        className={classes.submitButton}
-                        variant="contained"
-                        color="primary"
-                        disabled={isSubmitting}
-                        onClick={submitForm}>Preview Products</Button>
-                    
-                    {isSubmitting && <LinearProgress/>}
+                    <div className={classes.submitDiv}>
+                        <Button
+                            className={classes.submitButton}
+                            variant="contained"
+                            color="primary"
+                            disabled={isSubmitting}
+                            onClick={submitForm}>Preview Products</Button>
 
+                        {isSubmitting && <LinearProgress />}
+                    </div>
                 </Form>
             )}
             </Formik>
         </div >
-    ) : null;
+    )
 
 }

@@ -9,7 +9,7 @@ export interface ProductContextInterface {
 }
 
 export const defaultProductContext: ProductContextInterface = {
-    products: [{ _id: '163',categories: ['Pizzas'], name: 'Pizza', price: '10€', description: "A nice pineaple pizza" }],
+    products: [{ _id: '163',categories: [], name: 'Pizza', price: '10€', description: "A nice pineaple pizza" }],
     addProducts: () => {},
     deleteProduct: () => {},
     updateProduct: () => {}

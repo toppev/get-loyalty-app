@@ -1,13 +1,20 @@
 import React from "react";
 
 export interface AppContextInterface {
-    businessId: string,
+    business: Business,
     user: object,
     loggedIn: boolean,
 }
 
+export interface Business {
+    _id: string,
+
+}
+
 export const defaultAppContext: AppContextInterface = {
-    businessId: "",
+    business: {
+        _id: ""
+    },
     user: {},
     loggedIn: false,
 }

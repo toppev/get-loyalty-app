@@ -83,7 +83,7 @@ export default function (props: Props) {
                     {props.product.price}
                 </Grid>
                 <Grid item xs={2} sm={2} className={classes.categories}>
-                    {props.product.categories.join(", ")}
+                    {props.product.categories.map(c => c.name).join(", ")}
                 </Grid>
                 <Grid item xs={2} sm={2}>
                     <Button className={classes.editBtn}

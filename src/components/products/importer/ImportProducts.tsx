@@ -1,15 +1,15 @@
 import { Button, ButtonProps, createStyles, Dialog, DialogContent, DialogContentText, IconButton, LinearProgress, makeStyles, Theme, Typography } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import React, { ReactElement, useState } from 'react';
-import { useProductOperations } from '../../../App';
 import { post, uploadFile } from '../../../config/axios';
-import ColumnMapping, { KeyValue } from './ColumnMapping';
-import ProductContext from '../ProductContext';
-import ProductRow from '../ProductRow';
-import ProductsDropzone from './ImportDropzone';
 import Product from '../Product';
+import ProductContext from '../ProductContext';
+import { useProductOperations } from '../ProductHook';
+import ProductRow from '../ProductRow';
+import ColumnMapping, { KeyValue } from './ColumnMapping';
+import ProductsDropzone from './ImportDropzone';
 
-const URL_PREFIX = '/converter'
+const URL_PREFIX = 'http://localhost:8080'
 
 let fileId: string | null = null;
 
@@ -25,10 +25,6 @@ interface ColumnResponse {
     columns: KeyValue
 }
 
-interface ProductResponse {
-    products: Product[]
-}
-
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         closeButton: {
@@ -42,6 +38,15 @@ const useStyles = makeStyles((theme: Theme) =>
             alignItems: 'center',
             display: 'flex',
             flexDirection: 'column',
+        },
+        submitDiv: {
+            textAlign: 'center',
+        },
+        submitButton: {
+            margin: '20px 10px 10px 10px'
+        },
+        center: {
+            textAlign: 'center',
         }
     }));
 
@@ -49,6 +54,8 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function ImportProducts(props: Props): ReactElement {
 
     const [dialogOpen, setDialogOpen] = useState(false);
+    const [previewOpen, setPreviewOpen] = useState(false);
+
     const [error, setError] = useState("");
     const [file, setFile] = useState<File | null>(null);
     const [submittingFile, setSubmittingFile] = useState(false);
@@ -58,92 +65,151 @@ export default function ImportProducts(props: Props): ReactElement {
 
     const classes = useStyles();
 
-    const toggleOpen = () => {
+    const toggleDialogOpen = () => {
         setDialogOpen(!dialogOpen);
+        setError('')
     }
 
-    const RenderNextAction = () => {
-        return !!mappingFields ? (
-            <ColumnMapping
-                open={!!mappingFields}
-                initialFields={toReadableNames(mappingFields)}
-                options={readableColumnOptions}
-                onSubmit={(_values, { setSubmitting, setErrors }) => {
-                    post(`${URL_PREFIX}/products`, {})
-                        .then(res => {
-                            if (res.status !== 200) {
-                                setError('Sorry, we failed to parse the products. IS the file a valid CSV file?')
-                            } else {
-                                const data: ProductResponse = res.data;
-                                // TODO: Open product preview
-                                previewProducts.setProducts(data.products)
-                            }
-                        }).catch(_err => {
-                            setError(`Failed to parse products. Is the file a valid CSV file?`);
-                        }).finally(() => {
-                            setSubmitting(false);
-                        });
-                }} />
-        ) : (
-                <div>
-                    <Button onClick={() => {
-                        setSubmittingFile(true);
-                        uploadFile(`${URL_PREFIX}/columns`, file!!)
+    const togglePreviewOpen = () => {
+        setPreviewOpen(!previewOpen);
+    }
+
+    const discardAll = () => {
+        setMappingFields({})
+        resetImport()
+    }
+
+    const resetImport = () => {
+        setDialogOpen(false)
+        setFile(null)
+    }
+
+    const RenderColumnMapping = () => {
+        return (
+            <>
+                <ColumnMapping
+                    initialFields={toReadableNames(mappingFields)}
+                    options={readableColumnOptions}
+                    onSubmit={(values, { setSubmitting, setErrors }) => {
+                        const newMapping = fromReadableName(values);
+                        setMappingFields(newMapping)
+                        setSubmitting(true)
+                        post(`${URL_PREFIX}/products`, {
+                            fileId: fileId,
+                            columns: newMapping
+                        }, true)
                             .then(res => {
                                 if (res.status !== 200) {
-                                    setError('Sorry, we failed to parse the products. IS the file a valid CSV file?')
+                                    setError('Sorry, we failed to parse the products. Is the file a valid CSV file?')
+                                } else {
+                                    setError('')
+                                    setPreviewOpen(true)
+                                    const products: Product[] = res.data.products;
+                                    // (currently) does not have categories and id
+                                    products.forEach(p => {
+                                        if (!p.categories) {
+                                            p.categories = []
+                                        }
+                                        p._id = `import_${Math.random()}`
+                                    })
+                                    previewProducts.addProducts(products)
                                 }
-                                else {
-                                    const data: ColumnResponse = res.data;
-                                    fileId = data.fileId;
-                                    setMappingFields(data.columns)
-                                }
-                            }).catch(err => {
-                                setError(`${err} Failed to send the file`);
+                            }).catch(_err => {
+                                setError(`Failed to parse products. Is the file a valid CSV file?`);
                             }).finally(() => {
-                                setSubmittingFile(false);
+                                setSubmitting(false);
                             });
-                    }} color="secondary" disabled={submittingFile || !!file}>Import File</Button>
+                    }} />
+                <ProductContext.Provider value={previewProducts}>
+                    <ProductPreview open={previewOpen} onClickClose={togglePreviewOpen} />
+                </ProductContext.Provider>
+            </>
+        )
+    }
+
+
+    return Object.keys(mappingFields).length !== 0 ? (
+        <Dialog open={true} fullWidth={true}>
+            <IconButton className={classes.closeButton} aria-label="close" onClick={discardAll}>
+                <CloseIcon />
+            </IconButton>
+            <DialogContent>
+                <RenderColumnMapping />
+            </DialogContent>
+        </Dialog>
+    ) : (
+            <div>
+                <div className={classes.submitDiv}>
+                    <Button {...props} aria-haspopup="true" variant="contained" onClick={toggleDialogOpen}>Import Products</Button>
+                </div>
+                <Dialog open={dialogOpen} aria-labelledby="form-dialog-title">
+                    <IconButton className={classes.closeButton} aria-label="close" onClick={resetImport}>
+                        <CloseIcon />
+                    </IconButton>
+                    <DialogContent className={classes.content}>
+                        <Typography component="h1" variant="h5">Import from a file</Typography>
+                        <DialogContentText id="alert-dialog-description">
+                            Select the file to import. We currently only support CSV files
+                    </DialogContentText>
+                        <ProductsDropzone dropzoneOptions={{
+                            multiple: false,
+                            accept: '.csv',
+                            onDropAccepted: (files, _event) => {
+                                // Only accepting one file
+                                setFile(files[0])
+                            }
+                        }} />
+                    </DialogContent>
+
+                    <FileInfo file={file} />
+
+                    <div className={classes.center}>
+                        <Button
+                            onClick={
+                                () => {
+                                    setSubmittingFile(true);
+                                    uploadFile(`${URL_PREFIX}/columns`, file!!, true)
+                                        .then(res => {
+                                            if (res.status !== 200) {
+                                                setError('Sorry, we failed to parse the products. Is the file a valid CSV file?')
+                                            }
+                                            else {
+                                                const data: ColumnResponse = res.data;
+                                                fileId = data.fileId;
+                                                setMappingFields(data.columns)
+                                                setError('')
+                                            }
+                                        }).catch(err => {
+                                            setError(`Failed to send the file. ${err}`);
+                                        }).finally(() => {
+                                            setSubmittingFile(false);
+                                        });
+                                }}
+                            className={classes.submitButton}
+                            color="secondary"
+                            variant="contained"
+                            disabled={submittingFile || !!!file}
+                        > Import File</Button >
+                    </div>
+
 
                     {submittingFile && <LinearProgress />}
 
-                    <ProductContext.Provider value={previewProducts}>
-                        <ProductPreview open={dialogOpen} onClickClose={toggleOpen} />
-                    </ProductContext.Provider>
+                    {error && <Typography align="center" color="error">{error}</Typography>}
+                </Dialog>
+            </div>
+        )
+}
 
+type FileProps = { file: File | null }
 
-                </div>
-            )
-    }
+function FileInfo({ file }: FileProps) {
 
-    return (
-        <div>
-            <Button {...props} aria-haspopup="true" onClick={toggleOpen}>Import Products</Button>
+    const classes = useStyles();
 
-            <Dialog open={dialogOpen} aria-labelledby="form-dialog-title">
-                <IconButton className={classes.closeButton} aria-label="close" onClick={toggleOpen}>
-                    <CloseIcon />
-                </IconButton>
-                <DialogContent className={classes.content}>
-                    <Typography component="h1" variant="h5">Import from a file</Typography>
-                    <DialogContentText id="alert-dialog-description">
-                        Select the file to import. We currently only support CSV files
-                    </DialogContentText>
-                    <ProductsDropzone dropzoneOptions={{
-                        multiple: false,
-                        accept: '.csv',
-                        onDropAccepted: (files, _event) => {
-                            setFile(files[0])
-                        }
-                    }} />
-                </DialogContent>
-
-                <RenderNextAction />
-
-                {error && <Typography align="center" color="error">{error}</Typography>}
-            </Dialog>
-        </div>
-    )
+    return !!file ? (
+        <b className={classes.center}>{file!.name} - {(file.size / 1000).toFixed(2)} Kb</b>
+    ) : (<br />)
 }
 
 interface PreviewProps {
@@ -151,20 +217,20 @@ interface PreviewProps {
     onClickClose: () => void
 }
 
-function ProductPreview(props: PreviewProps) {
+function ProductPreview({ open, onClickClose }: PreviewProps) {
 
     const classes = useStyles();
 
     return (
 
-        <Dialog open={props.open}>
-            <IconButton className={classes.closeButton} aria-label="close" onClick={props.onClickClose}>
+        <Dialog open={open} fullWidth={true}>
+            <IconButton className={classes.closeButton} aria-label="close" onClick={onClickClose}>
                 <CloseIcon />
             </IconButton>
             <DialogContent>
-                <Typography component="h1" variant="h5">Import from a file</Typography>
+                <Typography component="h1" variant="h5">Preview Products</Typography>
                 <DialogContentText id="alert-dialog-description">
-                    Select the file to import. We currently only support CSV files
+                    Select products to import or edit them.
                     </DialogContentText>
                 <ProductContext.Consumer>
                     {({ products }) => (
@@ -175,6 +241,23 @@ function ProductPreview(props: PreviewProps) {
                         </ul>
                     )}
                 </ProductContext.Consumer>
+                <div className={classes.submitDiv}>
+                    <Button
+                        className={classes.submitButton}
+                        aria-haspopup="true"
+                        variant="contained"
+                        onClick={() => {
+                            console.log("TODO: submit all products and update")
+                        }}
+                    >Import Products</Button>
+
+                    <Button
+                        className={classes.submitButton}
+                        aria-haspopup="true"
+                        variant="contained"
+                        onClick={onClickClose}
+                    >Cancel</Button>
+                </div>
             </DialogContent>
 
         </Dialog>

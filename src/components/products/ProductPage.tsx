@@ -65,7 +65,7 @@ export default function () {
     const classes = useStyles();
 
     const fetchData = async () => {
-        get(`/business/${appContext.businessId}/product/all`).then(response => {
+        get(`/business/${appContext.business._id}/product/all`).then(response => {
             setShouldLoad(false);
             context.addProducts(response.data);
         }).catch(error => {

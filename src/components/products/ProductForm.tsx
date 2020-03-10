@@ -2,8 +2,7 @@ import { Button, createStyles, LinearProgress, makeStyles, Theme, Typography } f
 import { Form, Formik, FormikErrors } from 'formik';
 import { TextField } from 'formik-material-ui';
 import React, { useState } from 'react';
-import { post } from '../../config/axios';
-import CategoryChangeField from './CategoryChangeField';
+import CategoryChangeField from '../categories/CategorySelector';
 import Product from './Product';
 
 export interface ProductFormProps {
@@ -93,7 +92,7 @@ export default function (props: ProductFormProps) {
                             disabled={isSubmitting}
                             onClick={submitForm}>Save</Button>
                     </div>
-                    
+
                     <p className={classes.itemId}>ID: {product._id}</p>
                 </Form>
             )}
@@ -102,7 +101,7 @@ export default function (props: ProductFormProps) {
     )
 }
 
-function validate(values: Product) {
+function validate(values: Product): FormikErrors<Product> {
     const errors: FormikErrors<Product> = {};
     // TODO
     return errors;
