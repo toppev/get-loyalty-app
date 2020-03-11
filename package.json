@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "jest --forceExit --detectOpenHandles --maxWorkers=1",
+    "test": "jest --forceExit --runInBand",
     "start": "node app.js",
     "dev": "nodemon app.js"
   },
