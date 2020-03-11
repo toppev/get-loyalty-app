@@ -20,6 +20,9 @@ const businessSchema = new Schema({
         address: {
             type: String,
         },
+        website: {
+            type: String,
+        },
         openingHours: [{
             dayOfWeek: {
                 type: String,
