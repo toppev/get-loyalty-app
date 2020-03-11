@@ -7,7 +7,7 @@ let testCategory;
 let pizzaCategory;
 
 beforeAll(async () => {
-    const url = 'mongodb://127.0.0.1/kantis-product-test';
+    const url = 'mongodb://127.0.0.1/kantis-category-test';
     await mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
     await mongoose.connection.db.dropDatabase();
 

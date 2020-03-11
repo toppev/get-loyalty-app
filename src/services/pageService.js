@@ -1,0 +1,24 @@
+const PageData = require('../models/page');
+
+module.exports = {
+    createPage,
+    savePage,
+    loadPage
+}
+
+async function createPage(businessId, pageParam) {
+    const newPage = new PageData(pageParam);
+    newPage.business = businessId;
+    return await newPage.save();
+}
+
+async function savePage(id, pageData) {
+    const oldPage = await PageData.findById(id);
+    Object.assign(oldPage, pageData);
+    return await oldPage.save();
+}
+
+async function loadPage(id) {
+    const page = await PageData.findById(id);
+    return page;
+}

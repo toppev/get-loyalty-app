@@ -1,6 +1,7 @@
 const campaignService = require('../services/campaignService');
 const productService = require('../services/productService');
 const customerService = require('../services/customerService');
+const Page = require('../models/page');
 
 // Roles and permsissions
 // * is a wildcard
@@ -16,6 +17,9 @@ const roles = {
             'campaign:*': _ownCampaignOnly,
             'product:*': _ownProductOnly,
             'purchase:*': _ownCustomerPurchaseOnly,
+            'page:create': _ownPageOnly,
+            'page:save': _ownPageOnly,
+            'page:load': _ownPageOnly,
             'customer:update': true
         },
     },
@@ -58,6 +62,17 @@ async function _ownCustomerPurchaseOnly(params) {
     const reqParams = params.reqParams;
     const businessId = await customerService.businessFromPurchase(reqParams.purchaseId);
     return !businessId || (businessId == reqParams.businessId);
+}
+
+/**
+ * Checks whether the page is owner by the same business
+ * or the page is not found (usually only for creating a new pages)
+ */
+async function _ownPageOnly(params) {
+    const reqParams = params.reqParams;
+    const pageId = reqParams.pageId;
+    const page = await Page.findById(pageId);
+    return !page || (page.business && page.business == reqParams.businessId);
 }
 
 /**
