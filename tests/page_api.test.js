@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const productService = require('../src/services/productService');
+const pageService = require('../src/services/pageService');
 const businessService = require('../src/services/businessService');
 const User = require('../src/models/user');
 const app = require('../app');
@@ -9,8 +9,11 @@ const businessParams = { email: "example@email.com", public: { address: 'this is
 const userParams = { email: "example@email.com", password: "password123" };
 let userId;
 
+const testPageData = { gjs: { "gjs-components": ["stuff"], "gjs-style": ["more stuff"] } }
+const updatedPageData = { gjs: { "gjs-components": ["differentStuff"], "gjs-style": ["more stuff"] } }
+
 beforeAll(async () => {
-    const url = 'mongodb://127.0.0.1/kantis-product-test';
+    const url = 'mongodb://127.0.0.1/kantis-page-test';
     await mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
     await mongoose.connection.db.dropDatabase();
 });
@@ -19,7 +22,6 @@ describe('Logged in user with permissions can', () => {
 
     let cookie;
     let businessId;
-    let productId;
 
     beforeAll(async () => {
         // Login
@@ -28,54 +30,36 @@ describe('Logged in user with permissions can', () => {
             .post('/user/login/local')
             .send(userParams)
             .expect(200);
+        // Setting the cookie
         cookie = res.headers['set-cookie'];
         businessId = (await businessService.createBusiness(businessParams, userId)).id;
     });
 
-    it('create product', async () => {
-        const productData = { name: "Test Product" }
+    it('save page', async () => {
         const res = await api
-            .post(`/business/${businessId}/product`)
+            .post(`/business/${businessId}/page`)
             .set('Cookie', cookie)
-            .send(productData)
+            .send(testPageData)
             .expect(200);
-        productId = res.body._id;
-        expect(res.body.name).toBe(productData.name);
+        const resId = res.body._id;
+        expect(resId).toBeDefined();
+        testPageData.id = resId;
     });
 
-    it('update product', async () => {
-        const updatedData = { name: "Test Product2" }
+    it('update page', async () => {
         const res = await api
-            .patch(`/business/${businessId}/product/${productId}`)
+            .post(`/business/${businessId}/page/${testPageData.id}`)
             .set('Cookie', cookie)
-            .send(updatedData)
+            .send(updatedPageData)
             .expect(200);
-        expect(res.body.name).toBe(updatedData.name);
-
     });
 
-    it('get product', async () => {
+    it('get page', async () => {
         const res = await api
-            .get(`/business/${businessId}/product/${productId}`)
+            .get(`/business/${businessId}/page/${testPageData.id}`)
             .set('Cookie', cookie)
             .expect(200);
-        expect(res.body._id).toBe(productId);
-    });
-
-    it('get all', async () => {
-        const res = await api
-            .get(`/business/${businessId}/product/all`)
-            .set('Cookie', cookie)
-            .expect(200);
-        expect(res.body[0]._id).toBe(productId);
-    });
-
-
-    it('delete product', async () => {
-        await api
-            .delete(`/business/${businessId}/product/${productId}`)
-            .set('Cookie', cookie)
-            .expect(200);
+        expect(res.body.gjs).toStrictEqual(updatedPageData.gjs);
     });
 
 });

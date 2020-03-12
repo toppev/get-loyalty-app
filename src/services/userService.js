@@ -11,32 +11,43 @@ module.exports = {
     forgotPassword,
     resetPassword,
     deleteUser,
-    addPurchase,
-    updatePurchase,
-    deletePurchase,
-    getPurchases,
-    businessFromPurchase
 };
 
+/**
+ * Finds a user by the given email address. If the user was found, random token is generated and saved (@see {@link ResetPassword}).
+ * If the user was not found nothing will be done.
+ * Throws and error if the user didn't use local authentication strategy.
+ * @param {string} email the user's email address 
+ */
 async function forgotPassword(email) {
-    const userId = await User.findOne({
+    const user = await User.findOne({
         email: email
-    }).select('_id');
-    // Don't let the user know if the email exists
-    if (userId) {
-        const buffer = crypto.randomBytes(16);
-        const token = buffer.toString('hex');
-        console.log(token)
-        const reset = new ResetPassword({
-            token,
-            userId
-        });
-        await reset.save();
-        // TODO: enable
-        //emailPasswordReset(email, token);
+    });
+    if (user) {
+        if (user.authentication.service && user.authentication.service !== 'local') {
+            throw new Error('Only users using local authentication can reset their password');
+        }
+        const userId = user.id;
+        if (userId) {
+            const buffer = crypto.randomBytes(16);
+            const token = buffer.toString('hex');
+            const reset = new ResetPassword({
+                token,
+                userId
+            });
+            await reset.save();
+            // TODO: enable
+            //emailPasswordReset(email, token);
+        }
     }
 }
 
+/**
+ * Finds a {@link ResetPassword} by the given token. If the token does not exists,
+ * the request was not found or the request has expired an error will be thrown.
+ * Otherwise returns the user found by the password reset request.
+ * @param {string} token the password reset request token
+ */
 async function resetPassword(token) {
     if (!token) {
         throw 'No token parameter specified.';
@@ -53,105 +64,45 @@ async function resetPassword(token) {
     return await User.findById(request.userId);
 }
 
+/**
+ * Returns all users (without password hashes)
+ */
 async function getAll() {
     return await User.find().select('-password');
 }
 
+/**
+ * Find a user by the given id. Returns the user without password field (password hash) 
+ * @param {Any} id the user's _id field 
+ */
 async function getById(id) {
     return await User.findById(id).select('-password');
 }
 
+/**
+ * Create a new user with the values from the given object (e.g email, password)
+ * @param {Object} userParam 
+ */
 async function create(userParam) {
     const user = new User(userParam);
     return await user.save();
 }
 
-async function findCustomerData(user, businessId) {
-    const data = user.customerData.find(_item => _item.business == businessId);
-    return data;
-}
-
-async function addPurchase(userId, businessId, purchase) {
-    const user = await User.findById(userId);
-    let data = await findCustomerData(user, businessId);
-    if (!data) {
-        user.customerData.push({ business: businessId, purchases: [purchase] });
-    }
-    else {
-        data.purchases.push(purchase);
-    }
-    await user.save();
-    const newData = await findCustomerData(user, businessId);
-    return newData.purchases;
-}
-
-async function userByPurchaseId(purchaseId) {
-    const result = await User.findOne({ "customerData.purchases._id": purchaseId });
-    return result;
-}
-
-async function businessFromPurchase(purchaseId) {
-    const user = await userByPurchaseId(purchaseId);
-    if (!user) {
-        return null;
-    }
-    return await findCustomerDataFromPurchase(user, purchaseId).business;
-}
-
 /**
- * Finds one element from customerData that contains the given purchaseId
- * @param {object} user the user who owns the purchase
- * @param {(string|object)} purchaseId the purchase's id
+ * Update an existing user
+ * @param {Any} id the user's _id field
+ * @param {Object} updateParam the object with the values to update
  */
-async function findCustomerDataFromPurchase(user, purchaseId) {
-    for (let i in user.customerData) {
-        const data = user.customerData[i];
-        if (data.purchases && data.purchases.findIndex(_p => _p._id == purchaseId) > -1) {
-            return data;
-        }
-    }
-}
-
-async function updatePurchase(purchaseId, purchase) {
-    purchase._id = purchaseId;
-    const user = await userByPurchaseId(purchaseId);
-    if (!user) {
-        throw Error('User not found with the given purchaseId');
-    }
-    const customerData = await findCustomerDataFromPurchase(user, purchaseId);
-    const newPurchases = customerData.purchases.map(obj => obj.id == purchaseId ? updatedPurchase = Object.assign(obj, purchase) : obj);
-    if (newPurchases.length != customerData.purchases.length) {
-        user.customerData.purchases = newPurchases;
-        await user.save();
-    }
-    return customerData.purchases;
-}
-
-async function deletePurchase(purchaseId) {
-    const user = await userByPurchaseId(purchaseId);
-    if (!user) {
-        throw Error('User not found with the given purchaseId');
-    }
-    const customerData = await findCustomerDataFromPurchase(user, purchaseId);
-    const newPurchases = customerData.purchases.filter(purchase => purchase.id != purchaseId);
-    if (newPurchases.length != customerData.purchases.length) {
-        customerData.purchases = newPurchases;
-        await user.save();
-    }
-    return customerData.purchases;
-}
-
-async function getPurchases(id, business) {
-    const user = await User.findById(id);
-    return user.customerDataByBusiness(business).purchases;
-}
-
 async function update(id, updateParam) {
     const user = await User.findById(id);
     Object.assign(user, updateParam);
     return await user.save();
 }
 
+/**
+ * Delete the given user from the database
+ * @param {Any} id the user's _id field 
+ */
 async function deleteUser(id) {
     await User.findByIdAndRemove(id);
 }

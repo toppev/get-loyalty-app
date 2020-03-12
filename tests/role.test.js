@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 
 const Business = require('../src/models/business');
 const userService = require('../src/services/userService');
+const customerService = require('../src/services/customerService');
 const productService = require('../src/services/productService');
 const campaignService = require('../src/services/campaignService');
 
@@ -24,7 +25,7 @@ beforeAll(async () => {
 
     params.reqParams.productId = (await productService.create(businessId, { name: 'Pizza' })).id;
     params.reqParams.campaignId = (await campaignService.create(businessId, { name: 'Sick Campaign' })).id;
-    const purchases = await userService.addPurchase(userId, businessId, { category: '5e2721e1dab8355d82d53379' });
+    const purchases = await customerService.addPurchase(userId, businessId, { category: '5e2721e1dab8355d82d53379' });
     params.reqParams.purchaseId = purchases[0].id;
 
     const otherBusinessId = (await new Business({}).save()).id;
@@ -36,7 +37,7 @@ beforeAll(async () => {
 
     otherParams.reqParams.productId = (await productService.create(otherBusinessId, { name: 'Pizza' })).id;
     otherParams.reqParams.campaignId = (await campaignService.create(otherBusinessId, { name: 'Sick Campaign' })).id;
-    otherParams.reqParams.purchaseId = (await userService.addPurchase(userId, otherBusinessId, { category: '5e2721e1dab8355d82d53379' }))[0].id;
+    otherParams.reqParams.purchaseId = (await customerService.addPurchase(userId, otherBusinessId, { category: '5e2721e1dab8355d82d53379' }))[0].id;
 });
 
 // Not all but many permissions are tested here
@@ -154,4 +155,8 @@ describe('user', () => {
         expect.assertions(1);
         return expect(role.can('user', 'user:create', params)).resolves.toBeTruthy();
     });
+});
+
+afterAll(() => {
+    mongoose.connection.close();
 });

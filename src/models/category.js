@@ -12,13 +12,16 @@ const categorySchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Category'
     }],
-    childs: [{
+    children: [{
         type: Schema.Types.ObjectId,
         ref: 'Category'
     }],
     keywords: {
         type: [String],
         index: true
+    },
+    official: {
+        type: Boolean
     },
     // TODO: should it be like
     // en: ["drink"], fi: ["juoma"]

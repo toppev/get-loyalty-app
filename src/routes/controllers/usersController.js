@@ -6,8 +6,6 @@ const authenticator = require('../../middlewares/authenticator');
 const validation = require('../../helpers/validation');
 const userValidator = validation.validate(validation.userValidator);
 
-// TODO authenticate middleware
-
 // Not logged in, no perms
 router.get('/resetpassword/:token', resetPassword);
 router.post('/forgotpassword', forgotPassword);

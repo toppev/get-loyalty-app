@@ -11,7 +11,16 @@ const businessSchema = new Schema({
     },
     config: configSchema,
     public: {
+        name: {
+            type: String,
+        },
+        description: {
+            type: String,
+        },
         address: {
+            type: String,
+        },
+        website: {
             type: String,
         },
         openingHours: [{
@@ -21,10 +30,9 @@ const businessSchema = new Schema({
                 // min: 1,
                 // max: 7
             },
-            opens: {
-                type: String,
-            },
-            closes: {
+            // String representing open hours (can be custom)
+            // e.g 8:00-12:00, 13:00-17:30 or 9-16 or 24/7, basically anything
+            hours: {
                 type: String,
             },
             validFrom: {

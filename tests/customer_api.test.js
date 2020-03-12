@@ -4,15 +4,15 @@ const User = require('../src/models/user');
 const app = require('../app');
 const api = require('supertest')(app);
 
-const businessParam = { email: "purchase.test.business@email.com", public: { address: 'this is an address' } };
-const userParams = { email: "purchase.test@email.com", password: "password123" };
+const businessParam = { email: "customer.test.business@email.com", public: { address: 'this is an address' } };
+const userParams = { email: "customer.test@email.com", password: "password123" };
 
 let cookie;
 let business;
 let userId;
 
 beforeAll(async () => {
-    const url = 'mongodb://127.0.0.1/kantis-purchase-test';
+    const url = 'mongodb://127.0.0.1/kantis-customer-test';
     await mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
     await mongoose.connection.db.dropDatabase();
     // Login
@@ -65,4 +65,20 @@ describe('Logged in user with permission can', () => {
         // TODO check if it really was deleted
     });
 
+    it('update customer points (properties)', async () => {
+        const data = {
+            points: 100
+        }
+        const res = await api
+            .patch(`/business/${business.id}/customer/${userId}`)
+            .send(data)
+            .set('Cookie', cookie)
+            .expect(200);
+        expect(res.body.points).toBe(data.points);
+    });
+
+});
+
+afterAll(() => {
+    mongoose.connection.close();
 });

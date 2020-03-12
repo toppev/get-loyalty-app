@@ -1,7 +1,8 @@
 const ajv = require('ajv');
+const logger = require('../config/logger');
 
 function errorHandler(err, req, res, next) {
-  console.log(err)
+  logger.error(`${err.status || 500} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
   if (process.env.NODE_ENV == 'development') {
     return res.status(400).json({
       message: err.toString()

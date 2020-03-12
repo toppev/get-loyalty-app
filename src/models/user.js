@@ -43,12 +43,28 @@ const userSchema = new Schema({
     password: {
         type: String,
     },
+    // Super user role
+    // e.g site admin
+    // Has permission to modify everything
+    superRole: {
+        type: String,
+        enum: [null, 'admin']
+    },
     lastVisit: {
         type: Date,
         default: Date.now
     },
     birthday: {
         type: Date
+    },
+    authentication: {
+        // The service used
+        service: {
+            type: String,
+        },
+        profile: {
+            type: Object,
+        }
     },
     customerData: [{
         business: {
@@ -63,9 +79,12 @@ const userSchema = new Schema({
             default: 'user'
         },
         purchases: [purchaseSchema],
-        points: {
-            type: Number,
-            default: 0
+        // Other customer properties that business can modify freely
+        properties: {
+            points: {
+                type: Number,
+                default: 0
+            }
         }
     }],
 });
@@ -83,13 +102,13 @@ userSchema.methods.customerDataByBusiness = async function (business) {
  * Check whether user can perform the specified operation.
  */
 userSchema.methods.hasPermission = async function (operation, params) {
-    // If not set use 'user' role
-    let userRole = 'user';
-    let businessId;
-    if (params.reqParams && params.reqParams.businessId) {
-        const data = await this.customerDataByBusiness(params.reqParams.businessId);
-        if (data) {
-            businessId = data.business;
+    // If superRole is set use it otherwise defaults to 'user
+    let userRole = this.superRole || 'user';
+    const businessId = params.reqParams.businessId;
+    // and check if they have a greater role in the given business
+    if (userRole == 'user' && businessId) {
+        const data = await this.customerDataByBusiness(businessId);
+        if (data && data.role) {
             userRole = data.role;
         }
     }
@@ -115,4 +134,5 @@ const User = mongoose.model('User', userSchema);
 module.exports = User;
 
 // Because circular dependencies
+// TODO: fix?
 var role = require('./role');

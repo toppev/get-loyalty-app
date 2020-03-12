@@ -127,3 +127,7 @@ describe('Logged in user can', () => {
     });
 
 });
+
+afterAll(() => {
+    mongoose.connection.close();
+});
