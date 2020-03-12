@@ -29,6 +29,8 @@ jobs:
     - run: npm test
       env:
         CI: true
+        # A random string for testing
+        JWT_SECRET: "D943E42E91D22C87621BAB73F866EDAA0FA0178B25C98EC54C254F897A609F5C"
     services:
       mongodb:
         image: mongo:4.2.3
