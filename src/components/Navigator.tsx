@@ -1,4 +1,3 @@
-import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
@@ -37,7 +36,6 @@ const categories = [
     {
         id: 'Site Design',
         children: [
-            { id: 'Theme', icon: <PublicIcon />, to: '/theme' },
             { id: 'Pages', icon: <PagesIcon />, to: '/pages' },
             { id: 'Demo', icon: <PhoneIcon />, to: '/demo' },
         ],
@@ -58,14 +56,14 @@ const useStyles = makeStyles((theme: Theme) =>
             paddingBottom: theme.spacing(2),
         },
         categoryHeaderPrimary: {
-            color: 'darkslategray',
-            fontSize: 16
+            color: 'gray',
+            fontSize: 14
         },
         item: {
             paddingTop: 1,
             paddingBottom: 1,
-            fontSize: 20,
-            color: '#3495eb',
+            fontSize: 18,
+            color: '#1072c9',
         },
         itemCategory: {
             backgroundColor: '#232f3e',
@@ -74,12 +72,13 @@ const useStyles = makeStyles((theme: Theme) =>
             paddingBottom: theme.spacing(2),
         },
         kantisApp: {
-            fontSize: 24,
+            fontSize: 22,
             color: theme.palette.common.white,
             textAlign: 'center'
         },
         active: {
-            color: '#34ebb7',
+            color: '#16c795',
+            backgroundColor: '#f5f5f5'
         },
         itemPrimary: {
             fontSize: 'inherit',
@@ -89,7 +88,7 @@ const useStyles = makeStyles((theme: Theme) =>
             marginRight: theme.spacing(2),
         },
         divider: {
-            marginTop: theme.spacing(2),
+            marginTop: theme.spacing(3),
         },
         root: {
             flexGrow: 1,
@@ -123,7 +122,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         drawerPaper: {
 
-        }
+        },
     }));
 
 export interface NavigatorProps {
@@ -186,7 +185,7 @@ function Navigator(props: NavigatorProps) {
                         </ListItemText>
                     </ListItem>
                 ))}
-                <Divider className={classes.divider} />
+                <div className={classes.divider}/>
             </React.Fragment>
         ))}
     </List>);

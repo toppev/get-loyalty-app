@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) =>
             padding: 0
         },
         sectionTypography: {
-            marginTop: '20px'
+            color: 'gray'
         }
     }));
 
@@ -81,7 +81,7 @@ export default function () {
                 {({ submitForm, isSubmitting, handleChange }) => (
                     <div>
                         <Paper className={classes.paper}>
-                            <Typography variant="h6" align="center">
+                            <Typography className={classes.sectionTypography} variant="h6" align="center">
                                 Public Information
                             </Typography>
                             <Form>
@@ -121,7 +121,7 @@ export default function () {
                             </Form>
                         </Paper>
                         <Paper className={classes.paper}>
-                            <Typography variant="h6" align="center">Other Details</Typography>
+                            <Typography className={classes.sectionTypography} variant="h6" align="center">Other Details</Typography>
                             <Form>
                                 <TextField
                                     className={classes.field}

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 
-const url = 'http://localhost:3001';
+export const BASE_URL = 'http://localhost:3001';
 
 const headers = {
     'Accept': 'application/json',
@@ -27,7 +27,7 @@ export async function get(path: string, fullPath: boolean = false) {
 
     return axios({
         method: 'GET',
-        url: fullPath ? path : url + path,
+        url: fullPath ? path : BASE_URL + path,
         headers: headers
     });
 }
@@ -38,7 +38,7 @@ export async function get(path: string, fullPath: boolean = false) {
 export async function remove(path: string, fullPath: boolean = false) {
     return axios({
         method: 'DELETE',
-        url: fullPath ? path : url + path,
+        url: fullPath ? path : BASE_URL + path,
         headers: headers
     });
 }
@@ -46,7 +46,7 @@ export async function remove(path: string, fullPath: boolean = false) {
 export async function post(path: string, data: Object, fullPath: boolean = false) {
     return axios({
         method: 'POST',
-        url: fullPath ? path : url + path,
+        url: fullPath ? path : BASE_URL + path,
         data: data,
         headers: {
             'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ export async function post(path: string, data: Object, fullPath: boolean = false
 export async function patch(path: string, data: Object, fullPath: boolean = false) {
     return axios({
         method: 'PATCH',
-        url: fullPath ? path : url + path,
+        url: fullPath ? path : BASE_URL + path,
         headers: {
             'Content-Type': 'application/json',
             ...headers
@@ -71,7 +71,7 @@ export async function uploadFile(path: string, file: File, fullPath: boolean = f
     formData.append('file', file)
     return axios({
         method: 'POST',
-        url: fullPath ? path : url + path,
+        url: fullPath ? path : BASE_URL + path,
         data: formData,
         headers: {
             'Content-Type': 'multipart/form-data',
