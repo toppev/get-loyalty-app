@@ -80,3 +80,7 @@ describe('Logged in user with permissions can', () => {
     });
 
 });
+
+afterAll(() => {
+    mongoose.connection.close();
+});

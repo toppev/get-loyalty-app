@@ -78,3 +78,7 @@ describe('Logged in user with permission can', () => {
     });
 
 });
+
+afterAll(() => {
+    mongoose.connection.close();
+});

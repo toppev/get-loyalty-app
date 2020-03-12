@@ -127,3 +127,7 @@ describe('Logged in user should', () => {
 * Testing patching, deleting and getting other users is not currently tested.
 * Only site admins can do it anyway. Might implement later
 */
+
+afterAll(() => {
+    mongoose.connection.close();
+});

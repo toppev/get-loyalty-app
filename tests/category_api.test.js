@@ -49,4 +49,8 @@ describe('Category API: ', () => {
             .expect(200)
         expect(res.body.name).toBeUndefined();
     });
-})
+});
+
+afterAll(() => {
+    mongoose.connection.close();
+});

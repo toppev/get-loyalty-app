@@ -156,3 +156,7 @@ describe('user', () => {
         return expect(role.can('user', 'user:create', params)).resolves.toBeTruthy();
     });
 });
+
+afterAll(() => {
+    mongoose.connection.close();
+});
