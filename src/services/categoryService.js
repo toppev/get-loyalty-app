@@ -23,14 +23,21 @@ async function create(categoryParam) {
  * Find categories whose name or keywords contain the query
  * @param {string} query the query string to search, ignored if it's null/undefined
  * @param {number} limit limit of returned categories 
+ * @param {string} type to search ('product', 'service', 'business' or null)
  */
-async function find(query, limit = 100) {
-    const dbQyery = query ? {
+async function find(query, type, limit = 100) {
+    // Whether the type was specified
+    const typeQuery = type ? {
         official: true,
-        $or: [{ keywords: query }, { name: query }]
+        categoryType: type
     } : { official: true }
+    // Wether the query was specified
+    const finalQuery = query ? {
+        $or: [{ keywords: query }, { name: query }],
+        ...typeQuery
+    } : { ...typeQuery }
 
-    const categories = await Category.find(dbQyery).limit(limit);
+    const categories = await Category.find(finalQuery).limit(limit);
 
     return categories;
 }

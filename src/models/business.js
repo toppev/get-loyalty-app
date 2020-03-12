@@ -43,6 +43,10 @@ const businessSchema = new Schema({
                 type: Date,
             }
         }],
+        categories: [{
+            type: mongoose.Types.ObjectId,
+            ref: 'Category',
+        }],
         customerLevels: [{
             name: {
                 type: String,

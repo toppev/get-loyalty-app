@@ -23,6 +23,10 @@ const categorySchema = new Schema({
     official: {
         type: Boolean
     },
+    categoryType: {
+        type: String,
+        enum: [null, 'business', 'product', 'service']
+    },
     // TODO: should it be like
     // en: ["drink"], fi: ["juoma"]
     // or
