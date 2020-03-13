@@ -4,11 +4,12 @@ import React, { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import './App.css';
 import Navigator from './components/Navigator';
+import PageEditor from './components/pages/PageEditor';
 import ProductContext from './components/products/ProductContext';
 import { useProductOperations } from './components/products/ProductHook';
 import AppContext, { defaultAppContext } from './context/AppContext';
 import Header from './Header';
-import PageEditor from './components/pages/PageEditor';
+import AccountPage from './components/products/AccountPage';
 // Lazy Pages
 const OverviewPage = lazy(() => import('./components/overview/OverviewPage'));
 const ProductPage = lazy(() => import('./components/products/ProductPage'));
@@ -48,6 +49,9 @@ class App extends React.Component<Props, State> {
         margin: '80px 20px 20px 15px',
         paddingLeft: notMobile ? paddingLeftDrawerOpen + 15 : 0
       },
+      loadingDiv: {
+        color: 'gray',
+      },
     };
 
     return (
@@ -68,12 +72,15 @@ class App extends React.Component<Props, State> {
             {
               //  <LoginDialog/>
             }
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense
+              fallback={(
+                <div style={styles.loadingDiv}>
+                  <h2>Loading...</h2>
+                </div>
+              )}>
               <Switch>
                 <Route exact path="/">
                   <OverviewPage />
-                </Route>
-                <Route path="/register">
                 </Route>
                 <Route path="/products">
                   <DefaultProductsPage />
@@ -84,14 +91,14 @@ class App extends React.Component<Props, State> {
                 <Route path="/customers">
 
                 </Route>
-                <Route path="/theme">
-
-                </Route>
                 <Route path="/pages">
-                  <PageEditor/>
+                  <PageEditor />
                 </Route>
                 <Route path="/demo">
 
+                </Route>
+                <Route path="/account">
+                  <AccountPage/>
                 </Route>
                 <Route path="/settings">
 

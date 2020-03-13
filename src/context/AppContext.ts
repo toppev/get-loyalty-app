@@ -2,20 +2,28 @@ import React from "react";
 
 export interface AppContextInterface {
     business: Business,
-    user: object,
+    user: User,
     loggedIn: boolean,
+}
+
+export interface User {
+    email: string,
+
 }
 
 export interface Business {
     _id: string,
-
+    categories: string[]
 }
 
 export const defaultAppContext: AppContextInterface = {
     business: {
-        _id: ""
+        _id: "",
+        categories: []
     },
-    user: {},
+    user: {
+        email: 'test@example.com'
+    },
     loggedIn: false,
 }
 
