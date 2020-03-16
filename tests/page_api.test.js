@@ -62,6 +62,15 @@ describe('Logged in user with permissions can', () => {
         expect(res.body.gjs).toStrictEqual(updatedPageData.gjs);
     });
 
+    it('list pages', async () => {
+        const res = await api
+            .get(`/business/${businessId}/page/list`)
+            .set('Cookie', cookie)
+            .expect(200);
+        expect(res.body[0].gjs).toBeFalsy();
+        expect(res.body[0]._id).toBeTruthy();
+    });
+
 });
 
 afterAll(() => {

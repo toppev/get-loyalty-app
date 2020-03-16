@@ -7,7 +7,9 @@ const customerService = require('../src/services/customerService');
 const productService = require('../src/services/productService');
 const campaignService = require('../src/services/campaignService');
 
+// Params for the first business
 const params = { reqParams: {} };
+// Params for the other business
 const otherParams = { reqParams: {} };
 
 beforeAll(async () => {

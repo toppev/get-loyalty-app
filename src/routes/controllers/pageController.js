@@ -6,6 +6,8 @@ const permit = require('../../middlewares/permitMiddleware');
 router.post('/', permit('page:create'), createPage);
 // Saving
 router.post('/:pageId', permit('page:save'), savePage);
+// List business's pages
+router.get('/list', permit('page:load'), listPages);
 // Loading
 router.get('/:pageId', permit('page:load'), loadPage);
 
@@ -26,6 +28,12 @@ function savePage(req, res, next) {
 
 function loadPage(req, res, next) {
     pageService.loadPage(req.params.pageId)
+        .then(data => data ? res.json(data) : res.sendStatus(404))
+        .catch(err => next(err));
+}
+
+function listPages(req, res, next) {
+    pageService.getBusinessPageIds(req.params.businessId)
         .then(data => data ? res.json(data) : res.sendStatus(404))
         .catch(err => next(err));
 }

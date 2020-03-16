@@ -3,7 +3,8 @@ const PageData = require('../models/page');
 module.exports = {
     createPage,
     savePage,
-    loadPage
+    loadPage,
+    getBusinessPageIds
 }
 
 async function createPage(businessId, pageParam) {
@@ -21,4 +22,13 @@ async function savePage(id, pageData) {
 async function loadPage(id) {
     const page = await PageData.findById(id);
     return page;
+}
+
+/**
+ * Find the given business's pages. The returned pages do not include the "gjs" data.
+ * @param {any} businessId the id of the business
+ */
+async function getBusinessPageIds(businessId) {
+    const pages = await PageData.find({ business: businessId }).select('-gjs');
+    return pages;
 }
