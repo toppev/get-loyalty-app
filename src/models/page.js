@@ -7,6 +7,9 @@ const PageDataSchema = new Schema({
         ref: 'Business',
         index: true
     },
+    name: {
+        type: String
+    },
     gjs: {
         "gjs-components": {
             type: Array
