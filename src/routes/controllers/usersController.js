@@ -19,6 +19,7 @@ router.get('/profile', getCurrent);
 router.get('/logout', logout);
 // With permissions
 router.get('/all', permit('user:list'), getAll);
+// Patch other if perms?
 router.patch('/:userId', permit('user:update'), userValidator, update);
 router.delete('/:userId', permit('user:delete'), deleteUser);
 router.get('/:userId', permit('user:get'), getById);

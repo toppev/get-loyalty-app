@@ -68,7 +68,9 @@ async function resetPassword(token) {
  * Returns all users (without password hashes)
  */
 async function getAll() {
-    return await User.find().select('-password');
+    const users = await User.find();
+    users.forEach(user => delete user.password);
+    return users;
 }
 
 /**
@@ -76,7 +78,15 @@ async function getAll() {
  * @param {Any} id the user's _id field 
  */
 async function getById(id) {
-    return await User.findById(id).select('-password');
+    // If we use select(-password) hasPassword virtual will break
+    const user = await User.findById(id);
+    if (user) {
+        // so just remove the password here
+        delete user.password;
+        return user;
+    }
+    // Just so tests wont' break
+    return null;
 }
 
 /**

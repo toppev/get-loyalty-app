@@ -87,6 +87,13 @@ const userSchema = new Schema({
             }
         }
     }],
+}, {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+});
+
+userSchema.virtual("hasPassword").get(function () {
+    return !!this.password;
 });
 
 purchaseSchema.methods.populateProducts = function () {

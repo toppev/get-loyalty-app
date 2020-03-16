@@ -17,7 +17,7 @@ beforeAll(async () => {
 
 describe('Not logged in user should', () => {
 
-    it('register', async () => {
+    it('register without password', async () => {
         const secondUserParams = { email: 'example2@email.com' };
         const res = await api
             .post('/user/register')
@@ -25,7 +25,19 @@ describe('Not logged in user should', () => {
             .set('Accept', 'application/json')
             .expect(200);
         const user = await userService.getById(res.body._id);
+        expect(user.hasPassword).toBe(false);
         expect(user.email).toBe(secondUserParams.email);
+    });
+
+    it('register with password', async () => {
+        const testUserParams = { email: 'example3@email.com', password: "asdasdasd" };
+        const res = await api
+            .post('/user/register')
+            .send(testUserParams)
+            .set('Accept', 'application/json')
+            .expect(200);
+        const user = await userService.getById(res.body._id);
+        expect(user.hasPassword).toBe(true);
     });
 
     it('forgotPassword', async () => {
