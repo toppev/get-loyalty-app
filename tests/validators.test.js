@@ -3,7 +3,7 @@ const validators = require('../src/helpers/validation');
 // USER
 describe('user', () => {
 
-    it('should validate #1', async () => {
+    it('should validate #1', () => {
         const data = {
             email: 'example@email.com',
             password: 'password123',

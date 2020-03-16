@@ -15,30 +15,25 @@ beforeAll(async () => {
     await mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
     await mongoose.connection.db.dropDatabase();
 
-    // TODO: stop using services or reduce usage if not necessary
+    await initParams(params)
+    await initParams(otherParams)
+});
+
+
+async function initParams(paramsObj) {
     const businessId = (await new Business({}).save()).id;
-    params.reqParams.businessId = businessId;
+    paramsObj.reqParams.businessId = businessId;
 
     const userId = (await userService.create({})).id;
-    params.userId = userId;
-    params.reqParams.userId = userId;
+    paramsObj.userId = userId;
+    paramsObj.reqParams.userId = paramsObj.userId;
 
-    params.reqParams.productId = (await productService.create(businessId, { name: 'Pizza' })).id;
-    params.reqParams.campaignId = (await campaignService.create(businessId, { name: 'Sick Campaign' })).id;
+    paramsObj.reqParams.productId = (await productService.create(businessId, { name: 'Pizza' })).id;
+    paramsObj.reqParams.campaignId = (await campaignService.create(businessId, { name: 'Sick Campaign' })).id;
+    
     const purchases = await customerService.addPurchase(userId, businessId, { category: '5e2721e1dab8355d82d53379' });
-    params.reqParams.purchaseId = purchases[0].id;
-
-    const otherBusinessId = (await new Business({}).save()).id;
-    otherParams.reqParams.businessId = otherBusinessId;
-
-    const otherUserId = (await userService.create({})).id;
-    otherParams.userId = userId;
-    otherParams.reqParams.userId = otherUserId;
-
-    otherParams.reqParams.productId = (await productService.create(otherBusinessId, { name: 'Pizza' })).id;
-    otherParams.reqParams.campaignId = (await campaignService.create(otherBusinessId, { name: 'Sick Campaign' })).id;
-    otherParams.reqParams.purchaseId = (await customerService.addPurchase(userId, otherBusinessId, { category: '5e2721e1dab8355d82d53379' }))[0].id;
-});
+    paramsObj.reqParams.purchaseId = purchases[0].id;
+}
 
 // Not all but many permissions are tested here
 // TODO purchases
@@ -108,9 +103,9 @@ describe('business', () => {
     // that matches the businessId url param is modified (and user has permission from that business)
     // For products etc the 
     //
-    // hence checking if role has permission would return true alwas (only for purchases)
+    // hence checking if role has permission would return true always (only for purchases)
     /*
-    it('should not should have permission to purchase:create other', async () => {
+    it('should not have permission to purchase:create other', async () => {
         const fakeNews = JSON.parse(JSON.stringify(params));
         fakeNews.reqParams.purchaseId = otherParams.reqParams.purchaseId;
         expect.assertions(1);
