@@ -1,10 +1,13 @@
 const PageData = require('../models/page');
+const uploader = require('../helpers/uploader')
 
 module.exports = {
     createPage,
     savePage,
     loadPage,
-    getBusinessPageIds
+    getBusinessPageIds,
+    uploadHtml,
+    getHtmlFile
 }
 
 async function createPage(businessId, pageParam) {
@@ -13,14 +16,24 @@ async function createPage(businessId, pageParam) {
     return await newPage.save();
 }
 
-async function savePage(id, pageData) {
+async function savePage(id, pageData, gjsOnly) {
     const oldPage = await PageData.findById(id);
-    Object.assign(oldPage, pageData);
+    // Whether we save the entire document or just what's under 'gjs' key
+    if (gjsOnly && gjsOnly !== 'false') {
+        // In this case the pageData has gjs-components and gjs-style (root) keys (only what is under 'gjs').
+        Object.assign(oldPage.gjs, pageData);
+    } else {
+        Object.assign(oldPage, pageData);
+    }
     return await oldPage.save();
 }
 
-async function loadPage(id) {
+async function loadPage(id, gjsOnly) {
     const page = await PageData.findById(id);
+    // Whether we load the entire document or just what's under 'gjs' key
+    if (gjsOnly && gjsOnly !== 'false') {
+        return page.gjs;
+    }
     return page;
 }
 
@@ -32,3 +45,12 @@ async function getBusinessPageIds(businessId) {
     const pages = await PageData.find({ business: businessId }).select('-gjs');
     return pages;
 }
+
+async function uploadHtml(pageId, html) {
+    await uploader.upload(`page_${pageId}.html`, html);
+}
+
+async function getHtmlFile(pageId) {
+    return uploader.toPath(`page_${pageId}.html`);
+}
+

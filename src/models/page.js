@@ -10,6 +10,11 @@ const PageDataSchema = new Schema({
     name: {
         type: String
     },
+    // We don't delete pages currently
+    // Instead just make them invisible
+    invisible: {
+        type: Boolean,
+    },
     gjs: {
         "gjs-components": {
             type: Array

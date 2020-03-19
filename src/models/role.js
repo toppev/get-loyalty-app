@@ -20,6 +20,7 @@ const roles = {
             'page:create': _ownPageOnly,
             'page:save': _ownPageOnly,
             'page:load': _ownPageOnly,
+            'page:upload': _ownPageOnly,
             'customer:update': true
         },
     },
