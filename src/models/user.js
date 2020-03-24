@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
+const rewardSchema = require('./reward');
 const { Schema } = mongoose;
 
 const purchaseSchema = new Schema({
@@ -28,14 +29,14 @@ const purchaseSchema = new Schema({
 const userSchema = new Schema({
     email: {
         type: String,
-        // 
         validate: {
             validator: async function (value) {
                 // Allow undefined
                 if (!value) {
                     return true;
                 }
-                return await User.find({ email: value });
+                const users = await User.find({ email: value });
+                return !users.length || (users[0].id === this.id && users.length === 1);
             }, message: 'Email is already taken.',
         },
         index: true
@@ -79,6 +80,7 @@ const userSchema = new Schema({
             default: 'user'
         },
         purchases: [purchaseSchema],
+        rewards: [rewardSchema],
         // Other customer properties that business can modify freely
         properties: {
             points: {
@@ -120,7 +122,9 @@ userSchema.methods.hasPermission = async function (operation, params) {
         }
     }
     const result = await role.can(userRole, operation, { businessId, ...params })
-        .catch(err => { throw err; });
+        .catch(err => {
+            throw err;
+        });
     return result;
 };
 
