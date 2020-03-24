@@ -13,7 +13,7 @@ module.exports = {
     getBusinessPageIds,
     uploadPage,
     getPageContent,
-    getScreenshot,
+    getThumbnail,
     getTemplates,
     getPageContext,
     renderPageView
@@ -88,7 +88,7 @@ async function createScreenshot(businessId, pageId) {
  * Get the screenshot file path if it exists, otherwise creates a new screenshot and finally returns it
  * @param {any} pageId the id of the page
  */
-async function getScreenshot(pageId) {
+async function getThumbnail(pageId) {
     const file = uploader.toPath(`ss_${pageId}.jpeg`);
     if (fs.existsSync(file)) {
         return file;

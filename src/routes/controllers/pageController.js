@@ -67,7 +67,8 @@ function getTemplates(req, res, next) {
 }
 
 function getThumbnail(req, res, next) {
-    pageService.getTemplates()
+    const pageId = req.params.pageId;
+    pageService.getThumbnail(pageId)
         .then(file => file ? res.sendFile(file) : res.sendStatus(404))
         .catch(err => next(err));
 }
