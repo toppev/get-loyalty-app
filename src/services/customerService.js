@@ -12,7 +12,7 @@ module.exports = {
 /**
  * Find the user's customerData for the given business
  * @param {object} user the user object
- * @param {Any} businessId value of business's `_id` to query by
+ * @param {any} businessId value of business's `_id` to query by
  */
 async function findCustomerData(user, businessId) {
     const data = user.customerData.find(_item => _item.business == businessId);
@@ -21,8 +21,8 @@ async function findCustomerData(user, businessId) {
 
 /**
  * Update customerData's "properties" object. Returns the new properties object.
- * @param {Any} userId value of the user's `_id` to query by
- * @param {Any} businessId value of business's `_id` to query by
+ * @param {any} userId value of the user's `_id` to query by
+ * @param {any} businessId value of business's `_id` to query by
  * @param {Object} updateProperties the updates to perform. Values of this object are copied to current properties.
  */
 async function updateCustomerProperties(userId, businessId, updateProperties) {
@@ -35,8 +35,8 @@ async function updateCustomerProperties(userId, businessId, updateProperties) {
 
 /**
  * Add a new purchase. The user's all purchases in the given business.
- * @param {Any} userId value of the user's `_id` to query by
- * @param {Any} businessId value of business's `_id` to query by
+ * @param {any} userId value of the user's `_id` to query by
+ * @param {any} businessId value of business's `_id` to query by
  * @param {object} purchase the new purchase 
  */
 async function addPurchase(userId, businessId, purchase) {
@@ -55,7 +55,7 @@ async function addPurchase(userId, businessId, purchase) {
 
 /**
  * Find the user of the given purchase
- * @param {Any} purchaseId value of purchase's `_id` to query by
+ * @param {any} purchaseId value of purchase's `_id` to query by
  */
 async function userByPurchaseId(purchaseId) {
     const result = await User.findOne({ "customerData.purchases._id": purchaseId });
@@ -64,7 +64,7 @@ async function userByPurchaseId(purchaseId) {
 
 /**
  * Find the business of the given purchase
- * @param {Any} purchaseId value of purchase's `_id` to query by
+ * @param {any} purchaseId value of purchase's `_id` to query by
  */
 async function businessFromPurchase(purchaseId) {
     const user = await userByPurchaseId(purchaseId);
@@ -77,7 +77,7 @@ async function businessFromPurchase(purchaseId) {
 /**
  * Finds one element from customerData that contains the given purchaseId
  * @param {object} user the user who owns the purchase
- * @param {Any} purchaseId value of purchase's `_id` to query by
+ * @param {any} purchaseId value of purchase's `_id` to query by
  */
 async function findCustomerDataFromPurchase(user, purchaseId) {
     for (let i in user.customerData) {
@@ -91,7 +91,7 @@ async function findCustomerDataFromPurchase(user, purchaseId) {
 /**
  * Update the given purchase. Throws an error if the purchase is not found.
  * Returns the users current purchases (with the updated purchase)
- * @param {Any} purchaseId value of purchase's `_id` to query by
+ * @param {any} purchaseId value of purchase's `_id` to query by
  * @param {object} purchase the updated version of the purchase
  */
 async function updatePurchase(purchaseId, purchase) {
@@ -113,7 +113,7 @@ async function updatePurchase(purchaseId, purchase) {
  * Delete the given purchases.
  * If the purchase doesn't exists in any user's purchases and error will be thrown.
  * Returns the list of purchases where the given purchase was (and is now removed)
- * @param {Any} purchaseId value of purchase's `_id` to query by
+ * @param {any} purchaseId value of purchase's `_id` to query by
  */
 async function deletePurchase(purchaseId) {
     const user = await userByPurchaseId(purchaseId);
@@ -131,8 +131,8 @@ async function deletePurchase(purchaseId) {
 
 /**
  * Find all purchases by the given user in the given business. Returns a list of purchases
- * @param {Any} id value of user's `_id` to query by
- * @param {Any} business the business or its id 
+ * @param {any} id value of user's `_id` to query by
+ * @param {any} business the business or its id
  */
 async function getPurchases(id, business) {
     const user = await User.findById(id);

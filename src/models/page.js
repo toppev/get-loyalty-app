@@ -15,6 +15,9 @@ const PageDataSchema = new Schema({
     invisible: {
         type: Boolean,
     },
+    template: {
+        type: Boolean
+    },
     gjs: {
         "gjs-components": {
             type: Array

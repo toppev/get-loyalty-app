@@ -9,7 +9,7 @@ module.exports = {
 
 /**
  * Create a new category
- * @param {Any} categoryParam the initial params, "official" key is always false in the returned category object
+ * @param {any} categoryParam the initial params, "official" key is always false in the returned category object
  */
 async function create(categoryParam) {
     const category = new Category(categoryParam);
@@ -44,7 +44,7 @@ async function find(query, type, limit = 100) {
 
 /**
  * Find a category by the given id
- * @param {Any} id the category id
+ * @param {any} id the category id
  */
 async function findById(id) {
     return await Category.findById(id);

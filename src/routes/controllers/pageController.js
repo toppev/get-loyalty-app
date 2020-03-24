@@ -1,15 +1,20 @@
 const router = require('express').Router({ mergeParams: true });
-const pageService = require('../../services/pageService')
+const pageService = require('../../services/pageService');
 const permit = require('../../middlewares/permitMiddleware');
 
-// Get any html, no perms needed
-router.get('/:pageId/html', getHtml);
+
+// Get templates (no html/css only other data)
+router.get('/templates', getTemplates);
 // List business's pages
 router.get('/list', permit('page:load'), listPages);
+// Get any html, no perms needed
+router.get('/:pageId/html', getHtml);
+// GET for screenshot/thumbnail
+router.get('/:pageId/thumbnail', getThumbnail);
 // Loading the GJS data
 router.get('/:pageId', permit('page:load'), loadPage);
 // Uploading html pages
-router.post('/:pageId/upload', permit('page:upload'), uploadHtml);
+router.post('/:pageId/upload', permit('page:upload'), uploadPage);
 // Saving the GJS data
 // Even though it's a post (because it's easier with grapesjs in frontend) pageService uses Object.assign so it works like a PATCH
 router.post('/:pageId', permit('page:save'), savePage);
@@ -48,16 +53,37 @@ function listPages(req, res, next) {
         .catch(err => next(err));
 }
 
-function uploadHtml(req, res, next) {
+function uploadPage(req, res, next) {
     const pageId = req.params.pageId;
-    pageService.uploadHtml(pageId, req.body.html)
+    pageService.uploadPage(pageId, req.body)
         .then(() => res.sendStatus(200))
         .catch(err => next(err));
 }
 
-function getHtml(req, res, next) {
-    const pageId = req.params.pageId;
-    pageService.getHtmlFile(pageId)
-        .then(file => res.sendFile(file))
+function getTemplates(req, res, next) {
+    pageService.getTemplates()
+        .then(data => data ? res.json(data) : res.sendStatus(404))
         .catch(err => next(err));
+}
+
+function getThumbnail(req, res, next) {
+    pageService.getTemplates()
+        .then(file => file ? res.sendFile(file) : res.sendStatus(404))
+        .catch(err => next(err));
+}
+
+async function getHtml(req, res, next) {
+    try {
+        const { pageId, businessId } = req.params;
+        const user = req.user;
+        const [content, context] = await Promise.all([
+            pageService.getPageContent(pageId),
+            pageService.getPageContext(businessId, user)
+        ]);
+        const html = await pageService.renderPageView(content, context);
+        res.send(html);
+        next();
+    } catch (error) {
+        next(error);
+    }
 }

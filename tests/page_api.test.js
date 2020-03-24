@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const pageService = require('../src/services/pageService');
 const businessService = require('../src/services/businessService');
 const User = require('../src/models/user');
 const app = require('../app');
@@ -44,6 +43,7 @@ describe('Logged in user with permissions can', () => {
             .expect(200);
         const resId = res.body._id;
         expect(resId).toBeDefined();
+        // eslint-disable-next-line require-atomic-updates
         testPageData.id = resId;
     });
 
@@ -89,27 +89,11 @@ describe('Logged in user with permissions can', () => {
         expect(res.body[0]._id).toBeTruthy();
     });
 
-    const htmlPage = `
-    <div>
-        <h1>Hello world!</h1>
-        <br>
-        <p>This is a test with åäö<p>
-    </div>
-    `;
-
-    it('upload page', async () => {
+    it('upload page html', async () => {
         const res = await api
             .post(`/business/${businessId}/page/${testPageData.id}/upload`)
             .set('Cookie', cookie)
             .send({ html: '<p>test</p>' })
-            .expect(200);
-    });
-
-    it('replace/update page', async () => {
-        const res = await api
-            .post(`/business/${businessId}/page/${testPageData.id}/upload`)
-            .set('Cookie', cookie)
-            .send({ html: htmlPage })
             .expect(200);
     });
 
@@ -118,7 +102,46 @@ describe('Logged in user with permissions can', () => {
             .get(`/business/${businessId}/page/${testPageData.id}/html`)
             .set('Cookie', cookie)
             .expect(200);
-        expect(res.text).toBe(htmlPage);
+        expect(res.text).toBe('<p>test</p>');
+    });
+
+    const htmlPage = `
+    <div>
+        <h1>Hello {{user.email}}!</h1>
+        <br>
+        <p>This is a test with åäö</p>
+    </div>
+    `;
+
+    const pageCss = `
+    h1 {
+        color: red;
+    }
+    `;
+
+    it('replace page html', async () => {
+        const res = await api
+            .post(`/business/${businessId}/page/${testPageData.id}/upload`)
+            .set('Cookie', cookie)
+            .send({ html: htmlPage, css: pageCss })
+            .expect(200);
+    });
+
+    const expectedPage = `
+    <div>
+        <h1 style="color: red;">Hello ${userParams.email}!</h1>
+        <br>
+        <p>This is a test with åäö</p>
+    </div>
+    `;
+
+
+    it('get page html with placeholder', async () => {
+        const res = await api
+            .get(`/business/${businessId}/page/${testPageData.id}/html`)
+            .set('Cookie', cookie)
+            .expect(200);
+        expect(res.text).toBe(expectedPage);
     });
 
 });
@@ -128,9 +151,13 @@ afterAll(() => {
     const { uploadDir } = require('../src/helpers/uploader');
 
     const fs = require('fs');
-    if (fs.readdirSync(uploadDir).length > 1) {
-        console.log(`Warning: not deleting upload directory ${uploadDir} because it has more files than it should`)
+    const files = fs.readdirSync(uploadDir);
+    if (files.length > 1) {
+        console.log(`Warning: not deleting upload directory ${uploadDir} because it has more files than expected`)
     } else {
-        fs.rmdir(uploadDir, { recursive: true });
+        files.forEach(file => {
+            fs.unlinkSync(uploadDir + '/' + file);
+        });
+        fs.rmdirSync(uploadDir);
     }
 });

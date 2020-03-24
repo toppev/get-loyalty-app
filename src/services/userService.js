@@ -75,7 +75,7 @@ async function getAll() {
 
 /**
  * Find a user by the given id. Returns the user without password field (password hash) 
- * @param {Any} id the user's _id field 
+ * @param {any} id the user's _id field
  */
 async function getById(id) {
     // If we use select(-password) hasPassword virtual will break
@@ -100,7 +100,7 @@ async function create(userParam) {
 
 /**
  * Update an existing user
- * @param {Any} id the user's _id field
+ * @param {any} id the user's _id field
  * @param {Object} updateParam the object with the values to update
  */
 async function update(id, updateParam) {
@@ -111,7 +111,7 @@ async function update(id, updateParam) {
 
 /**
  * Delete the given user from the database
- * @param {Any} id the user's _id field 
+ * @param {any} id the user's _id field
  */
 async function deleteUser(id) {
     await User.findByIdAndRemove(id);

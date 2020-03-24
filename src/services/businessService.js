@@ -7,12 +7,12 @@ module.exports = {
     update,
     setUserRole,
     getPublicInformation
-}
+};
 
 /**
  * Create a new business and promote its owner
  * @param {object} businessParam the business object to create with optional fields from {@link Business}
- * @param {Any} userId the owner's _id field. This user will be given 'business' rank 
+ * @param {any} userId the owner's _id field. This user will be given 'business' rank
  */
 async function createBusiness(businessParam, userId) {
     const business = new Business(businessParam);
@@ -23,7 +23,7 @@ async function createBusiness(businessParam, userId) {
 
 /**
  * Find a business by its id
- * @param {Any} id the business's _id field 
+ * @param {any} id the business's _id field
  */
 async function getBusiness(id) {
     return await Business.findById(id);
@@ -31,7 +31,7 @@ async function getBusiness(id) {
 
 /**
  * Update an business. Does not replace the business, instead only updates the given fields.
- * @param {Any} id the business's _id field 
+ * @param {any} id the business's _id field
  * @param {Object} updateParam the object whose fields will be copied to business.
  */
 async function update(id, updateParam) {
@@ -43,10 +43,10 @@ async function update(id, updateParam) {
 /**
  * Set the user's role in this business. Updates customerData of the user and returns an object with role and business's id:
  * @example {role: 'user', business: '5e38360f3afaeaff8581e78a'}
- * 
- * @param {Any} id the business's _id field 
- * @param {Any} userId the user's _id field
- * @param {string} role the role as a string 
+ *
+ * @param {any} id the business's _id field
+ * @param {any} userId the user's _id field
+ * @param {string} role the role as a string
  */
 async function setUserRole(id, userId, role) {
     const user = await User.findById(userId);
@@ -54,6 +54,7 @@ async function setUserRole(id, userId, role) {
         throw new Error("User " + userId + " was not found");
     }
     const data = user.customerData;
+    // FIXME replacing == with === will break
     const index = data.findIndex(_item => _item.business == id);
     if (index > -1) {
         data[index].role = role;
@@ -67,7 +68,7 @@ async function setUserRole(id, userId, role) {
 
 /**
  * Get the public available information, anything in the business's ´public´ field
- * @param {Any} id the business's _id field 
+ * @param {any} id the business's _id field
  */
 async function getPublicInformation(id) {
     return await Business.findById(id).select('public');
