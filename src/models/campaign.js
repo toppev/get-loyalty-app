@@ -1,47 +1,12 @@
 const mongoose = require('mongoose');
+const rewardSchema = require('./reward');
 const { Schema } = mongoose;
-
-const rewardSchema = new Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    description: {
-        type: String
-    },
-    // Either products or categories or both
-    // e.g -20% from normal tea and coffee or soft drinks
-    products: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Product'
-    }],
-    categories: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Category'
-    }],
-    // Value e.g "-20%", "2€", "free"
-    itemDiscount: {
-        type: String,
-        required: true
-    },
-    // Or/and just points
-    customerPoints: {
-        type: Schema.Types.Number,
-        default: 0
-    },
-    // The business decides
-    // e.g "only if meal", "if more than 10€"
-    // TODO: change?
-    requirement: {
-        type: String,
-    }
-});
 
 /**
  * Contains requirements to campaigns.
  * Each requirement may have "func" function that calculates if the requirement is met.
  * If humans are needed to answer the "question" attribute should be specified
- * 
+ *
  * Params to functions: values (supplied from database), user, purchase
  */
 const campaignRequirements = {
@@ -104,7 +69,7 @@ const campaignSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Category'
     }],
-    requirements: [ requirementSchema ],
+    requirements: [requirementSchema],
     // Each purchase's (or whatever) reward as customer points
     transactionPoints: {
         type: Schema.Types.Number,

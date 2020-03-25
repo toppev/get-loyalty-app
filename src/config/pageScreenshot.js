@@ -19,7 +19,7 @@ async function takeScreenshot(path, fileName, fullUrl = false) {
     request.get(SERVICE_URL, {
         json: { url: fullUrl ? path : BASE_URL + path }
     }, (err, res, body) => {
-        if (err || process.env.NODE_ENV !== 'test') {
+        if (err && process.env.NODE_ENV !== 'test') {
             console.log(`Failed to request a screenshot ${err}`)
         }
     }).pipe(fs.createWriteStream(`${fileName}.jpeg`));

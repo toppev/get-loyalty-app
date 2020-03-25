@@ -106,15 +106,17 @@ describe('Logged in user should', () => {
     });
 
     it('patch self', async () => {
+        // random email
+        const email = `example${Math.random()*10000 || 0}@email.com`;
         const res = await api
             .patch('/user/' + userId)
             .set('Cookie', cookie)
-            .send({ email: "example2@email.com" })
+            .send({ email: email })
             .expect(200);
-        expect(res.body.email).toEqual("example2@email.com");
+        expect(res.body.email).toEqual(email);
         // And was saved in database
         const user = await userService.getById(res.body._id);
-        expect(user.email).toEqual("example2@email.com");
+        expect(user.email).toEqual(email);
     });
 
     it('logout', async () => {

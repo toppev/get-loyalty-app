@@ -33,9 +33,7 @@ router.use('/business/:businessId/campaign', requireLogin, campaigns);
 router.use('/business/:businessId/product', requireLogin, products);
 // No need to be logged in to view pages
 router.use('/business/:businessId/page', page);
-// Unlike other controllers, rest of the path is defined in customerController.js
-// Because there are multiple different routes in there
-router.use('/business/:businessId', requireLogin, customer);
+router.use('/business/:businessId/customer/:userId', requireLogin, customer);
 
 router.get('/', (req, res) => {
   res.status(200).json({ message: 'Connected!' });

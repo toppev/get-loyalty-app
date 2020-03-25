@@ -13,7 +13,7 @@ const params = { reqParams: {} };
 const otherParams = { reqParams: {} };
 
 beforeAll(async () => {
-    const url = 'mongodb://127.0.0.1/kantis-test-role'
+    const url = 'mongodb://127.0.0.1/kantis-role-test'
     await mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
     await mongoose.connection.db.dropDatabase();
 
