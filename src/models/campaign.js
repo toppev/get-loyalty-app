@@ -70,6 +70,26 @@ const campaignSchema = new Schema({
         ref: 'Category'
     }],
     requirements: [requirementSchema],
+    // The code that will give the reward
+    // May be used for identifying so should be unique if only one per customer
+    couponCode: {
+        type: String
+    },
+    // Count total rewards here
+    rewardedCount: {
+        type: Number
+    },
+    maxRewards: {
+        // maximum number of rewards
+        total: {
+            type: Number,
+        },
+        // per user limit
+        user: {
+            type: Number,
+            default: 1
+        },
+    },
     // Each purchase's (or whatever) reward as customer points
     transactionPoints: {
         type: Schema.Types.Number,

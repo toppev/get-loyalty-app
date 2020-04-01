@@ -19,6 +19,11 @@ const rewardSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Category'
     }],
+    // campaigns using this reward
+    campaigns: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Campaign'
+    }],
     // Value e.g "-20%", "2€", "free"
     itemDiscount: {
         type: String,
@@ -34,7 +39,10 @@ const rewardSchema = new Schema({
     // TODO: change?
     requirement: {
         type: String,
-    }
+    },
+    expires: {
+        type: Date
+    },
 });
 
 module.exports = rewardSchema;

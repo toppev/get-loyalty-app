@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const Campaign = require('../models/campaign');
 
 module.exports = {
     addPurchase,
@@ -8,7 +9,9 @@ module.exports = {
     businessFromPurchase,
     updateCustomerProperties,
     addReward,
-    deleteReward
+    deleteReward,
+    addCampaignRewards,
+    canReceiveCampaignRewards
 
 }
 
@@ -150,7 +153,6 @@ async function getPurchases(id, business) {
  * @param reward the reward to give
  * @returns {Promise<[*]>} the user's updated customerData in the given business
  */
-// TODO: create test
 async function addReward(userId, businessId, reward) {
     const user = await User.findById(userId);
     let data = await findCustomerData(user, businessId);
@@ -168,13 +170,56 @@ async function addReward(userId, businessId, reward) {
 }
 
 /**
+ * Add all rewards from the campaign.
+ * Increases rewardedCount but does not perform any checks, (use #canReceiveCampaignRewards)
+ * 
+ * @returns all given rewards (campaign.endReward)
+ */
+// TODO: test
+async function addCampaignRewards(userId, campaign) {
+    if (campaign.endReward.length) {
+        campaign.endReward.forEach(reward => {
+            addReward(userId, campaign.business, reward)
+        })
+        campaign.rewardedCount++
+        await Campaign.save(campaign);
+    }
+    return campaign.endReward
+
+}
+
+/**
+ * Validate that the campaign is active and max rewards haven't been reached
+ */
+// TODO test
+async function canReceiveCampaignRewards(userId, businessId, campaign) {
+    const now = Date.now()
+    if (campaign.start > now) {
+        throw Error('The campaign has not strated yet')
+    }
+    if (campaign.end && campaign.end < now) {
+        throw Error('The campaign has already ended')
+    }
+    if (campaign.rewardedCount >= campaign.maxRewards.total) {
+        throw Error('The campaign has run out of rewards :(')
+    }
+    const user = await User.findById(userId);
+    const customerData = await findCustomerData(user, businessId);
+    const receivedRewards = customerData ? customerData.rewards : []
+    const receivedCount = receivedRewards.filter(reward => reward.campaigns == campaign.id).length
+    if(receivedCount >= campaign.maxRewards.user) {
+        throw Error('You have already received all rewards')
+    }
+    return true
+}
+
+/**
  * Remove the reward given by the specified business from the user's customer data
  * @param userId the user
  * @param businessId the business
  * @param rewardId the reward to remove
  * @returns {Promise<*[]>}
  */
-// TODO: create test
 async function deleteReward(userId, businessId, rewardId) {
     const user = await User.findById(userId);
     const customerData = await findCustomerData(user, businessId);

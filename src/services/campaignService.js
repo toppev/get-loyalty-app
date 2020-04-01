@@ -5,7 +5,8 @@ module.exports = {
     getById,
     create,
     update,
-    deleteCampaign
+    deleteCampaign,
+    byCouponCode
 };
 
 /**
@@ -13,7 +14,7 @@ module.exports = {
  * @param {any} businessId the business's _id field
  */
 async function getAllByBusinessId(businessId) {
-    return await Campaign.find({business: businessId});
+    return await Campaign.find({ business: businessId });
 }
 
 /**
@@ -41,7 +42,7 @@ async function create(businessId, campaign) {
  */
 async function update(campaignId, updatedCampaign) {
     // Update and return the new document
-    const campaign = await Campaign.findByIdAndUpdate(campaignId, updatedCampaign, {new: true});
+    const campaign = await Campaign.findByIdAndUpdate(campaignId, updatedCampaign, { new: true });
     return campaign;
 }
 
@@ -51,4 +52,8 @@ async function update(campaignId, updatedCampaign) {
  */
 async function deleteCampaign(campaignId) {
     return await Campaign.findByIdAndDelete(campaignId)
+}
+
+async function byCouponCode(businessId, couponCode) {
+    return await Campaign.find({ business: businessId, couponCode: couponCode });
 }

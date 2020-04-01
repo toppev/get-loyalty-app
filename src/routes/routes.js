@@ -6,6 +6,7 @@ const campaigns = require('./controllers/campaignController');
 const business = require('./controllers/businessController');
 const category = require('./controllers/categoryController');
 const page = require('./controllers/pageController');
+const coupon = require('./controllers/couponController');
 
 // Kinda useless? or is it?
 const requireLogin = (req, res, next) => {
@@ -34,9 +35,11 @@ router.use('/business/:businessId/product', requireLogin, products);
 // No need to be logged in to view pages
 router.use('/business/:businessId/page', page);
 router.use('/business/:businessId/customer/:userId', requireLogin, customer);
+// Coupon codes
+router.use('/business/:businessId/coupon', requireLogin, coupon);
 
 router.get('/', (req, res) => {
-  res.status(200).json({ message: 'Connected!' });
+  res.status(200).json({ message: 'Working!' });
 });
 
 module.exports = router;
