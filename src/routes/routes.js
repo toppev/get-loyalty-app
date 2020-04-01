@@ -26,7 +26,8 @@ router.use('/user', requireLogin.unless({
   ]
 }), users);
 
-router.use('/business', business);
+router.use('/business', requireLogin, business);
+// FIXME: requireLogin, not necessary and need to fix category tests
 router.use('/category', category)
 // So we can easily validate permissions with one middleware (using businessId param)
 // and admin panel will be easy to implement
