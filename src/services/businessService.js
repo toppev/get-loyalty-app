@@ -55,14 +55,14 @@ async function setUserRole(id, userId, role) {
     }
     const data = user.customerData;
     // FIXME replacing == with === will break
-    const index = data.findIndex(_item => _item.business == id);
+    const index = data.findIndex(_item => _item.business == id || _item.business.equals(id));
     if (index > -1) {
         data[index].role = role;
     } else {
         data.push({ business: id, role: role });
     }
     await user.save();
-    const newData = data.find(_item => _item.business == id);
+    const newData = data.find(_item => _item.business == id || _item.business.equals(id));
     return { role: newData.role, business: newData.business };
 }
 

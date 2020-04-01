@@ -55,5 +55,9 @@ async function deleteCampaign(campaignId) {
 }
 
 async function byCouponCode(businessId, couponCode) {
-    return await Campaign.find({ business: businessId, couponCode: couponCode });
+    const campaigns = await Campaign.find({ business: businessId, couponCode: couponCode });
+    if (campaigns.length > 1) {
+        console.warn(`Business ${businessId} has multiple campaigns with the code ${couponCode}`)
+    }
+    return campaigns[0];
 }

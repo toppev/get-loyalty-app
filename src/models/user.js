@@ -68,6 +68,9 @@ const userSchema = new Schema({
         }
     },
     customerData: [{
+        // no _id field
+        _id: false,
+        // identify by business
         business: {
             type: Schema.Types.ObjectId,
             ref: 'Business'
@@ -104,7 +107,7 @@ purchaseSchema.methods.populateProducts = function () {
 
 userSchema.methods.customerDataByBusiness = async function (business) {
     const id = business.id || business;
-    return this.customerData.find(data => data.business == id);
+    return this.customerData.find(data => data.business.equals(id));
 };
 
 /**

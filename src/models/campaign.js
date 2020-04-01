@@ -77,7 +77,8 @@ const campaignSchema = new Schema({
     },
     // Count total rewards here
     rewardedCount: {
-        type: Number
+        type: Number,
+        default: 0
     },
     maxRewards: {
         // maximum number of rewards

@@ -11,7 +11,8 @@ module.exports = {
     addReward,
     deleteReward,
     addCampaignRewards,
-    canReceiveCampaignRewards
+    canReceiveCampaignRewards,
+    findCustomerData
 
 }
 
@@ -21,7 +22,7 @@ module.exports = {
  * @param {any} businessId value of business's `_id` to query by
  */
 async function findCustomerData(user, businessId) {
-    const data = user.customerData.find(_item => _item.business == businessId);
+    const data = user.customerData.find(_item => _item.business.equals(businessId));
     return data;
 }
 
@@ -89,7 +90,7 @@ async function businessFromPurchase(purchaseId) {
 async function findCustomerDataFromPurchase(user, purchaseId) {
     for (let i in user.customerData) {
         const data = user.customerData[i];
-        if (data.purchases && data.purchases.findIndex(_p => _p._id == purchaseId) > -1) {
+        if (data.purchases && data.purchases.findIndex(_p => _p._id.equals(purchaseId)) > -1) {
             return data;
         }
     }
@@ -108,7 +109,7 @@ async function updatePurchase(userId, purchaseId, purchase) {
         throw Error('User not found');
     }
     const customerData = await findCustomerDataFromPurchase(user, purchaseId);
-    const newPurchases = customerData.purchases.map(obj => obj.id == purchaseId ? Object.assign(obj, purchase) : obj);
+    const newPurchases = customerData.purchases.map(obj => obj._id.equals(purchaseId) ? Object.assign(obj, purchase) : obj);
     if (newPurchases.length != customerData.purchases.length) {
         user.customerData.purchases = newPurchases;
         await user.save();
@@ -182,7 +183,7 @@ async function addCampaignRewards(userId, campaign) {
             addReward(userId, campaign.business, reward)
         })
         campaign.rewardedCount++
-        await Campaign.save(campaign);
+        await campaign.save();
     }
     return campaign.endReward
 
@@ -200,15 +201,17 @@ async function canReceiveCampaignRewards(userId, businessId, campaign) {
     if (campaign.end && campaign.end < now) {
         throw Error('The campaign has already ended')
     }
-    if (campaign.rewardedCount >= campaign.maxRewards.total) {
-        throw Error('The campaign has run out of rewards :(')
-    }
-    const user = await User.findById(userId);
-    const customerData = await findCustomerData(user, businessId);
-    const receivedRewards = customerData ? customerData.rewards : []
-    const receivedCount = receivedRewards.filter(reward => reward.campaigns == campaign.id).length
-    if(receivedCount >= campaign.maxRewards.user) {
-        throw Error('You have already received all rewards')
+    if (campaign.maxRewards) {
+        if (campaign.rewardedCount >= campaign.maxRewards.total) {
+            throw Error('The campaign has run out of rewards :(')
+        }
+        const user = await User.findById(userId);
+        const customerData = await findCustomerData(user, businessId);
+        const allReceivedRewards = customerData ? customerData.rewards : []
+        const receivedCount = allReceivedRewards.filter(reward => reward.campaigns.equals(campaign.id)).length
+        if (receivedCount >= campaign.maxRewards.user) {
+            throw Error('You have already received all rewards')
+        }
     }
     return true
 }

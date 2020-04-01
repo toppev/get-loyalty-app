@@ -4,10 +4,9 @@
 const router = require('express').Router({ mergeParams: true });
 const customerService = require('../../services/customerService');
 const campaignService = require('../../services/campaignService');
-const userService = require('../../services/userService');
 
 // Claim a coupon reward
-router.post('/{coupon}', getCoupon);
+router.post('/:coupon', getCoupon);
 
 module.exports = router;
 
