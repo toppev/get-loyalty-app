@@ -53,8 +53,20 @@ describe('Logged in user can', () => {
         const user = await userService.getById(userId)
         const data = await customerService.findCustomerData(user, business.id)
         const rewards = data.rewards;
+        console.log(userId, user, data, rewards, business.id)
         expect(rewards.length).toBe(1)
         expect(rewards[0].name).toBe(endReward.name)
+    });
+
+    it('not reclaim coupon rewards', async () => {
+        await api
+            .post(`/business/${business.id}/coupon/${couponCode}`)
+            .set('Cookie', cookie)
+            .expect(500);
+        const user = await userService.getById(userId)
+        const data = await customerService.findCustomerData(user, business.id)
+        const rewards = data.rewards;
+        expect(rewards.length).toBe(1)
     });
 
 });

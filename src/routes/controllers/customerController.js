@@ -7,7 +7,6 @@ const purchaseValidator = validation.validate(validation.purchaseValidator);
 const propertiesValidator = validation.validate(validation.customerPropertiesValidator);
 const rewardValidator = validation.validate(validation.rewardValidator);
 
-// userId param is the user
 router.post('/purchase/', permit('purchase:create'), purchaseValidator, newPurchase);
 router.patch('/purchase/:purchaseId', permit('purchase:update'), purchaseValidator, updatePurchase);
 router.delete('/purchase/:purchaseId', permit('purchase:delete'), deletePurchase);

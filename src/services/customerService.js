@@ -1,5 +1,4 @@
 const User = require('../models/user');
-const Campaign = require('../models/campaign');
 
 module.exports = {
     addPurchase,
@@ -14,7 +13,7 @@ module.exports = {
     canReceiveCampaignRewards,
     findCustomerData
 
-}
+};
 
 /**
  * Find the user's customerData for the given business
@@ -99,6 +98,7 @@ async function findCustomerDataFromPurchase(user, purchaseId) {
 /**
  * Update the given purchase. Throws an error if the purchase is not found.
  * Returns the users current purchases (with the updated purchase)
+ * @param {any} userId the user's id
  * @param {any} purchaseId value of purchase's `_id` to query by
  * @param {object} purchase the updated version of the purchase
  */
@@ -110,7 +110,7 @@ async function updatePurchase(userId, purchaseId, purchase) {
     }
     const customerData = await findCustomerDataFromPurchase(user, purchaseId);
     const newPurchases = customerData.purchases.map(obj => obj._id.equals(purchaseId) ? Object.assign(obj, purchase) : obj);
-    if (newPurchases.length != customerData.purchases.length) {
+    if (newPurchases.length !== customerData.purchases.length) {
         user.customerData.purchases = newPurchases;
         await user.save();
     }
@@ -121,6 +121,7 @@ async function updatePurchase(userId, purchaseId, purchase) {
  * Delete the given purchases.
  * If the purchase doesn't exists in any user's purchases and error will be thrown.
  * Returns the list of purchases where the given purchase was (and is now removed)
+ * @param {any} userId the user's id
  * @param {any} purchaseId value of purchase's `_id` to query by
  */
 async function deletePurchase(userId, purchaseId) {
@@ -129,8 +130,8 @@ async function deletePurchase(userId, purchaseId) {
         throw Error('User not found');
     }
     const customerData = await findCustomerDataFromPurchase(user, purchaseId);
-    const newPurchases = customerData.purchases.filter(purchase => purchase.id != purchaseId);
-    if (newPurchases.length != customerData.purchases.length) {
+    const newPurchases = customerData.purchases.filter(purchase => purchase.id.toString() !== purchaseId);
+    if (newPurchases.length !== customerData.purchases.length) {
         customerData.purchases = newPurchases;
         await user.save();
     }
@@ -159,15 +160,13 @@ async function addReward(userId, businessId, reward) {
     let data = await findCustomerData(user, businessId);
     if (!data) {
         // create customer data for this business
-        user.customerData.push({ business: businessId, rewards: [reward] });
+        user.customerData.push(data = { business: businessId, rewards: [reward] });
     }
     else {
         data.rewards.push(reward);
     }
     await user.save();
-    // return only this business's data
-    const newData = await findCustomerData(user, businessId);
-    return newData.rewards;
+    return data.rewards;
 }
 
 /**
@@ -180,9 +179,10 @@ async function addReward(userId, businessId, reward) {
 async function addCampaignRewards(userId, campaign) {
     if (campaign.endReward.length) {
         campaign.endReward.forEach(reward => {
-            addReward(userId, campaign.business, reward)
-        })
-        campaign.rewardedCount++
+            reward.campaign = campaign.id;
+            addReward(userId, campaign.business, reward);
+        });
+        campaign.rewardedCount++;
         await campaign.save();
     }
     return campaign.endReward
@@ -194,7 +194,7 @@ async function addCampaignRewards(userId, campaign) {
  */
 // TODO test
 async function canReceiveCampaignRewards(userId, businessId, campaign) {
-    const now = Date.now()
+    const now = Date.now();
     if (campaign.start > now) {
         throw Error('The campaign has not strated yet')
     }
@@ -207,8 +207,14 @@ async function canReceiveCampaignRewards(userId, businessId, campaign) {
         }
         const user = await User.findById(userId);
         const customerData = await findCustomerData(user, businessId);
-        const allReceivedRewards = customerData ? customerData.rewards : []
-        const receivedCount = allReceivedRewards.filter(reward => reward.campaigns.equals(campaign.id)).length
+        const allReceivedRewards = customerData ? customerData.rewards : [];
+        console.log("ASDASDASd");
+        console.log(allReceivedRewards);
+
+        const receivedCount = allReceivedRewards.filter(reward => reward.campaign.equals(campaign.id)).length;
+        console.log(campaign.id);
+        console.log(receivedCount);
+
         if (receivedCount >= campaign.maxRewards.user) {
             throw Error('You have already received all rewards')
         }
@@ -226,8 +232,8 @@ async function canReceiveCampaignRewards(userId, businessId, campaign) {
 async function deleteReward(userId, businessId, rewardId) {
     const user = await User.findById(userId);
     const customerData = await findCustomerData(user, businessId);
-    const newRewards = customerData.rewards.filter(reward => reward.id != rewardId);
-    if (newRewards.length != customerData.rewards.length) {
+    const newRewards = customerData.rewards.filter(reward => reward.id.toString() !== rewardId);
+    if (newRewards.length !== customerData.rewards.length) {
         customerData.rewards = newRewards;
         await user.save();
     }

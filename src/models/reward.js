@@ -19,11 +19,11 @@ const rewardSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Category'
     }],
-    // campaigns using this reward
-    campaigns: [{
+    // The campaign that rewarded this reward
+    campaign: {
         type: Schema.Types.ObjectId,
         ref: 'Campaign'
-    }],
+    },
     // Value e.g "-20%", "2€", "free"
     itemDiscount: {
         type: String,
