@@ -143,6 +143,16 @@ userSchema.methods.comparePassword = function (password) {
     return password && bcrypt.compareSync(password, this.password);
 };
 
+userSchema.set('toJSON', {
+    transform: function(doc, ret, options) {
+        // Just to be sure
+        // using field level select: false will break stuff
+        delete ret.password;
+        delete ret.superRole;
+        return ret;
+    }
+});
+
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;
