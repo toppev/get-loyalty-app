@@ -2,13 +2,17 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const PageDataSchema = new Schema({
+    name: {
+        type: String
+    },
+    // Mainly just for the templates
+    description: {
+      type: String
+    },
     business: {
         type: mongoose.Types.ObjectId,
         ref: 'Business',
         index: true
-    },
-    name: {
-        type: String
     },
     // We don't delete pages currently
     // Instead just make them invisible
