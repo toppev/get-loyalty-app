@@ -208,13 +208,7 @@ async function canReceiveCampaignRewards(userId, businessId, campaign) {
         const user = await User.findById(userId);
         const customerData = await findCustomerData(user, businessId);
         const allReceivedRewards = customerData ? customerData.rewards : [];
-        console.log("ASDASDASd");
-        console.log(allReceivedRewards);
-
         const receivedCount = allReceivedRewards.filter(reward => reward.campaign.equals(campaign.id)).length;
-        console.log(campaign.id);
-        console.log(receivedCount);
-
         if (receivedCount >= campaign.maxRewards.user) {
             throw Error('You have already received all rewards')
         }

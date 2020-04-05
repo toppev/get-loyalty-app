@@ -53,7 +53,6 @@ describe('Logged in user can', () => {
         const user = await userService.getById(userId)
         const data = await customerService.findCustomerData(user, business.id)
         const rewards = data.rewards;
-        console.log(userId, user, data, rewards, business.id)
         expect(rewards.length).toBe(1)
         expect(rewards[0].name).toBe(endReward.name)
     });
