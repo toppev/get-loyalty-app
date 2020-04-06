@@ -1,8 +1,11 @@
 import { Button, createStyles, LinearProgress, makeStyles, Theme, Typography } from '@material-ui/core';
+import SaveIcon from '@material-ui/icons/Save';
 import { Form, Formik, FormikErrors } from 'formik';
 import { TextField } from 'formik-material-ui';
 import React, { useState } from 'react';
+import Category from '../categories/Category';
 import CategoryChangeField from '../categories/CategorySelector';
+import IdText from '../common/IdText';
 import Product from './Product';
 
 export interface ProductFormProps {
@@ -11,7 +14,8 @@ export interface ProductFormProps {
 }
 
 
-const emptyProduct = { _id: Math.random().toString(), name: "", description: "", price: "", categories: [] };
+const categories: Category[] = [];
+const emptyProduct = { _id: `new_product_${Math.random() * 1000 | 0}`, name: "", description: "", price: "", categories: categories };
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -39,15 +43,6 @@ const useStyles = makeStyles((theme: Theme) =>
         submitButton: {
             margin: theme.spacing(3, 0, 2),
         },
-        itemId: {
-            [theme.breakpoints.down('sm')]: {
-                display: 'none',
-            },
-            color: 'rgba(0, 0, 0, 0.5)',
-            fontSize: '0.6em',
-            margin: '3px 0px 0px 0px',
-            textAlign: 'center',
-        },
     }));
 
 
@@ -55,7 +50,7 @@ export default function (props: ProductFormProps) {
 
     const classes = useStyles();
 
-    const product = props.initialProduct || emptyProduct
+    const product = props.initialProduct || emptyProduct;
     // CategoryChangeField is not formik field so keep track of categories here
     const [categories, setCategories] = useState(product.categories);
 
@@ -90,10 +85,11 @@ export default function (props: ProductFormProps) {
                             variant="contained"
                             color="primary"
                             disabled={isSubmitting}
+                            startIcon={(<SaveIcon />)}
                             onClick={submitForm}>Save</Button>
                     </div>
 
-                    <p className={classes.itemId}>ID: {product._id}</p>
+                    <IdText id={product._id} />
                 </Form>
             )}
             </Formik>

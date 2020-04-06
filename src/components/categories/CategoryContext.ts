@@ -6,9 +6,9 @@ export interface CategoryContextInterface {
     addCategory: (category: Category) => void,
 }
 
-export const defaultProductContext: CategoryContextInterface = {
+export const defaultCategoryContext: CategoryContextInterface = {
     categories: [],
     addCategory: () => { },
 }
 
-export default React.createContext<CategoryContextInterface>(defaultProductContext);
+export default React.createContext<CategoryContextInterface>(defaultCategoryContext);

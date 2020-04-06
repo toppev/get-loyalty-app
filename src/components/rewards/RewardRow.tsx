@@ -3,8 +3,8 @@ import Grid from '@material-ui/core/Grid';
 import EditIcon from '@material-ui/icons/Edit';
 import FastfoodIcon from '@material-ui/icons/Fastfood';
 import React, { useContext } from 'react';
-import Product from './Product';
-import ProductContext from './ProductContext';
+import Reward from './Reward';
+import RewardContext from './RewardContext';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -13,50 +13,34 @@ const useStyles = makeStyles((theme: Theme) =>
             marginBottom: '5px',
             padding: '5px 25px 5px 0px'
         },
-        paper: {
-
-        },
-        productItem: {
-
-        },
-        itemIcon: {
-
-        },
         icon: {
             marginLeft: '8px'
         },
         itemName: {
             margin: '5px',
         },
-        itemDesc: {
+        noMobile: {
             [theme.breakpoints.down('sm')]: {
                 display: 'none',
             },
         },
-        categories: {
-            [theme.breakpoints.down('sm')]: {
-                display: 'none',
-            },
-        },
-        editBtn: {
+        button: {
             margin: '10px 5px 5px 0px',
             width: '75px'
         },
-        removeBtn: {
-            margin: '10px 0px 5px 0px',
-            width: '75px'
-        }
     }));
 
-interface ProductRowProps {
-    product: Product,
+interface RewardRowProps {
+    reward: Reward,
     CustomActions?: JSX.Element
-    startEditing?: (product: Product) => any
+    startEditing?: (reward: Reward) => any
 }
 
-export default function (props: ProductRowProps) {
+export default function (props: RewardRowProps) {
 
     const classes = useStyles();
+
+    const { CustomActions, reward } = props;
 
     return (
         <div className={classes.rowDiv}>
@@ -71,19 +55,22 @@ export default function (props: ProductRowProps) {
                     <FastfoodIcon className={classes.icon} />
                 </Grid>
                 <Grid item xs={2} sm={2}>
-                    <b>{props.product.name}</b>
+                    <b>{reward.name}</b>
                 </Grid>
-                <Grid item sm={3} className={classes.itemDesc}>
-                    {props.product.description}
+                <Grid item sm={3} className={classes.noMobile}>
+                    {reward.description}
                 </Grid>
                 <Grid item xs={1} sm={1}>
-                    {props.product.price}
+                    {reward.itemDiscount}
                 </Grid>
-                <Grid item xs={2} sm={2} className={classes.categories}>
-                    {props.product.categories.map(c => c.name).join(", ")}
+                <Grid item xs={1} sm={1}>
+                    {reward.customerPoints && (<p>{reward.customerPoints} points</p>)}
+                </Grid>
+                <Grid item xs={2} sm={2} className={classes.noMobile}>
+                    {reward.products.map(p => p.name).join(", ")}
                 </Grid>
                 <Grid item xs={2} sm={2}>
-                    {props.CustomActions || <EditDeleteActions {...props} />}
+                    {CustomActions || <SelectAction {...props} />}
                 </Grid>
             </Grid>
 
@@ -91,33 +78,26 @@ export default function (props: ProductRowProps) {
     )
 }
 
-function EditDeleteActions(props: ProductRowProps) {
+function SelectAction(props: RewardRowProps) {
 
     const classes = useStyles();
 
-    const context = useContext(ProductContext);
+    const context = useContext(RewardContext);
 
 
     return (
         <>
             <Button
-                className={classes.editBtn}
+                className={classes.button}
                 startIcon={(<EditIcon />)}
                 onClick={() => {
                     if (props.startEditing) {
-                        props.startEditing(props.product);
+                        props.startEditing(props.reward);
                     }
                 }}
-                variant="contained" color="primary">Edit</Button>
-            <Button
-                className={classes.removeBtn}
-                color="secondary"
-                onClick={() => {
-                    if (window.confirm('Do you want to delete the item? This action is irreversible.')) {
-                        context.deleteProduct(props.product);
-                    }
-                }}
-            >Delete</Button>
+                variant="contained"
+                color="primary"
+            >Select</Button>
         </>
     )
 

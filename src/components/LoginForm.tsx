@@ -5,6 +5,8 @@ import { TextField } from 'formik-material-ui';
 import React from 'react';
 import { post } from '../config/axios';
 
+import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+
 interface FormValues {
     email: string,
     password: string
@@ -64,8 +66,18 @@ export function LoginForm() {
                     }}
                 >{({ submitForm, isSubmitting }) => (
                     <Form className={classes.form}>
-                        <TextField className={classes.field} name="email" type="email" placeholder="example@email.com" />
-                        <TextField className={classes.field} name="password" type="password" placeholder="password123" />
+                        <TextField
+                            className={classes.field}
+                            name="email"
+                            type="email"
+                            placeholder="example@email.com"
+                        />
+                        <TextField
+                            className={classes.field}
+                            name="password"
+                            type="password"
+                            placeholder="password123"
+                        />
                         {isSubmitting && <LinearProgress />}
                         <br />
                         <div className={classes.submitDiv}>
@@ -73,6 +85,7 @@ export function LoginForm() {
                                 variant="contained"
                                 color="primary"
                                 disabled={isSubmitting}
+                                startIcon={<NavigateNextIcon/>}
                                 onClick={submitForm}>Login</Button>
                         </div>
                     </Form>
@@ -91,7 +104,7 @@ async function validate(values: FormValues) {
     if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
         errors.email = 'Invalid email address';
     }
-    if (values.password.length < 5) {
+    if (values.password.length <= 6) {
         errors.password = "Doesn't look like a password";
     }
     return errors;

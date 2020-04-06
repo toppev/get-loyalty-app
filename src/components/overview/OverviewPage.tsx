@@ -82,7 +82,7 @@ export default function () {
                     <div>
                         <Paper className={classes.paper}>
                             <Typography className={classes.sectionTypography} variant="h6" align="center">
-                                Public Information
+                                Public Information (optional)
                             </Typography>
                             <Form>
                                 <TextField

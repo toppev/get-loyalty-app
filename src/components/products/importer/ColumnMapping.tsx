@@ -1,6 +1,7 @@
 import { Button, createStyles, Grid, LinearProgress, makeStyles, MenuItem, Select, Theme, Typography } from "@material-ui/core";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import React from "react";
+import ViewHeadlineIcon from '@material-ui/icons/ViewHeadline';
 
 interface Props {
     initialFields: KeyValue,
@@ -101,6 +102,7 @@ export default function (props: Props) {
                             variant="contained"
                             color="primary"
                             disabled={isSubmitting}
+                            startIcon={(<ViewHeadlineIcon/>)}
                             onClick={submitForm}>Preview Products</Button>
 
                         {isSubmitting && <LinearProgress />}

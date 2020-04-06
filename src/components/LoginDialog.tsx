@@ -10,9 +10,9 @@ import { LoginForm } from './LoginForm';
 
 export default function LoginDialog() {
 
-    const context = useContext(AppContext);
+    const appContext = useContext(AppContext);
 
-    const [open, setOpen] = React.useState(!context.loggedIn);
+    const [open, setOpen] = React.useState(!appContext.loggedIn);
     const [error, setError] = React.useState("");
     const [submitting, setSubmitting] = React.useState(false);
 
@@ -20,7 +20,7 @@ export default function LoginDialog() {
         setSubmitting(true);
         setError("");
         post('/user/register', {})
-            .then(() => {
+            .then((data) => {
                 setOpen(false);
             }).catch(err => {
                 console.log("Error when creating an account: " + err);

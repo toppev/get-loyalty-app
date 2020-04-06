@@ -7,8 +7,9 @@ export interface AppContextInterface {
 }
 
 export interface User {
-    email: string,
-
+    _id: any
+    email: string
+    hasPassword: boolean
 }
 
 export interface Business {
@@ -22,7 +23,9 @@ export const defaultAppContext: AppContextInterface = {
         categories: []
     },
     user: {
-        email: 'test@example.com'
+        email: 'test@example.com',
+        hasPassword: false,
+        _id: 'testid1234'
     },
     loggedIn: false,
 }

@@ -1,3 +1,4 @@
+import { Badge } from '@material-ui/core';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
@@ -14,12 +15,13 @@ import PhoneIcon from '@material-ui/icons/MobileFriendly';
 import PagesIcon from '@material-ui/icons/Pages';
 import PeopleIcon from '@material-ui/icons/People';
 import PermMediaOutlinedIcon from '@material-ui/icons/PhotoSizeSelectActual';
-import PublicIcon from '@material-ui/icons/Public';
 import RedeemIcon from '@material-ui/icons/Redeem';
 import SettingsIcon from '@material-ui/icons/Settings';
 import clsx from 'clsx';
 import React from 'react';
 import { NavLink } from "react-router-dom";
+import { NotificationValues } from '../Notifications';
+import LocalOfferIcon from '@material-ui/icons/LocalOffer';
 
 const drawerWidth = 240;
 
@@ -28,8 +30,8 @@ const categories = [
         id: 'Business',
         children: [
             { id: 'Overview', icon: <AppsIcon />, to: '/' },
-            { id: 'Campaigns', icon: <RedeemIcon />, to: '/campaigns' },
             { id: 'Products', icon: <PermMediaOutlinedIcon />, to: '/products' },
+            { id: 'Campaigns', icon: <RedeemIcon />, to: '/campaigns' },
             { id: 'Customers', icon: <PeopleIcon />, to: '/customers' },
         ],
     },
@@ -56,7 +58,7 @@ const useStyles = makeStyles((theme: Theme) =>
             paddingBottom: theme.spacing(2),
         },
         categoryHeaderPrimary: {
-            color: 'gray',
+            color: theme.palette.grey[500],
             fontSize: 14
         },
         item: {
@@ -78,7 +80,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         active: {
             color: '#16c795',
-            backgroundColor: '#f5f5f5'
+            backgroundColor: theme.palette.grey[200]
         },
         itemPrimary: {
             fontSize: 'inherit',
@@ -127,11 +129,12 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export interface NavigatorProps {
 
-    handleDrawerToggle: Function
-    open: boolean
+    handleDrawerToggle: () => any
+    open: boolean,
+    notifications: NotificationValues
 }
 
-function Navigator(props: NavigatorProps) {
+export default function Navigator(props: NavigatorProps) {
     const classes = useStyles();
 
     const drawer = (<List disablePadding>
@@ -175,7 +178,12 @@ function Navigator(props: NavigatorProps) {
                         activeClassName={classes.active}
                         className={clsx(classes.item)}
                     >
-                        <ListItemIcon className={classes.itemIcon}>{icon}</ListItemIcon>
+                        <ListItemIcon className={classes.itemIcon}>
+                            <Badge
+                                badgeContent={props.notifications[childId]}
+                                color="secondary"
+                            >{icon}</Badge>
+                        </ListItemIcon>
                         <ListItemText
                             classes={{
                                 primary: classes.itemPrimary,
@@ -185,7 +193,7 @@ function Navigator(props: NavigatorProps) {
                         </ListItemText>
                     </ListItem>
                 ))}
-                <div className={classes.divider}/>
+                <div className={classes.divider} />
             </React.Fragment>
         ))}
     </List>);
@@ -204,7 +212,9 @@ function Navigator(props: NavigatorProps) {
                         }}
                         {...props}
                     >
-                        <IconButton onClick={(event: React.MouseEvent<HTMLElement>) => { props.handleDrawerToggle() }} className={classes.closeMenuButton}>
+                        <IconButton
+                            onClick={(event: React.MouseEvent<HTMLElement>) => { props.handleDrawerToggle() }}
+                            className={classes.closeMenuButton}>
                             <CloseIcon />
                         </IconButton>
                         {drawer}
@@ -224,5 +234,3 @@ function Navigator(props: NavigatorProps) {
         </div>
     );
 }
-
-export default Navigator;

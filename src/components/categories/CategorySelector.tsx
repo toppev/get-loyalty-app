@@ -29,16 +29,15 @@ export default function (props: Props) {
     }, []);
 
     return (
+        // FIXME: does not render new values properly and is complaining of changing defaultValue because 1 editor is used for all products
+        // renderOption crashes and getOptionLabel only renders default values correctly
         <Autocomplete
             defaultValue={props.initialCategories}
             options={allCategories}
-
-            renderOption={option => option.name}
-            filterSelectedOptions
             autoSelect
-            disableOpenOnFocus
             multiple
             freeSolo
+            getOptionLabel={c => c.name}
 
             onChange={(event, values: any[]) => {
                 setCategories(values.map(value => {

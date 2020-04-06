@@ -1,115 +1,114 @@
-import { CssBaseline, isWidthUp, withWidth } from '@material-ui/core';
-import { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
-import React, { lazy, Suspense } from 'react';
+import { CssBaseline, useMediaQuery, useTheme } from '@material-ui/core';
+import React, { lazy, Suspense, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import './App.css';
 import Navigator from './components/Navigator';
-import PageEditor from './components/pages/PageEditor';
 import ProductContext from './components/products/ProductContext';
 import { useProductOperations } from './components/products/ProductHook';
-import AppContext, { defaultAppContext } from './context/AppContext';
+import AppContext, { AppContextInterface, defaultAppContext } from './context/AppContext';
 import Header from './Header';
-import AccountPage from './components/products/AccountPage';
+import { NotificationValues } from './Notifications';
 // Lazy Pages
 const OverviewPage = lazy(() => import('./components/overview/OverviewPage'));
 const ProductPage = lazy(() => import('./components/products/ProductPage'));
 const PagesPage = lazy(() => import('./components/pages/PagesPage'));
+const AccountPage = lazy(() => import('./components/account/AccountPage'));
 
-interface Props {
-  width: Breakpoint
-}
 
-interface State {
-  navDrawerOpen: boolean
-}
 
-class App extends React.Component<Props, State> {
+export default function () {
 
-  state = {
-    navDrawerOpen: false
+  const [navDrawerOpen, setNavDrawerOpen] = useState(false);
+  const [notifications, setNotifications] = useState<NotificationValues>({})
+  const [appContext, setAppContext] = useState<AppContextInterface>(defaultAppContext);
+
+  useEffect(() => {
+
+    const { user } = appContext;
+
+    setNotifications(notifications => {
+      // +1 if email is missing, +1 if password is missing
+      notifications['My Account'] = (+!!!user.email) + (+!!!user.hasPassword);
+      return notifications;
+    });
+  }, [appContext]);
+
+  const handleDrawerToggle = () => {
+    setNavDrawerOpen(!navDrawerOpen);
+  }
+
+  const paddingLeftDrawerOpen = 236;
+
+  const theme = useTheme();
+  const notMobile = useMediaQuery(theme.breakpoints.up('sm'));
+
+  const styles = {
+    header: {
+      paddingRight: notMobile && navDrawerOpen ? paddingLeftDrawerOpen : 0
+    },
+    bodyDiv: {
+      margin: '80px 20px 20px 15px',
+      paddingLeft: notMobile ? paddingLeftDrawerOpen + 15 : 0
+    },
+    loadingDiv: {
+      color: 'gray',
+    },
   };
 
-  handleDrawerToggle() {
-    this.setState({
-      navDrawerOpen: !this.state.navDrawerOpen
-    });
-  }
+  return (
+    <div style={styles.bodyDiv}>
 
-  render() {
+      <CssBaseline />
 
-    let { navDrawerOpen } = this.state;
-    const paddingLeftDrawerOpen = 236;
-    const notMobile = isWidthUp('sm', this.props.width);
-
-    const styles = {
-      header: {
-        paddingRight: notMobile && navDrawerOpen ? paddingLeftDrawerOpen : 0
-      },
-      bodyDiv: {
-        margin: '80px 20px 20px 15px',
-        paddingLeft: notMobile ? paddingLeftDrawerOpen + 15 : 0
-      },
-      loadingDiv: {
-        color: 'gray',
-      },
-    };
-
-    return (
-      <div style={styles.bodyDiv}>
-
-        <CssBaseline />
-
-        <Router>
+      <Router>
+        {
+          // TODO: Remove the testing
+        }
+        <AppContext.Provider value={appContext}>
+          <Header handleDrawerToggle={handleDrawerToggle} />
+          <div onClick={() => !notMobile && handleDrawerToggle()}>
+            <Navigator notifications={notifications} handleDrawerToggle={handleDrawerToggle} open={navDrawerOpen} />
+          </div>
           {
-            // TODO: Remove the testing
+            // <LoginDialog />
           }
-          <AppContext.Provider value={defaultAppContext}>
+          <Suspense
+            fallback={(
+              <div style={styles.loadingDiv}>
+                <h2>Loading...</h2>
+              </div>
+            )}>
+            <Switch>
+              <Route exact path="/">
+                <OverviewPage />
+              </Route>
+              <Route path="/products">
+                <DefaultProductsPage />
+              </Route>
+              <Route path="/campaigns">
 
-            <Header handleDrawerToggle={this.handleDrawerToggle.bind(this)} />
-            <div onClick={() => !notMobile && this.handleDrawerToggle.bind(this)()}>
-              <Navigator handleDrawerToggle={this.handleDrawerToggle.bind(this)} open={navDrawerOpen} />
-            </div>
-            {
-              //  <LoginDialog/>
-            }
-            <Suspense
-              fallback={(
-                <div style={styles.loadingDiv}>
-                  <h2>Loading...</h2>
-                </div>
-              )}>
-              <Switch>
-                <Route exact path="/">
-                  <OverviewPage />
-                </Route>
-                <Route path="/products">
-                  <DefaultProductsPage />
-                </Route>
-                <Route path="/campaigns">
+              </Route>
+              <Route path="/customers">
 
-                </Route>
-                <Route path="/customers">
+              </Route>
+              <Route path="/pages">
+                <PagesPage />
+              </Route>
+              <Route path="/demo">
 
-                </Route>
-                <Route path="/pages">
-                  <PageEditor />
-                </Route>
-                <Route path="/demo">
+              </Route>
+              <Route path="/account">
+                <AccountPage />
+              </Route>
+              <Route path="/settings">
 
-                </Route>
-                <Route path="/account">
-                  <AccountPage/>
-                </Route>
-                <Route path="/settings">
-
-                </Route>
-              </Switch>
-            </Suspense>
-          </AppContext.Provider>
-        </Router >
-      </div>
-    );
-  }
+              </Route>
+            </Switch>
+          </Suspense>
+        </AppContext.Provider>
+      </Router >
+    </div>
+  );
 }
 
 function DefaultProductsPage() {
@@ -122,6 +121,3 @@ function DefaultProductsPage() {
     </ProductContext.Provider>
   )
 }
-
-
-export default withWidth()(App);

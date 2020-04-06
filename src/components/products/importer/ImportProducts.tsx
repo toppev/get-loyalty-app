@@ -1,9 +1,12 @@
 import { Button, ButtonProps, createStyles, Dialog, DialogContent, DialogContentText, IconButton, LinearProgress, makeStyles, Theme, Typography } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
-import React, { ReactElement, useState } from 'react';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import GetAppIcon from '@material-ui/icons/GetApp';
+import React, { ReactElement, useContext, useState } from 'react';
 import { post, uploadFile } from '../../../config/axios';
 import Product from '../Product';
 import ProductContext from '../ProductContext';
+import ProductFormDialog from '../ProductFormDialog';
 import { useProductOperations } from '../ProductHook';
 import ProductRow from '../ProductRow';
 import ColumnMapping, { KeyValue } from './ColumnMapping';
@@ -140,7 +143,13 @@ export default function ImportProducts(props: Props): ReactElement {
     ) : (
             <div>
                 <div className={classes.submitDiv}>
-                    <Button {...props} aria-haspopup="true" variant="contained" onClick={toggleDialogOpen}>Import Products</Button>
+                    <Button
+                        {...props}
+                        aria-haspopup="true"
+                        variant="contained"
+                        onClick={toggleDialogOpen}
+                        startIcon={(<GetAppIcon />)}
+                    >Import Products</Button>
                 </div>
                 <Dialog open={dialogOpen} aria-labelledby="form-dialog-title">
                     <IconButton className={classes.closeButton} aria-label="close" onClick={resetImport}>
@@ -189,6 +198,7 @@ export default function ImportProducts(props: Props): ReactElement {
                             color="secondary"
                             variant="contained"
                             disabled={submittingFile || !!!file}
+                            startIcon={(<CloudUploadIcon />)}
                         > Import File</Button >
                     </div>
 
@@ -221,6 +231,11 @@ function ProductPreview({ open, onClickClose }: PreviewProps) {
 
     const classes = useStyles();
 
+    const context = useContext(ProductContext);
+
+    const [formOpen, setFormOpen] = useState(false);
+    const [editingProduct, setEditingProduct] = useState<Product | undefined>();
+
     return (
 
         <Dialog open={open} fullWidth={true}>
@@ -236,11 +251,30 @@ function ProductPreview({ open, onClickClose }: PreviewProps) {
                     {({ products }) => (
                         <ul>
                             {products
-                                .map((item, index) => <ProductRow key={index} product={item} />)
+                                .map((item, index) => <ProductRow key={index} product={item} startEditing={(product) => setEditingProduct(product)} />)
                             }
                         </ul>
                     )}
                 </ProductContext.Consumer>
+
+                <ProductFormDialog
+                    open={formOpen || !!editingProduct}
+                    initialProduct={editingProduct}
+                    onClose={() => {
+                        setFormOpen(false);
+                        setEditingProduct(undefined);
+                    }}
+                    onProductSubmitted={(product: Product) => {
+                        // Whether it's a new product or editing
+                        if (!editingProduct) {
+                            context.addProducts([product]);
+                        } else {
+                            context.updateProduct(product);
+                        }
+                        setFormOpen(false);
+                        setEditingProduct(undefined);
+                    }} />
+
                 <div className={classes.submitDiv}>
                     <Button
                         className={classes.submitButton}
