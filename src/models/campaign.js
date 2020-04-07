@@ -1,42 +1,21 @@
 const mongoose = require('mongoose');
 const rewardSchema = require('./reward');
+const campaignTypes = require('./campaignTypes');
 const { Schema } = mongoose;
 
-/**
- * Contains requirements to campaigns.
- * Each requirement may have "func" function that calculates if the requirement is met.
- * If humans are needed to answer the "question" attribute should be specified
- *
- * Params to functions: values (supplied from database), user, purchase
- */
-const campaignRequirements = {
-    ifPurchaseGreaterThan: {
-        // We don't know the price so ask a human
-        // {0} is the value parameter
-        question: "Is the price of the purchase more than {0}?"
-    },
-    ifBirthday: {
-        // TODO
-        func: function (values, user, purchase) {
-
-        },
-    },
-    // TODO: more campagin types (e.g. buy x number in x days)
-};
 
 const requirementSchema = new Schema({
-    requirement: {
+    type: {
         type: String,
-        enum: Object.keys(campaignRequirements)
+        enum: Object.keys(campaignTypes)
     },
-    // TODO: what kinda values or how idk
     values: [{
         type: String
     }],
     question: {
         type: String,
         default: function () {
-            return campaignRequirements[this.requirement].question;
+            return campaignTypes[this.type].question;
         }
     }
 });
