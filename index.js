@@ -33,4 +33,5 @@ module.exports = {
         },
     },
     // TODO: more campagin types (e.g. buy x number in x days)
+
 };
