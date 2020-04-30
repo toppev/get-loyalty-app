@@ -11,7 +11,7 @@ module.exports = {
 }
 
 /**
- * Request the service to take a screenshot of the given url
+ * Request the service to take a screenshot of the given url and save it in a file
  * @param {string} path the url to screenshot
  * @param {string} fileName the name of the file without suffix
  */

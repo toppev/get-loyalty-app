@@ -2,7 +2,12 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const configSchema = new Schema({
-    // TODO: config values
+    // Al
+    pointsName: {
+        type: String,
+        default: 'points'
+    },
+
 });
 
 const businessSchema = new Schema({

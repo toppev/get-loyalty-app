@@ -106,6 +106,14 @@ describe('Logged in user with permissions can modify customer rewards', () => {
 
 describe('Logged in user with permissions can modify customer data', () => {
 
+    it('get customer', async() => {
+        const res = await api
+            .get(`/business/${business.id}/customer/${userId}`)
+            .set('Cookie', cookie)
+            .expect(200);
+        expect(res.body.customerData.business).toBe(business.id)
+    });
+
     it('update customer points (properties)', async () => {
         const data = {
             points: 100
@@ -115,7 +123,7 @@ describe('Logged in user with permissions can modify customer data', () => {
             .send(data)
             .set('Cookie', cookie)
             .expect(200);
-        expect(res.body.points).toBe(data.points);
+        expect(res.body.properties.points).toBe(data.points);
     });
 });
 

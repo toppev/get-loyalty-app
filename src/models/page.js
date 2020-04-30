@@ -7,7 +7,7 @@ const PageDataSchema = new Schema({
     },
     // Mainly just for the templates
     description: {
-      type: String
+        type: String
     },
     business: {
         type: mongoose.Types.ObjectId,
@@ -16,8 +16,10 @@ const PageDataSchema = new Schema({
     },
     // We don't delete pages currently
     // Instead just make them invisible
-    invisible: {
-        type: Boolean,
+    stage: {
+        type: String,
+        enum: ['unpublished', 'published', 'discarded'],
+        default: 'unpublished'
     },
     template: {
         type: Boolean

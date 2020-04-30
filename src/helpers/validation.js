@@ -71,7 +71,13 @@ const businessValidator = ajv.compile({
         },
         // Do we really need to validate this?
         "config": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+                "pointsName": {
+                    "type": "string",
+                    "maxLength": 20
+                }
+            }
         },
         "public": {
             "type": "object",

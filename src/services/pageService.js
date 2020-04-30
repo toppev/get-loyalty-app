@@ -65,9 +65,9 @@ async function uploadPage(pageId, { html, css }) {
     if (page) {
         createScreenshot(page.business, pageId)
             .then(() => {
-
+                console.log(`Created or updated page thumbnail of ${pageId}`)
             })
-            .catch(_err => console.error(`Failed to create a screenshot of ${pageId} page`));
+            .catch(err => console.error(`Failed to create a screenshot of ${pageId} page: ${err}`));
     } else {
         console.log(`Page with invalid id was uploaded ${pageId}`);
     }
@@ -79,7 +79,7 @@ async function createScreenshot(businessId, pageId) {
     try {
         await pageScreenshot.takeScreenshot(pagePath, uploader.toPath(fileName));
     } catch (err) {
-        console.log(`Failed to create a screenshot ${err}`);
+        console.log(`Failed to create a screenshot ${err.message}`);
     }
     return fileName;
 }

@@ -21,7 +21,9 @@ const roles = {
             'page:save': _ownPageOnly,
             'page:load': _ownPageOnly,
             'page:upload': _ownPageOnly,
+            // Will only return this business's view anyway
             'customer:update': true,
+            'customer:get': true,
             'reward:*': true
         },
     },

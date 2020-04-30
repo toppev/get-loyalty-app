@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const rewardSchema = require('./reward');
-const campaignTypes = require('./campaignTypes');
+const campaignTypes = require('@toppev/loyally-campaigns');
 const { Schema } = mongoose;
 
 
