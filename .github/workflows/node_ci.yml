@@ -20,9 +20,10 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+    - name: Authenticate with GitHub package registry
+      run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" > ~/.npmrc
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
       env:
         CI: true
-        NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
