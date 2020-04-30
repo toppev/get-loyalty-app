@@ -16,10 +16,8 @@
     "url": "https://github.com/toppev/loyally-campaigns/issues"
   },
   "homepage": "https://github.com/toppev/loyally-campaigns#readme",
-  "dependencies": {
-    "jest": "^25.4.0"
-  },
   "devDependencies": {
+    "jest": "^25.4.0",
     "eslint": "^6.8.0",
     "eslint-plugin-jest": "^23.8.2"
   }
