@@ -2,10 +2,15 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const configSchema = new Schema({
-    // Al
     pointsName: {
-        type: String,
-        default: 'points'
+        singular: {
+            type: String,
+            default: 'point'
+        },
+        plural: {
+            type: String,
+            default: 'points'
+        }
     },
 
 });

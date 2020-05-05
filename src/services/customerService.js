@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const StatusError = require('../helpers/statusError');
 
 module.exports = {
     addPurchase,
@@ -252,7 +253,7 @@ async function canReceiveCampaignRewards(userId, businessId, campaign) {
         const allReceivedRewards = customerData ? customerData.rewards : [];
         const receivedCount = allReceivedRewards.filter(reward => reward.campaign.equals(campaign.id)).length;
         if (receivedCount >= campaign.maxRewards.user) {
-            throw Error('You have already received all rewards')
+            throw new StatusError('You have already received all rewards', 403)
         }
     }
     return true

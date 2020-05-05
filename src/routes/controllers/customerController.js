@@ -7,29 +7,6 @@ const purchaseValidator = validation.validate(validation.purchaseValidator);
 const propertiesValidator = validation.validate(validation.customerPropertiesValidator);
 const rewardValidator = validation.validate(validation.rewardValidator);
 
-
-// Workaround for now
-// TODO: clean up
-function customerValidator(req, res, next) {
-    const { purchases, rewards, properties } = req.body;
-    purchases.forEach(purchase => {
-        validation.purchaseValidator(purchase)
-            .then(() => {
-                rewards.forEach(reward => {
-                    validation.rewardValidator(reward)
-                        .then(() => {
-                            validation.customerPropertiesValidator(properties)
-                                .then(allowed => next())
-                                .catch(err => next(err));
-                        })
-                        .catch(err => next(err));
-                })
-            })
-            .catch(err => next(err));
-    })
-
-}
-
 router.post('/purchase/', permit('purchase:create'), purchaseValidator, newPurchase);
 router.patch('/purchase/:purchaseId', permit('purchase:update'), purchaseValidator, updatePurchase);
 router.delete('/purchase/:purchaseId', permit('purchase:delete'), deletePurchase);
@@ -38,29 +15,13 @@ router.post('/rewards', permit('reward:update'), rewardValidator, updateRewards)
 router.delete('/reward/:rewardId', permit('reward:revoke'), rewardValidator, revokeReward);
 router.post('/reward', permit('reward:give'), rewardValidator, giveReward);
 
-// TODO: do we really want this? Should probably avoid using this?
-router.post('/update', permit('customer:update'), customerValidator, updateCustomer); // TODO: test
+router.patch('/properties', permit('customer:update'), propertiesValidator, updateCustomerProperties);
 
-router.patch('/', permit('customer:update'), propertiesValidator, updateCustomerProperties);
-
-router.get('/', permit('customer:get'), getCustomerData); // TODO: test
+router.get('/', permit('customer:get'), getCustomerData);
 
 module.exports = router;
 
-function updateCustomerProperties(req, res, next) {
-    const userId = req.params.userId;
-    customerService.updateCustomerProperties(userId, req.params.businessId, req.body)
-        .then(properties => res.json(properties))
-        .catch(err => next(err));
-}
-
-function updateCustomer(req, res, next) {
-    const { businessId, userId } = req.params;
-    customerService.updateCustomer(userId, businessId, req.body)
-        .then(data => res.json({ customer: data }))
-        .catch(err => next(err));
-}
-
+// PURCHASES
 function newPurchase(req, res, next) {
     const { businessId, userId } = req.params;
     customerService.addPurchase(userId, businessId, req.body)
@@ -82,6 +43,7 @@ function deletePurchase(req, res, next) {
         .catch(err => next(err));
 }
 
+// REWARDS
 function giveReward(req, res, next) {
     const { businessId, userId } = req.params;
     customerService.addReward(userId, businessId, req.body)
@@ -105,9 +67,17 @@ function revokeReward(req, res, next) {
         .catch(err => next(err));
 }
 
+// OTHER DATA
 function getCustomerData(req, res, next) {
     const { businessId, userId } = req.params;
     customerService.findCustomerData(userId, businessId)
         .then(data => res.json({ customerData: data }))
+        .catch(err => next(err));
+}
+
+function updateCustomerProperties(req, res, next) {
+    const userId = req.params.userId;
+    customerService.updateCustomerProperties(userId, req.params.businessId, req.body)
+        .then(properties => res.json(properties))
         .catch(err => next(err));
 }

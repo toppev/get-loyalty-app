@@ -50,7 +50,7 @@ const campaignSchema = new Schema({
     }],
     requirements: [requirementSchema],
     // The code that will give the reward
-    // May be used for identifying so should be unique if only one per customer
+    // Should be unique
     couponCode: {
         type: String
     },
@@ -70,13 +70,12 @@ const campaignSchema = new Schema({
             default: 1
         },
     },
-    // Each purchase's (or whatever) reward as customer points
+    // Reward for each purchase (or whatever transaction)
     transactionPoints: {
         type: Schema.Types.Number,
         default: 0
     },
     endReward: [rewardSchema],
-    // TODO: categories?
 });
 
 

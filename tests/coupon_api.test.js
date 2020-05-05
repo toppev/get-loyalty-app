@@ -55,7 +55,7 @@ describe('Logged in user can', () => {
         await api
             .post(`/business/${business.id}/coupon/${couponCode}`)
             .set('Cookie', cookie)
-            .expect(500);
+            .expect(403);
         const user = await userService.getById(userId)
         const data = await customerService.findCustomerData(user, business.id)
         const rewards = data.rewards;

@@ -93,6 +93,7 @@ describe('Logged in user with permissions can modify customer rewards', () => {
         expect(resRewards[1].name).toBe(secondReward.name);
     });
 
+
     it('delete first reward', async () => {
         const res = await api
             .delete(`/business/${business.id}/customer/${userId}/reward/${firstReward._id}`)
@@ -102,11 +103,22 @@ describe('Logged in user with permissions can modify customer rewards', () => {
         expect(res.body.rewards[0].name).toBe(secondReward.name);
     });
 
+    it('update rewards', async () => {
+        const res = await api
+            .post(`/business/${business.id}/customer/${userId}/rewards`)
+            .send([firstReward])
+            .set('Cookie', cookie)
+            .expect(200);
+        console.log(res.body)
+        expect(res.body.rewards.length).toBe(1)
+        expect(res.body.rewards[0].name).toBe(firstReward.name)
+    });
+
 });
 
 describe('Logged in user with permissions can modify customer data', () => {
 
-    it('get customer', async() => {
+    it('get customer', async () => {
         const res = await api
             .get(`/business/${business.id}/customer/${userId}`)
             .set('Cookie', cookie)
@@ -119,7 +131,7 @@ describe('Logged in user with permissions can modify customer data', () => {
             points: 100
         };
         const res = await api
-            .patch(`/business/${business.id}/customer/${userId}`)
+            .patch(`/business/${business.id}/customer/${userId}/properties`)
             .send(data)
             .set('Cookie', cookie)
             .expect(200);
