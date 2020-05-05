@@ -1,7 +1,7 @@
 const { createLogger, format, transports } = require('winston');
-const { combine, timestamp, label, printf } = format;
+const { combine, timestamp, printf } = format;
 
-const printfFormat = printf(({ level, message, label, timestamp }) => {
+const printfFormat = printf(({ level, message, timestamp }) => {
     return `${timestamp} ${level}: ${message}`;
 });
 
@@ -37,7 +37,7 @@ const logger = createLogger({
 });
 
 logger.stream = {
-    write: function (message, encoding) {
+    write: function (message) {
         logger.info(message);
     },
 };

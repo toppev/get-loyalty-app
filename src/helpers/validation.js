@@ -71,7 +71,13 @@ const businessValidator = ajv.compile({
         },
         // Do we really need to validate this?
         "config": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+                "pointsName": {
+                    "type": "string",
+                    "maxLength": 20
+                }
+            }
         },
         "public": {
             "type": "object",
@@ -177,6 +183,52 @@ const productValidator = ajv.compile({
     "required": ["name"]
 });
 
+
+const rawRewardSchema = {
+    "properties": {
+        "name": {
+            "type": "string"
+        },
+        "description": {
+            "type": "string"
+        },
+        "products": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "objectid": true
+            }
+        },
+        "categories": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "objectid": true
+            }
+        },
+        "itemDiscount": {
+            "type": "string",
+        },
+        "customerPoints": {
+            "type": "number"
+        },
+        "requirement": {
+            "type": "string"
+        },
+        "expires": {
+            "type": "string",
+            "format": "date-time"
+        }
+    },
+    "required": ["name", "itemDiscount"]
+};
+
+const rewardValidator = ajv.compile({
+    "$async": true,
+    "additionalProperties": false,
+    ...rawRewardSchema
+});
+
 const campaignValidator = ajv.compile({
     "$async": true,
     "additionalProperties": false,
@@ -215,43 +267,24 @@ const campaignValidator = ajv.compile({
                 }
             }
         },
+        "maxRewards": {
+            "type": "object",
+            "properties": {
+                "total": {
+                    "type": "number"
+                },
+                "user": {
+                    "type": "number"
+                }
+            }
+        },
         "transactionPoints": {
             "type": "number"
         },
+        // TODO: separate
         "endReward": {
             "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "products": {
-                    "type": "array",
-                    "items": {
-                        "type": "string",
-                        "objectid": true
-                    }
-                },
-                "categories": {
-                    "type": "array",
-                    "items": {
-                        "type": "string",
-                        "objectid": true
-                    }
-                },
-                "itemDiscount": {
-                    "type": "string",
-                },
-                "customerPoints": {
-                    "type": "number"
-                },
-                "requirement": {
-                    "type": "string"
-                }
-            },
-            "required": ["name", "itemDiscount"]
+            ...rawRewardSchema
         }
     },
     "required": ["name"]
@@ -290,5 +323,6 @@ module.exports = {
     productValidator,
     campaignValidator,
     purchaseValidator,
-    customerPropertiesValidator
-}
+    customerPropertiesValidator,
+    rewardValidator
+};

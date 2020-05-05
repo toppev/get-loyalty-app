@@ -6,12 +6,14 @@ const campaigns = require('./controllers/campaignController');
 const business = require('./controllers/businessController');
 const category = require('./controllers/categoryController');
 const page = require('./controllers/pageController');
+const coupon = require('./controllers/couponController');
 
+// Kinda useless? or is it?
 const requireLogin = (req, res, next) => {
   if (req.isAuthenticated()) {
     return next();
   }
-  res.status(401).json({ message: "Forbidden: login required" });
+  res.status(401).json({ message: "Forbidden: this route requires logging in" });
 }
 requireLogin.unless = require('express-unless');
 
@@ -24,19 +26,21 @@ router.use('/user', requireLogin.unless({
   ]
 }), users);
 
-router.use('/business', business);
+router.use('/business', requireLogin, business);
+// FIXME: requireLogin, not necessary and need to fix category tests
 router.use('/category', category)
 // So we can easily validate permissions with one middleware (using businessId param)
 // and admin panel will be easy to implement
 router.use('/business/:businessId/campaign', requireLogin, campaigns);
 router.use('/business/:businessId/product', requireLogin, products);
-router.use('/business/:businessId/page', requireLogin, page);
-// Unlike other controllers, rest of the path is defined in customerController.js
-// Because there are multiple different routes in there
-router.use('/business/:businessId', requireLogin, customer);
+// No need to be logged in to view pages
+router.use('/business/:businessId/page', page);
+router.use('/business/:businessId/customer/:userId', requireLogin, customer);
+// Coupon codes
+router.use('/business/:businessId/coupon', requireLogin, coupon);
 
 router.get('/', (req, res) => {
-  res.status(200).json({ message: 'Connected!' });
+  res.status(200).json({ message: 'Working!' });
 });
 
 module.exports = router;

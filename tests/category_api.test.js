@@ -4,7 +4,6 @@ const app = require('../app');
 const api = require('supertest')(app);
 
 let testCategory;
-let pizzaCategory;
 
 beforeAll(async () => {
     const url = 'mongodb://127.0.0.1/kantis-category-test';

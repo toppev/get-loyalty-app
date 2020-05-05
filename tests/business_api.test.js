@@ -44,7 +44,7 @@ describe('Logged in user can', () => {
         business = await businessService.getBusiness(res.body._id);
         expect(business.email).toBe(secondBusinessParam.email);
         const user = await User.findById(userId);
-        const index = user.customerData.findIndex(_item => _item.business == res.body._id);
+        const index = user.customerData.findIndex(_item => _item.business.equals(res.body._id));
         expect(user.customerData[index].role).toBe('business');
     });
 

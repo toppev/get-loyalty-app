@@ -3,8 +3,8 @@ const productService = require('../services/productService');
 const customerService = require('../services/customerService');
 const Page = require('../models/page');
 
-// Roles and permsissions
-// * is a wildcard
+// Roles and permissions
+// * is accepted (wildcard)
 const roles = {
     admin: {
         can: { '*': true },
@@ -20,7 +20,11 @@ const roles = {
             'page:create': _ownPageOnly,
             'page:save': _ownPageOnly,
             'page:load': _ownPageOnly,
-            'customer:update': true
+            'page:upload': _ownPageOnly,
+            // Will only return this business's view anyway
+            'customer:update': true,
+            'customer:get': true,
+            'reward:*': true
         },
     },
     user: {

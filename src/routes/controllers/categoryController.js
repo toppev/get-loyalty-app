@@ -14,8 +14,8 @@ function createCategory(req, res, next) {
 }
 
 function find(req, res, next) {
-    const { query, limit } = req.query;
-    categoryService.find(query, limit)
+    const { query, limit, type } = req.query;
+    categoryService.find(query, type, limit)
         .then(categories => categories ?
             res.json(categories) : res.sendStatus(404))
         .catch(err => next(err));

@@ -38,11 +38,8 @@ app.use(passport.session());
 app.use(routes);
 app.use(require('./src/middlewares/errorHandler'));
 
-
-// eslint-disable-next-line no-undef
-const port = process.env.PORT || 3000;
-
 if (!isTesting) {
+    const port = process.env.PORT || 3000;
     app.listen(port, function () {
         console.log('Listening on port ' + port);
     });

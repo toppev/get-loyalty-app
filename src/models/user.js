@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
+const rewardSchema = require('./reward');
 const { Schema } = mongoose;
 
 const purchaseSchema = new Schema({
@@ -28,14 +29,14 @@ const purchaseSchema = new Schema({
 const userSchema = new Schema({
     email: {
         type: String,
-        // 
         validate: {
             validator: async function (value) {
                 // Allow undefined
                 if (!value) {
                     return true;
                 }
-                return await User.find({ email: value });
+                const users = await User.find({ email: value });
+                return !users.length || (users[0].id === this.id && users.length === 1);
             }, message: 'Email is already taken.',
         },
         index: true
@@ -67,6 +68,9 @@ const userSchema = new Schema({
         }
     },
     customerData: [{
+        // no _id field
+        _id: false,
+        // identify by business
         business: {
             type: Schema.Types.ObjectId,
             ref: 'Business'
@@ -79,6 +83,7 @@ const userSchema = new Schema({
             default: 'user'
         },
         purchases: [purchaseSchema],
+        rewards: [rewardSchema],
         // Other customer properties that business can modify freely
         properties: {
             points: {
@@ -87,6 +92,13 @@ const userSchema = new Schema({
             }
         }
     }],
+}, {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+});
+
+userSchema.virtual("hasPassword").get(function () {
+    return !!this.password;
 });
 
 purchaseSchema.methods.populateProducts = function () {
@@ -95,7 +107,7 @@ purchaseSchema.methods.populateProducts = function () {
 
 userSchema.methods.customerDataByBusiness = async function (business) {
     const id = business.id || business;
-    return this.customerData.find(data => data.business == id);
+    return this.customerData.find(data => data.business.equals(id));
 };
 
 /**
@@ -113,7 +125,9 @@ userSchema.methods.hasPermission = async function (operation, params) {
         }
     }
     const result = await role.can(userRole, operation, { businessId, ...params })
-        .catch(err => { throw err; });
+        .catch(err => {
+            throw err;
+        });
     return result;
 };
 
@@ -127,6 +141,12 @@ userSchema.pre('save', async function (next) {
 
 userSchema.methods.comparePassword = function (password) {
     return password && bcrypt.compareSync(password, this.password);
+};
+
+userSchema.methods.toJSON = function() {
+    let obj = this.toObject();
+    delete obj.password;
+    return obj;
 };
 
 const User = mongoose.model('User', userSchema);

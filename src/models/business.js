@@ -2,7 +2,17 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const configSchema = new Schema({
-    // TODO: config values
+    pointsName: {
+        singular: {
+            type: String,
+            default: 'point'
+        },
+        plural: {
+            type: String,
+            default: 'points'
+        }
+    },
+
 });
 
 const businessSchema = new Schema({
@@ -42,6 +52,10 @@ const businessSchema = new Schema({
             validThrough: {
                 type: Date,
             }
+        }],
+        categories: [{
+            type: mongoose.Types.ObjectId,
+            ref: 'Category',
         }],
         customerLevels: [{
             name: {

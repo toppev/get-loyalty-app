@@ -10,6 +10,8 @@ router.get('/:businessId', permit('business:get'), getBusiness);
 router.patch('/:businessId', permit('business:update'), businessValidator, updateBusiness);
 router.post('/:businessId/role', permit('business:role'), validation.validate(validation.businessRoleValidator), setUserRole);
 
+router.get('/:businessId/customers', permit('customer:list'), listCustomers); // TODO test
+
 module.exports = router;
 
 function createBusiness(req, res, next) {
@@ -45,4 +47,16 @@ function getPublicInformation(req, res, next) {
     businessService.getPublicInformation(id)
         .then(data => res.json(data))
         .catch(err => next(err));
+}
+
+
+function listCustomers(req, res, next) {
+    const { businessId } = req.params;
+    res.status(501).send()
+    // TODO: implement
+    /*
+    customerService.listCustomers(businessId)
+        .then(data => res.json({ customerData: data }))
+        .catch(err => next(err));
+     */
 }

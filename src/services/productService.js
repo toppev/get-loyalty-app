@@ -10,7 +10,7 @@ module.exports = {
 
 /**
  * Get all products created by this business
- * @param {Any} businessId the business's _id field 
+ * @param {any} businessId the business's _id field
  */
 async function getAllById(businessId) {
     return await Product.find({ business: businessId });
@@ -18,7 +18,7 @@ async function getAllById(businessId) {
 
 /**
  * Get a product by its id
- * @param {Any} productId the product's _id field 
+ * @param {any} productId the product's _id field
  */
 async function getById(productId) {
     return await Product.findById(productId);
@@ -36,7 +36,7 @@ async function create(businessId, product) {
 
 /**
  * Update an existing product. Returns the updated product
- * @param {Any} productId the product's _id field 
+ * @param {any} productId the product's _id field
  * @param {Object} updatedProduct an object with the values to update 
  */
 async function update(productId, updatedProduct) {
@@ -46,7 +46,7 @@ async function update(productId, updatedProduct) {
 
 /**
  * Delete an existing product from the database
- * @param {Any} productId the product's _id field 
+ * @param {any} productId the product's _id field
  */
 async function deleteProduct(productId) {
     return await Product.findByIdAndDelete(productId)

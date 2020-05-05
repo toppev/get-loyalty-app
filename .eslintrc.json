@@ -14,7 +14,7 @@
         "ecmaVersion": 2018
     },
     "rules": {
-        "no-unused-vars": ["error", { "vars": "all", "args": "none", "ignoreRestSiblings": false }],
+        "no-unused-vars": ["error", { "vars": "all", "args": "none", "ignoreRestSiblings": false }]
     },
     "plugins": ["jest"]
 }

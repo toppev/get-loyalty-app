@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const productService = require('../src/services/productService');
 const businessService = require('../src/services/businessService');
 const User = require('../src/models/user');
 const app = require('../app');
