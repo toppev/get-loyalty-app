@@ -109,7 +109,6 @@ describe('Logged in user with permissions can modify customer rewards', () => {
             .send([firstReward])
             .set('Cookie', cookie)
             .expect(200);
-        console.log(res.body)
         expect(res.body.rewards.length).toBe(1)
         expect(res.body.rewards[0].name).toBe(firstReward.name)
     });

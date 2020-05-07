@@ -30,8 +30,12 @@ app.use(parser.urlencoded({
 }));
 app.use(parser.json());
 app.use(cors());
+app.options('*', cors({
+    // Localhost any port
+    origin: [/http:\/\/localhost:[0-9]+$/]
+}))
 
-if(!isTesting) {
+if (!isTesting) {
     app.use(csrf({ cookie: true }))
 }
 
