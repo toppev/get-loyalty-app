@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const csrf = require('csurf')
 const morgan = require('morgan');
 const logger = require('./src/config/logger');
 
@@ -29,6 +30,10 @@ app.use(parser.urlencoded({
 }));
 app.use(parser.json());
 app.use(cors());
+
+if(!isTesting) {
+    app.use(csrf({ cookie: true }))
+}
 
 require('./src/config/passport');
 
