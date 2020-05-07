@@ -2,16 +2,18 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const configSchema = new Schema({
-    pointsName: {
-        singular: {
-            type: String,
-            default: 'point'
+    translations: {
+        points: {
+            singular: {
+                type: String,
+                default: 'point'
+            },
+            plural: {
+                type: String,
+                default: 'points'
+            }
         },
-        plural: {
-            type: String,
-            default: 'points'
-        }
-    },
+    }
 
 });
 
