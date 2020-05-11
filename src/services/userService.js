@@ -17,7 +17,7 @@ module.exports = {
  * Finds a user by the given email address. If the user was found, random token is generated and saved (@see {@link ResetPassword}).
  * If the user was not found nothing will be done.
  * Throws and error if the user didn't use local authentication strategy.
- * @param {string} email the user's email address 
+ * @param {string} email the user's email address
  */
 async function forgotPassword(email) {
     const user = await User.findOne({
@@ -74,7 +74,7 @@ async function getAll() {
 }
 
 /**
- * Find a user by the given id. Returns the user without password field (password hash) 
+ * Find a user by the given id. Returns the user without password field (password hash)
  * @param {any} id the user's _id field
  */
 async function getById(id) {
@@ -91,7 +91,7 @@ async function getById(id) {
 
 /**
  * Create a new user with the values from the given object (e.g email, password)
- * @param {Object} userParam 
+ * @param {Object} userParam
  */
 async function create(userParam) {
     const user = new User(userParam);

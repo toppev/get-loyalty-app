@@ -153,6 +153,6 @@ const User = mongoose.model('User', userSchema);
 
 module.exports = User;
 
-// Because circular dependencies
-// TODO: fix?
+// Because of circular dependencies
+// FIXME?
 var role = require('./role');

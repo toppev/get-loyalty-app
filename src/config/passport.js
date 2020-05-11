@@ -1,6 +1,7 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const User = require('../models/user');
+const userService = require('../services/userService');
 
 passport.use(new LocalStrategy({
     usernameField: 'email',
@@ -9,7 +10,7 @@ passport.use(new LocalStrategy({
     async function (email, password, next) {
         return User.findOne({ email }).then(user => {
             if (user) {
-                if (user.authentication.service && user.authentication.service !== 'local') {
+                if (user.authentication.service && user.authentication.service.valueOf() !== 'local') {
                     return next(null, false, { message: 'Incorrect authentication method.' });
                 }
                 if (!user.password) {
@@ -29,7 +30,7 @@ passport.serializeUser(function (user, done) {
 });
 
 passport.deserializeUser(function (id, done) {
-    User.findById(id, function (err, user) {
-        done(err, user);
-    });
+    userService.getById(id)
+        .then(u => done(null, u))
+        .catch(err => done(err, null))
 });

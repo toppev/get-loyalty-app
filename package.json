@@ -14,6 +14,7 @@
     "@toppev/loyally-campaigns": "^0.1.0",
     "ajv": "^6.12.2",
     "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.5",
     "cookie-session": "^1.4.0",
     "cors": "^2.8.5",
@@ -24,7 +25,7 @@
     "handlebars": "^4.7.6",
     "jsonwebtoken": "^8.5.1",
     "juice": "^6.0.0",
-    "mongoose": "^5.9.12",
+    "mongoose": "^5.9.13",
     "morgan": "^1.10.0",
     "nodemailer": "^6.4.6",
     "passport": "^0.4.1",
@@ -35,8 +36,8 @@
   },
   "devDependencies": {
     "eslint": "^6.8.0",
-    "eslint-plugin-jest": "^23.9.0",
-    "jest": "^26.0.0",
+    "eslint-plugin-jest": "^23.10.0",
+    "jest": "^26.0.1",
     "nodemon": "^2.0.3",
     "supertest": "^4.0.2"
   }

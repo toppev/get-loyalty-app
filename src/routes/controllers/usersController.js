@@ -27,8 +27,7 @@ router.get('/:userId', permit('user:get'), getById);
 module.exports = router;
 
 function login(req, res, next) {
-    const { password, ...user } = req.user.toJSON();
-    res.json(user);
+    res.json(req.user.toJSON());
 }
 
 /**
