@@ -7,7 +7,8 @@
  * Each type may have "requirement" function that calculates if the requirement is met.
  * If humans are needed (to answer a question), the "question" attribute should be specified
  *
- * Parameters to the requirement function: values (supplied from database), user, purchase, customerData (of the current business)
+ * Parameters to the requirement function: values (from database, valueDescriptions property should describe these values),
+ * user, purchase, customerData (of the current business)
  *
  * @type {import("./index")}
  */
@@ -21,7 +22,11 @@ module.exports = {
         description: 'If the total cost of the purchase is greater than X',
         // We don't know the price so ask a human
         // {0} is the value parameter
-        question: "Is the price of the purchase more than {0}?"
+        question: "Is the price of the purchase more than {0}?",
+        valueDescriptions: [{
+            name: 'Purchase amount',
+            type: "number"
+        }]
     },
     isBirthday: {
         name: 'Customer Birthday',
