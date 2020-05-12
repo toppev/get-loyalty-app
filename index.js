@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Contains types of campaigns
  *
@@ -7,6 +8,8 @@
  * If humans are needed (to answer a question), the "question" attribute should be specified
  *
  * Parameters to the requirement function: values (supplied from database), user, purchase, customerData (of the current business)
+ *
+ * @type {import("./index")}
  */
 module.exports = {
     basicCampaign: {
@@ -23,7 +26,7 @@ module.exports = {
     isBirthday: {
         name: 'Customer Birthday',
         description: "If it's the customers birthday!",
-        requirement: function (values, user, purchase, customerData) {
+        requirement: function (values, user, _purchase, _customerData) {
             const { birthday: bd } = user;
             if (bd) {
                 const now = new Date();
@@ -32,6 +35,6 @@ module.exports = {
             return false
         },
     },
-    // TODO: more campagin types (e.g. buy x number in x days)
+    // TODO: more campaigns types (e.g. buy x number in y days)
 
 };
