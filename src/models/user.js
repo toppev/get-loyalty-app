@@ -84,6 +84,7 @@ const userSchema = new Schema({
         },
         purchases: [purchaseSchema],
         rewards: [rewardSchema],
+        usedRewards: [rewardSchema],
         // Other customer properties that business can modify freely
         properties: {
             points: {
