@@ -298,10 +298,20 @@ const purchaseValidator = ajv.compile({
             "type": "string",
             "objectid": true
         },
-        "category": {
-            "type": "string",
-            "objectid": true
-        }
+        "categories": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "objectid": true
+            }
+        },
+        "products": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "objectid": true
+            }
+        },
     }
 });
 

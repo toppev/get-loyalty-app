@@ -12,9 +12,9 @@ module.exports = {
     addReward,
     deleteReward,
     addCampaignRewards,
-    canReceiveCampaignRewards,
     findCustomerData,
-    updateRewards
+    updateRewards,
+    useReward,
 };
 
 /**
@@ -25,6 +25,9 @@ module.exports = {
 async function findCustomerData(user, businessId) {
     if (!user.customerData) { // Does not exists so it's the user id
         user = await User.findById(user);
+    }
+    if (!user) {
+        throw new StatusError(`Customer data of ${user._id} was not found`, 404)
     }
     const data = user.customerData.find(_item => _item.business.equals(businessId));
     return data;
@@ -57,8 +60,8 @@ async function updateCustomerProperties(userId, businessId, updateProperties) {
 
 /**
  * Add a new purchase. The user's all purchases in the given business.
- * @param {id} userId value of the user's `_id` to query by
- * @param {id} businessId value of business's `_id` to query by
+ * @param {ObjectId|string} userId value of the user's `_id` to query by
+ * @param {ObjectId|string} businessId value of business's `_id` to query by
  * @param {object} purchase the new purchase
  */
 async function addPurchase(userId, businessId, purchase) {
@@ -93,7 +96,7 @@ async function businessFromPurchase(purchaseId) {
     if (!user) {
         return null;
     }
-    return await findCustomerDataFromPurchase(user, purchaseId).business;
+    return findCustomerDataFromPurchase(user, purchaseId).business;
 }
 
 /**
@@ -165,13 +168,14 @@ async function getPurchases(id, business) {
 
 /**
  * Add a new reward
- * @param userId the user to receive the reward
+ * @param userParam the id of the user or the user object, user to receive the reward
  * @param businessId the business giving the reward
  * @param reward the reward to give
  * @returns {Promise<[*]>} the user's updated customerData in the given business
  */
-async function addReward(userId, businessId, reward) {
-    const user = await User.findById(userId);
+async function addReward(userParam, businessId, reward) {
+    // For some reason userParam.id is always truthy???
+    const user = userParam.save ? userParam : await User.findById(userParam);
     let data = await findCustomerData(user, businessId);
     if (!data) {
         // create customer data for this business
@@ -181,6 +185,12 @@ async function addReward(userId, businessId, reward) {
     }
     await user.save();
     return data.rewards;
+}
+
+async function useReward(user, customerData, reward) {
+    customerData.rewards = customerData.rewards.filter(r => !r._id.equals(reward._id));
+    customerData.usedRewards.push({ reward: reward });
+    await user.save();
 }
 
 /**
@@ -218,43 +228,19 @@ async function deleteReward(userId, businessId, rewardId) {
 /**
  * Add all rewards from the campaign.
  * Increases rewardedCount but does not perform any checks, (use #canReceiveCampaignRewards)
- *
+ * @param user the id of the user or the user object
+ * @param campaign
  * @returns all given rewards (campaign.endReward)
  */
-async function addCampaignRewards(userId, campaign) {
-    if (campaign.endReward.length) {
+async function addCampaignRewards(user, campaign) {
+    if (campaign.endReward && campaign.endReward.length) {
         campaign.endReward.forEach(reward => {
             reward.campaign = campaign.id;
-            addReward(userId, campaign.business, reward);
+            addReward(user, campaign.business, reward);
         });
         campaign.rewardedCount++;
         await campaign.save();
     }
     return campaign.endReward
 
-}
-
-/**
- * Validate that the campaign is active and max rewards haven't been reached
- */
-async function canReceiveCampaignRewards(userId, businessId, campaign) {
-    const now = Date.now();
-    if (campaign.start > now) {
-        throw Error('The campaign has not strated yet')
-    }
-    if (campaign.end && campaign.end < now) {
-        throw Error('The campaign has already ended')
-    }
-    if (campaign.maxRewards) {
-        if (campaign.rewardedCount >= campaign.maxRewards.total) {
-            throw Error('The campaign has run out of rewards :(')
-        }
-        const customerData = await findCustomerData(userId, businessId);
-        const allReceivedRewards = customerData ? customerData.rewards : [];
-        const receivedCount = allReceivedRewards.filter(reward => reward.campaign.equals(campaign.id)).length;
-        if (receivedCount >= campaign.maxRewards.user) {
-            throw new StatusError('You have already received all rewards', 403)
-        }
-    }
-    return true
 }

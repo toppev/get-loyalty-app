@@ -1,6 +1,7 @@
-const campaignService = require('../services/campaignService');
-const productService = require('../services/productService');
+// Avoid importing services because they may cause circular dependencies and break everything :( @see user.js
 const customerService = require('../services/customerService');
+const Product = require('../models/product');
+const Campaign = require('../models/campaign');
 const Page = require('../models/page');
 
 // Roles and permissions
@@ -24,7 +25,9 @@ const roles = {
             // Will only return this business's view anyway
             'customer:update': true,
             'customer:get': true,
-            'reward:*': true
+            'reward:*': true,
+            'scan:get': true,
+            'scan:use': true,
         },
     },
     user: {
@@ -43,7 +46,7 @@ const roles = {
 async function _ownProductOnly(params) {
     const reqParams = params.reqParams;
     const productId = reqParams.productId;
-    const product = await productService.getById(productId);
+    const product = await Product.findById(productId);
     return !product || (product.business && product.business == reqParams.businessId);
 }
 
@@ -54,7 +57,7 @@ async function _ownProductOnly(params) {
 async function _ownCampaignOnly(params) {
     const reqParams = params.reqParams;
     const campaignId = reqParams.campaignId;
-    const campaign = await campaignService.getById(campaignId);
+    const campaign = await Campaign.findById(campaignId);
     return !campaign || (campaign.business && campaign.business == reqParams.businessId);
 }
 

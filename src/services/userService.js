@@ -74,7 +74,7 @@ async function getAll() {
 }
 
 /**
- * Find a user by the given id. Returns the user without password field (password hash)
+ * Find a user by the given id. Returns the user without password hash field
  * @param {any} id the user's _id field
  */
 async function getById(id) {
@@ -85,7 +85,7 @@ async function getById(id) {
         delete user.password;
         return user;
     }
-    // Just so tests wont' break
+    // Just so tests won't break
     return null;
 }
 

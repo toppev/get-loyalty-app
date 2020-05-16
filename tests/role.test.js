@@ -33,7 +33,7 @@ async function initParams(paramsObj) {
     paramsObj.reqParams.productId = (await productService.create(businessId, { name: 'Pizza' })).id;
     paramsObj.reqParams.campaignId = (await campaignService.create(businessId, { name: 'Sick Campaign' })).id;
     
-    const purchases = await customerService.addPurchase(userId, businessId, { category: '5e2721e1dab8355d82d53379' });
+    const purchases = await customerService.addPurchase(userId, businessId, { categories: ['5e2721e1dab8355d82d53379'] });
     paramsObj.reqParams.purchaseId = purchases[0].id;
 }
 

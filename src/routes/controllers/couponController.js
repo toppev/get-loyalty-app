@@ -16,7 +16,7 @@ async function getCoupon(req, res, next) {
         const user = req.user;
         const userId = user.id;
         const campaign = await campaignService.byCouponCode(businessId, coupon);
-        if (await customerService.canReceiveCampaignRewards(userId, businessId, campaign)) {
+        if (await campaignService.canReceiveCampaignRewards(userId, businessId, campaign)) {
             const rewards = await customerService.addCampaignRewards(userId, campaign)
             res.json({
                 rewards: rewards,

@@ -7,6 +7,7 @@ const business = require('./controllers/businessController');
 const category = require('./controllers/categoryController');
 const page = require('./controllers/pageController');
 const coupon = require('./controllers/couponController');
+const scan = require('./controllers/scanController');
 
 // Kinda useless? or is it?
 const requireLogin = (req, res, next) => {
@@ -38,6 +39,7 @@ router.use('/business/:businessId/page', page);
 router.use('/business/:businessId/customer/:userId', requireLogin, customer);
 // Coupon codes
 router.use('/business/:businessId/coupon', requireLogin, coupon);
+router.use('/business/:businessId/scan', requireLogin, scan)
 
 router.get('/', (req, res) => {
   res.status(200).json({ message: 'Working!' });

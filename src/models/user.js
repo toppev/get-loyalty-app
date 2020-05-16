@@ -2,28 +2,15 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
 const rewardSchema = require('./reward');
+const productSchema = require('./product').schema;
 const { Schema } = mongoose;
 
 const purchaseSchema = new Schema({
-    category: {
+    categories: [{
         type: Schema.Types.ObjectId,
         ref: 'Category',
-    }
-    // Might add these back later(?)
-    // With current plan it won't be easy to get the exact product
-    /*
-    products: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Product'
     }],
-    price: {
-        type: mongoose.Decimal128,
-        validate: {
-            validator: function (v) { return v >= 0; },
-            message: '{VALUE} is negative'
-        }
-    },
-    */
+    products: [productSchema],
 });
 
 const userSchema = new Schema({
@@ -84,7 +71,13 @@ const userSchema = new Schema({
         },
         purchases: [purchaseSchema],
         rewards: [rewardSchema],
-        usedRewards: [rewardSchema],
+        usedRewards: [{
+            dateUsed: {
+                type: Date,
+                default: Date.now
+            },
+            reward: rewardSchema
+        }],
         // Other customer properties that business can modify freely
         properties: {
             points: {
@@ -144,7 +137,7 @@ userSchema.methods.comparePassword = function (password) {
     return password && bcrypt.compareSync(password, this.password);
 };
 
-userSchema.methods.toJSON = function() {
+userSchema.methods.toJSON = function () {
     let obj = this.toObject();
     delete obj.password;
     return obj;

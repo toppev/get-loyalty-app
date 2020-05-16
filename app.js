@@ -22,9 +22,10 @@ if (!isTesting) {
         useUnifiedTopology: true
     });
     console.log("Connected to mongo database");
+    app.use(morgan('":method :url" :status (len: :res[content-length]) ":user-agent" - :response-time ms',
+        { stream: logger.stream }));
 }
-app.use(morgan('":method :url" :status (len: :res[content-length]) ":user-agent" - :response-time ms',
-    { stream: logger.stream }));
+
 app.use(cookieParser());
 app.use(parser.urlencoded({
     extended: false

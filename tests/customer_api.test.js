@@ -36,24 +36,24 @@ describe('Logged in user with permissions can modify customer purchases', () => 
     let purchaseId;
 
     it('create purchase', async () => {
-        const purchase = { category: '5e2708e560885bbf21fbb9de' };
+        const purchase = { categories: ['5e2708e560885bbf21fbb9de'] };
         const res = await api
             .post(`/business/${business.id}/customer/${userId}/purchase`)
             .set('Cookie', cookie)
             .send(purchase)
             .expect(200);
         purchaseId = res.body.purchases[0]._id;
-        expect(res.body.purchases[0].category).toBe(purchase.category);
+        expect(res.body.purchases[0].categories[0]).toBe(purchase.categories[0]);
     });
 
     it('update purchase', async () => {
-        const patchData = { category: '5e2756df4d931c1fe5b9013f' };
+        const patchData = { categories: ['5e2756df4d931c1fe5b9013f'] };
         const res = await api
             .patch(`/business/${business.id}/customer/${userId}/purchase/${purchaseId}`)
             .set('Cookie', cookie)
             .send(patchData)
             .expect(200);
-        expect(res.body.purchases[0].category).toBe(patchData.category);
+        expect(res.body.purchases[0].categories[0]).toBe(patchData.categories[0]);
     });
 
     it('delete purchase', async () => {

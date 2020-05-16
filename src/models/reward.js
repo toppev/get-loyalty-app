@@ -36,7 +36,6 @@ const rewardSchema = new Schema({
     },
     // The business decides
     // e.g "only if meal", "if more than 10€"
-    // TODO: change?
     requirement: {
         type: String,
     },

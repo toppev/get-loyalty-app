@@ -258,17 +258,18 @@ describe('purchase', () => {
 
     it('should validate', () => {
         const data = {
-            category: '5e222adae08de45c2c09455c',
+            categories: ['5e222adae08de45c2c09455c'],
+            products: ['5e222adae08de45c2c09455c'],
             userId: '5e222ac86e9aa80b23b4886c'
         }
         expect.assertions(1);
         return expect(validators.purchaseValidator(data)).resolves.toBe(data);
     });
 
-    it('should not validate (invalid category ObjectID)', () => {
+    it('should not validate (invalid categories ObjectID)', () => {
         expect.assertions(1);
         return expect(validators.purchaseValidator({
-            category: 'not an ObjectId',
+            categories: ['not an ObjectId'],
             userId: '5e222adae08de45c2c09455c',
         })).rejects.toThrow();
     });
@@ -276,7 +277,7 @@ describe('purchase', () => {
     it('should not validate (invalid userId ObjectID)', () => {
         expect.assertions(1);
         return expect(validators.purchaseValidator({
-            category: '5e222adae08de45c2c09455c',
+            categories: ['5e222adae08de45c2c09455c'],
             userId: 'not an ObjectId',
         })).rejects.toThrow();
     });
@@ -284,7 +285,7 @@ describe('purchase', () => {
     it('should not validate (additional properties)', () => {
         expect.assertions(1);
         return expect(validators.purchaseValidator({
-            category: '5e222adae08de45c2c09455c',
+            categories: ['5e222adae08de45c2c09455c'],
             userId: '5e222ac86e9aa80b23b4886c',
             admin: true
         })).rejects.toThrow();

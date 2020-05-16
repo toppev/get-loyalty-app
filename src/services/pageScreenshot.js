@@ -2,7 +2,7 @@ const fs = require('fs');
 // deprecated but will still use as it just works
 const request = require('request');
 
-const BASE_URL = process.env.SS_BASE_URL || 'http://localhost:3000/';
+const BASE_URL = process.env.SS_BASE_URL || 'http://localhost:3004/';
 const SERVICE_URL = process.env.SS_SERVICE_URL || 'http://localhost:3005/';
 
 module.exports = {
