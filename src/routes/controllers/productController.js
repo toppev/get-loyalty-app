@@ -40,7 +40,8 @@ function getById(req, res, next) {
 
 function getAll(req, res, next) {
     const businessId = req.params.businessId;
-    productService.getAllById(businessId)
+    const { populate } = req.query;
+    productService.getAllById(businessId, populate !== undefined ? populate : true)
         .then(products => res.json(products))
         .catch(err => next(err));
 }

@@ -29,7 +29,7 @@ function updateCampaign(req, res, next) {
 function deleteCampaign(req, res, next) {
     const campaignId = req.params.campaignId;
     campaignService.deleteCampaign(campaignId)
-        .then(() => res.json({success: true}))
+        .then(() => res.json({ success: true }))
         .catch(err => next(err));
 }
 
@@ -42,7 +42,8 @@ function getById(req, res, next) {
 
 function getAll(req, res, next) {
     const businessId = req.params.businessId;
-    campaignService.getAllByBusinessId(businessId)
+    const { populate } = req.query;
+    campaignService.getAllByBusinessId(businessId, populate !== undefined ? populate : true)
         .then(campaigns => res.json(campaigns))
         .catch(err => next(err));
 }
