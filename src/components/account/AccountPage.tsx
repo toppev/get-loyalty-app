@@ -1,4 +1,14 @@
-import { Button, createStyles, LinearProgress, makeStyles, Paper, Theme, Typography } from "@material-ui/core";
+import {
+    Box,
+    Button,
+    createStyles,
+    LinearProgress,
+    makeStyles,
+    Paper,
+    Theme,
+    Typography,
+    useMediaQuery, useTheme
+} from "@material-ui/core";
 import LockIcon from '@material-ui/icons/Lock';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import clsx from 'clsx';
@@ -7,12 +17,14 @@ import { TextField } from "formik-material-ui";
 import React, { useContext, useState } from "react";
 import { patch } from "../../config/axios";
 import AppContext, { User } from "../../context/AppContext";
+import { validateEmail } from "../common/Validate";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         paper: {
-            padding: '20px',
-            margin: '30px'
+            padding: '25px',
+            margin: '20px',
+            flex: '1 1 0px'
         },
         field: {
             width: '100%',
@@ -32,17 +44,23 @@ export default function () {
 
     const { user } = useContext(AppContext);
 
+    const theme = useTheme();
+    const bigScreen = useMediaQuery(theme.breakpoints.up('md'));
+
     return (
         <div>
-            <EmailForm
-                user={user}
-            />
 
-            <ResetPassword
-                user={user}
-                title={user.hasPassword ? "Reset Password" : "Set Password"}
-                highlight={!user.hasPassword}
-            />
+            <Box display="flex" flexDirection={bigScreen ? "row" : "column"}>
+                <EmailForm
+                    user={user}
+                />
+
+                <ResetPassword
+                    user={user}
+                    title={user.hasPassword ? "Reset Password" : "Set Password"}
+                    highlight={!user.hasPassword}
+                />
+            </Box>
         </div>
     )
 }
@@ -50,20 +68,21 @@ export default function () {
 function updateUser(userId: string, value: object, setSubmitting: (state: boolean) => any, setError: (err: string) => any) {
     setSubmitting(true)
     setError("");
+    console.log(value)
     patch(`/user/${userId}`, value)
         .then(res => {
-            if(res.status !== 200) {
-                if(res.data.message) {
+            if (res.status !== 200) {
+                if (res.data.message) {
                     // FIXME: better message?
                     setError(res.data.message);
                 }
             }
 
         }).catch(err => {
-            setError(`${err}. Please try again.`);
-        }).finally(() => {
-            setSubmitting(false);
-        });
+        setError(`${err}. Please try again.`);
+    }).finally(() => {
+        setSubmitting(false);
+    });
 }
 
 interface EmailFormProps {
@@ -109,25 +128,17 @@ function EmailForm({ user }: EmailFormProps) {
                             onClick={submitForm}
                             variant="contained"
                             color="primary"
-                            startIcon={<MailOutlineIcon />}
+                            startIcon={<MailOutlineIcon/>}
                         >Update email</Button>
 
                     </Form>
                     {error && <Typography align="center" color="error">{error}</Typography>}
-                    {isSubmitting && <LinearProgress />}
+                    {isSubmitting && <LinearProgress/>}
                 </Paper>
             )}
         </Formik>
     );
 }
-
-function validateEmail(email: string) {
-    const re = /\S+@\S+\.\S+/;
-    return re.test(email);
-}
-
-
-
 
 interface ResetPasswordProps {
     user: User
@@ -146,8 +157,7 @@ function ResetPassword({ user, title, highlight }: ResetPasswordProps) {
         const errors: FormikErrors<PasswordReset> = {};
         if (value.password && value.password.length <= 6) {
             errors.password = "Password is too weak!"
-        }
-        else if (value.repeatPassword && value.repeatPassword !== value.password) {
+        } else if (value.repeatPassword && value.repeatPassword !== value.password) {
             errors.repeatPassword = "Passwords do not match!"
         }
         setCanSubmit(!!value.password && !!value.repeatPassword
@@ -184,7 +194,7 @@ function ResetPassword({ user, title, highlight }: ResetPasswordProps) {
                             name="password"
                             type="password"
                             label="Password"
-                            placeholder="mYpAsSwOrD123"
+                            placeholder="Password123"
                         />
 
                         <TextField
@@ -192,22 +202,22 @@ function ResetPassword({ user, title, highlight }: ResetPasswordProps) {
                             name="repeatPassword"
                             type="password"
                             label="Repeat Password"
-                            placeholder="mYpAsSwOrD123"
+                            placeholder="Password123"
                         />
 
                         <Button
                             className={classes.passwordBtn}
                             disabled={isSubmitting || !canSubmit}
                             onClick={submitForm}
-                            startIcon={(<LockIcon />)}
+                            startIcon={(<LockIcon/>)}
                             variant="contained"
                         >{title}</Button>
                     </Form>
                     {error && <Typography align="center" color="error">{error}</Typography>}
-                    {isSubmitting && <LinearProgress />}
+                    {isSubmitting && <LinearProgress/>}
                 </Paper>
             )}
-        </Formik >
+        </Formik>
     )
 
 }

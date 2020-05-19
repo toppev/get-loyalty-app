@@ -1,11 +1,10 @@
 import { Button, createStyles, makeStyles, Theme } from "@material-ui/core";
 import RefreshIcon from '@material-ui/icons/Refresh';
 import React from "react";
+import RequestError from "../requestError";
 
 interface ButtonProps {
-    callback: Function,
-    error: string
-    message?: "An error occurred while loading the page"
+    error: RequestError
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -26,23 +25,30 @@ const useStyles = makeStyles((theme: Theme) =>
         }
     }));
 
-export default function (props: ButtonProps) {
+export default function ({ error: errorObject }: ButtonProps) {
 
     const classes = useStyles();
 
-    return (
+    const { message, error, retry, clearError } = errorObject;
+
+    return !!errorObject ? (
         <div className={classes.errorDiv}>
-            <p className={classes.errorText}>{props.message}</p>
-            <p className={classes.errorName}>{props.error}</p>
+            <p className={classes.errorText}>{message}</p>
+            <p className={classes.errorName}>{error?.toString()}</p>
+            {retry &&
             <Button
                 variant="contained"
                 color="secondary"
                 onClick={(event: React.MouseEvent<HTMLElement>) => {
-                    props.callback()
+                    retry()
+                    if (clearError) {
+                        clearError();
+                    }
                 }}
-                startIcon={<RefreshIcon />}
+                startIcon={<RefreshIcon/>}
                 className={classes.retryButton}
-            >Retry</Button >
-        </div >
-    );
+            >Retry</Button>
+            }
+        </div>
+    ) : (null);
 }

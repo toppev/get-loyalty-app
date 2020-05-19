@@ -24,7 +24,7 @@ export default function (props: RewardFormDialogProps) {
         <div>
             <Dialog open={props.open}>
                 <IconButton className={classes.closeButton} aria-label="close" onClick={props.onClose}>
-                    <CloseIcon />
+                    <CloseIcon/>
                 </IconButton>
                 <DialogContent>
                     <RewardForm {...props} />

@@ -2,9 +2,10 @@ import { Button, createStyles, makeStyles, Theme } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import EditIcon from '@material-ui/icons/Edit';
 import FastfoodIcon from '@material-ui/icons/Fastfood';
-import React, { useContext } from 'react';
+import React from 'react';
 import Product from './Product';
-import ProductContext from './ProductContext';
+import { deleteProduct } from "../../services/productService";
+import useRequest from "../../hooks/useRequest";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -13,15 +14,9 @@ const useStyles = makeStyles((theme: Theme) =>
             marginBottom: '5px',
             padding: '5px 25px 5px 0px'
         },
-        paper: {
-
-        },
-        productItem: {
-
-        },
-        itemIcon: {
-
-        },
+        paper: {},
+        productItem: {},
+        itemIcon: {},
         icon: {
             marginLeft: '8px'
         },
@@ -68,7 +63,7 @@ export default function (props: ProductRowProps) {
                 alignItems="center"
             >
                 <Grid item xs={1} sm={1}>
-                    <FastfoodIcon className={classes.icon} />
+                    <FastfoodIcon className={classes.icon}/>
                 </Grid>
                 <Grid item xs={2} sm={2}>
                     <b>{props.product.name}</b>
@@ -95,14 +90,13 @@ function EditDeleteActions(props: ProductRowProps) {
 
     const classes = useStyles();
 
-    const context = useContext(ProductContext);
-
+    const { error, loading, response, execute } = useRequest(() => deleteProduct(props.product));
 
     return (
         <>
             <Button
                 className={classes.editBtn}
-                startIcon={(<EditIcon />)}
+                startIcon={(<EditIcon/>)}
                 onClick={() => {
                     if (props.startEditing) {
                         props.startEditing(props.product);
@@ -114,7 +108,7 @@ function EditDeleteActions(props: ProductRowProps) {
                 color="secondary"
                 onClick={() => {
                     if (window.confirm('Do you want to delete the item? This action is irreversible.')) {
-                        context.deleteProduct(props.product);
+                        execute()
                     }
                 }}
             >Delete</Button>

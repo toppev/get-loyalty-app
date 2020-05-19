@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme: Theme) =>
             [theme.breakpoints.down('sm')]: {
                 display: 'none',
             },
-            color: 'rgba(0, 0, 0, 0.5)',
+            color: 'rgba(0,0,0,0.5)',
             fontSize: '0.7em',
             margin: '3px 0px 0px 0px',
             textAlign: 'right',

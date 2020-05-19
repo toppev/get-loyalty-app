@@ -1,22 +1,35 @@
-import { Button, createStyles, InputAdornment, LinearProgress, ListItem, makeStyles, TextField, Theme } from "@material-ui/core";
+import {
+    Button,
+    createStyles,
+    Dialog,
+    DialogContent,
+    IconButton,
+    LinearProgress,
+    ListItem,
+    makeStyles,
+    Theme
+} from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
-import SearchIcon from "@material-ui/icons/Search";
+import _ from "lodash";
 import React, { useContext, useEffect, useState } from "react";
 import { get } from "../../config/axios";
 import AppContext from "../../context/AppContext";
-import RetryButton from "../common/RetryButton";
+import RetryButton from "../common/button/RetryButton";
 import Reward from "./Reward";
 import RewardContext from "./RewardContext";
 import RewardFormDialog from "./RewardFormDialog";
-import RewardRow from "./RewardRow";
-import _ from "lodash";
+import RewardItem from "./RewardItem";
+import SelectRewardButton from "./SelectRewardButton";
+import SearchField from "../common/SearchField";
+import CloseIcon from "@material-ui/icons/Close";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
-        // TODO
-        paper: {
-
+        dialogContent: {
+            height: '480px',
+            width: '640px'
         },
+        paper: {},
         rewardList: {
             paddingLeft: 0,
         },
@@ -36,17 +49,23 @@ const useStyles = makeStyles((theme: Theme) =>
             backgroundColor: 'limegreen',
             marginRight: '15px'
         },
-        importBtn: {
-
-        }
+        importBtn: {},
+        closeButton: {
+            position: 'absolute',
+            right: 0,
+            color: theme.palette.grey[500],
+        },
     }));
 
 interface RewardSelectorProps {
-
+    onClose: () => any
     onSelect: (reward: Reward) => any
-
+    open: boolean
 }
 
+/**
+ * Dialog to select a reward
+ */
 export default function (props: RewardSelectorProps) {
 
     const appContext = useContext(AppContext);
@@ -74,76 +93,76 @@ export default function (props: RewardSelectorProps) {
     };
 
     useEffect(() => {
-        fetchData();
+        fetchData().then();
     }, []);
 
     return (
-        <div>
-            {shouldLoad ? (
-                <LinearProgress />
-            ) : error && false && "TODO REMOVE THE FALSE" ? (
-                <RetryButton error={error.toString()} callback={async () => await fetchData()} />
-            ) : (<div className={classes.paper}>
+        <Dialog open={props.open} maxWidth={false}>
+            <IconButton className={classes.closeButton} aria-label="close" onClick={props.onClose}>
+                <CloseIcon/>
+            </IconButton>
+            <DialogContent className={classes.dialogContent}>
+                {shouldLoad ? (
+                    <LinearProgress/>
+                ) : error ? (
+                    <RetryButton error={{ message: error, retry: async () => await fetchData() }}/>
+                ) : (<div className={classes.paper}>
 
+                    <SearchField
+                        textColor="black"
+                        setSearch={setSearch}
+                        name={"reward_search"}
+                        placeholder={"Reward products..."}
+                    />
 
-                <ListItem className={classes.tools}>
-                    <Button className={classes.newBtn} variant="contained"
-                        startIcon={(<AddIcon />)}
-                        onClick={() => setFormOpen(true)}>New Reward</Button>
-                </ListItem>
+                    <ListItem className={classes.tools}>
+                        <Button className={classes.newBtn} variant="contained"
+                                startIcon={(<AddIcon/>)}
+                                onClick={() => setFormOpen(true)}>New Reward</Button>
+                    </ListItem>
 
-                <TextField
-                    className={classes.search}
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <SearchIcon />
-                            </InputAdornment>
-                        ),
-                        className: classes.input
-                    }}
-                    InputLabelProps={{ className: classes.inputLabel }}
-                    name="reward_search"
-                    type="search"
-                    placeholder="Search rewards..."
-                    onChange={(e) => setSearch(e.target.value)
-                    }
-                />
-                <RewardContext.Consumer>
-                    {({ rewards }) => (
-                        <ul className={classes.rewardList}>
-                            {rewards
-                                .filter(searchFilter)
-                                .map((item, index) =>
-                                    <RewardRow
-                                        startEditing={reward => setEditingReward(reward)}
-                                        key={index}
-                                        reward={item}
-                                    />
-                                )}
-                        </ul>
-                    )}
-                </RewardContext.Consumer>
+                    <RewardContext.Consumer>
+                        {({ rewards }) => (
+                            <ul className={classes.rewardList}>
+                                {rewards
+                                    .filter(searchFilter)
+                                    .map((item, index) =>
+                                        <RewardItem
+                                            actions={(
+                                                <SelectRewardButton
+                                                    reward={item}
+                                                    startEditing={reward => setEditingReward(reward)}
+                                                />
+                                            )}
+                                            key={index}
+                                            reward={item}
+                                        />
+                                    )}
+                            </ul>
+                        )}
+                    </RewardContext.Consumer>
 
-                <RewardFormDialog
-                    open={formOpen || !!editingReward}
-                    initialReward={editingReward}
-                    onClose={() => {
-                        setFormOpen(false);
-                        setEditingReward(undefined);
-                    }}
-                    onSubmitted={(reward: Reward) => {
-                        // If it was edited we will clone it, otherwise just use it (as it was not updated)
-                        if (!_.isEqual(reward, editingReward)) {
-                            reward._id = "new_reward"; // Just make sure possible future changes won't break and update the reward instead of creating a new one
-                            context.addRewards([reward]);
-                        }
-                        setFormOpen(false);
-                        setEditingReward(undefined);
-                        props.onSelect(reward)
-                    }} />
+                    <RewardFormDialog
+                        open={formOpen || !!editingReward}
+                        initialReward={editingReward}
+                        onClose={() => {
+                            setFormOpen(false);
+                            setEditingReward(undefined);
+                        }}
+                        onSubmitted={(reward: Reward) => {
+                            // If it was edited we will clone it, otherwise just use it (as it was not updated)
+                            if (!_.isEqual(reward, editingReward)) {
+                                reward._id = "new_reward"; // Just make sure possible future changes won't break and update the reward instead of creating a new one
+                                context.addRewards([reward]);
+                            }
+                            setFormOpen(false);
+                            setEditingReward(undefined);
+                            props.onSelect(reward);
+                            props.onClose();
+                        }}/>
 
-            </div>)}
-        </div>
+                </div>)}
+            </DialogContent>
+        </Dialog>
     )
 }

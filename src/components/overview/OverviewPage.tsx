@@ -1,22 +1,31 @@
-import DateFnsUtils from '@date-io/date-fns';
-import { createStyles, Grid, makeStyles, MenuItem, Paper, Select, TextField, Theme, Typography } from "@material-ui/core";
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import {
+    Box,
+    createStyles,
+    makeStyles,
+    MenuItem,
+    Paper,
+    Select,
+    Theme,
+    Typography,
+    useMediaQuery,
+    useTheme
+} from "@material-ui/core";
 import { Field, Form, Formik, FormikErrors } from "formik";
 import _ from 'lodash';
 import React, { useContext, useState } from "react";
 import AppContext, { Business } from "../../context/AppContext";
 import SaveChangesSnackbar from "../common/SaveChangesSnackbar";
 import Product from "../products/Product";
+import { TextField } from "formik-material-ui";
+import HelpIcon from "@material-ui/icons/Help";
+import Tooltip from "@material-ui/core/Tooltip";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
-        // TODO
-        paperDiv: {
-            padding: '20px'
-        },
         paper: {
-            padding: '20px',
-            margin: '30px'
+            padding: '25px',
+            margin: '20px',
+            flex: '1 1 0px'
         },
         field: {
             width: '100%',
@@ -27,18 +36,18 @@ const useStyles = makeStyles((theme: Theme) =>
             color: 'ghostwhite',
             marginBottom: '20px'
         },
-        option: {
-
-        },
+        option: {},
         ul: {
             listStyle: "none",
             padding: 0
         },
         sectionTypography: {
             color: 'gray'
+        },
+        helpIcon: {
+            marginLeft: '20px'
         }
     }));
-
 
 
 export default function () {
@@ -49,6 +58,9 @@ export default function () {
 
     const [saved, setSaved] = useState(true);
 
+    const theme = useTheme();
+    const bigScreen = useMediaQuery(theme.breakpoints.up('md'));
+
     const weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 
     // If changed will update the state so the snackbar opens
@@ -57,7 +69,6 @@ export default function () {
         // TODO: validate
         if (!_.isEqual(value, context.business)) {
             setSaved(false);
-            console.log(value, context.business)
         }
         return errors;
     }
@@ -71,7 +82,7 @@ export default function () {
             >Business Details</Typography>
             <Formik
                 initialValues={context.business}
-                validateOnBlur
+                validateOnChange={true}
                 validate={validateAndSnackbar}
                 onSubmit={(business, actions) => {
                     actions.setSubmitting(true)
@@ -79,10 +90,22 @@ export default function () {
                 }}
             >
                 {({ submitForm, isSubmitting, handleChange }) => (
-                    <div>
+                    <Box display="flex" flexDirection={bigScreen ? "row" : "column"}>
                         <Paper className={classes.paper}>
                             <Typography className={classes.sectionTypography} variant="h6" align="center">
                                 Public Information (optional)
+                                <Tooltip
+                                    enterDelay={200}
+                                    leaveDelay={300}
+                                    title={
+                                        <React.Fragment>
+                                            <Typography>Public information</Typography>
+                                            Include public information that anyone can see.
+                                        </React.Fragment>
+                                    }
+                                >
+                                    <HelpIcon className={classes.helpIcon}/>
+                                </Tooltip>
                             </Typography>
                             <Form>
                                 <TextField
@@ -93,6 +116,7 @@ export default function () {
                                     placeholder="My Business"
                                 />
                                 <TextField
+                                    multiline
                                     className={classes.field}
                                     name="public.description"
                                     type="text"
@@ -113,15 +137,12 @@ export default function () {
                                     label="Website (if any)"
                                 />
 
-                                <SaveChangesSnackbar
-                                    open={!saved}
-                                    buttonDisabled={isSubmitting}
-                                    onSave={submitForm}
-                                />
                             </Form>
+
                         </Paper>
                         <Paper className={classes.paper}>
-                            <Typography className={classes.sectionTypography} variant="h6" align="center">Other Details</Typography>
+                            <Typography className={classes.sectionTypography} variant="h6" align="center">Other
+                                Details</Typography>
                             <Form>
                                 <TextField
                                     className={classes.field}
@@ -132,10 +153,17 @@ export default function () {
                                 />
                             </Form>
                         </Paper>
-                    </div>
+
+                        <SaveChangesSnackbar
+                            open={!saved}
+                            buttonDisabled={isSubmitting}
+                            onSave={submitForm}
+                        />
+
+                    </Box>
                 )}
             </Formik>
-        </div >
+        </div>
     )
 }
 
@@ -143,6 +171,7 @@ export default function () {
 interface WeekDaySelectProps {
     key?: string,
     defaultValue: string,
+
     handleChange<T = string | React.ChangeEvent<any>>(field: T): T extends React.ChangeEvent<any> ? void : (e: string | React.ChangeEvent<any>) => void;
 }
 

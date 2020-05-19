@@ -1,7 +1,7 @@
-import { createStyles, Dialog, DialogContent, IconButton, makeStyles, Theme } from "@material-ui/core";
-import CloseIcon from '@material-ui/icons/Close';
+import { createStyles, Dialog, DialogContent, makeStyles, Theme } from "@material-ui/core";
 import React from "react";
 import ProductForm, { ProductFormProps } from "./ProductForm";
+import CloseButton from "../common/button/CloseButton";
 
 
 export interface ProductFormDialogProps extends ProductFormProps {
@@ -25,9 +25,7 @@ export default function (props: ProductFormDialogProps) {
     return (
         <div>
             <Dialog open={props.open}>
-                <IconButton className={classes.closeButton} aria-label="close" onClick={props.onClose}>
-                    <CloseIcon />
-                </IconButton>
+                <CloseButton onClick={props.onClose}/>
                 <DialogContent>
                     <ProductForm {...props} />
                 </DialogContent>

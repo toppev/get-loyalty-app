@@ -8,8 +8,9 @@ import 'grapesjs/dist/css/grapes.min.css';
 import React, { useContext, useEffect, useState } from "react";
 import { BASE_URL, post } from "../../config/axios";
 import AppContext from '../../context/AppContext';
+import Alert from "@material-ui/lab/Alert";
 
-// So the editor is not rerendered every time if the page id didn't change
+// So the editor is not rendered every time if the page id didn't change
 export default React.memo(PageEditor, propsAreEqual);
 
 function propsAreEqual(prev, next) {
@@ -36,6 +37,8 @@ function PageEditor(props) {
     const theme = useTheme();
     const notMobile = useMediaQuery(theme.breakpoints.up('sm'));
     const [forceMobileEditor, setForceMobileEditor] = useState(false);
+    const [savingError, setSavingError] = useState('');
+
 
     const classes = useStyles();
 
@@ -60,17 +63,14 @@ function PageEditor(props) {
         // By default open the blocks view
         editor.runCommand('core:open-blocks');
 
-        // TODO: should this be triggered every time
         editor.on('storage:store', () => {
             post(`/business/${appContext.business._id}/page/${props._id}/upload`, {
                 html: editor.getHtml(),
                 css: editor.getCss()
-            }).then((res) => {
-                // TODO
-            }).catch(_err => {
-                // TODO
+            }).then().catch(err => {
+                setSavingError(err?.response?.message || `Check internet connection. ${err}`)
             });
-        })
+        });
 
         return function cleanup() {
             if (editor.getDirtyCount()) {
@@ -86,13 +86,17 @@ function PageEditor(props) {
             </Typography>
             <div className={classes.enableEditor}>
                 If you want to try it
-            <Button
+                <Button
                     size="small"
                     className={classes.enableEditorBtn}
                     onClick={() => setForceMobileEditor(true)}
                 >click here</Button>
             </div>
-        </div>) : (
-            <div id="page-editor"></div>
-        )
+        </div>
+    ) : (
+        <>
+            {savingError.length && <Alert severity="error">Failed to save the page! {savingError}</Alert>}
+            <div id="page-editor"/>
+        </>
+    )
 }

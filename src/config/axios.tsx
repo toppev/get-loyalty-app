@@ -1,14 +1,13 @@
 import axios from "axios";
 
+//axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
+//axios.defaults.withCredentials = true // TODO: only for testing
 
-export const BASE_URL = 'http://localhost:3001';
 
-const headers = {
-    'Accept': 'application/json',
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'DELETE, POST, GET, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With',
-}
+export const BASE_URL = '';
+export const BUSINESS_ID = 'fakebusinessid';
+
+const headers = {}
 
 /*
 
@@ -47,7 +46,7 @@ export async function post(path: string, data: Object, fullPath: boolean = false
     return axios({
         method: 'POST',
         url: fullPath ? path : BASE_URL + path,
-        data: data,
+        data: transformDataObjects(data),
         headers: {
             'Content-Type': 'application/json',
             ...headers
@@ -59,6 +58,7 @@ export async function patch(path: string, data: Object, fullPath: boolean = fals
     return axios({
         method: 'PATCH',
         url: fullPath ? path : BASE_URL + path,
+        data: transformDataObjects(data),
         headers: {
             'Content-Type': 'application/json',
             ...headers
@@ -78,4 +78,18 @@ export async function uploadFile(path: string, file: File, fullPath: boolean = f
             ...headers
         }
     });
+}
+
+/**
+ * Add toRequestObject if you want to serialize a different version of the object.
+ * E.g full objects to ObjectId references only
+ */
+function transformDataObjects(data: any) {
+    if (data.toRequestObject) {
+        return data.toRequestObject();
+    }
+    if (Array.isArray(data)) {
+        return data.map(item => item.toRequestObject ? item.toRequestObject() : item);
+    }
+    return data;
 }

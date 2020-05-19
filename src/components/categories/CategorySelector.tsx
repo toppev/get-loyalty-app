@@ -41,11 +41,12 @@ export default function (props: Props) {
 
             onChange={(event, values: any[]) => {
                 setCategories(values.map(value => {
-                    return typeof value === 'string' ? new Category(value) : value;
+                    return typeof value === 'string' ? new Category(`${Math.random()}`, value) : value;
                 }));
             }}
 
-            renderInput={params => <TextField {...params} name="category" label="Categories" placeholder="Press Enter to add more"
+            renderInput={params => <TextField {...params} name="category" label="Categories"
+                                              placeholder="Press Enter to add more"
             />}
         />)
 

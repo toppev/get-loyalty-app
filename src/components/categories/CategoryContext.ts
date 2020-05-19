@@ -8,7 +8,8 @@ export interface CategoryContextInterface {
 
 export const defaultCategoryContext: CategoryContextInterface = {
     categories: [],
-    addCategory: () => { },
+    addCategory: () => {
+    },
 }
 
 export default React.createContext<CategoryContextInterface>(defaultCategoryContext);

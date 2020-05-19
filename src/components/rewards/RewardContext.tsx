@@ -10,9 +10,12 @@ export interface RewardContextInterface {
 
 export const defaultRewardContext: RewardContextInterface = {
     rewards: [new Reward('32131', 'Test Reward', "test reward description", "free items!")],
-    addRewards: () => { },
-    deleteReward: () => { },
-    updateReward: () => { }
+    addRewards: () => {
+    },
+    deleteReward: () => {
+    },
+    updateReward: () => {
+    }
 }
 
 export default React.createContext<RewardContextInterface>(defaultRewardContext);

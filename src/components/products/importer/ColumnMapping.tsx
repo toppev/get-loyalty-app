@@ -1,4 +1,14 @@
-import { Button, createStyles, Grid, LinearProgress, makeStyles, MenuItem, Select, Theme, Typography } from "@material-ui/core";
+import {
+    Button,
+    createStyles,
+    Grid,
+    LinearProgress,
+    makeStyles,
+    MenuItem,
+    Select,
+    Theme,
+    Typography
+} from "@material-ui/core";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import React from "react";
 import ViewHeadlineIcon from '@material-ui/icons/ViewHeadline';
@@ -27,9 +37,7 @@ const useStyles = makeStyles((theme: Theme) =>
         row: {
             marginTop: '20px'
         },
-        option: {
-
-        },
+        option: {},
         columnName: {
             marginRight: '25px',
             fontStyle: 'italic'
@@ -49,9 +57,9 @@ export default function (props: Props) {
     return (
         <div className={classes.content}>
             <Typography variant="h5">Column Mapping</Typography>
-            <br />
+            <br/>
             Please select where the value of each columns belongs.
-            <br />
+            <br/>
             Select "None" to exclude the field.
             <Formik
                 initialValues={props.initialFields}
@@ -105,12 +113,12 @@ export default function (props: Props) {
                             startIcon={(<ViewHeadlineIcon/>)}
                             onClick={submitForm}>Preview Products</Button>
 
-                        {isSubmitting && <LinearProgress />}
+                        {isSubmitting && <LinearProgress/>}
                     </div>
                 </Form>
             )}
             </Formik>
-        </div >
+        </div>
     )
 
 }

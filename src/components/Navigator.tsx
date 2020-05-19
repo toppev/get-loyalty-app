@@ -1,4 +1,4 @@
-import { Badge } from '@material-ui/core';
+import { Badge, Link } from '@material-ui/core';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
@@ -15,38 +15,40 @@ import PhoneIcon from '@material-ui/icons/MobileFriendly';
 import PagesIcon from '@material-ui/icons/Pages';
 import PeopleIcon from '@material-ui/icons/People';
 import PermMediaOutlinedIcon from '@material-ui/icons/PhotoSizeSelectActual';
+import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import RedeemIcon from '@material-ui/icons/Redeem';
 import SettingsIcon from '@material-ui/icons/Settings';
 import clsx from 'clsx';
 import React from 'react';
 import { NavLink } from "react-router-dom";
 import { NotificationValues } from '../Notifications';
-import LocalOfferIcon from '@material-ui/icons/LocalOffer';
 
 const drawerWidth = 240;
+export const APP_URL = "something.asd"
 
 const categories = [
     {
         id: 'Business',
         children: [
-            { id: 'Overview', icon: <AppsIcon />, to: '/' },
-            { id: 'Products', icon: <PermMediaOutlinedIcon />, to: '/products' },
-            { id: 'Campaigns', icon: <RedeemIcon />, to: '/campaigns' },
-            { id: 'Customers', icon: <PeopleIcon />, to: '/customers' },
+            { id: 'Overview', icon: <AppsIcon/>, to: '/' },
+            { id: 'Products', icon: <PermMediaOutlinedIcon/>, to: '/products' },
+            { id: 'Campaigns', icon: <RedeemIcon/>, to: '/campaigns' },
+            { id: 'Customers', icon: <PeopleIcon/>, to: '/customers' },
+            { id: 'Notifications', icon: <NotificationsActiveIcon/>, to: '/notifications' },
         ],
     },
     {
         id: 'Site Design',
         children: [
-            { id: 'Pages', icon: <PagesIcon />, to: '/pages' },
-            { id: 'Demo', icon: <PhoneIcon />, to: '/demo' },
+            { id: 'Pages', icon: <PagesIcon/>, to: '/pages' },
+            { id: 'Demo', icon: <PhoneIcon/>, to: '/demo' },
+            { id: 'Settings', icon: <SettingsIcon/>, to: '/settings' },
         ],
     },
     {
         id: 'Other',
         children: [
-            { id: 'My Account', icon: <AccountBox />, to: '/account' },
-            { id: 'Other Settings', icon: <SettingsIcon />, to: '/settings' },
+            { id: 'My Account', icon: <AccountBox/>, to: '/account' },
         ],
     },
 ];
@@ -54,26 +56,26 @@ const categories = [
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         categoryHeader: {
-            paddingTop: theme.spacing(2),
-            paddingBottom: theme.spacing(2),
+            paddingTop: '12px',
+            paddingBottom: '8px',
         },
         categoryHeaderPrimary: {
             color: theme.palette.grey[500],
             fontSize: 14
         },
         item: {
-            paddingTop: 1,
-            paddingBottom: 1,
+            paddingTop: '3px',
+            paddingBottom: '3px',
             fontSize: 18,
             color: '#1072c9',
         },
         itemCategory: {
             backgroundColor: '#232f3e',
             boxShadow: '0 -1px 0 #404854 inset',
-            paddingTop: theme.spacing(2),
-            paddingBottom: theme.spacing(2),
+            paddingTop: '12px',
+            paddingBottom: '12px',
         },
-        kantisApp: {
+        appName: {
             fontSize: 22,
             color: theme.palette.common.white,
             textAlign: 'center'
@@ -90,7 +92,7 @@ const useStyles = makeStyles((theme: Theme) =>
             marginRight: theme.spacing(2),
         },
         divider: {
-            marginTop: theme.spacing(3),
+            marginTop: '16px',
         },
         root: {
             flexGrow: 1,
@@ -122,13 +124,10 @@ const useStyles = makeStyles((theme: Theme) =>
             marginRight: 'auto',
             marginLeft: 0,
         },
-        drawerPaper: {
-
-        },
+        drawerPaper: {},
     }));
 
-export interface NavigatorProps {
-
+interface NavigatorProps {
     handleDrawerToggle: () => any
     open: boolean,
     notifications: NotificationValues
@@ -138,25 +137,27 @@ export default function Navigator(props: NavigatorProps) {
     const classes = useStyles();
 
     const drawer = (<List disablePadding>
-        <ListItem className={clsx(classes.kantisApp, classes.item, classes.itemCategory)}>
+        <ListItem className={clsx(classes.appName, classes.item, classes.itemCategory)}>
             <ListItemText
                 classes={{
                     primary: classes.itemPrimary,
                 }}
             >
-                kantis.app
+                <Link color="inherit" href={`https://${APP_URL}`}>{APP_URL}</Link>
             </ListItemText>
         </ListItem>
         <ListItem className={clsx(classes.item, classes.itemCategory)}>
             <ListItemIcon className={classes.itemIcon}>
-                <HomeIcon />
+                <Link color="inherit" href={`https://panel.${APP_URL}`}>
+                    <HomeIcon/>
+                </Link>
             </ListItemIcon>
             <ListItemText
                 classes={{
                     primary: classes.itemPrimary,
                 }}
             >
-                Management Panel
+                <Link color="inherit" href={`https://panel.${APP_URL}`}>Management Panel</Link>
             </ListItemText>
         </ListItem>
         {categories.map(({ id, children }) => (
@@ -176,7 +177,7 @@ export default function Navigator(props: NavigatorProps) {
                         button
                         component={NavLink} exact to={to}
                         activeClassName={classes.active}
-                        className={clsx(classes.item)}
+                        className={classes.item}
                     >
                         <ListItemIcon className={classes.itemIcon}>
                             <Badge
@@ -193,7 +194,7 @@ export default function Navigator(props: NavigatorProps) {
                         </ListItemText>
                     </ListItem>
                 ))}
-                <div className={classes.divider} />
+                <div className={classes.divider}/>
             </React.Fragment>
         ))}
     </List>);
@@ -206,16 +207,18 @@ export default function Navigator(props: NavigatorProps) {
                     <Drawer
                         variant="temporary"
                         className={classes.drawerPaper}
-                        onClose={(event: React.MouseEvent<HTMLElement>) => { props.handleDrawerToggle() }}
+                        onClose={(e) => props.handleDrawerToggle()}
                         ModalProps={{
                             keepMounted: true, // Better open performance on mobile.
                         }}
-                        {...props}
+                        open={props.open}
                     >
                         <IconButton
-                            onClick={(event: React.MouseEvent<HTMLElement>) => { props.handleDrawerToggle() }}
+                            onClick={(event: React.MouseEvent<HTMLElement>) => {
+                                props.handleDrawerToggle()
+                            }}
                             className={classes.closeMenuButton}>
-                            <CloseIcon />
+                            <CloseIcon/>
                         </IconButton>
                         {drawer}
                     </Drawer>
@@ -224,9 +227,9 @@ export default function Navigator(props: NavigatorProps) {
                     <Drawer
                         className={classes.drawer}
                         variant="permanent"
-                        {...props}
+                        open={props.open}
                     >
-                        <div />
+                        <div/>
                         {drawer}
                     </Drawer>
                 </Hidden>

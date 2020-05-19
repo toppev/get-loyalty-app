@@ -1,12 +1,13 @@
-import { Button, createStyles, LinearProgress, makeStyles, TextField, Theme, Typography } from "@material-ui/core";
-import FastfoodIcon from '@material-ui/icons/Fastfood';
+import { Button, createStyles, LinearProgress, makeStyles, Theme, Typography } from "@material-ui/core";
 import SaveIcon from '@material-ui/icons/Save';
 import { Form, Formik, FormikErrors } from "formik";
 import React, { useState } from "react";
-import CategoryChangeField from '../categories/CategorySelector';
+import CategorySelector from '../categories/CategorySelector';
 import IdText from "../common/IdText";
 import ProductSelector from "../products/ProductSelector";
 import Reward from "./Reward";
+import { TextField } from "formik-material-ui";
+import SelectProductsButton from "../common/button/SelectProductsButton";
 
 export interface RewardFormProps {
     initialReward?: Reward,
@@ -42,6 +43,11 @@ const useStyles = makeStyles((theme: Theme) =>
         submitButton: {
             margin: theme.spacing(3, 0, 2),
         },
+        typography: {
+            marginTop: '30px',
+            fontSize: '14px',
+            color: theme.palette.grey[600]
+        }
     }));
 
 
@@ -56,9 +62,11 @@ export default function (props: RewardFormProps) {
 
     const [productSelectorOpen, setProductSelectorOpen] = useState(false);
 
+    const title = props.initialReward ? 'Edit Reward' : 'Create Reward';
+
     return (
         <div className={classes.paper}>
-            <Typography component="h1" variant="h5">reward</Typography>
+            <Typography component="h1" variant="h5">{title}</Typography>
             <Formik
                 initialValues={reward}
                 validate={validate}
@@ -108,43 +116,49 @@ export default function (props: RewardFormProps) {
                         placeholder="Customer points to receive"
                     />
 
-                    <Typography variant="h6">(Optional) Select which categories or products are included in the discount</Typography>
 
-                    <CategoryChangeField
+                    <p className={classes.typography}>
+                        (Optional) Select which categories or products are included in the discount
+                    </p>
+                    <CategorySelector
                         className={classes.field}
                         initialCategories={reward.categories}
                         onCategoriesUpdate={setCategories}
                     />
+                    <SelectProductsButton
+                        products={products}
+                        buttonProps={{
+                            disabled: isSubmitting,
+                            onClick: () => setProductSelectorOpen(true)
+                        }}
+                    />
 
-                    <Button className={classes.submitButton}
-                        variant="contained"
-                        color="primary"
-                        disabled={isSubmitting}
-                        startIcon={(<FastfoodIcon />)}
-                        onClick={() => setProductSelectorOpen(true)}>Select Products</Button>
                     <ProductSelector
                         open={productSelectorOpen}
                         onClickClose={() => setProductSelectorOpen(false)}
-                        onSubmit={products => setProducts(products)}
+                        onSubmit={products => {
+                            setProducts(products)
+                            setProductSelectorOpen(false)
+                        }}
                         text="Select products eligible for the discount"
                     />
 
-                    {isSubmitting && <LinearProgress />}
-                    <br />
+                    {isSubmitting && <LinearProgress/>}
+                    <br/>
                     <div className={classes.submitDiv}>
                         <Button className={classes.submitButton}
-                            variant="contained"
-                            color="primary"
-                            disabled={isSubmitting}
-                            startIcon={(<SaveIcon />)}
-                            onClick={submitForm}>Save</Button>
+                                variant="contained"
+                                color="primary"
+                                disabled={isSubmitting}
+                                startIcon={(<SaveIcon/>)}
+                                onClick={submitForm}>Save</Button>
                     </div>
 
-                    <IdText id={reward._id} />
+                    <IdText id={reward._id}/>
                 </Form>
             )}
             </Formik>
-        </div >
+        </div>
     )
 }
 

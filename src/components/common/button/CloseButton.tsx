@@ -22,7 +22,7 @@ export default function (props: IconButtonProps) {
             {...props}
             className={classes.closeButton}
             aria-label="close">
-            <CloseIcon />
+            <CloseIcon/>
         </IconButton>
     );
 }
