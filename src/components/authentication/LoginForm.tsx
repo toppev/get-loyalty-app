@@ -17,7 +17,7 @@ import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import PasswordResetRequestDialog from "./PasswordResetRequestDialog";
 import AppContext from "../../context/AppContext";
 import { loginRequest } from '../../services/authenticationService';
-import { validateEmail } from "../common/Validate";
+import { validateEmail } from "../../util/Validate";
 
 interface FormValues {
     email: string,

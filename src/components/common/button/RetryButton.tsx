@@ -1,7 +1,7 @@
 import { Button, createStyles, makeStyles, Theme } from "@material-ui/core";
 import RefreshIcon from '@material-ui/icons/Refresh';
 import React from "react";
-import RequestError from "../requestError";
+import RequestError from "../../../util/requestError";
 
 interface ButtonProps {
     error: RequestError

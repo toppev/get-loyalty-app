@@ -1,6 +1,7 @@
 import {
     Box,
     createStyles,
+    LinearProgress,
     makeStyles,
     MenuItem,
     Paper,
@@ -19,6 +20,9 @@ import Product from "../products/Product";
 import { TextField } from "formik-material-ui";
 import HelpIcon from "@material-ui/icons/Help";
 import Tooltip from "@material-ui/core/Tooltip";
+import { updateBusiness } from "../../services/businessService";
+import useRequest from "../../hooks/useRequest";
+import RetryButton from "../common/button/RetryButton";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -49,6 +53,8 @@ const useStyles = makeStyles((theme: Theme) =>
         }
     }));
 
+const weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+
 
 export default function () {
 
@@ -61,7 +67,9 @@ export default function () {
     const theme = useTheme();
     const bigScreen = useMediaQuery(theme.breakpoints.up('md'));
 
-    const weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    const otherRequests = useRequest()
+
+    const { error, loading } = otherRequests;
 
     // If changed will update the state so the snackbar opens
     const validateAndSnackbar = (value: Business) => {
@@ -80,89 +88,90 @@ export default function () {
                 variant="h4"
                 align="center"
             >Business Details</Typography>
-            <Formik
-                initialValues={context.business}
-                validateOnChange={true}
-                validate={validateAndSnackbar}
-                onSubmit={(business, actions) => {
-                    actions.setSubmitting(true)
+            {error && <RetryButton error={error}/>}
+            {loading ? <LinearProgress/> : (
+                <Formik
+                    initialValues={context.business}
+                    validateOnChange={true}
+                    validate={validateAndSnackbar}
+                    onSubmit={(business, actions) => {
+                        actions.setSubmitting(true)
+                        otherRequests.performRequest(() => updateBusiness(business));
 
-                }}
-            >
-                {({ submitForm, isSubmitting, handleChange }) => (
-                    <Box display="flex" flexDirection={bigScreen ? "row" : "column"}>
-                        <Paper className={classes.paper}>
-                            <Typography className={classes.sectionTypography} variant="h6" align="center">
-                                Public Information (optional)
-                                <Tooltip
-                                    enterDelay={200}
-                                    leaveDelay={300}
-                                    title={
-                                        <React.Fragment>
-                                            <Typography>Public information</Typography>
-                                            Include public information that anyone can see.
-                                        </React.Fragment>
-                                    }
-                                >
-                                    <HelpIcon className={classes.helpIcon}/>
-                                </Tooltip>
-                            </Typography>
-                            <Form>
-                                <TextField
-                                    className={classes.field}
-                                    name="public.name"
-                                    type="text"
-                                    label="Business Name"
-                                    placeholder="My Business"
-                                />
-                                <TextField
-                                    multiline
-                                    className={classes.field}
-                                    name="public.description"
-                                    type="text"
-                                    label="Description"
-                                    placeholder="A short user-friendly description of your business"
-                                />
-                                <TextField
-                                    className={classes.field}
-                                    name="public.address"
-                                    type="text"
-                                    label="Public Address"
-                                />
+                    }}
+                >
+                    {({ submitForm, isSubmitting, handleChange }) => (
+                        <Box display="flex" flexDirection={bigScreen ? "row" : "column"}>
+                            <Paper className={classes.paper}>
+                                <Typography className={classes.sectionTypography} variant="h6" align="center">
+                                    Public Information (optional)
+                                    <Tooltip
+                                        enterDelay={200}
+                                        leaveDelay={300}
+                                        title={
+                                            <React.Fragment>
+                                                <Typography>Public information</Typography>
+                                                Include public information that anyone can see.
+                                            </React.Fragment>
+                                        }
+                                    >
+                                        <HelpIcon className={classes.helpIcon}/>
+                                    </Tooltip>
+                                </Typography>
+                                <Form>
+                                    <TextField
+                                        className={classes.field}
+                                        name="public.name"
+                                        type="text"
+                                        label="Business Name"
+                                        placeholder="My Business"
+                                    />
+                                    <TextField
+                                        multiline
+                                        className={classes.field}
+                                        name="public.description"
+                                        type="text"
+                                        label="Description"
+                                        placeholder="A short user-friendly description of your business"
+                                    />
+                                    <TextField
+                                        className={classes.field}
+                                        name="public.address"
+                                        type="text"
+                                        label="Public Address"
+                                    />
+                                    <TextField
+                                        className={classes.field}
+                                        name="public.website"
+                                        type="text"
+                                        label="Website (if any)"
+                                    />
+                                </Form>
+                            </Paper>
+                            <Paper className={classes.paper}>
+                                <Typography className={classes.sectionTypography} variant="h6" align="center">Other
+                                    Details</Typography>
+                                <Form>
+                                    <TextField
+                                        className={classes.field}
+                                        name="email"
+                                        type="text"
+                                        label="Private Email"
+                                        placeholder="example@email.com"
+                                    />
+                                </Form>
+                            </Paper>
 
-                                <TextField
-                                    className={classes.field}
-                                    name="public.website"
-                                    type="text"
-                                    label="Website (if any)"
-                                />
+                            <SaveChangesSnackbar
+                                open={!saved}
+                                buttonDisabled={isSubmitting}
+                                onSave={submitForm}
+                            />
 
-                            </Form>
-
-                        </Paper>
-                        <Paper className={classes.paper}>
-                            <Typography className={classes.sectionTypography} variant="h6" align="center">Other
-                                Details</Typography>
-                            <Form>
-                                <TextField
-                                    className={classes.field}
-                                    name="email"
-                                    type="text"
-                                    label="Private Email"
-                                    placeholder="example@email.com"
-                                />
-                            </Form>
-                        </Paper>
-
-                        <SaveChangesSnackbar
-                            open={!saved}
-                            buttonDisabled={isSubmitting}
-                            onSave={submitForm}
-                        />
-
-                    </Box>
-                )}
-            </Formik>
+                        </Box>
+                    )}
+                </Formik>
+            )}
         </div>
     )
 }
@@ -178,8 +187,6 @@ interface WeekDaySelectProps {
 function WeekDaySelect({ key, defaultValue, handleChange }: WeekDaySelectProps) {
 
     const classes = useStyles();
-
-    const weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 
     key = key || defaultValue;
 

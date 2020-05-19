@@ -26,7 +26,7 @@ import CloseButton from '../common/button/CloseButton';
 import IdText from '../common/IdText';
 import RetryButton from '../common/button/RetryButton';
 import { Page, PUBLISHED } from './Page';
-import PageEditor from './PageEditor';
+import PageEditor from './editor/PageEditor';
 import useRequest from "../../hooks/useRequest";
 import useResponseState from "../../hooks/useResponseState";
 import { createPage, deletePage, listPages, listTemplates, updatePage } from "../../services/pageService";
@@ -88,7 +88,8 @@ export default function () {
     const [templateSelectorOpen, setTemplateSelectorOpen] = useState(false);
 
     const { error: listError, loading: listLoading, response, execute: fetchPages } = useRequest(listPages);
-    const [pages, setPages] = useResponseState<Page[]>(response, []);
+    const [pages, setPages] = useState<Page[]>([new Page('123', 'test page', 'testiii')]);
+    //const [pages, setPages] = useResponseState<Page[]>(response, []);
 
     const otherRequests = useRequest();
 
@@ -225,7 +226,7 @@ function PageCard(props: PageCardProps) {
 
     const submitNameChange = () => {
         setEditing(false)
-        const url = `${BASE_URL}/page$/${page._id}`;
+        const url = `${BASE_URL}/page/${page._id}`;
         post(url, { name: page.name })
             .catch(err => {
                 // Show notification?

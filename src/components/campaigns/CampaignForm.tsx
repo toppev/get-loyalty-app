@@ -24,12 +24,12 @@ import Reward from "../rewards/Reward";
 import RewardFormDialog from "../rewards/RewardFormDialog";
 import DateFnsUtils from "@date-io/date-fns";
 import RewardSelector from "../rewards/RewardSelector";
-import SelectProductsButton from "../common/button/SelectProductsButton";
+import SelectProductsButton from "../products/button/SelectProductsButton";
 import RequirementSelector from "./RequirementSelector";
 import useRequest from "../../hooks/useRequest";
 import RetryButton from "../common/button/RetryButton";
 import { createCampaign, updateCampaign } from "../../services/campaignService";
-import { alphanumeric } from "../common/Validate";
+import { alphanumeric } from "../../util/Validate";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

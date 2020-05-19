@@ -17,7 +17,7 @@ import { TextField } from "formik-material-ui";
 import React, { useContext, useState } from "react";
 import { patch } from "../../config/axios";
 import AppContext, { User } from "../../context/AppContext";
-import { validateEmail } from "../common/Validate";
+import { validateEmail } from "../../util/Validate";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

@@ -7,7 +7,7 @@ import IdText from "../common/IdText";
 import ProductSelector from "../products/ProductSelector";
 import Reward from "./Reward";
 import { TextField } from "formik-material-ui";
-import SelectProductsButton from "../common/button/SelectProductsButton";
+import SelectProductsButton from "../products/button/SelectProductsButton";
 
 export interface RewardFormProps {
     initialReward?: Reward,

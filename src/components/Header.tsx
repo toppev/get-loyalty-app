@@ -1,7 +1,7 @@
 import React from 'react'
 import { AppBar, Hidden, IconButton, Toolbar, Typography, withWidth } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
-import { APP_URL } from "./components/Navigator";
+import { APP_URL } from "./Navigator";
 
 interface HeaderProps {
     handleDrawerToggle: () => any,

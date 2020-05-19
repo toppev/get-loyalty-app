@@ -4,10 +4,11 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import './App.css';
 import Navigator from './components/Navigator';
 import AppContext, { AppContextInterface, defaultAppContext } from './context/AppContext';
-import Header from './Header';
-import { NotificationValues } from './Notifications';
+import Header from './components/Header';
+import { AccountNotificationValues } from './components/account/AccountNotifications';
 import LoginDialog from "./components/authentication/LoginDialog";
 import { loginRequest } from "./services/authenticationService";
+import { createBusiness, getBusiness } from "./services/businessService";
 
 // Lazy Pages
 const OverviewPage = lazy(() => import('./components/overview/OverviewPage'));
@@ -23,7 +24,7 @@ const NotificationsPage = lazy(() => import('./components/notifications/Notifica
 export default function () {
 
     const [navDrawerOpen, setNavDrawerOpen] = useState(false);
-    const [notifications, setNotifications] = useState<NotificationValues>({});
+    const [notifications, setNotifications] = useState<AccountNotificationValues>({});
     const [loginDialog, setLoginDialog] = useState(false);
 
     const context = defaultAppContext
@@ -46,8 +47,21 @@ export default function () {
         if (!document.cookie.includes('session=')) {
             setLoginDialog(true)
         } else {
+            // Login -> fetch business or create one
             loginRequest()
-                .then(res => context.setUser(res.data))
+                .then(res => {
+                    context.setUser(res.data)
+                    getBusiness()
+                        .then(res => context.setBusiness(res.data))
+                        .catch(err => {
+                            console.log(err)
+                            if (err.response && err.response.status === 404) {
+                                createBusiness()
+                                    .then(res => context.setBusiness(res.data))
+                                    .catch(err => console.log(err))
+                            }
+                        })
+                })
                 .catch(_err => setLoginDialog(true))
         }
     }, [])

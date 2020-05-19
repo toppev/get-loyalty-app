@@ -2,7 +2,7 @@ import { Button, ButtonProps } from "@material-ui/core";
 import FastfoodIcon from "@material-ui/icons/Fastfood";
 import React from "react";
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import Product from "../../products/Product";
+import Product from "../Product";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -32,7 +32,8 @@ export default function ({ buttonProps, products }: SelectProductsButtonProps) {
             color="primary"
             startIcon={(<FastfoodIcon/>)}
             {...buttonProps}
-        >Select Products
+        >
+            Select Products
             <span className={classes.selectedCount}>{products ? ` (${products.length || 'all'} selected)` : ''}</span>
         </Button>)
 }

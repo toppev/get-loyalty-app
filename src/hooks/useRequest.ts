@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import RequestError from "../components/common/requestError";
+import RequestError from "../util/requestError";
 import { AxiosResponse } from "axios";
 
 // IF TRUE THERE WONT BE ERRORS
@@ -8,10 +8,12 @@ const NO_ERROR = true;
 
 type Request = () => Promise<any>
 type Callback = (response: AxiosResponse) => any
+type OnError = (err: any) => any
 
 type RequestWithCallback = {
     request?: Request
     callback?: Callback
+    onError?: OnError
 };
 
 /**
@@ -35,7 +37,8 @@ export default function useRequest(
         /**
          * Custom error message to display if an error occurs
          */
-        errorMessage?: string
+        errorMessage?: string,
+        onError?: OnError
     },
     initialCallback?: Callback,
 ) {
@@ -75,6 +78,9 @@ export default function useRequest(
                         retry: () => execute(),
                         clearError: () => setError(undefined)
                     });
+                    if (requestContext.onError) {
+                        requestContext.onError(err)
+                    }
                 }).finally(() => setLoading(false))
         }
     }, [opts.errorMessage, requestContext])
@@ -85,8 +91,8 @@ export default function useRequest(
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [execute])
 
-    const performRequest = useCallback((request: Request, callback?: Callback) => {
-        setRequestContext({ request, callback })
+    const performRequest = useCallback((request: Request, callback?: Callback, onError?: OnError) => {
+        setRequestContext({ request, callback, onError })
     }, [])
 
     return {

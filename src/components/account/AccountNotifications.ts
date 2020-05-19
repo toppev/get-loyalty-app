@@ -2,6 +2,6 @@
  * Business/logged in user notifications.
  * Nothing to do with push notifications
  */
-export interface NotificationValues {
+export interface AccountNotificationValues {
     [key: string]: number;
 }

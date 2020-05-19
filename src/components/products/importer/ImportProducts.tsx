@@ -16,7 +16,7 @@ import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import React, { ReactElement, useState } from 'react';
 import { post, uploadFile } from '../../../config/axios';
-import RequestError from '../../common/requestError';
+import RequestError from '../../../util/requestError';
 import Product from '../Product';
 import ProductFormDialog from '../ProductFormDialog';
 import ProductRow from '../ProductRow';

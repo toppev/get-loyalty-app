@@ -21,7 +21,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import clsx from 'clsx';
 import React from 'react';
 import { NavLink } from "react-router-dom";
-import { NotificationValues } from '../Notifications';
+import { AccountNotificationValues } from './account/AccountNotifications';
 
 const drawerWidth = 240;
 export const APP_URL = "something.asd"
@@ -130,7 +130,7 @@ const useStyles = makeStyles((theme: Theme) =>
 interface NavigatorProps {
     handleDrawerToggle: () => any
     open: boolean,
-    notifications: NotificationValues
+    notifications: AccountNotificationValues
 }
 
 export default function Navigator(props: NavigatorProps) {
