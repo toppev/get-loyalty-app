@@ -3,9 +3,10 @@ import useRequest from "../../hooks/useRequest";
 import { listNotificationHistory } from "../../services/pushNotificationService";
 import useResponseState from "../../hooks/useResponseState";
 import { PushNotification } from "./PushNotification";
-import { Card, CardProps, createStyles, Paper, Theme, Typography } from "@material-ui/core";
+import { Card, CardProps, createStyles, LinearProgress, Paper, Theme, Typography } from "@material-ui/core";
 import RetryButton from "../common/button/RetryButton";
 import { makeStyles } from "@material-ui/core/styles";
+import { Form } from "formik";
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -46,6 +47,7 @@ export default function (props: NotificationHistoryProps) {
     return (
         <Paper className={classes.paper}>
             <Typography variant="h5" className={classes.typography}>Notification History</Typography>
+            {loading && <LinearProgress/>}
             {error && <RetryButton error={error}/>}
             {props.addToHistory?.map(n => (
                 <NotificationCard notification={n} className={`${classes.card} ${classes.newCard}`}/>

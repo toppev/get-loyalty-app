@@ -41,7 +41,8 @@ export default function ({ notification, onSubmitted }: NotificationFormProps) {
 
     const classes = useStyles();
 
-    const { loading, error, response, performRequest } = useRequest();
+    const { loading, error, performRequest } = useRequest();
+    console.log(error)
 
     return (
         <Paper className={classes.paper}>
@@ -51,11 +52,16 @@ export default function ({ notification, onSubmitted }: NotificationFormProps) {
                 validate={validate}
                 onSubmit={(notification, actions) => {
                     if (window.confirm('Are you sure you want to send this notification to all customers that can receive notifications?')) {
-                        sendPushNotification(notification).then(r => {
-                            if (onSubmitted) {
-                                onSubmitted(notification);
-                            }
-                        });
+                        performRequest(
+                            () => sendPushNotification(notification),
+                            () => {
+                                actions.setSubmitting(false)
+                                if (onSubmitted) {
+                                    onSubmitted(notification);
+                                }
+                            },
+                            () => actions.setSubmitting(false)
+                        )
                     }
                 }}
             >{({ submitForm, isSubmitting }) => (
@@ -81,8 +87,7 @@ export default function ({ notification, onSubmitted }: NotificationFormProps) {
                         label="Link (optional)"
                         placeholder="Your website url or link to anything else (e.g social media) or just empty :)"
                     />
-
-                    {(isSubmitting || loading) && <LinearProgress/>}
+                    {loading && <LinearProgress/>}
                     {error && <RetryButton error={error}/>}
                     <div className={classes.submitDiv}>
                         <Button

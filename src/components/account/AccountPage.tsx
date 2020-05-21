@@ -7,7 +7,8 @@ import {
     Paper,
     Theme,
     Typography,
-    useMediaQuery, useTheme
+    useMediaQuery,
+    useTheme
 } from "@material-ui/core";
 import LockIcon from '@material-ui/icons/Lock';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
@@ -15,9 +16,9 @@ import clsx from 'clsx';
 import { Form, Formik, FormikErrors } from "formik";
 import { TextField } from "formik-material-ui";
 import React, { useContext, useState } from "react";
-import { patch } from "../../config/axios";
 import AppContext, { User } from "../../context/AppContext";
 import { validateEmail } from "../../util/Validate";
+import { updateUser } from "../../services/userService";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -65,24 +66,17 @@ export default function () {
     )
 }
 
-function updateUser(userId: string, value: object, setSubmitting: (state: boolean) => any, setError: (err: string) => any) {
+function handleUpdate(userId: string, value: object, setSubmitting: (state: boolean) => any, setError: (err: string) => any) {
     setSubmitting(true)
     setError("");
-    console.log(value)
-    patch(`/user/${userId}`, value)
-        .then(res => {
-            if (res.status !== 200) {
-                if (res.data.message) {
-                    // FIXME: better message?
-                    setError(res.data.message);
-                }
-            }
-
-        }).catch(err => {
-        setError(`${err}. Please try again.`);
-    }).finally(() => {
-        setSubmitting(false);
-    });
+    updateUser(userId, value)
+        .then()
+        .catch(err => {
+            setError(`${err?.response?.message || err?.response || err}. Please try again.`);
+        })
+        .finally(() => {
+            setSubmitting(false);
+        });
 }
 
 interface EmailFormProps {
@@ -110,7 +104,7 @@ function EmailForm({ user }: EmailFormProps) {
             initialValues={user}
             validateOnBlur
             validate={validate}
-            onSubmit={(value, actions) => updateUser(value._id, value, actions.setSubmitting, setError)}
+            onSubmit={(value, actions) => handleUpdate(value._id, value, actions.setSubmitting, setError)}
         >
             {({ submitForm, isSubmitting, handleChange }) => (
                 <Paper className={!!!user.email ? clsx(classes.paper, classes.highlight) : classes.paper}>
@@ -160,8 +154,7 @@ function ResetPassword({ user, title, highlight }: ResetPasswordProps) {
         } else if (value.repeatPassword && value.repeatPassword !== value.password) {
             errors.repeatPassword = "Passwords do not match!"
         }
-        setCanSubmit(!!value.password && !!value.repeatPassword
-            && !!!errors.password && !!!errors.repeatPassword);
+        setCanSubmit(!!value.password && !!value.repeatPassword && !errors.password && !errors.repeatPassword);
         return errors;
     }
 
@@ -176,7 +169,7 @@ function ResetPassword({ user, title, highlight }: ResetPasswordProps) {
             initialValues={{ password: "", repeatPassword: "" }}
             validate={validate}
             onSubmit={(value, actions) => {
-                updateUser(user._id, { password: value.password }, actions.setSubmitting, setError)
+                handleUpdate(user._id, { password: value.password }, actions.setSubmitting, setError)
             }}
         >
             {({ submitForm, isSubmitting, handleChange }) => (

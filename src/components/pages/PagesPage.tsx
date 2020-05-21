@@ -9,13 +9,17 @@ import {
     CardProps,
     createStyles,
     Dialog,
-    DialogContent, Divider,
+    DialogContent,
+    Divider,
     Grid,
     IconButton,
     LinearProgress,
-    makeStyles, Paper,
+    makeStyles,
+    Paper,
     TextField,
-    Theme, Tooltip, Typography
+    Theme,
+    Tooltip,
+    Typography
 } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import WebIcon from '@material-ui/icons/Web';
@@ -35,9 +39,15 @@ import PreviewPage from "./PreviewPage";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
+        cardsDiv: {},
         card: {
             textAlign: 'center',
             margin: '15px',
+            width: '350px',
+        },
+        actionCardsDivider: {
+            margin: '12px 0px',
+            backgroundColor: theme.palette.grey[800]
         },
         cardMedia: {},
         cardActions: {
@@ -101,14 +111,8 @@ export default function () {
 
     return error ? (<RetryButton error={error}/>) : (
         <div>
-            {loading && <LinearProgress/>}
-            <Grid
-                container
-                direction="row"
-                justify="flex-start"
-                alignItems="flex-start"
-            >
-                <Grid item xs={12} sm={4} key={"page_selector"}>
+            <div className={classes.cardsDiv}>
+                <div>
                     <PageCard
                         className={`${classes.card} ${classes.templateSelectorCard}`}
                         page={new Page('123', 'Create a new page')}
@@ -136,40 +140,44 @@ export default function () {
                             );
                         }}
                     />
-                </Grid>
-                {pages.filter((page: Page) => !page.isDiscarded()).map((page: Page) => (
-                    <Grid item xs={12} sm={4} key={page._id}>
-                        <PageCard
-                            editableName
-                            page={page}
-                            image={`${BASE_URL}/business/${business._id}/page/${page._id}/thumbnail`}
-                            actions={(
-                                <>
-                                    <Button
-                                        className={classes.actionButton}
-                                        color="primary"
-                                        variant="contained"
-                                        startIcon={(<EditIcon/>)}
-                                        onClick={() => setPageOpen(page)}
-                                    >Edit</Button>
-                                    <Button
-                                        className={classes.actionButton}
-                                        color="secondary"
-                                        onClick={() => {
-                                            if (window.confirm(`Do you want to remove the page "${page.name}"?`)) {
-                                                // Not actually deleting them, instead make it invisible (unavailable)
-                                                otherRequests.performRequest(() => deletePage(page))
-                                            }
-                                        }}
-                                    >Delete</Button>
-                                </>
-                            )}
-                        />
-                    </Grid>
-                ))}
-            </Grid>
+                </div>
+                <Divider className={classes.actionCardsDivider}/>
+                {loading && <LinearProgress/>}
+                <div>
+                    {pages.filter((page: Page) => !page.isDiscarded()).map((page: Page) => (
+                        <Grid item xs={12} sm={4} key={page._id}>
+                            <PageCard
+                                editableName
+                                page={page}
+                                image={`${BASE_URL}/business/${business._id}/page/${page._id}/thumbnail`}
+                                actions={(
+                                    <>
+                                        <Button
+                                            className={classes.actionButton}
+                                            color="primary"
+                                            variant="contained"
+                                            startIcon={(<EditIcon/>)}
+                                            onClick={() => setPageOpen(page)}
+                                        >Edit</Button>
+                                        <Button
+                                            className={classes.actionButton}
+                                            color="secondary"
+                                            onClick={() => {
+                                                if (window.confirm(`Do you want to remove the page "${page.name}"?`)) {
+                                                    // Not actually deleting them, instead make it invisible (unavailable)
+                                                    otherRequests.performRequest(() => deletePage(page))
+                                                }
+                                            }}
+                                        >Delete</Button>
+                                    </>
+                                )}
+                            />
+                        </Grid>
+                    ))}
+                </div>
+            </div>
             {pageOpen &&
-            <>
+            <div>
                 <Divider className={classes.divider}/>
                 <Paper className={classes.stageSelectorPaper}>
                     <div className={classes.stageSelectorDiv}>
@@ -201,7 +209,7 @@ export default function () {
                     </div>
                 </Paper>
                 <PageEditor page={pageOpen}/>
-            </>}
+            </div>}
         </div>
     )
 }

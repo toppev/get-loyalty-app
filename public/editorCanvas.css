@@ -1,5 +1,8 @@
 .loyally-placeholder {
-    background-color: ghostwhite;
-    color: orange;
-    border: dashed teal;
+    font-style: italic;
+}
+
+.loyally-placeholder:hover {
+    background-color: #0aef75;
+    text-decoration: none;
 }

@@ -11,8 +11,8 @@ const useStyles = makeStyles((theme: Theme) =>
         box: {
             "& > .MuiPaper-root": {
                 margin: '30px',
-                minWidth: '450px',
-                maxHeight: '400px',
+                minWidth: '550px',
+                height: '550px',
             }
         }
     }));

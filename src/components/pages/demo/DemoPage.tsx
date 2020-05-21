@@ -20,7 +20,10 @@ const useStyles = makeStyles((theme: Theme) =>
         linkItem: {
             marginTop: '50px',
             color: theme.palette.grey[100],
-        }
+        },
+        copyBtn: {
+            marginLeft: '4px'
+        },
     }));
 
 export default function () {
@@ -39,7 +42,7 @@ export default function () {
                     Scan the QR code or share the link to try on other devices
                 </Typography>
                 <p className={classes.typography}>
-                    This is what your customers see. Only published sites will display.
+                    This is what you would see as an customer. Only published sites will display.
                     Edit pages <Link href='/pages' underline='always' color='inherit'>here</Link>
                 </p>
                 <div className={classes.linkItem}>
@@ -47,6 +50,7 @@ export default function () {
                 </div>
                 <div className={classes.linkItem}>
                     <Link href={src} color="inherit" target="_blank" rel="noopener"><u>{src}</u></Link>
+                    <span className={classes.copyBtn}>
                     <CopyToClipboard>
                         {({ copy }) => (
                             <Button
@@ -57,6 +61,7 @@ export default function () {
                             >Copy</Button>
                         )}
                     </CopyToClipboard>
+                    </span>
 
                 </div>
             </Box>

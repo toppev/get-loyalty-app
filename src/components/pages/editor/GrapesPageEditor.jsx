@@ -7,7 +7,11 @@ import React, { useContext, useEffect, useState } from "react";
 import { BASE_URL, post } from "../../../config/axios";
 import AppContext from '../../../context/AppContext';
 import Alert from "@material-ui/lab/Alert";
-import { addPlaceholderBlock, registerListener } from "./grapesPlaceholderBlock";
+import { addPlaceholderBlock, registerListener } from "./blocks/placeholderBlock";
+import { addCampaignsBlock } from "./blocks/campaignBlock";
+import { addUserRewardsBlocK } from "./blocks/userRewardBlock";
+import { addRichTextEditorPlaceholders } from "./blocks/richPlaceholder";
+import { usePlaceholderContext } from "./placeholderContext";
 
 // So the editor is not rendered every time if the page id didn't change
 export default React.memo(GrapesPageEditor, propsAreEqual);
@@ -24,6 +28,8 @@ function GrapesPageEditor(props) {
 
     const [savingError, setSavingError] = useState('');
 
+    const placeholderContext = usePlaceholderContext()
+
     useEffect(() => {
         const editor = GrapesJS.init({
             container: `#page-editor`,
@@ -34,7 +40,11 @@ function GrapesPageEditor(props) {
                 gjsBlocksBasic,
                 grapesjsTabs,
                 grapesjsTouch,
-                //grapesjs-tui-image-editor?
+
+                // Add CKEditor?
+                // didn't really work :/
+
+                //Add grapesjs-tui-image-editor?
             ],
             storageManager: {
                 type: 'remote',
@@ -45,19 +55,24 @@ function GrapesPageEditor(props) {
             }
         });
 
-        // By default open the blocks view
+        // Open the blocks view
         editor.runCommand('core:open-blocks');
 
-        addPlaceholderBlock(editor.BlockManager);
-
+        // Add custom blocks
+        const bm = editor.BlockManager;
+        addPlaceholderBlock(bm);
         registerListener(editor, props.selectPlaceholder);
+
+        addCampaignsBlock(bm);
+        addUserRewardsBlocK(bm);
+      //  addRichTextEditorPlaceholders(editor, placeholderContext);
 
         editor.on('storage:store', () => {
             post(`/business/${appContext.business._id}/page/${props._id}/upload`, {
                 html: editor.getHtml(),
                 css: editor.getCss()
             }).then().catch(err => {
-                setSavingError(err?.response?.message || `Check internet connection. ${err}`)
+                setSavingError(err?.response?.message || `Oops.. Please, check your internet connection. ${err}`)
             });
         });
 

@@ -141,7 +141,7 @@ export default function ({ initialCampaign, onSubmitted }: CampaignFormProps) {
                     />
                     <TextField
                         className={classes.field}
-                        name="name"
+                        name="description"
                         type="text"
                         label="Description of this campaign"
                         placeholder="Free cupcake on your birthday!"
@@ -276,7 +276,6 @@ export default function ({ initialCampaign, onSubmitted }: CampaignFormProps) {
                     </div>
 
                     {error && <RetryButton error={error}/>}
-                    {loading && <LinearProgress/>}
 
                     <div className={classes.submitDiv}>
                         <Button

@@ -1,4 +1,4 @@
-import { createStyles, LinearProgress, ListItem, makeStyles, Theme } from '@material-ui/core';
+import { Box, createStyles, LinearProgress, ListItem, makeStyles, Theme } from '@material-ui/core';
 import React, { useState } from 'react';
 import RetryButton from '../common/button/RetryButton';
 import ImportProducts from './importer/ImportProducts';
@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) =>
             paddingLeft: 0,
         },
         tools: {
-            marginBottom: '10px',
+            marginBottom: '25px',
         },
         newBtn: {
             marginRight: '15px'
@@ -50,7 +50,7 @@ export default function () {
                 <RetryButton error={error}/>
             ) : (<div className={classes.paper}>
 
-                <ListItem className={classes.tools}>
+                <Box display="flex" className={classes.tools}>
                     <NewButton
                         name="New Product"
                         buttonProps={{
@@ -59,7 +59,7 @@ export default function () {
                         }}
                     />
                     <ImportProducts className={classes.importBtn} variant="contained"/>
-                </ListItem>
+                </Box>
 
                 <SearchField
                     setSearch={setSearch}

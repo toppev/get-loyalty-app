@@ -43,9 +43,10 @@ export default function LoginDialog({ open, setOpen }: LoginDialogProps) {
             </DialogContent>
             <DialogActions>
                 <Button
+                    variant={document.cookie.includes('session=') ? "text" : "contained"}
                     color="primary"
                     onClick={handleClickNoAccount}
-                >Try without an account</Button>
+                >I don't have an account</Button>
             </DialogActions>
             {error && <Typography align="center" color="error">{error}</Typography>}
             {submitting && <LinearProgress/>}

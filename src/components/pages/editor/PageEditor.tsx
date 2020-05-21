@@ -3,7 +3,7 @@ import GrapesPageEditor from "./GrapesPageEditor";
 import { Dialog, DialogContent, makeStyles, Typography, useMediaQuery, useTheme } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import { Page } from "../Page";
-import { SelectPlaceholderCallback } from "./grapesPlaceholderBlock";
+import { SelectPlaceholderCallback } from "./blocks/placeholderBlock";
 import PlaceholderSelector from "./PlaceholderSelector";
 import CloseButton from "../../common/button/CloseButton";
 

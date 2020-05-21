@@ -27,7 +27,7 @@ export default function PreviewPage({ page, onClose, actions, open = true }: Pre
 
     const appContext = useContext(AppContext);
 
-    return !!!page ? (
+    return !page ? (
         null
     ) : (
         <Dialog onClose={onClose} open={open} maxWidth={false}>

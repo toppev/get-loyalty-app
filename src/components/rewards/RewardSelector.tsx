@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) =>
             color: 'white'
         },
         tools: {
-            marginBottom: '10px',
+            marginBottom: '25px',
         },
         newBtn: {
             backgroundColor: 'limegreen',
@@ -88,7 +88,7 @@ export default function (props: RewardSelectorProps) {
             context.addRewards(response.data);
         }).catch(error => {
             setShouldLoad(false);
-            setError(error);
+            setError(error?.response?.message || error.message || 'Failed to load rewards');
         });
     };
 
@@ -105,7 +105,12 @@ export default function (props: RewardSelectorProps) {
                 {shouldLoad ? (
                     <LinearProgress/>
                 ) : error ? (
-                    <RetryButton error={{ message: error, retry: async () => await fetchData() }}/>
+                    <RetryButton error={{
+                        message: error, retry: async () => {
+                            setError('');
+                            await fetchData()
+                        }
+                    }}/>
                 ) : (<div className={classes.paper}>
 
                     <SearchField
