@@ -1,5 +1,5 @@
 {
-  "name": "@toppev/loyally-campaigns",
+  "name": "@toppev/loyalty-campaigns",
   "version": "0.2.0",
   "description": "",
   "main": "index.js",
@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/toppev/loyally-campaigns.git"
+    "url": "git://github.com/toppev/loyalty-campaigns.git"
   },
   "author": "toppev",
   "license": "SEE LICENSE IN LICENSE",
   "bugs": {
-    "url": "https://github.com/toppev/loyally-campaigns/issues"
+    "url": "https://github.com/toppev/loyalty-campaigns/issues"
   },
-  "homepage": "https://github.com/toppev/loyally-campaigns#readme",
+  "homepage": "https://github.com/toppev/loyalty-campaigns#readme",
   "devDependencies": {
     "jest": "^25.4.0",
     "eslint": "^6.8.0",
