@@ -1,6 +1,7 @@
 const router = require('express').Router({ mergeParams: true });
 const categoryService = require('../../services/categoryService')
 
+// TODO: validate
 router.post('/', createCategory);
 router.get('/:categoryId', findById);
 router.get('/', find);

@@ -12,8 +12,12 @@ module.exports = {
  * Get all products created by this business
  * @param {any} businessId the business's _id field
  */
-async function getAllById(businessId) {
-    return await Product.find({ business: businessId });
+async function getAllById(businessId, populate) {
+    const res = Product.find({ business: businessId });
+    if (populate) {
+        res.populate();
+    }
+    return await res;
 }
 
 /**
@@ -37,10 +41,10 @@ async function create(businessId, product) {
 /**
  * Update an existing product. Returns the updated product
  * @param {any} productId the product's _id field
- * @param {Object} updatedProduct an object with the values to update 
+ * @param {Object} updatedProduct an object with the values to update
  */
 async function update(productId, updatedProduct) {
-    const product = await Product.findByIdAndUpdate(productId, updatedProduct, {new: true});
+    const product = await Product.findByIdAndUpdate(productId, updatedProduct, { new: true });
     return product;
 }
 

@@ -3,6 +3,17 @@ const StatusError = require('../helpers/statusError');
 const customerService = require('./customerService');
 const campaignService = require('./campaignService');
 const pollingService = require('./pollingService');
+const format = require('../helpers/stringUtils').format;
+
+
+const IDENTIFIERS = {
+    CONFIRM: 'confirm',
+    PRODUCTS: 'products',
+    CATEGORIES: 'products',
+    REQUIREMENT: function (requirement) {
+        return requirement.type;
+    }
+}
 
 /**
  * Parse the scanned string
@@ -50,13 +61,54 @@ async function getScan(scanStr, businessId) {
     const questions = [];
     const reward = await validateRewardId(rewardId, customerData);
     if (reward) {
+        addQuestions(questions, reward.categories, reward.products, [reward.requirement]);
+        questions.push({ id: 'success', question: 'Use reward?', options: ['Yes', 'No'] });
         otherData.reward = reward;
     } else {
-        otherData.campaigns = await campaignService.getOnGoingCampaigns(businessId, true);
+        const campaigns = await campaignService.getOnGoingCampaigns(businessId, true);
+        otherData.campaigns = campaigns;
+        const categories = [].concat(...campaigns.map(c => c.categories));
+        const products = [].concat(...campaigns.map(c => c.products));
+        const requirements = [];
+        campaigns.map(c => c.requirements).forEach(req => {
+            if (req.question) {
+                requirements.push(format(req.question, req.values))
+            }
+        })
+        addQuestions(questions, categories, products, requirements);
+        questions.push({ question: 'Confirm', options: ['Yes', 'No'] });
     }
     // TODO: change message
     pollingService.sendToUser(userId, { message: 'QR code scanned!' }, 'scan')
     return { questions, ...otherData };
+}
+
+function addQuestions(questions, categories, products, requirements) {
+    if (categories && categories.length) {
+        questions.push({
+            id: IDENTIFIERS.CATEGORIES,
+            question: 'Select categories',
+            options: categories.map(c => c.name)
+        })
+    }
+    if (products && products.length) {
+        questions.push({
+            id: IDENTIFIERS.PRODUCTS,
+            question: 'Select products',
+            options: products.map(p => p.name)
+        })
+    }
+    if (requirements) {
+        requirements.forEach(req => {
+            if (req) {
+                const identifier = IDENTIFIERS.REQUIREMENT(req);
+                // No duplicate questions
+                if (!questions.some(r => r.id === identifier)) {
+                    questions.push({ id: identifier, question: req, options: ['Yes', 'No'] })
+                }
+            }
+        })
+    }
 }
 
 async function useScan(scanStr, data, businessId) {
@@ -69,18 +121,33 @@ async function useScan(scanStr, data, businessId) {
         responseMessage = 'Reward Used!';
         pollingService.sendToUser(userId, { message: responseMessage }, 'reward_use')
     }
-    const { products, categories } = data;
+    const { answers } = data;
+
+    const productQuestion = answers.find(e => e.id === IDENTIFIERS.PRODUCTS);
+    const products = productQuestion ? productQuestion.options || [] : [];
+
+    const categoryQuestion = answers.find(e => e.id === IDENTIFIERS.CATEGORIES);
+    const categories = categoryQuestion ? categoryQuestion.options || [] : [];
+
+    const isTruthyAnswer = (requirement) => {
+        const reqId = IDENTIFIERS.REQUIREMENT(requirement.type || requirement);
+        const answer = answers.find(e => e.id === reqId);
+        // It should just be 'no' or 'yes' but make sure if we change it, it will still work
+        return answer && answer.toLowerCase() === 'yes';
+    }
+    // TODO: handle answers
     await customerService.addPurchase(userId, businessId, { products, categories })
     const newRewards = [];
-    const campaigns = await campaignService.getAllByBusinessId(businessId, true)
+    const campaigns = await campaignService.getOnGoingCampaigns(businessId, true)
     for (const campaign of campaigns) {
         let eligible;
         try {
-            // May throw (status)errors, catch them so it won't affect the response status
+            // May throw (status)errors, catch them so it won't affect the response status now
             eligible = await campaignService.canReceiveCampaignRewards(userId, businessId, campaign);
         } catch (err) {
             // Not eligible
             eligible = false;
+            // TODO: send the reason as a message?
             if (err.name !== 'StatusError') {
                 console.log(`ERROR! User not eligible to participate in campaign because ${err}`)
             }

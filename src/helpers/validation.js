@@ -24,8 +24,7 @@ ajv.addKeyword('objectid', {
 
 function validate(validator, bypassPermission = "validation:bypass") {
     return (req, res, next) => {
-        // Check if the user has permission to bypass validation
-        // TODO: just different validation instead of completely bypassing?
+        // Check if the user has permission to bypass validation (site admins)
         if (req.user && req.user.hasPermission(bypassPermission, {
             userId: req.user.id,
             reqParams: req.params
@@ -63,6 +62,7 @@ const userValidator = ajv.compile({
 
 const businessValidator = ajv.compile({
     "$async": true,
+    "additionalProperties": false,
     "properties": {
         "email": {
             "type": "string",
@@ -253,7 +253,7 @@ const campaignValidator = ajv.compile({
                 "properties": {
                     "requirement": {
                         "type": "string"
-                        // TODO: enum here or mongo only?
+                        // Let mongoose or something else validate the requirement typ
                     },
                     "values": {
                         "type": "array",
@@ -281,7 +281,6 @@ const campaignValidator = ajv.compile({
         "transactionPoints": {
             "type": "number"
         },
-        // TODO: separate
         "endReward": {
             "type": "object",
             ...rawRewardSchema
@@ -325,6 +324,19 @@ const customerPropertiesValidator = ajv.compile({
     }
 });
 
+const pushNotificationValidator = ajv.compile({
+    "$async": true,
+    "additionalProperties": false,
+    "properties": {
+        "title": {
+            "type": "string",
+        },
+        "message": {
+            "type": "string",
+        },
+    }
+})
+
 module.exports = {
     validate,
     userValidator,
@@ -334,5 +346,6 @@ module.exports = {
     campaignValidator,
     purchaseValidator,
     customerPropertiesValidator,
-    rewardValidator
+    rewardValidator,
+    pushNotificationValidator
 };

@@ -10,7 +10,7 @@ const rewardSchema = new Schema({
         type: String
     },
     // Either products or categories or both
-    // e.g -20% from normal tea and coffee or soft drinks
+    // e.g tea and coffee or soft drinks
     products: [{
         type: Schema.Types.ObjectId,
         ref: 'Product'

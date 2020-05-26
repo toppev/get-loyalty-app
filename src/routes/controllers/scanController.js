@@ -1,5 +1,4 @@
 /** Controller for QR code scans */
-
 const router = require('express').Router({ mergeParams: true });
 const permit = require('../../middlewares/permitMiddleware');
 const scanService = require('../../services/scanService');
@@ -12,7 +11,7 @@ const pollingService = require('../../services/pollingService');
 // Get information about the scan
 router.get('/:scan', permit('scan:get'), getScan);
 // Confirm purchase/use reward
-router.post('/:scan', permit('scan:use'), useScan); // TODO: test
+router.post('/:scan', permit('scan:use'), useScan);
 
 module.exports = router;
 

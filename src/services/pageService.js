@@ -12,10 +12,8 @@ module.exports = {
     loadPage,
     getBusinessPageIds,
     uploadPage,
-    getPageContent,
     getThumbnail,
     getTemplates,
-    getPageContext,
     renderPageView
 };
 
@@ -60,8 +58,9 @@ async function uploadPage(pageId, { html, css }) {
     const tmpl = `${html}<style>${css}</style>`;
     const inlineHtml = juice(tmpl);
     await uploader.upload(`page_${pageId}.html`, inlineHtml);
-    // TODO: should we keep it here?
-    const page = PageData.findById(pageId);
+    // TODO: should we create the screenshot here or queue or something?
+    // Good performance improvement probably
+    const page = await PageData.findById(pageId);
     if (page) {
         createScreenshot(page.business, pageId)
             .then(() => {
@@ -104,8 +103,7 @@ async function getTemplates() {
     return await PageData.find({ template: true });
 }
 
-async function getPageContent(pageId, callback) {
-    // TODO: might use aws s3 or something later
+async function getPageContent(pageId) {
     const path = uploader.toPath(`page_${pageId}.html`);
     return await fs.promises.readFile(path, 'utf8');
 }
@@ -113,21 +111,27 @@ async function getPageContent(pageId, callback) {
 async function getPageContext(businessId, user) {
     const business = await Business.findById(businessId).populate().lean();
     if (business) {
-        // Add all "placeholders" here
+        // FIXME, very hacky
+        // without this handlebar can't access fields because of remote code execution prevention (and we don't want RCE)
+        // .lean() fixes it for business
+        const userJSON = JSON.parse(JSON.stringify(user));
+        // Add all placeholders here
         return {
-            // FIXME, very hacky
-            // without this handlebar can't access fields because of remote code execution prevention (and we don't want RCE)
-            user: JSON.parse(JSON.stringify(user)),
-            // .lean() fixes it for business
+            user: userJSON,
             business: business,
             products: business.products,
-            campaigns: business.campaigns
+            campaigns: business.campaigns,
+            rewards: userJSON.rewards,
         }
     }
 }
 
-async function renderPageView(pageHtml, context) {
-    // TODO: handle invalid pageHtml/template
+async function renderPageView(pageId, businessId, user) {
+    const pageHtml = await getPageContent(pageId);
+    const context = await getPageContext(businessId, user);
+    // TODO: check performance
+    // we can also precompile when the page is saved, send the precompiled + data to browser
+    // browser can compile with handlebars.runtime library
     const template = handlebars.compile(pageHtml);
     return template(context)
 }

@@ -2,6 +2,7 @@ const router = require('express').Router({ mergeParams: true });
 const pageService = require('../../services/pageService');
 const permit = require('../../middlewares/permitMiddleware');
 
+// TODO: validate?
 
 // Get templates (no html/css only other data)
 router.get('/templates', getTemplates);
@@ -28,7 +29,6 @@ function createPage(req, res, next) {
         .then((data) => res.json(data))
         .catch(err => next(err));
 }
-
 
 function savePage(req, res, next) {
     // Whether we save the entire document or just what's under 'gjs' key
@@ -77,11 +77,7 @@ async function getHtml(req, res, next) {
     try {
         const { pageId, businessId } = req.params;
         const user = req.user;
-        const [content, context] = await Promise.all([
-            pageService.getPageContent(pageId),
-            pageService.getPageContext(businessId, user)
-        ]);
-        const html = await pageService.renderPageView(content, context);
+        const html = await pageService.renderPageView(pageId, businessId, user);
         res.send(html);
         next();
     } catch (error) {

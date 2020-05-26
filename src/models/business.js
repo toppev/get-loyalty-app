@@ -14,14 +14,54 @@ const configSchema = new Schema({
             }
         },
     }
-
 });
+
+const planSchema = new Schema({
+    // One word. e.g free, trial, custom
+    type: {
+        type: String
+    },
+    // Slightly more descriptive/custom name. e.g Early adopter, Moe's custom business plan
+    name: {
+        type: String,
+    },
+    expires: {
+        type: Date
+    },
+    // TODO: use these limits
+    // Change free tier levels here (default values)
+    limits: {
+        campaigns: {
+            active: {
+                type: Number,
+                default: 5
+            },
+            total: {
+                type: Number,
+                default: 10
+            }
+        },
+        products: {
+            total: {
+                type: Number,
+                default: 20
+            }
+        },
+        pages: {
+            total: {
+                type: Number,
+                default: 3
+            }
+        }
+    }
+})
 
 const businessSchema = new Schema({
     email: {
         type: String,
     },
     config: configSchema,
+    plan: planSchema,
     public: {
         name: {
             type: String,
@@ -35,26 +75,9 @@ const businessSchema = new Schema({
         website: {
             type: String,
         },
-        openingHours: [{
-            dayOfWeek: {
-                type: String,
-                // From monday to sunday
-                // min: 1,
-                // max: 7
-            },
-            // String representing open hours (can be custom)
-            // e.g 8:00-12:00, 13:00-17:30 or 9-16 or 24/7, basically anything
-            hours: {
-                type: String,
-            },
-            validFrom: {
-                type: Date,
-                default: Date.now
-            },
-            validThrough: {
-                type: Date,
-            }
-        }],
+        language: {
+            type: String
+        },
         categories: [{
             type: mongoose.Types.ObjectId,
             ref: 'Category',

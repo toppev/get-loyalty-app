@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const businessService = require('../../services/businessService');
 const permit = require('../../middlewares/permitMiddleware');
+const customerService = require('../../services/customerService');
 const validation = require('../../helpers/validation');
 const businessValidator = validation.validate(validation.businessValidator);
 
@@ -10,7 +11,7 @@ router.get('/:businessId', permit('business:get'), getBusiness);
 router.patch('/:businessId', permit('business:update'), businessValidator, updateBusiness);
 router.post('/:businessId/role', permit('business:role'), validation.validate(validation.businessRoleValidator), setUserRole);
 
-router.get('/:businessId/customers', permit('customer:list'), listCustomers); // TODO test
+router.get('/:businessId/customers', permit('customer:list'), listCustomers);
 
 module.exports = router;
 
@@ -52,11 +53,9 @@ function getPublicInformation(req, res, next) {
 
 function listCustomers(req, res, next) {
     const { businessId } = req.params;
-    res.status(501).send()
-    // TODO: implement
-    /*
-    customerService.listCustomers(businessId)
-        .then(data => res.json({ customerData: data }))
+    const limit = req.query.limit || 50;
+    const searchStr = req.query.search;
+    customerService.listCustomers(businessId, limit, searchStr)
+        .then(data => res.json({ customers: data }))
         .catch(err => next(err));
-     */
 }

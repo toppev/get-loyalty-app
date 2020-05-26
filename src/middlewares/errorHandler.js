@@ -1,14 +1,11 @@
 const ajv = require('ajv');
 const logger = require('../config/logger');
 
-function errorHandler(err, req, res, next) {
+function errorHandler(err, req, res, _next) {
     logger.error(`${err.status || 500} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
-    if (process.env.NODE_ENV === 'test') {
-        console.log(err);
-    }
     const status = err.status || 400;
-
-    if (process.env.NODE_ENV == 'development') {
+    if (process.env.NODE_ENV !== 'production') {
+        console.log(err);
         return res.status(status).json({
             message: err.toString()
         })
@@ -35,8 +32,8 @@ function errorHandler(err, req, res, next) {
             try {
                 const [, , fieldName] = /\[(.*)\].(.*)/.exec(error.dataPath);
                 return `Error with field "${fieldName}": ${error.message}`;
-            } catch (error) {
-                return error.message;
+            } catch (e) {
+                return e.message;
             }
         }).join('\n');
         return res.status(err.status || 401).json({

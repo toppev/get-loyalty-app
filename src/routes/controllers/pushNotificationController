@@ -1,0 +1,25 @@
+const router = require('express').Router({ mergeParams: true });
+const permit = require('../../middlewares/permitMiddleware');
+const pushNotificationService = require('../../services/pushNotificationService');
+
+const validator = require('../../helpers/validation');
+const notificationValidator = validator.validate(validator.pushNotificationValidator);
+
+router.get('/', permit('notification:list'), getNotifications); // TODO: test
+router.post('/', permit('notification:send'), notificationValidator, sendNotifications); // TODO: test
+
+module.exports = router;
+
+function getNotifications(req, res, next) {
+    const { businessId } = req.params;
+    pushNotificationService.getPushNotificationHistory(businessId)
+        .then(result => res.json({ notifications: result }))
+        .catch(err => next(err))
+}
+
+function sendNotifications(req, res, next) {
+    const { businessId } = req.params;
+    pushNotificationService.sendPushNotification(businessId, req.body)
+        .then(data => res.json({ success: true, data }))
+        .catch(err => next(err))
+}

@@ -2,8 +2,11 @@ const router = require('express').Router({ mergeParams: true });
 const productService = require('../../services/productService')
 const permit = require('../../middlewares/permitMiddleware');
 
-router.post('/', permit('product:create'), addProduct);
-router.patch('/:productId', permit('product:update'), updateProduct);
+const validation = require('../../helpers/validation');
+const productValidator = validation.validate(validation.productValidator);
+
+router.post('/', permit('product:create'), productValidator, addProduct);
+router.patch('/:productId', permit('product:update'), productValidator, updateProduct);
 router.delete('/:productId', permit('product:delete'), deleteProduct);
 router.get('/all', permit('product:list'), getAll);
 router.get('/:productId', permit('product:get'), getById);

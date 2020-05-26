@@ -25,6 +25,7 @@ const roles = {
             // Will only return this business's view anyway
             'customer:update': true,
             'customer:get': true,
+            'customer:list': true,
             'reward:*': true,
             'scan:get': true,
             'scan:use': true,

@@ -2,6 +2,7 @@ const Campaign = require('../models/campaign');
 const StatusError = require('../helpers/statusError');
 const customerService = require('./customerService');
 const userService = require('./userService');
+const campaignTypes = require('@toppev/loyalty-campaigns');
 
 module.exports = {
     getAllByBusinessId,
@@ -17,11 +18,12 @@ module.exports = {
 /**
  * Get all campaigns created by the given business
  * @param {any} businessId the business's _id field
+ * @param populate whether to populate products and categories (etc)
  */
 async function getAllByBusinessId(businessId, populate) {
     const res = Campaign.find({ business: businessId });
     if (populate) {
-        res.populate();
+        res.populate('products categories');
     }
     return await res;
 }
@@ -79,9 +81,14 @@ async function byCouponCode(businessId, couponCode) {
 
 
 /**
- * Validate that the campaign is active, requirements are met and max rewards haven't been reached
+ * Validate that the campaign is active, requirements are met and max rewards haven't been reached.
+ *
+ * @param userId id of the user
+ * @param businessId id of the business
+ * @param campaign the campaign object
+ * @param answerQuestion see #isEligible
  */
-async function canReceiveCampaignRewards(userId, businessId, campaign) {
+async function canReceiveCampaignRewards(userId, businessId, campaign, answerQuestion) {
     const now = Date.now();
     if (campaign.start > now) {
         throw Error('The campaign has not started yet')
@@ -94,9 +101,9 @@ async function canReceiveCampaignRewards(userId, businessId, campaign) {
             throw new StatusError('The campaign has run out of rewards :(', 410)
         }
         const user = await userService.getById(userId);
-        const eligible = await isEligible(user, campaign);
+        const eligible = await isEligible(user, campaign, answerQuestion);
         if (!eligible) {
-            throw new StatusError('You are not yet eligible for the reward.', 403)
+            throw new StatusError('You are not (currently) eligible for the reward.', 403)
         }
         const customerData = await customerService.findCustomerData(user, businessId);
         const allReceivedRewards = customerData ? customerData.rewards : [];
@@ -109,10 +116,28 @@ async function canReceiveCampaignRewards(userId, businessId, campaign) {
 }
 
 /**
- * Whether the user is eligible to receive the rewards (requirements are met, for example enough purchases)
+ * Whether the user is eligible to receive the rewards (requirements are met, for example enough purchases).
+ * Only checks requirements it can check with the given data. Therefore, this function ignores requirements with (cashier) questions.
+ *
+ * @param answerQuestion callback to answer whether the specified requirement question got a truthy answer. The callback gets the type as an argument.
  */
-async function isEligible(user, campaign) {
-    // TODO: check requirements
-    const requirements = campaign.requirements;
-    return requirements.length === 0;
+async function isEligible(user, campaign, answerQuestion) {
+    const { requirements, business } = campaign;
+    if (requirements.length === 0) {
+        return true;
+    }
+    const customerData = await customerService.findCustomerData(user, business.id);
+    return !requirements.some(req => {
+        // Return true if the user is not eligible
+        const campaignType = campaignTypes[req.type];
+        if (campaignType && campaignType.requirement) {
+            if (!campaignType.requirement(req.values, user, undefined, customerData)) {
+                return true;
+            }
+        }
+        // if answerQuestion is not defined the user is eligible (at least now, before cashier decides)
+        if (req.question && answerQuestion) {
+            return !answerQuestion(req.type);
+        }
+    })
 }

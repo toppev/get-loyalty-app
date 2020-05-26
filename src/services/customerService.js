@@ -15,6 +15,7 @@ module.exports = {
     findCustomerData,
     updateRewards,
     useReward,
+    listCustomers
 };
 
 /**
@@ -31,6 +32,21 @@ async function findCustomerData(user, businessId) {
     }
     const data = user.customerData.find(_item => _item.business.equals(businessId));
     return data;
+}
+
+/**
+ * Get customerData AND other data that is available (e.g email, birthday)
+ * @param user
+ * @param businessId
+ * @returns {Promise<{birthday, lastVisit, customerData: *, email, authentication: {service: {type: StringConstructor}}}>}
+ */
+async function getCustomerData(user, businessId) {
+    if (!user.customerData) { // Does not exists so it's the user id
+        user = await User.findById(user);
+    }
+    const customerData = await findCustomerData(user, businessId);
+    const { email, lastVisit, birthday, authentication } = user;
+    return { customerData, email, lastVisit, birthday, authentication: { service: authentication.service } }
 }
 
 /**
@@ -242,5 +258,13 @@ async function addCampaignRewards(user, campaign) {
         await campaign.save();
     }
     return campaign.endReward
+}
 
+async function listCustomers(businessId, limit, search) {
+    let users = await User.find({ "customerData.business": businessId }).limit(limit || 100);
+    if (search && search.trim().length) {
+        // FIXME: bad
+        users = users.filter(u => JSON.stringify(u).toLowerCase().includes(search));
+    }
+    return Promise.all(users.map(u => getCustomerData(u, businessId)));
 }

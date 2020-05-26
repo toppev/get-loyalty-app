@@ -31,7 +31,7 @@ async function find(query, type, limit = 100) {
         official: true,
         categoryType: type
     } : { official: true }
-    // Wether the query was specified
+    // Whether the query was specified
     const finalQuery = query ? {
         $or: [{ keywords: query }, { name: query }],
         ...typeQuery
