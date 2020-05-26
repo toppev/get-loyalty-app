@@ -19,7 +19,8 @@ if (!isTesting) {
     mongoose.connect(process.env.MONGO_URI, {
         useCreateIndex: true,
         useNewUrlParser: true,
-        useUnifiedTopology: true
+        useUnifiedTopology: true,
+        useFindAndModify: false
     });
     console.log("Connected to mongo database");
     app.use(morgan('":method :url" :status (len: :res[content-length]) ":user-agent" - :response-time ms',
