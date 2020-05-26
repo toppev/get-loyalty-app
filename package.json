@@ -25,7 +25,7 @@
     "handlebars": "^4.7.6",
     "jsonwebtoken": "^8.5.1",
     "juice": "^6.0.0",
-    "mongoose": "^5.9.13",
+    "mongoose": "^5.9.16",
     "morgan": "^1.10.0",
     "nodemailer": "^6.4.6",
     "passport": "^0.4.1",
@@ -36,9 +36,9 @@
   },
   "devDependencies": {
     "eslint": "^6.8.0",
-    "eslint-plugin-jest": "^23.10.0",
+    "eslint-plugin-jest": "^23.13.2",
     "jest": "^26.0.1",
-    "nodemon": "^2.0.3",
+    "nodemon": "^2.0.4",
     "supertest": "^4.0.2"
   }
 }
