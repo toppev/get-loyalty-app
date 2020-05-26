@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const { initDatabase, closeDatabase } = require('./testUtils');
 const Category = require('../src/models/category');
 const app = require('../app');
 const api = require('supertest')(app);
@@ -6,9 +6,7 @@ const api = require('supertest')(app);
 let testCategory;
 
 beforeAll(async () => {
-    const url = 'mongodb://127.0.0.1/kantis-category-test';
-    await mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
-    await mongoose.connection.db.dropDatabase();
+    await initDatabase('category');
 
     testCategory = new Category({ official: true, name: "haircut" });
     await testCategory.save();
@@ -21,7 +19,6 @@ describe('Category API: ', () => {
         const res = await api
             .post('/category')
             .send({ name: 'pizza', official: true })
-            .set('Accept', 'application/json')
             .expect(200)
         expect(res.body.name).toEqual('pizza');
         expect(res.body.official).toBeFalsy();
@@ -51,5 +48,5 @@ describe('Category API: ', () => {
 });
 
 afterAll(() => {
-    mongoose.connection.close();
+    closeDatabase();
 });

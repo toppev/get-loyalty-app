@@ -1,7 +1,9 @@
-const mongoose = require('mongoose');
+const { initDatabase, closeDatabase } = require('./testUtils');
 const businessService = require('../src/services/businessService');
 const customerService = require('../src/services/customerService');
 const campaignService = require('../src/services/campaignService');
+const productService = require('../src/services/productService');
+const categoryService = require('../src/services/categoryService');
 const User = require('../src/models/user');
 const Campaign = require('../src/models/campaign');
 const app = require('../app');
@@ -10,9 +12,7 @@ const api = require('supertest')(app);
 const userParams = { email: "examplescanner@email.com", password: "password123" };
 
 beforeAll(async () => {
-    const url = 'mongodb://127.0.0.1/kantis-scan-test';
-    await mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
-    await mongoose.connection.db.dropDatabase();
+    await initDatabase('scan');
 });
 
 describe('Logged in user can', () => {
@@ -44,14 +44,24 @@ describe('Logged in user can', () => {
         expect(res.body.questions).toBeDefined();
         expect(res.body.customerData).toBeDefined();
         expect(res.body.reward._id).toBeDefined();
+        const questions = res.body.questions;
+        expect(questions[questions.length - 1].question).toBe('Use reward?')
     });
 
     it('scan (get) userId', async () => {
         const now = Date.now();
         // Has ended
         const campaign1 = { name: 'Campaign #1', end: (now - 10000) };
-        // On going
-        const campaign2 = { name: 'Campaign #2', start: now, end: (now + 10000) };
+        // On going with product
+        const product = await productService.create(business._id, { name: 'Product1' })
+        const category = await categoryService.create({ name: 'Category1' })
+        const campaign2 = {
+            name: 'Campaign #2',
+            start: now,
+            end: (now + 10000),
+            products: [product],
+            categories: [category]
+        };
         // Hasn't started
         const campaign3 = { name: 'Campaign #2', start: (now + 10000) };
         await campaignService.create(business._id, campaign1)
@@ -63,10 +73,17 @@ describe('Logged in user can', () => {
             .get(`/business/${business.id}/scan/${scan}`)
             .set('Cookie', cookie)
             .expect(200);
+
         expect(res.body.questions).toBeDefined();
         expect(res.body.customerData).toBeDefined();
         expect(res.body.campaigns.length).toBe(1);
         expect(res.body.campaigns[0].name).toBe(campaign2.name);
+
+        expect(res.body.questions.length).toBe(3);
+        expect(res.body.questions[0].question).toBe('Select categories');
+        expect(res.body.questions[1].options).toStrictEqual(['Product1']);
+
+
     });
 
     it('scan (use) userId:rewardId', async () => {
@@ -76,8 +93,10 @@ describe('Logged in user can', () => {
         await Campaign.deleteMany({});
         const rewardId = rewards[0]._id;
         const scan = `${userId}:${rewardId}`;
+        const answers = [{ id: 'confirm', options: ['Yes'] }];
         const res = await api
             .post(`/business/${business.id}/scan/${scan}`)
+            .send({ answers })
             .set('Cookie', cookie)
             .expect(200);
         expect(res.body.newRewards.length).toBe(0);
@@ -90,10 +109,12 @@ describe('Logged in user can', () => {
         const campaign = { name: 'Test Campaign', endReward: [reward] };
         await campaignService.create(business._id, campaign)
 
+        const answers = [{ id: 'confirm', options: ['Yes'] }];
         const scan = userId;
         const res = await api
             .post(`/business/${business.id}/scan/${scan}`)
             .set('Cookie', cookie)
+            .send({ answers })
             .expect(200);
         expect(res.body.newRewards.length).toBe(1);
         expect(res.body.newRewards[0].name).toBe(reward.name);
@@ -102,5 +123,5 @@ describe('Logged in user can', () => {
 });
 
 afterAll(() => {
-    mongoose.connection.close();
+    closeDatabase();
 });

@@ -4,6 +4,7 @@ const Business = require('../src/models/business');
 const User = require('../src/models/user');
 const app = require('../app');
 const api = require('supertest')(app);
+const { initDatabase, closeDatabase } = require('./testUtils');
 
 const otherBusiness = { email: "example@email.com", public: { address: 'this is an address' } };
 let otherBusinessId;
@@ -11,9 +12,7 @@ const userParams = { email: "example@email.com", password: "password123" };
 let userId;
 
 beforeAll(async () => {
-    const url = 'mongodb://127.0.0.1/kantis-business-test';
-    await mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
-    await mongoose.connection.db.dropDatabase();
+    await initDatabase('business');
     otherBusinessId = (await new Business(otherBusiness).save())._id;
 });
 
@@ -38,7 +37,6 @@ describe('Logged in user can', () => {
         const res = await api
             .post('/business/create')
             .send(secondBusinessParam)
-            .set('Accept', 'application/json')
             .set('Cookie', cookie)
             .expect(200);
         business = await businessService.getBusiness(res.body._id);
@@ -51,7 +49,6 @@ describe('Logged in user can', () => {
     it('get business public information', async () => {
         const res = await api
             .get(`/business/${otherBusinessId}/public`)
-            .set('Accept', 'application/json')
             .set('Cookie', cookie)
             .expect(200);
         expect(res.body.email).toBeUndefined();
@@ -61,7 +58,6 @@ describe('Logged in user can', () => {
     it('get business self', async () => {
         const res = await api
             .get(`/business/${business.id}`)
-            .set('Accept', 'application/json')
             .set('Cookie', cookie)
             .expect(200);
         expect(res.body.email).toBe(business.email);
@@ -71,7 +67,6 @@ describe('Logged in user can', () => {
         const newEmail = "example2@email.com"
         const res = await api
             .patch(`/business/${business.id}`)
-            .set('Accept', 'application/json')
             .set('Cookie', cookie)
             .send({ email: newEmail })
             .expect(200);
@@ -81,7 +76,6 @@ describe('Logged in user can', () => {
     it('post business user role change', async () => {
         const res = await api
             .post(`/business/${business.id}/role`)
-            .set('Accept', 'application/json')
             .set('Cookie', cookie)
             .send({ userId: userId, role: 'business' })
             .expect(200);
@@ -92,7 +86,6 @@ describe('Logged in user can', () => {
     it('post business user role change to admin', async () => {
         const res = await api
             .post(`/business/${business.id}/role`)
-            .set('Accept', 'application/json')
             .set('Cookie', cookie)
             .send({ userId: userId, role: 'admin' })
             .expect(400);
@@ -102,7 +95,6 @@ describe('Logged in user can', () => {
     it('get business other', async () => {
         await api
             .get(`/business/${otherBusinessId}`)
-            .set('Accept', 'application/json')
             .set('Cookie', cookie)
             .expect(403);
     });
@@ -111,7 +103,6 @@ describe('Logged in user can', () => {
         const newEmail = "example2@email.com"
         await api
             .patch(`/business/${otherBusinessId}`)
-            .set('Accept', 'application/json')
             .set('Cookie', cookie)
             .send({ email: newEmail })
             .expect(403);
@@ -120,14 +111,22 @@ describe('Logged in user can', () => {
     it('post business user role change other', async () => {
         await api
             .post(`/business/${otherBusinessId}/role`)
-            .set('Accept', 'application/json')
             .set('Cookie', cookie)
             .send({ userId: userId, role: 'business' })
             .expect(403);
     });
 
+    it('get customers', async () => {
+        const res = await api
+            .get(`/business/${business.id}/customers`)
+            .set('Cookie', cookie)
+            .expect(200)
+        expect(res.body.customers.length).toBe(1);
+        expect(res.body.customers[0].email).toBe(userParams.email);
+    })
+
 });
 
 afterAll(() => {
-    mongoose.connection.close();
+    closeDatabase();
 });

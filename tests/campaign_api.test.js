@@ -1,5 +1,4 @@
-const mongoose = require('mongoose');
-const campaignService = require('../src/services/campaignService');
+const { initDatabase, closeDatabase } = require('./testUtils');
 const businessService = require('../src/services/businessService');
 const User = require('../src/models/user');
 const app = require('../app');
@@ -10,9 +9,7 @@ const userParams = { email: "example@email.com", password: "password123" };
 let userId;
 
 beforeAll(async () => {
-    const url = 'mongodb://127.0.0.1/kantis-campaign-test';
-    await mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
-    await mongoose.connection.db.dropDatabase();
+    await initDatabase('campaign');
 });
 
 describe('Logged in user with permissions can', () => {
@@ -82,5 +79,5 @@ describe('Logged in user with permissions can', () => {
 });
 
 afterAll(() => {
-    mongoose.connection.close();
+    closeDatabase();
 });

@@ -74,32 +74,39 @@ describe('user', () => {
 // BUSINESS
 describe('business', () => {
 
-    it('should validate', () => {
-        const data = {
-            email: 'test@email.com',
-            config: {
-                will: 'add',
-                stuff: 'here'
-            },
-            public: {
-                address: 'Country Street 69 something',
-                openingHours: [{
-                    dayOfWeek: 1,
-                    opens: '9:00',
-                    closes: '18:00',
-                    validFrom: new Date().toISOString(),
-                    // skip for now
-                    //validThrough:
-                }],
-                customerLevels: [
-                    { name: 'Silver', requiredPoints: 200 },
-                    { name: 'Gold', requiredPoints: 500, },
-                    { name: 'Platinum', requiredPoints: 1000 }
-                ]
-            }
+    const data = {
+        email: 'test@email.com',
+        config: {
+            will: 'add',
+            stuff: 'here'
+        },
+        public: {
+            address: 'Country Street 69 something',
+            openingHours: [{
+                dayOfWeek: 1,
+                opens: '9:00',
+                closes: '18:00',
+                validFrom: new Date().toISOString(),
+                // skip for now
+                //validThrough:
+            }],
+            customerLevels: [
+                { name: 'Silver', requiredPoints: 200 },
+                { name: 'Gold', requiredPoints: 500, },
+                { name: 'Platinum', requiredPoints: 1000 }
+            ]
         }
+    }
+
+    it('should validate', () => {
+
         expect.assertions(1);
         return expect(validators.businessValidator(data)).resolves.toBe(data);
+    });
+
+    it("should not validate (can't change plan)", () => {
+        expect.assertions(1);
+        return expect(validators.businessValidator({ ...data, plan: { type: 'free' } })).rejects.toThrow();
     });
 
 });

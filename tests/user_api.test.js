@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const { initDatabase, closeDatabase } = require('./testUtils');
 const userService = require('../src/services/userService');
 const User = require('../src/models/user');
 const ResetPassword = require('../src/models/passwordReset');
@@ -9,9 +9,7 @@ const userParams = { email: "example@email.com", password: "password123" };
 let userId;
 
 beforeAll(async () => {
-    const url = 'mongodb://127.0.0.1/kantis-user-test';
-    await mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
-    await mongoose.connection.db.dropDatabase();
+    await initDatabase('user');
     userId = (await new User(userParams).save())._id;
 });
 
@@ -22,7 +20,6 @@ describe('Not logged in user should', () => {
         const res = await api
             .post('/user/register')
             .send(secondUserParams)
-            .set('Accept', 'application/json')
             .expect(200);
         const user = await userService.getById(res.body._id);
         expect(user.hasPassword).toBe(false);
@@ -34,7 +31,6 @@ describe('Not logged in user should', () => {
         const res = await api
             .post('/user/register')
             .send(testUserParams)
-            .set('Accept', 'application/json')
             .expect(200);
         const user = await userService.getById(res.body._id);
         expect(user.hasPassword).toBe(true);
@@ -44,7 +40,6 @@ describe('Not logged in user should', () => {
         await api
             .post('/user/forgotpassword')
             .send(userParams)
-            .set('Accept', 'application/json')
             .expect(200);
         const reset = await ResetPassword.findOne({})
         expect(reset.token).toEqual(expect.anything());
@@ -107,7 +102,7 @@ describe('Logged in user should', () => {
 
     it('patch self', async () => {
         // random email
-        const email = `example${Math.random()*10000 || 0}@email.com`;
+        const email = `example${Math.random() * 10000 || 0}@email.com`;
         const res = await api
             .patch('/user/' + userId)
             .set('Cookie', cookie)
@@ -143,5 +138,5 @@ describe('Logged in user should', () => {
 */
 
 afterAll(() => {
-    mongoose.connection.close();
+    closeDatabase();
 });

@@ -1,8 +1,9 @@
-const mongoose = require('mongoose');
+const { initDatabase, closeDatabase } = require('./testUtils');
 const businessService = require('../src/services/businessService');
 const User = require('../src/models/user');
 const app = require('../app');
 const api = require('supertest')(app);
+
 
 const businessParam = { email: "customer.test.business@email.com", public: { address: 'this is an address' } };
 const userParams = { email: "customer.test@email.com", password: "password123" };
@@ -12,9 +13,7 @@ let business;
 let userId;
 
 beforeAll(async () => {
-    const url = 'mongodb://127.0.0.1/kantis-customer-test';
-    await mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
-    await mongoose.connection.db.dropDatabase();
+    await initDatabase('customer');
     // Login
     userId = (await new User(userParams).save())._id;
     const res = await api
@@ -139,5 +138,5 @@ describe('Logged in user with permissions can modify customer data', () => {
 });
 
 afterAll(() => {
-    mongoose.connection.close();
+    closeDatabase();
 });

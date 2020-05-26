@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const { initDatabase, closeDatabase } = require('./testUtils');
 const businessService = require('../src/services/businessService');
 const User = require('../src/models/user');
 const app = require('../app');
@@ -13,9 +13,7 @@ const updatedPageData = { gjs: { "gjs-components": ["differentStuff"], "gjs-styl
 const updatedPageData2 = { gjs: { "gjs-components": ["differentStuff2"], "gjs-style": ["more different stuff"] } }
 
 beforeAll(async () => {
-    const url = 'mongodb://127.0.0.1/kantis-page-test';
-    await mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
-    await mongoose.connection.db.dropDatabase();
+    await initDatabase('page');
 });
 
 describe('Logged in user with permissions can', () => {
@@ -147,7 +145,7 @@ describe('Logged in user with permissions can', () => {
 });
 
 afterAll(() => {
-    mongoose.connection.close();
+    closeDatabase();
     const { uploadDir } = require('../src/helpers/uploader');
 
     const fs = require('fs');

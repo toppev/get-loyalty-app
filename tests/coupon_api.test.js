@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const { initDatabase, closeDatabase } = require('./testUtils');
 const businessService = require('../src/services/businessService');
 const campaignService = require('../src/services/campaignService');
 const customerService = require('../src/services/customerService');
@@ -18,9 +18,7 @@ let endReward;
 const couponCode = 'TEST_COUPON'
 
 beforeAll(async () => {
-    const url = 'mongodb://127.0.0.1/kantis-coupon-test';
-    await mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
-    await mongoose.connection.db.dropDatabase();
+    await initDatabase('category');
     // Login
     userId = (await new User(userParams).save())._id;
     const res = await api
@@ -66,5 +64,5 @@ describe('Logged in user can', () => {
 
 
 afterAll(() => {
-    mongoose.connection.close();
+    closeDatabase();
 });
