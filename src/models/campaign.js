@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const rewardSchema = require('./reward');
-const campaignTypes = require('@toppev/loyally-campaigns');
+const campaignTypes = require('@toppev/loyalty-campaigns');
 const { Schema } = mongoose;
 
 
@@ -77,6 +77,5 @@ const campaignSchema = new Schema({
     },
     endReward: [rewardSchema],
 });
-
 
 module.exports = mongoose.model('Campaign', campaignSchema);
