@@ -1,10 +1,10 @@
 import React from "react";
 
 
-const campaignsClass = "loyally-campaigns"
-const campaignItemClass = "loyally-campaign"
-const campaignRewardsClass = "loyally-campaign-rewards"
-const campaignRewardClass = "loyally-campaign-reward"
+const campaignsClass = "loyalty-campaigns"
+const campaignItemClass = "loyalty-campaign"
+const campaignRewardsClass = "loyalty-campaign-rewards"
+const campaignRewardClass = "loyalty-campaign-reward"
 
 /**
  * Block to list on going campaigns

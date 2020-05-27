@@ -1,7 +1,7 @@
 import React from "react";
 
-const userRewardsClass = "loyally-user-rewards"
-const userRewardItemClass = "loyally-user-reward"
+const userRewardsClass = "loyalty-user-rewards"
+const userRewardItemClass = "loyalty-user-reward"
 
 /**
  * Block to list user rewards

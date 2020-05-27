@@ -2,7 +2,7 @@ import React from "react";
 import { placeholders } from "../Placeholders";
 
 function addRichTextEditorPlaceholders(editor, context) {
-    editor.RichTextEditor.add('loyally-placeholders', {
+    editor.RichTextEditor.add('loyalty-placeholders', {
         icon: `<select class="gjs-field" style="color: lightgray; background-color: #343434">
             <option style="color: lightgrey" value="">Add Placeholder</option>
             ${listPlaceholderOptions(context).join('')}

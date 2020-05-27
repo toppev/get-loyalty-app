@@ -2,7 +2,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { createStyles, TextField, Theme } from "@material-ui/core";
 import { Requirement } from "./Campaign";
 import React from "react";
-import allRequirements from "@toppev/loyally-campaigns";
+import allRequirements from "@toppev/loyalty-campaigns";
 import { format } from "../common/StringUtils";
 
 const useStyles = makeStyles((theme: Theme) =>

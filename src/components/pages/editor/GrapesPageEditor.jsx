@@ -44,7 +44,7 @@ function GrapesPageEditor(props) {
                 // Add CKEditor?
                 // didn't really work :/
 
-                //Add grapesjs-tui-image-editor?
+                // Add grapesjs-tui-image-editor?
             ],
             storageManager: {
                 type: 'remote',
