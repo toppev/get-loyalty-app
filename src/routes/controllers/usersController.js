@@ -28,8 +28,9 @@ module.exports = router;
 
 function login(req, res, next) {
     // So it's easier to get the business id and do stuff on client side
-    const businessOwner = req.user.customerData.find(cd => cd.role === 'business').business;
-    res.json({...req.user.toJSON(), businessOwner});
+    const customerData = req.user.customerData.find(cd => cd.role === 'business');
+    let businessOwner = customerData ? customerData.business : null;
+    res.json({ ...req.user.toJSON(), businessOwner });
 }
 
 /**
@@ -40,8 +41,11 @@ function register(req, res, next) {
     userService.create(req.body)
         .then(user => {
             req.login(user, function (err) {
-                if (err) { return next(err); }
-                else { res.json(user); }
+                if (err) {
+                    return next(err);
+                } else {
+                    res.json(user);
+                }
             });
         }).catch(err => next(err));
 }
