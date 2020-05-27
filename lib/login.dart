@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'errorDialog.dart';
 import 'package:provider/provider.dart';
 
-import 'scannerPage.dart';
-import 'services/userService.dart';
+import 'error_dialog.dart';
+import 'scanner_page.dart';
+import 'services/user_service.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key, this.title}) : super(key: key);
@@ -93,9 +93,8 @@ class _LoginPageState extends State<LoginPage> {
             color: Colors.greenAccent,
             onPressed: () {
               userService
-                  .login(UserCredentials(_email, _password))
+                  .login(UserCredentials(_email.trim(), _password.trim()))
                   .then((value) {
-                // TODO handle login
                 Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) => ScannerPage()));
               }).catchError((e) {

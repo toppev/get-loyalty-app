@@ -1,14 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'errorDialog.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
-import 'services/scanService.dart';
+import 'error_dialog.dart';
+import 'services/scan_service.dart';
 
-// TODO: change
-const MAX_SCAN_DURATION = Duration(seconds: 30);
+const MAX_SCAN_DURATION = Duration(minutes: 3);
 const SCAN_COOLDOWN = 5000; // In millis
 
 var lastScanned = 0;

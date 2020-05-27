@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'errorDialog.dart';
-import 'questionDialog.dart';
+import 'error_dialog.dart';
+import 'question_dialog.dart';
 import 'package:provider/provider.dart';
 
 import 'scanner.dart';
-import 'services/scanService.dart';
+import 'services/scan_service.dart';
 
 const PAUSED = "Start Scanning";
 const SCANNING = "Stop Scanning";

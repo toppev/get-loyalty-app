@@ -1,8 +1,6 @@
 import 'dart:convert';
 
-import 'package:http/http.dart' as http;
-
-const BASE_URL = "http://localhost:3000";
+import 'package:loyalty_scanner_app/services/session_service.dart';
 
 class GetScan {
   dynamic reward;
@@ -56,28 +54,32 @@ class UseScan {
 }
 
 class ScanService {
+  SessionService sessionService;
+
+  ScanService(this.sessionService);
+
   Future<GetScan> getScan(String scan, String businessId) async {
-    var url = '$BASE_URL/business/$businessId/scan/$scan';
+    var url = '${sessionService.getBusinessUrl()}/scan/$scan';
     print('#getScan called. Sending request to $url');
-    final response = await http.get(url);
+    final response = await sessionService.get(url);
     if (response.statusCode == 200) {
       return GetScan.fromJson(json.decode(response.body), scannedString: scan);
     } else {
       var body = json.decode(response.body);
-      throw ('${body.message != null ? body.message : "HTTP status code: ${response.statusCode}"}');
+      throw ('${body['message'] != null ? body['message'] : "HTTP status code: ${response.statusCode}"}');
     }
   }
 
   Future<UseScan> useScan(
       String scan, String businessId, List<Question> answers) async {
-    var url = '$BASE_URL/business/$businessId/scan/$scan';
+    var url = '${sessionService.getBusinessUrl()}/scan/$scan';
     print('#useScan called. Sending request to $url');
-    final response = await http.post(url, body: json.encode({answers}));
+    final response = await sessionService.post(url, json.encode({answers}));
     if (response.statusCode == 200) {
-      return json.decode(response.body);
+      return UseScan.fromJson(json.decode(response.body));
     } else {
       var body = json.decode(response.body);
-      throw ('${body.message != null ? body.message : "HTTP status code: ${response.statusCode}"}');
+      throw ('${body['message'] != null ? body['message'] : "HTTP status code: ${response.statusCode}"}');
     }
   }
 }

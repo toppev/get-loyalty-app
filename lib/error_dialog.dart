@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 void showError(context, {String message, String error}) {
+  print('Opening error. message: $message, error: $error');
   showDialog(
       context: context,
       builder: (BuildContext context) {

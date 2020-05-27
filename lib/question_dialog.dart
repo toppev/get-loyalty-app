@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'services/scanService.dart';
+import 'services/scan_service.dart';
 
 class QuestionDialogWidget extends StatefulWidget {
   final List<Question> questions;
