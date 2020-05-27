@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
-const csrf = require('csurf')
+const csurf = require('csurf')
 const routes = require('./src/routes/routes');
 
 const morgan = require('morgan');
@@ -37,24 +37,29 @@ app.use(cors());
 app.options('*', cors({
     // Localhost any port
     origin: [/http:\/\/localhost:[0-9]+$/]
-}))
+}));
 require('./src/config/passport');
 
 app.use(require('./src/config/sessionConfig'));
 app.use(passport.initialize());
 app.use(passport.session());
 if (!isTesting) {
-    app.use(csrf())
-    app.use(function (err, req, res, next) {
-        if (err.code !== 'EBADCSRFTOKEN') return next(err)
-        // CSRF error
-        res.status(403)
-        res.send('session has expired or form tampered')
-    })
     app.use(function (req, res, next) {
-        res.cookie('XSRF-TOKEN', req.csrfToken())
-        next()
-    })
+        if (req.url === '/user/register' || req.url === '/user/login') {
+            return next();
+        }
+        csurf()(req, res, next);
+    });
+    app.use(function (req, res, next) {
+        res.cookie('XSRF-TOKEN', req.csrfToken());
+        next();
+    });
+    app.use(function (err, req, res, next) {
+        if (err.code !== 'EBADCSRFTOKEN') return next(err);
+        res.cookie('XSRF-TOKEN', req.csrfToken());
+        res.status(403);
+        res.send({ message: 'session has expired or form tampered' });
+    });
 }
 app.use(routes);
 app.use(require('./src/middlewares/errorHandler'));

@@ -129,6 +129,7 @@ async function useScan(scanStr, data, businessId) {
     const categoryQuestion = answers.find(e => e.id === IDENTIFIERS.CATEGORIES);
     const categories = categoryQuestion ? categoryQuestion.options || [] : [];
 
+    // Function that returns true if the given requirement/requirement type got truthy answer (from the human/cashier)
     const isTruthyAnswer = (requirement) => {
         const reqId = IDENTIFIERS.REQUIREMENT(requirement.type || requirement);
         const answer = answers.find(e => e.id === reqId);
@@ -143,7 +144,7 @@ async function useScan(scanStr, data, businessId) {
         let eligible;
         try {
             // May throw (status)errors, catch them so it won't affect the response status now
-            eligible = await campaignService.canReceiveCampaignRewards(userId, businessId, campaign);
+            eligible = await campaignService.canReceiveCampaignRewards(userId, businessId, campaign, isTruthyAnswer);
         } catch (err) {
             // Not eligible
             eligible = false;

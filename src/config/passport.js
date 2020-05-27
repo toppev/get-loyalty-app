@@ -4,9 +4,9 @@ const User = require('../models/user');
 const userService = require('../services/userService');
 
 passport.use(new LocalStrategy({
-    usernameField: 'email',
-    passwordField: 'password'
-},
+        usernameField: 'email',
+        passwordField: 'password'
+    },
     async function (email, password, next) {
         return User.findOne({ email }).then(user => {
             if (user) {
@@ -15,8 +15,7 @@ passport.use(new LocalStrategy({
                 }
                 if (!user.password) {
                     return next(null, false, { message: 'No password found.' });
-                }
-                else if (user.comparePassword(password)) {
+                } else if (user.comparePassword(password)) {
                     return next(null, user, { message: 'Logged in successfully' });
                 }
             }

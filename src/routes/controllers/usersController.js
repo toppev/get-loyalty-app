@@ -27,7 +27,9 @@ router.get('/:userId', permit('user:get'), getById);
 module.exports = router;
 
 function login(req, res, next) {
-    res.json(req.user.toJSON());
+    // So it's easier to get the business id and do stuff on client side
+    const businessOwner = req.user.customerData.find(cd => cd.role === 'business').business;
+    res.json({...req.user.toJSON(), businessOwner});
 }
 
 /**
