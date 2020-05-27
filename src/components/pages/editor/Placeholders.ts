@@ -24,6 +24,8 @@ interface Placeholders {
 }
 
 const placeholders: Placeholders = {
+    // Some placeholders are grapesjs blocks (campaigns, their rewards, products, user rewards etc)
+    // see pages/editor/blocks directory
     businessPlaceholders: {
         name: 'Business Placeholders',
         identifier: 'business',
@@ -58,54 +60,28 @@ const placeholders: Placeholders = {
                 name: 'Email',
                 description: "The customer's email",
             },
+            // TODO: implement in backend, where can the message be configured?
+            birthdayGreeting: {
+                name: 'Birthday greetings',
+                description: 'Display a birthday greeting message if today is the customers birthday'
+            }
         }
     },
     rewards: {
-        name: 'Customer/Campaign Rewards (multiple)',
+        name: 'Customer Rewards',
         identifier: 'rewards',
         placeholders: {
             length: {
                 name: 'Number of rewards',
                 description: 'Number of customer rewards'
             },
-        }
-    },
-    reward: {
-        name: 'Customer/Campaign Reward',
-        identifier: 'reward',
-        placeholders: {
-            // TODO: available functions
-            name: {
-                name: 'Reward name',
-                description: 'Name of the reward'
-            },
-            description: {
-                name: 'Reward description',
-                description: 'The description of the reward'
-            },
-            // TODO products
-            categories: {
-                name: 'Reward categories',
-                description: 'List of reward categories'
-            },
-            campaign: {
-                name: 'Reward campaign',
-                description: 'The name of the campaign associated with this reward'
-            },
-            itemDiscount: {
-                name: 'Discount',
-                description: 'The discount of an item. e.g -50%, Free or "For $5 only!"'
-            },
-            note: {
-                name: 'Reward note/requirement',
-                description: 'A note or a requirement for this reward. e.g "not during xx-xx hours" or "only with meals"'
-            },
-            expires: {
-                name: 'Reward expiration',
-                description: 'The date when the reward expires'
+            // TODO: implement in backend
+            used: {
+                name: 'Number of used rewards',
+                description: 'Number of rewards the customer has used'
             }
         }
-    },
+    }
 }
 
 export { placeholders }
