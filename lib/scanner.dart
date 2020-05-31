@@ -65,7 +65,7 @@ class ScannerWidgetState extends State<ScannerWidget> {
           stateText = "(INVALID) " + stateText;
         } else {
           setScanning(false);
-          scanService.getScan(scanData, 'testBusiness123').then((result) {
+          scanService.getScan(scanData).then((result) {
             print('handling request result: $result');
             widget.onScan(result);
           }).catchError((e) {

@@ -104,9 +104,7 @@ class _ScannerPageState extends State<ScannerPage> {
       builder: (BuildContext context) => QuestionDialogWidget(
           onSubmit: (res) {
             print('Answers: $res');
-            scanService
-                .useScan(data.scannedString, 'fakebusiness', res)
-                .then((result) {
+            scanService.useScan(data.scannedString, res).then((result) {
               print('Scan used. Response: $result');
               _onScanSubmitted(result);
             }).catchError((e) {
