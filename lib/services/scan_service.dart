@@ -42,13 +42,15 @@ class Question {
 class UseScan {
   String message;
   List<dynamic> newRewards;
+  dynamic usedReward;
 
-  UseScan(this.message, this.newRewards);
+  UseScan(this.message, this.newRewards, this.usedReward);
 
   factory UseScan.fromJson(Map<String, dynamic> json) {
     return UseScan(
       json['message'],
       json['newRewards'],
+      json['usedReward'],
     );
   }
 }

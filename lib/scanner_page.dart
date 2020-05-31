@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'error_dialog.dart';
-import 'question_dialog.dart';
 import 'package:provider/provider.dart';
 
+import 'error_dialog.dart';
+import 'question_dialog.dart';
 import 'scanner.dart';
 import 'services/scan_service.dart';
 
@@ -108,7 +108,7 @@ class _ScannerPageState extends State<ScannerPage> {
                 .useScan(data.scannedString, 'fakebusiness', res)
                 .then((result) {
               print('Scan used. Response: $result');
-              globalKey.currentState.setScanning(true);
+              _onScanSubmitted(result);
             }).catchError((e) {
               print(e);
               showError(context,
@@ -117,6 +117,36 @@ class _ScannerPageState extends State<ScannerPage> {
           },
           questions: data.questions),
     );
+  }
+
+  _onScanSubmitted(UseScan result) {
+    if (result.usedReward != null) {
+      var reward = result.usedReward;
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+                title: Text("Customer used reward: ${reward['name']}"),
+                content: Column(
+                  children: <Widget>[
+                    Text("Name: ${reward['name']}"),
+                    Text("Discount: ${reward['description']}"),
+                    reward['requirement'] != null
+                        ? Text("Note: ${reward['requirement']}")
+                        : null,
+                    Text(reward['description']),
+                  ],
+                ),
+                actions: [
+                  new FlatButton(
+                      child: Text("Close message"),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        globalKey.currentState.setScanning(true);
+                      })
+                ]);
+          });
+    }
   }
 
   @override
