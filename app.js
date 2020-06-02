@@ -49,10 +49,7 @@ if (!isTesting) {
             return next();
         }
         csurf()(req, res, next);
-    });
-    app.use(function (req, res, next) {
         res.cookie('XSRF-TOKEN', req.csrfToken());
-        next();
     });
     app.use(function (err, req, res, next) {
         if (err.code !== 'EBADCSRFTOKEN') return next(err);

@@ -76,7 +76,10 @@ const userSchema = new Schema({
                 type: Date,
                 default: Date.now
             },
-            reward: rewardSchema
+            reward: {
+                type: rewardSchema,
+                required: true
+            }
         }],
         // Other customer properties that business can modify freely
         properties: {

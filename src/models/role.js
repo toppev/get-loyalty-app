@@ -29,6 +29,7 @@ const roles = {
             'reward:*': true,
             'scan:get': true,
             'scan:use': true,
+            'notification:*': true,
         },
     },
     user: {

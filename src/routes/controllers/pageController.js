@@ -8,6 +8,9 @@ const permit = require('../../middlewares/permitMiddleware');
 router.get('/templates', getTemplates);
 // List business's pages
 router.get('/list', permit('page:load'), listPages);
+// Returns public information of the published pages, no need for permissions
+// The customer app uses to list all pages, first should be the homepage
+router.get('/pages', listPublicPages);
 // Get any html, no perms needed
 router.get('/:pageId/html', getHtml);
 // GET for screenshot/thumbnail
@@ -17,7 +20,7 @@ router.get('/:pageId', permit('page:load'), loadPage);
 // Uploading html pages
 router.post('/:pageId/upload', permit('page:upload'), uploadPage);
 // Saving the GJS data
-// Even though it's a post (because it's easier with grapesjs in frontend) pageService uses Object.assign so it works like a PATCH
+// Even though it's a post (because it's easier with grapesjs in frontend) pageService uses Object.assign so partial updates work
 router.post('/:pageId', permit('page:save'), savePage);
 // Creating a new page
 router.post('/', permit('page:create'), createPage);
@@ -48,8 +51,14 @@ function loadPage(req, res, next) {
 }
 
 function listPages(req, res, next) {
-    pageService.getBusinessPageIds(req.params.businessId)
+    pageService.getBusinessPages(req.params.businessId)
         .then(data => data ? res.json(data) : res.sendStatus(404))
+        .catch(err => next(err));
+}
+
+function listPublicPages(req, res, next) {
+    pageService.getPublicPage(req.params.businessId)
+        .then(data => res.json(data))
         .catch(err => next(err));
 }
 

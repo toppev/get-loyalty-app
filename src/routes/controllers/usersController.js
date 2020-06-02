@@ -26,11 +26,14 @@ router.get('/:userId', permit('user:get'), getById);
 
 module.exports = router;
 
+// So it's easier to get the business id and do stuff on client side
+function getBusinessOwner(user) {
+    const customerData = user.customerData.find(cd => cd.role === 'business');
+    return customerData ? customerData.business : null;
+}
+
 function login(req, res, next) {
-    // So it's easier to get the business id and do stuff on client side
-    const customerData = req.user.customerData.find(cd => cd.role === 'business');
-    let businessOwner = customerData ? customerData.business : null;
-    res.json({ ...req.user.toJSON(), businessOwner });
+    res.json({ ...req.user.toJSON(), businessOwner: getBusinessOwner(req.user) });
 }
 
 /**
@@ -79,7 +82,7 @@ function resetPassword(req, res, next) {
 
 function getCurrent(req, res, next) {
     userService.getById(req.user.id)
-        .then(user => user ? res.json(user) : res.sendStatus(404))
+        .then(user => user ? res.json({ ...user.toJSON(), businessOwner: getBusinessOwner(user) }) : res.sendStatus(404))
         .catch(err => next(err));
 }
 

@@ -29,8 +29,12 @@ const productSchema = new Schema({
         },
     }],
     price: {
-        type: mongoose.Types.Decimal128
+        // Use string so it's possible to include the currency
+        type: String
     }
+}, {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
 });
 
 module.exports = mongoose.model('Product', productSchema);

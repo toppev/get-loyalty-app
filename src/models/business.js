@@ -60,23 +60,34 @@ const businessSchema = new Schema({
     email: {
         type: String,
     },
-    config: configSchema,
-    plan: planSchema,
+    config: {
+        type: configSchema,
+        default: {}
+    },
+    plan: {
+        type: planSchema,
+        default: {}
+    },
     public: {
         name: {
             type: String,
+            default: ''
         },
         description: {
             type: String,
+            default: ''
         },
         address: {
             type: String,
+            default: ''
         },
         website: {
             type: String,
+            default: ''
         },
         language: {
-            type: String
+            type: String,
+            default: 'English'
         },
         categories: [{
             type: mongoose.Types.ObjectId,
@@ -93,6 +104,9 @@ const businessSchema = new Schema({
             }
         }]
     }
+}, {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
 });
 
 businessSchema.virtual("campaigns", {

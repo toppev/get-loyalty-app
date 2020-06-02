@@ -1,34 +1,10 @@
+// TODO: maybe later use AWS s3 or somethin else
 
-/* TODO: maybe later
-const AWS = require('aws-sdk');
-
-const PAGE_IMAGES_BUCKET = 'kantis-page-images';
-const PAGE_HTML_BUCKET = 'kantis-page-html';
-
-
-const params = {
-    Bucket: uploader.PAGE_HTML_BUCKET,
-    Key: `page_${pageData.id}.html`,
-    Body: html,
-    ContentType: 'text/html'
-};
-
-uploader.s3.upload(params, function(err, data) {
-    if (err) {
-        throw err;
-    }
-    // Success
-});
-
-const s3 = new AWS.S3({
-    accessKeyId: process.env.AWS_KEY,
-    secretAccessKey: process.env.AWS_SECRET_KEY
-});
-*/
 const fs = require('fs');
-const { sep } = require('path');
+const sep = '/'; // const { sep } require('path'); doesn't really work as well with express (or something) (even on Windows)
 
 const uploadDir = process.env.UPLOAD_DIR || process.env.PWD.concat(`${sep}uploads`);
+console.log(`Upload dir: ${uploadDir}`);
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir);
 }
@@ -42,13 +18,11 @@ async function upload(fileName, data) {
         if (err) {
             throw err;
         }
-        // Success    
+        // Success
     });
 }
 
 module.exports = {
-    //PAGE_IMAGES_BUCKET,
-    //PAGE_HTML_BUCKET,
     uploadDir,
     upload,
     toPath

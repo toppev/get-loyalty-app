@@ -76,6 +76,9 @@ const campaignSchema = new Schema({
         default: 0
     },
     endReward: [rewardSchema],
+}, {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
 });
 
 module.exports = mongoose.model('Campaign', campaignSchema);

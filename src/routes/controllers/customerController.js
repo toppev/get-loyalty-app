@@ -1,3 +1,5 @@
+// Every request here has a userId param
+// businessController can list customers
 const router = require('express').Router({ mergeParams: true });
 const customerService = require('../../services/customerService');
 const permit = require('../../middlewares/permitMiddleware');
@@ -7,7 +9,7 @@ const purchaseValidator = validation.validate(validation.purchaseValidator);
 const propertiesValidator = validation.validate(validation.customerPropertiesValidator);
 const rewardValidator = validation.validate(validation.rewardValidator);
 
-// TODO: list customers
+
 router.post('/purchase/', permit('purchase:create'), purchaseValidator, newPurchase);
 router.patch('/purchase/:purchaseId', permit('purchase:update'), purchaseValidator, updatePurchase);
 router.delete('/purchase/:purchaseId', permit('purchase:delete'), deletePurchase);

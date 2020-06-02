@@ -35,7 +35,6 @@ async function parseScanString(scanStr) {
  * Validate that the reward exists in the given customerData
  * @param rewardId
  * @param customerData
- * @returns {Promise<T>}
  */
 async function validateRewardId(rewardId, customerData) {
     if (rewardId) {
@@ -62,7 +61,7 @@ async function getScan(scanStr, businessId) {
     const reward = await validateRewardId(rewardId, customerData);
     if (reward) {
         addQuestions(questions, reward.categories, reward.products, [reward.requirement]);
-        questions.push({ id: 'success', question: 'Use reward?', options: ['Yes', 'No'] });
+        questions.push({ id: 'success', question: `Use reward "${reward.name}"?`, options: ['Yes', 'No'] });
         otherData.reward = reward;
     } else {
         const campaigns = await campaignService.getOnGoingCampaigns(businessId, true);
@@ -116,6 +115,7 @@ async function useScan(scanStr, data, businessId) {
     const customerData = await customerService.findCustomerData(user, businessId);
     const reward = await validateRewardId(rewardId, customerData);
     let responseMessage;
+    let usedReward = reward;
     if (reward) {
         await customerService.useReward(user, customerData, reward)
         responseMessage = 'Reward Used!';
@@ -165,7 +165,7 @@ async function useScan(scanStr, data, businessId) {
     } else {
         pollingService.sendToUser(userId, { message: 'Done!' }, 'scan_end');
     }
-    return { message: responseMessage, newRewards }
+    return { message: responseMessage, newRewards, usedReward }
 }
 
 module.exports = {

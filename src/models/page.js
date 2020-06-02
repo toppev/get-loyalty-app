@@ -5,6 +5,12 @@ const PageDataSchema = new Schema({
     name: {
         type: String
     },
+    pathname: {
+        type: String,
+        default: function () {
+            return this.name.replace(/[^a-zA-Z0-9]/, '')
+        }
+    },
     // Mainly just for the templates
     description: {
         type: String
@@ -24,6 +30,10 @@ const PageDataSchema = new Schema({
     template: {
         type: Boolean
     },
+    // ??? is it html?
+    icon: {
+        type: String
+    },
     gjs: {
         "gjs-components": {
             type: Array
@@ -32,6 +42,9 @@ const PageDataSchema = new Schema({
             type: Array
         },
     },
+}, {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
 });
 
 module.exports = mongoose.model('PageData', PageDataSchema);

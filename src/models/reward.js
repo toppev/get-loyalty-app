@@ -42,6 +42,9 @@ const rewardSchema = new Schema({
     expires: {
         type: Date
     },
+}, {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
 });
 
 module.exports = rewardSchema;

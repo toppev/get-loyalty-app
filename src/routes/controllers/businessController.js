@@ -1,7 +1,8 @@
 const router = require('express').Router();
 const businessService = require('../../services/businessService');
-const permit = require('../../middlewares/permitMiddleware');
 const customerService = require('../../services/customerService');
+const campaignService = require('../../services/campaignService');
+const permit = require('../../middlewares/permitMiddleware');
 const validation = require('../../helpers/validation');
 const businessValidator = validation.validate(validation.businessValidator);
 
@@ -12,6 +13,7 @@ router.patch('/:businessId', permit('business:update'), businessValidator, updat
 router.post('/:businessId/role', permit('business:role'), validation.validate(validation.businessRoleValidator), setUserRole);
 
 router.get('/:businessId/customers', permit('customer:list'), listCustomers);
+router.get('/:businessId/reward/list', permit('reward:list'), listRewards);
 
 module.exports = router;
 
@@ -58,4 +60,15 @@ function listCustomers(req, res, next) {
     customerService.listCustomers(businessId, limit, searchStr)
         .then(data => res.json({ customers: data }))
         .catch(err => next(err));
+}
+
+function listRewards(req, res, next) {
+    const { businessId } = req.params;
+    res.end(501)
+    // TODO implement
+        /*
+    .getAllByBusinessId(businessId, false)
+        .then(data => res.json(data.map(c => c.endReward)))
+        .catch(err => next(err))
+         */
 }

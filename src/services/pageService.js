@@ -10,7 +10,8 @@ module.exports = {
     createPage,
     savePage,
     loadPage,
-    getBusinessPageIds,
+    getBusinessPages,
+    getPublicPage,
     uploadPage,
     getThumbnail,
     getTemplates,
@@ -48,8 +49,17 @@ async function loadPage(id, gjsOnly) {
  * Find the given business's pages. The returned pages do not include the "gjs" data.
  * @param {any} businessId the id of the business
  */
-async function getBusinessPageIds(businessId) {
+async function getBusinessPages(businessId) {
     const pages = await PageData.find({ business: businessId }).select('-gjs');
+    return pages;
+}
+
+/**
+ * Return only the ids of the published pages. First should be the home page
+ */
+// TODO: order the pages
+async function getPublicPage(businessId) {
+    const pages = await PageData.find({ business: businessId, stage: 'published' }).select('_id icon ');
     return pages;
 }
 

@@ -27,11 +27,7 @@ const categorySchema = new Schema({
         type: String,
         enum: [null, 'business', 'product', 'service']
     },
-    // TODO: should it be like
-    // en: ["drink"], fi: ["juoma"]
-    // or
-    // { lang: "en", translations: ["drink"]}
-    translations: {},
+    // IDEA: translations for categories?
     images: [{
         type: String,
         validate: {
@@ -40,6 +36,9 @@ const categorySchema = new Schema({
             }, message: 'Invalid URL.',
         },
     }],
+}, {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
 });
 
 module.exports = mongoose.model('Category', categorySchema);

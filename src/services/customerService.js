@@ -45,8 +45,8 @@ async function getCustomerData(user, businessId) {
         user = await User.findById(user);
     }
     const customerData = await findCustomerData(user, businessId);
-    const { email, lastVisit, birthday, authentication } = user;
-    return { customerData, email, lastVisit, birthday, authentication: { service: authentication.service } }
+    const { _id, id, email, lastVisit, birthday, authentication } = user;
+    return { _id, id, customerData, email, lastVisit, birthday, authentication: { service: authentication.service } }
 }
 
 /**
@@ -261,7 +261,7 @@ async function addCampaignRewards(user, campaign) {
 }
 
 async function listCustomers(businessId, limit, search) {
-    let users = await User.find({ "customerData.business": businessId }).limit(limit || 100);
+    let users = await User.find({ "customerData.business": businessId }).limit(search ? (limit || 100) : 500); // If searching limit at 500, might fix later
     if (search && search.trim().length) {
         // FIXME: bad
         users = users.filter(u => JSON.stringify(u).toLowerCase().includes(search));
