@@ -14,6 +14,8 @@ router.post('/:businessId/role', permit('business:role'), validation.validate(va
 
 router.get('/:businessId/customers', permit('customer:list'), listCustomers);
 router.get('/:businessId/reward/list', permit('reward:list'), listRewards);
+// Get the business who owns the current site
+router.get('/whois', getWebsiteOwner);
 
 module.exports = router;
 
@@ -64,11 +66,20 @@ function listCustomers(req, res, next) {
 
 function listRewards(req, res, next) {
     const { businessId } = req.params;
-    res.end(501)
-    // TODO implement
-        /*
-    .getAllByBusinessId(businessId, false)
-        .then(data => res.json(data.map(c => c.endReward)))
+    campaignService.getAllRewards(businessId)
+        .then(rewards => res.json(rewards))
         .catch(err => next(err))
-         */
+}
+
+function getWebsiteOwner(req, res, next) {
+    // TODO: make sure no one is using this to get their query params and remove lol (?)
+    const { business } = req.query;
+    if (business) {
+        res.json({ business })
+    } else {
+        const url = req.query.url || req.hostname + req.originalUrl
+        businessService.getCurrentBusiness(req.user, url)
+            .then(res => res.json({ business: res.id }))
+            .catch(err => next(err))
+    }
 }

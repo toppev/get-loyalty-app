@@ -17,6 +17,8 @@ const resetModel = new Schema({
     toObject: { virtuals: true }
 });
 
+// TODO: we probably should hash the token (?)
+
 resetModel.statics.findByToken = function (token, callback) {
     return this.findOne({ token }, callback);
 }

@@ -19,6 +19,7 @@ async function emailPasswordReset(email, token) {
         subject: config.emailSubject,
         text: config.emailText.replace('{url}', url),
     };
+    if (process.env.NODE_ENV === 'test') return;
     transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
             console.log(error);

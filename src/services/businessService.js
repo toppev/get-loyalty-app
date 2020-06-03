@@ -2,12 +2,33 @@ const Business = require('../models/business');
 const User = require('../models/user');
 
 module.exports = {
+    getCurrentBusiness,
+    getOwnBusiness,
     createBusiness,
     getBusiness,
     update,
     setUserRole,
     getPublicInformation
 };
+
+/**
+ * Get the business the given user owns
+ * @param user the user object (with customerData etc)
+ */
+function getOwnBusiness(user) {
+    const customerData = user.customerData.find(cd => cd.role === 'business');
+    return customerData ? customerData.business : null;
+}
+
+/**
+ * Get the business the user is currently visiting
+ * @param user the user object
+ * @param url the website url
+ */
+async function getCurrentBusiness(user, url) {
+    const business = await Business.find({ 'public.website': url })
+    return business;
+}
 
 /**
  * Create a new business and promote its owner
@@ -51,7 +72,7 @@ async function update(id, updateParam) {
 async function setUserRole(id, userId, role) {
     const user = await User.findById(userId);
     if (!user) {
-        throw new Error("User " + userId + " was not found");
+        throw new Error(`User ${userId} was not found`);
     }
     const data = user.customerData;
     // FIXME replacing == with === will break

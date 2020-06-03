@@ -8,7 +8,8 @@ const PageDataSchema = new Schema({
     pathname: {
         type: String,
         default: function () {
-            return this.name.replace(/[^a-zA-Z0-9]/, '')
+            // TODO increment page name "page2" etc
+            return this.name ? this.name.replace(/[^a-zA-Z0-9]/, '') : 'page1'
         }
     },
     // Mainly just for the templates

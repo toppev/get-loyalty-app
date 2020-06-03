@@ -38,7 +38,6 @@ async function initParams(paramsObj) {
 }
 
 // Not all but many permissions are tested here
-// TODO purchases
 
 // ADMIN
 describe('admin', () => {

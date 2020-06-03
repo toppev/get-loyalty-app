@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const userService = require('../../services/userService');
+const businessService = require('../../services/businessService');
 const permit = require('../../middlewares/permitMiddleware');
 const authenticator = require('../../middlewares/authenticator');
 
@@ -26,14 +27,12 @@ router.get('/:userId', permit('user:get'), getById);
 
 module.exports = router;
 
-// So it's easier to get the business id and do stuff on client side
-function getBusinessOwner(user) {
-    const customerData = user.customerData.find(cd => cd.role === 'business');
-    return customerData ? customerData.business : null;
-}
 
 function login(req, res, next) {
-    res.json({ ...req.user.toJSON(), businessOwner: getBusinessOwner(req.user) });
+    res.json({
+        ...req.user.toJSON(),
+        businessOwner: businessService.getOwnBusiness(req.user),
+    });
 }
 
 /**
@@ -82,7 +81,10 @@ function resetPassword(req, res, next) {
 
 function getCurrent(req, res, next) {
     userService.getById(req.user.id)
-        .then(user => user ? res.json({ ...user.toJSON(), businessOwner: getBusinessOwner(user) }) : res.sendStatus(404))
+        .then(user => user ? res.json({
+            ...user.toJSON(),
+            businessOwner: businessService.getOwnBusiness(user),
+        }) : res.sendStatus(404))
         .catch(err => next(err));
 }
 

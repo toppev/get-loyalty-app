@@ -12,7 +12,8 @@ module.exports = {
     update,
     deleteCampaign,
     byCouponCode,
-    canReceiveCampaignRewards
+    canReceiveCampaignRewards,
+    getAllRewards
 };
 
 /**
@@ -26,6 +27,14 @@ async function getAllByBusinessId(businessId, populate) {
         res.populate('products categories');
     }
     return await res;
+}
+
+/**
+ * Get all campaign rewards from the business's campaigns
+ */
+async function getAllRewards(businessId) {
+    const rewards = await Campaign.find({ business: businessId }).select('endReward');
+    return [].concat(...rewards.map(it => it.endReward));
 }
 
 async function getOnGoingCampaigns(businessId, populate) {

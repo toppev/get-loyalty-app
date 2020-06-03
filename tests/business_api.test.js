@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
 const businessService = require('../src/services/businessService');
+const campaignService = require('../src/services/campaignService');
 const Business = require('../src/models/business');
 const User = require('../src/models/user');
 const app = require('../app');
@@ -123,6 +123,16 @@ describe('Logged in user can', () => {
             .expect(200)
         expect(res.body.customers.length).toBe(1);
         expect(res.body.customers[0].email).toBe(userParams.email);
+    })
+
+    it('list rewards', async () => {
+        await campaignService.create(business.id, { name: 'dasdawdasd', endReward: [{ name: 'free stuff', itemDiscount: 'free' }] });
+        const res = await api
+            .get(`/business/${business.id}/reward/list`)
+            .set('Cookie', cookie)
+            .expect(200)
+        expect(res.body.length).toBe(1);
+        expect(res.body[0].name).toBe('free stuff');
     })
 
 });

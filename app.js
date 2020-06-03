@@ -26,7 +26,8 @@ if (!isTesting) {
     app.use(morgan('":method :url" :status (len: :res[content-length]) ":user-agent" - :response-time ms',
         { stream: logger.stream }));
 }
-
+// If this app is sitting behind a reverse proxy (e.g nginx)
+// app.enable('trust proxy')
 app.use(cookieParser());
 app.use(parser.urlencoded({
     extended: false

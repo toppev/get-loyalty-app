@@ -45,7 +45,7 @@ describe('Logged in user can', () => {
         expect(res.body.customerData).toBeDefined();
         expect(res.body.reward._id).toBeDefined();
         const questions = res.body.questions;
-        expect(questions[questions.length - 1].question).toBe('Use reward?')
+        expect(questions[questions.length - 1].question).toBe('Use reward "Free items"?')
     });
 
     it('scan (get) userId', async () => {

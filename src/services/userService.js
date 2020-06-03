@@ -36,8 +36,7 @@ async function forgotPassword(email) {
                 userId
             });
             await reset.save();
-            // TODO: enable
-            //emailPasswordReset(email, token);
+            emailPasswordReset(email, token);
         }
     }
 }

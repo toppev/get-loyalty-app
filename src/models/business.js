@@ -83,7 +83,11 @@ const businessSchema = new Schema({
         },
         website: {
             type: String,
-            default: ''
+            default: '',
+            // TODO: check that no one else has entered the website. This will prevent abuse but then they must use the same account?
+            // IDEA: trim the url so it will work? e.g no https:// or trailing slashes etc to break it?
+            // SEE businessService #getCurrentBusiness and also implement trimming there
+            index: true, // Used to get whose site it is
         },
         language: {
             type: String,
