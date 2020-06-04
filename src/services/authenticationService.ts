@@ -1,4 +1,4 @@
-import { get, post } from "../config/axios";
+import { businessId, get, post } from "../config/axios";
 
 type LoginCredentials = {
     email?: string
@@ -18,6 +18,9 @@ function registerRequest({ email, password }: LoginCredentials = {}) {
 }
 
 function getBusinessId() {
+    if (businessId?.length === 24) {
+        return businessId
+    }
     return get(`/business/whois/?url=${document.location.href}`)
 }
 
