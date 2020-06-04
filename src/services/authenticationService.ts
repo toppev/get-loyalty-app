@@ -17,9 +17,14 @@ function registerRequest({ email, password }: LoginCredentials = {}) {
     return post('/user/register', { email, password })
 }
 
+function getBusinessId() {
+    return get(`/business/whois/?url=${document.location.href}`)
+}
+
 
 export {
     profileRequest,
     loginRequest,
     registerRequest,
+    getBusinessId
 }

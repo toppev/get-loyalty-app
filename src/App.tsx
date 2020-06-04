@@ -3,9 +3,11 @@ import './App.css';
 import { getPageHtml, getPages } from "./services/pageService";
 import Page, { ERROR_HTML } from "./model/Page";
 import PageView from "./components/PageView";
-import { profileRequest, registerRequest } from "./services/authenticationService";
+import { getBusinessId, profileRequest, registerRequest } from "./services/authenticationService";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Navbar from "./components/Navbar";
+import { setBusinessId } from "./config/axios";
+import { AxiosResponse } from "axios";
 
 function App() {
 
@@ -38,18 +40,35 @@ function App() {
         }
     }
 
+    const onLogin = (_res: AxiosResponse) => {
+        getBusinessId()
+            .then(res => {
+                const bId = res.data.businessId;
+                if (!bId || bId.length !== 24) {
+                    setError('Received invalid business')
+                } else {
+                    setBusinessId(bId)
+                }
+                loadPages()
+            })
+            .catch(_err => setError('Failed to identify business :('))
+    }
+
     // Authentication
-    // TODO: somehow get the business id?
     useEffect(() => {
         profileRequest()
-            .then(() => loadPages())
+            .then(onLogin)
             .catch(err => {
                 // TODO: Option to login on other responses?
-                if (err.response?.status == 403) {
+                if (err.response?.status === 403) {
                     registerRequest()
-                        .then(() => loadPages)
+                        .then(onLogin)
+                        .catch(_err => setError('Could not register a new account. Something went wrong :('))
+                } else {
+                    setError('Something went wrong :(')
                 }
             })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     // Loading page content

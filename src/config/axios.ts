@@ -76,5 +76,6 @@ export {
     get,
     patch,
     getBusinessUrl,
+    setBusinessId,
     BASE_URL,
 }
