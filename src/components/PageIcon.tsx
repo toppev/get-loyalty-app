@@ -10,7 +10,7 @@ export default function (props: PageIconProps) {
     const icon = page.icon || `<a>${page.pathname}</a>`
 
     return (
-        <div dangerouslySetInnerHTML={{ __html: icon }}/>
+        <div className="pageIcon" dangerouslySetInnerHTML={{ __html: icon }}/>
     )
 
 }

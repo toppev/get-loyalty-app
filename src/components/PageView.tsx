@@ -10,6 +10,6 @@ export default function (props: PageViewProps) {
     const html = page.html || LOADING_HTML
 
     return (
-        <div dangerouslySetInnerHTML={{ __html: html }}/>
+        <div className="page-view" dangerouslySetInnerHTML={{ __html: html }}/>
     )
 }
