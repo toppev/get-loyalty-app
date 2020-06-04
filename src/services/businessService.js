@@ -26,7 +26,7 @@ function getOwnBusiness(user) {
  * @param url the website url
  */
 async function getCurrentBusiness(user, url) {
-    const business = await Business.find({ 'public.website': url })
+    const business = await Business.find({ 'public.loyaltyWebsite': url })
     return business;
 }
 

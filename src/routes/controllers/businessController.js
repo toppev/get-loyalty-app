@@ -77,6 +77,7 @@ function getWebsiteOwner(req, res, next) {
     if (business) {
         res.json({ business })
     } else {
+        // Client can specify with query param "url"
         const url = req.query.url || req.hostname + req.originalUrl
         businessService.getCurrentBusiness(req.user, url)
             .then(res => res.json({ business: res.id }))

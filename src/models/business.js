@@ -81,13 +81,28 @@ const businessSchema = new Schema({
             type: String,
             default: ''
         },
+        // Any website
         website: {
             type: String,
+            default: ''
+        },
+        // Where the loyalty app is located
+        loyaltyWebsite: {
+            type: String,
             default: '',
-            // TODO: check that no one else has entered the website. This will prevent abuse but then they must use the same account?
             // IDEA: trim the url so it will work? e.g no https:// or trailing slashes etc to break it?
             // SEE businessService #getCurrentBusiness and also implement trimming there
             index: true, // Used to get whose site it is
+            validate: {
+                // IDEA: Should we require redirect to our servers before adding the website?
+                validator: async function (value) {
+                    if (!value) {
+                        return true;
+                    }
+                    const business = await Business.find({ 'public.website': value }).limit(2);
+                    return !business.length || (business[0].id === this.id && business.length === 1);
+                }, message: 'Someone has already entered that business. Contact us if you want it removed.',
+            },
         },
         language: {
             type: String,
@@ -125,4 +140,5 @@ businessSchema.virtual("products", {
     foreignField: "business",
 });
 
-module.exports = mongoose.model('Business', businessSchema);
+const Business = mongoose.model('Business', businessSchema);
+module.exports = Business;

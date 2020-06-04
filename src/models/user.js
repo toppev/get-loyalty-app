@@ -22,7 +22,7 @@ const userSchema = new Schema({
                 if (!value) {
                     return true;
                 }
-                const users = await User.find({ email: value });
+                const users = await User.find({ email: value }).limit(2);
                 return !users.length || (users[0].id === this.id && users.length === 1);
             }, message: 'Email is already taken.',
         },
