@@ -48,7 +48,7 @@ if (!isTesting) {
         if (req.url === '/user/register' || req.url === '/user/login') {
             return next();
         }
-        csurf({})(req, res, next);
+        csurf()(req, res, next);
     });
     app.use(function (err, req, res, next) {
         if (err.code !== 'EBADCSRFTOKEN') return next(err);

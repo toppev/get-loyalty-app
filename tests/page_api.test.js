@@ -8,9 +8,9 @@ const businessParams = { email: "example@email.com", public: { address: 'this is
 const userParams = { email: "example@email.com", password: "password123" };
 let userId;
 
-const testPageData = { gjs: { "gjs-components": ["stuff"], "gjs-style": ["more stuff"] } }
-const updatedPageData = { gjs: { "gjs-components": ["differentStuff"], "gjs-style": ["more stuff"] } }
-const updatedPageData2 = { gjs: { "gjs-components": ["differentStuff2"], "gjs-style": ["more different stuff"] } }
+const testPageData = { gjs: { "gjs-components": '["stuff"]', "gjs-style": '["more stuff"]' } }
+const updatedPageData = { gjs: { "gjs-components": '["differentStuff"]', "gjs-styles": '["more stuff"]' } }
+const updatedPageData2 = { gjs: { "gjs-components": '["differentStuff2"]', "gjs-styles": '["more different stuff"]' } }
 
 beforeAll(async () => {
     await initDatabase('page');
