@@ -28,6 +28,8 @@ const categorySchema = new Schema({
         enum: [null, 'business', 'product', 'service']
     },
     // IDEA: translations for categories?
+    // ???: Do we need images? Maybe keep for future support
+    // Not tested
     images: [{
         type: String,
         validate: {

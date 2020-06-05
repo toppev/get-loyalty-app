@@ -8,8 +8,7 @@ const PageDataSchema = new Schema({
     pathname: {
         type: String,
         default: function () {
-            // TODO increment page name "page2" etc
-            return this.name ? this.name.replace(/[^a-zA-Z0-9]/, '') : 'page1'
+            return this.name ? this.name.replace(/[^a-zA-Z0-9]/, '') : 'unnamed';
         }
     },
     // Mainly just for the templates
@@ -31,16 +30,16 @@ const PageDataSchema = new Schema({
     template: {
         type: Boolean
     },
-    // ??? is it html?
+    // html icon
     icon: {
         type: String
     },
     gjs: {
         "gjs-components": {
-            type: Array
+            type: String
         },
-        "gjs-style": {
-            type: Array
+        "gjs-styles": {
+            type: String
         },
     },
 }, {
@@ -48,4 +47,12 @@ const PageDataSchema = new Schema({
     toObject: { virtuals: true }
 });
 
-module.exports = mongoose.model('PageData', PageDataSchema);
+PageDataSchema.pre('save', async function () {
+    if (!this.pathname || this.pathname === 'unnamed') {
+        const pagesCount = await PageData.countDocuments({ business: this.business });
+        this.pathname = `page${pagesCount}`;
+    }
+})
+
+const PageData = mongoose.model('PageData', PageDataSchema);
+module.exports = PageData;

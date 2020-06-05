@@ -136,7 +136,6 @@ async function useScan(scanStr, data, businessId) {
         // It should just be 'no' or 'yes' but make sure if we change it, it will still work
         return answer && answer.toLowerCase() === 'yes';
     }
-    // TODO: handle answers
     await customerService.addPurchase(userId, businessId, { products, categories })
     const newRewards = [];
     const campaigns = await campaignService.getOnGoingCampaigns(businessId, true)
@@ -148,10 +147,10 @@ async function useScan(scanStr, data, businessId) {
         } catch (err) {
             // Not eligible
             eligible = false;
-            // TODO: send the reason as a message?
             if (err.name !== 'StatusError') {
                 console.log(`ERROR! User not eligible to participate in campaign because ${err}`)
             }
+            // IDEA: should we return reasons why the customer was not eligible?
         }
         if (eligible) {
             const rewards = await customerService.addCampaignRewards(user, campaign);

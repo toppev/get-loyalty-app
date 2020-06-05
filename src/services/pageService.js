@@ -85,12 +85,13 @@ async function uploadPage(pageId, { html, css }) {
 async function createScreenshot(businessId, pageId) {
     const pagePath = `/business/${businessId}/page/${pageId}/html`;
     const fileName = `ss_${pageId}`;
+    const path = uploader.toPath(`${fileName}.jpg`);
     try {
-        await pageScreenshot.takeScreenshot(pagePath, uploader.toPath(fileName));
+        await pageScreenshot.takeScreenshot(pagePath, path);
     } catch (err) {
         console.log(`Failed to create a screenshot ${err.message}`);
     }
-    return fileName;
+    return path;
 }
 
 /**
@@ -98,7 +99,7 @@ async function createScreenshot(businessId, pageId) {
  * @param {any} pageId the id of the page
  */
 async function getThumbnail(pageId) {
-    const file = uploader.toPath(`ss_${pageId}.jpeg`);
+    const file = uploader.toPath(`ss_${pageId}.jpg`);
     if (fs.existsSync(file)) {
         return file;
     }
@@ -108,7 +109,7 @@ async function getThumbnail(pageId) {
     }
 }
 
-// TODO: permission/plan based templates?
+// IDEA: permission/plan based templates?
 async function getTemplates() {
     return await PageData.find({ template: true });
 }
@@ -139,8 +140,7 @@ async function getPageContext(businessId, user) {
 async function renderPageView(pageId, businessId, user) {
     const pageHtml = await getPageContent(pageId);
     const context = await getPageContext(businessId, user);
-    // TODO: check performance
-    // we can also precompile when the page is saved, send the precompiled + data to browser
+    // IDEA: we could precompile when the page is saved, send the precompiled + data to browser
     // browser can compile with handlebars.runtime library
     const template = handlebars.compile(pageHtml);
     return template(context)

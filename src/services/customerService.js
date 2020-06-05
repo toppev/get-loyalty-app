@@ -215,7 +215,6 @@ async function useReward(user, customerData, reward) {
  * @param businessId the id of the business
  * @param newRewards the new rewards to save
  */
-// TODO: test
 async function updateRewards(userId, businessId, newRewards) {
     const user = await User.findById(userId);
     const customerData = await findCustomerData(user, businessId);

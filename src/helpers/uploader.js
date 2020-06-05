@@ -1,4 +1,4 @@
-// TODO: maybe later use AWS s3 or somethin else
+// IDEA: maybe later use AWS s3 or somethin else
 
 const fs = require('fs');
 const sep = '/'; // const { sep } require('path'); doesn't really work as well with express (or something) (even on Windows)

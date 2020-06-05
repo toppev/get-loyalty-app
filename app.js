@@ -34,10 +34,9 @@ app.use(parser.urlencoded({
 }));
 app.use(parser.json());
 
-app.use(cors());
-app.options('*', cors({
-    // Localhost any port
-    origin: [/http:\/\/localhost:[0-9]+$/]
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true
 }));
 require('./src/config/passport');
 
@@ -49,8 +48,7 @@ if (!isTesting) {
         if (req.url === '/user/register' || req.url === '/user/login') {
             return next();
         }
-        csurf()(req, res, next);
-        res.cookie('XSRF-TOKEN', req.csrfToken());
+        csurf({})(req, res, next);
     });
     app.use(function (err, req, res, next) {
         if (err.code !== 'EBADCSRFTOKEN') return next(err);
