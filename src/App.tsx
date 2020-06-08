@@ -7,8 +7,8 @@ import AppContext, { AppContextInterface, defaultAppContext } from './context/Ap
 import Header from './components/Header';
 import { AccountNotificationValues } from './components/account/AccountNotifications';
 import LoginDialog from "./components/authentication/LoginDialog";
-import { loginRequest } from "./services/authenticationService";
-import { createBusiness, getBusiness } from "./services/businessService";
+import { onLoginOrAccountCreate, profileRequest } from "./services/authenticationService";
+import { setBusinessId } from "./config/axios";
 
 // Lazy Pages
 const OverviewPage = lazy(() => import('./components/overview/OverviewPage'));
@@ -26,10 +26,20 @@ export default function () {
     const [navDrawerOpen, setNavDrawerOpen] = useState(false);
     const [notifications, setNotifications] = useState<AccountNotificationValues>({});
     const [loginDialog, setLoginDialog] = useState(false);
+    // Don't close dialog before everything has loaded so it won't try loading invalid stuff (undefined business id etc)
+    const [showContent, setShowContent] = useState(false);
 
-    const context = defaultAppContext
-    context.setUser = user => setAppContext({ ...appContext, user: user })
-    context.setBusiness = business => setAppContext({ ...appContext, business: business })
+    const context = defaultAppContext;
+    context.setUser = user => {
+        setAppContext({ ...appContext, user });
+    }
+
+    context.setBusiness = business => {
+        setBusinessId(business._id); // Update the id used in (axios) requests
+        setAppContext({ ...appContext, business });
+        setShowContent(true);
+        setLoginDialog(false);
+    }
     const [appContext, setAppContext] = useState<AppContextInterface>(context);
 
     useEffect(() => {
@@ -43,32 +53,20 @@ export default function () {
     }, [appContext]);
 
     useEffect(() => {
-        // Quick check first
-        if (!document.cookie.includes('session=')) {
-            setLoginDialog(true)
-        } else {
-            // Login -> fetch business or create one
-            loginRequest()
-                .then(res => {
-                    context.setUser(res.data)
-                    getBusiness()
-                        .then(res => context.setBusiness(res.data))
-                        .catch(err => {
-                            console.log(err)
-                            if (err.response && err.response.status === 404) {
-                                createBusiness()
-                                    .then(res => context.setBusiness(res.data))
-                                    .catch(err => console.log(err))
-                            }
-                        })
-                })
-                .catch(_err => setLoginDialog(true))
-        }
+        // Login -> fetch business or create one
+        profileRequest()
+            .then(res => onLoginOrAccountCreate(context, res))
+            .catch(err => {
+                if (err.response) {
+                    console.log(err);
+                    setLoginDialog(true);
+                } else {
+                    window.confirm('Something went wrong... Perhaps our servers are down :( Please try refreshing the page or logging in')
+                }
+            });
     }, [])
 
-    const handleDrawerToggle = () => {
-        setNavDrawerOpen(!navDrawerOpen);
-    };
+    const handleDrawerToggle = () => setNavDrawerOpen(!navDrawerOpen);
 
     const paddingLeftDrawerOpen = 236;
 
@@ -101,8 +99,8 @@ export default function () {
                         open={navDrawerOpen}
                     />
                 </div>
-                {loginDialog && <LoginDialog open={loginDialog} setOpen={(open) => setLoginDialog(open)}/>}
-                {!loginDialog && <div style={styles.content}>
+                {loginDialog && <LoginDialog open={loginDialog}/>}
+                {showContent && <div style={styles.content}>
                     <Suspense
                         fallback={(
                             <div style={styles.loadingDiv}>

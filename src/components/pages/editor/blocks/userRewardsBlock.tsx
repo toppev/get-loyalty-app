@@ -6,7 +6,7 @@ const userRewardItemClass = "loyalty-user-reward"
 /**
  * Block to list user rewards
  */
-function addUserRewardsBlocK(blockManager: any) {
+function addUserRewardsBlock(blockManager: any) {
     blockManager.add(userRewardsClass, {
         label: `User Rewards`,
         content: (`
@@ -24,5 +24,5 @@ function addUserRewardsBlocK(blockManager: any) {
 
 export {
     userRewardsClass,
-    addUserRewardsBlocK
+    addUserRewardsBlock
 }

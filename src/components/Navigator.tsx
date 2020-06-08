@@ -22,9 +22,9 @@ import clsx from 'clsx';
 import React from 'react';
 import { NavLink } from "react-router-dom";
 import { AccountNotificationValues } from './account/AccountNotifications';
-
+import ReactDOMServer from 'react-dom/server';
 const drawerWidth = 240;
-export const APP_URL = "something.asd"
+export const DOMAIN_HOME_PAGE = "GetLoyalty.App"
 
 const categories = [
     {
@@ -143,12 +143,12 @@ export default function Navigator(props: NavigatorProps) {
                     primary: classes.itemPrimary,
                 }}
             >
-                <Link color="inherit" href={`https://${APP_URL}`}>{APP_URL}</Link>
+                <Link color="inherit" href={`https://${DOMAIN_HOME_PAGE}`}>{DOMAIN_HOME_PAGE}</Link>
             </ListItemText>
         </ListItem>
         <ListItem className={clsx(classes.item, classes.itemCategory)}>
             <ListItemIcon className={classes.itemIcon}>
-                <Link color="inherit" href={`https://panel.${APP_URL}`}>
+                <Link color="inherit" href={`https://panel.${DOMAIN_HOME_PAGE}`}>
                     <HomeIcon/>
                 </Link>
             </ListItemIcon>
@@ -157,7 +157,7 @@ export default function Navigator(props: NavigatorProps) {
                     primary: classes.itemPrimary,
                 }}
             >
-                <Link color="inherit" href={`https://panel.${APP_URL}`}>Management Panel</Link>
+                <Link color="inherit" href={`https://panel.${DOMAIN_HOME_PAGE}`}>Management Panel</Link>
             </ListItemText>
         </ListItem>
         {categories.map(({ id, children }) => (

@@ -10,32 +10,38 @@ const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         box: {
             "& > .MuiPaper-root": {
-                margin: '30px',
-                minWidth: '550px',
                 height: '550px',
+                marginTop: '20px',
+                [theme.breakpoints.up('sm')]: {
+                    minWidth: '550px',
+                    margin: '20px',
+                },
             }
-        }
+        },
     }));
 
 export default function () {
 
     const classes = useStyles();
     const context = useContext(AppContext);
-    const theme = useTheme();
-    const bigScreen = useMediaQuery(theme.breakpoints.up('md'));
+    const bigScreen = useMediaQuery(useTheme().breakpoints.up('md'));
 
     const [newNotifications, setNewNotifications] = useState<PushNotification[]>([]);
 
-    // TODO: maybe a google maps link if website doesn't exist but the address does?
-    const initialNotification = new PushNotification('', '', context.business.public.website, new Date());
+    // IDEA: maybe a google maps link if website doesn't exist but the address does?
+    const initialNotification = new PushNotification({
+        title: '',
+        message: '',
+        link: context.business.config.loyaltyWebsite,
+        date: new Date()
+    });
 
-    const notificationSent = (notification: PushNotification) => {
-        setNewNotifications([...newNotifications, notification]);
-    }
+    const notificationSent = (notification: PushNotification) => setNewNotifications([...newNotifications, notification]);
 
     return (
         <div>
-            <Box display="flex" flexDirection={bigScreen ? "row" : "column"} className={classes.box}>
+            <Box display="flex" flexDirection={bigScreen ? "row" : "column"}
+                 className={classes.box}>
                 <NotificationForm onSubmitted={notificationSent} notification={initialNotification}/>
                 <NotificationHistory addToHistory={newNotifications}/>
             </Box>

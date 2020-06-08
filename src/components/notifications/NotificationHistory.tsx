@@ -6,7 +6,6 @@ import { PushNotification } from "./PushNotification";
 import { Card, CardProps, createStyles, LinearProgress, Paper, Theme, Typography } from "@material-ui/core";
 import RetryButton from "../common/button/RetryButton";
 import { makeStyles } from "@material-ui/core/styles";
-import { Form } from "formik";
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -25,6 +24,22 @@ const useStyles = makeStyles((theme: Theme) =>
         typography: {
             margin: '20px',
             textAlign: 'center',
+        },
+        noNotifications: {
+            marginTop: '50px',
+            color: theme.palette.grey[500],
+            textAlign: 'center'
+        },
+        sentDate: {
+            color: theme.palette.grey[500]
+        },
+        title: {
+            fontSize: '26px',
+            color: theme.palette.grey[800]
+        },
+        message: {
+            fontSize: '20px',
+            color: theme.palette.grey[700]
         }
     }));
 
@@ -37,12 +52,10 @@ export default function (props: NotificationHistoryProps) {
     const classes = useStyles();
 
     const { loading, error, response } = useRequest(listNotificationHistory);
-    const testNotification = new PushNotification('A nice title', 'Some random message', 'www.....com', new Date());
-    const testNotification1 = new PushNotification('A nice title', 'Some random message', 'www.....com', new Date());
-    const testNotification2 = new PushNotification('A nice title', 'Some random message', 'www.....com', new Date());
-    const testNotification3 = new PushNotification('A nice title', 'Some random message', 'www.....com', new Date());
 
-    const [history, setHistory] = useResponseState<PushNotification[]>(response, [testNotification, testNotification1, testNotification2, testNotification3]);
+    const [history, setHistory] = useResponseState<PushNotification[]>(response, [], res => res.data.notifications.map((it: any) => new PushNotification(it)));
+
+    const empty = !history.length && !props.addToHistory?.length;
 
     return (
         <Paper className={classes.paper}>
@@ -50,11 +63,13 @@ export default function (props: NotificationHistoryProps) {
             {loading && <LinearProgress/>}
             {error && <RetryButton error={error}/>}
             {props.addToHistory?.map(n => (
-                <NotificationCard notification={n} className={`${classes.card} ${classes.newCard}`}/>
+                <NotificationCard key={n.id} notification={n} className={`${classes.card} ${classes.newCard}`}/>
             ))}
             {history.map(n => (
-                <NotificationCard notification={n} className={classes.card}/>
+                <NotificationCard key={n.id} notification={n} className={classes.card}/>
             ))}
+            {empty && <Typography className={classes.noNotifications} variant="h6">You haven't sent any
+                notifications</Typography>}
         </Paper>
     )
 }
@@ -64,14 +79,13 @@ interface NotificationCardProps extends CardProps {
 }
 
 function NotificationCard({ notification, ...cardProps }: NotificationCardProps) {
-
-    const { date, title, message } = notification;
-
+    const classes = useStyles();
+    const { sent, title, message } = notification;
     return (
         <Card {...cardProps}>
-            <p>{date.toLocaleString()}</p>
-            <Typography variant="h6">{title}</Typography>
-            <p>{message}</p>
+            <p className={classes.sentDate}>{sent?.toLocaleString()}</p>
+            <Typography variant="h6" className={classes.title}>{title}</Typography>
+            <p className={classes.message}>{message}</p>
         </Card>
     )
 }

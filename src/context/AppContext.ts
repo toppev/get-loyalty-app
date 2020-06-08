@@ -26,7 +26,8 @@ export interface Business {
 export interface BusinessConfig {
     translations: {
         [key: string]: Translation
-    }
+    },
+    loyaltyWebsite: string
 }
 
 export interface Translation {
@@ -73,7 +74,8 @@ export const defaultAppContext: AppContextInterface = {
                     plural: "POINTS!!!",
                     singular: "POINT"
                 }
-            }
+            },
+            loyaltyWebsite: ''
         },
         email: "asd@adw.dawd",
         public: {

@@ -1,17 +1,26 @@
 /**
  * Check if the given email is a valid email (<characters>@<characters>.<characters>)
  */
-function validateEmail(email: string) {
+function isEmail(email: string) {
     const re = /\S+@\S+\.\S+/;
     return re.test(email);
 }
 
-function alphanumeric(str: string) {
+function isAlphanumeric(str: string) {
     const re = /^[a-zA-Z0-9_-]*$/;
     return re.test(str);
 }
 
+/**
+ * Only check if contains <text>.<text> (matches subdomains)
+ */
+function isDomain(str: string) {
+    const re = /\S+\.\S+/;
+    return re.test(str);
+}
+
 export {
-    validateEmail,
-    alphanumeric
+    isEmail,
+    isAlphanumeric,
+    isDomain
 }

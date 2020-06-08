@@ -9,14 +9,6 @@ import Reward from "./Reward";
 import { TextField } from "formik-material-ui";
 import SelectProductsButton from "../products/button/SelectProductsButton";
 
-export interface RewardFormProps {
-    initialReward?: Reward,
-    onSubmitted: (reward: Reward) => void
-}
-
-
-const emptyReward = new Reward(`new_reward_${Math.random() * 1000 | 0}`, "", "", "");
-
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         paper: {
@@ -50,12 +42,23 @@ const useStyles = makeStyles((theme: Theme) =>
         }
     }));
 
+const getEmptyReward = () => new Reward({
+    id: `new_reward_${Math.random() * 1000 | 0}`,
+    name: "",
+    description: "",
+    itemDiscount: ""
+});
+
+export interface RewardFormProps {
+    initialReward?: Reward,
+    onSubmitted: (reward: Reward) => void
+}
 
 export default function (props: RewardFormProps) {
 
     const classes = useStyles();
 
-    const reward: Reward = props.initialReward || emptyReward;
+    const reward: Reward = props.initialReward || getEmptyReward();
     // not formik fields so keep track of them here
     const [categories, setCategories] = useState(reward.categories);
     const [products, setProducts] = useState(reward.products);
@@ -154,7 +157,7 @@ export default function (props: RewardFormProps) {
                                 onClick={submitForm}>Save</Button>
                     </div>
 
-                    <IdText id={reward._id}/>
+                    <IdText id={reward.id}/>
                 </Form>
             )}
             </Formik>
@@ -164,6 +167,12 @@ export default function (props: RewardFormProps) {
 
 function validate(values: Reward): FormikErrors<Reward> {
     const errors: FormikErrors<Reward> = {};
+    if (!values.name.trim()) {
+        errors.name = 'Name is required';
+    }
+    if (!values.itemDiscount.trim()) {
+        errors.itemDiscount = 'Discount must be specified';
+    }
     // TODO
     return errors;
 }

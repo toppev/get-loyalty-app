@@ -8,7 +8,7 @@ import IdText from "../common/IdText";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
-        box: {
+        boxDesktop: {
             textAlign: 'center',
             margin: '5px 15px',
             padding: '5px 15px'
@@ -33,27 +33,27 @@ export default function (props: CustomerRowProps) {
 
     return (
         <div className={`${classes.div} ${props.className}`}>
-            <Box display="flex" flexWrap="wrap" flexDirection="row" p={1} m={1} className={classes.box}>
-                <Box className={classes.box}>
+            <Box display="flex" flexWrap="wrap" flexDirection="row" p={1} m={1} className={classes.boxDesktop}>
+                <Box className={classes.boxDesktop}>
                     {customer.email}
                 </Box>
-                <Box className={classes.box}>
+                <Box className={classes.boxDesktop}>
                     Rewards: {rewards.length}
                 </Box>
-                <Box className={classes.box}>
+                <Box className={classes.boxDesktop}>
                     Customer Points: {properties.points}
                 </Box>
-                <Box className={classes.box}>
-                    Last website visit: {customer.lastVisit}
+                <Box className={classes.boxDesktop}>
+                    Last website visit: {customer.lastVisit?.toLocaleString()}
                 </Box>
                 { /* Might change the default role from user to customer later */}
-                <Box className={classes.box}>
+                <Box className={classes.boxDesktop}>
                     {role !== 'user' && role !== 'customer' ? `Business Role: ${role}` : ""}
                 </Box>
                 <Box>
-                    <IdText id={customer._id}/>
+                    <IdText id={customer.id}/>
                 </Box>
-                <Box className={classes.box}>
+                <Box className={classes.boxDesktop}>
                     <Button
                         onClick={() => {
                             setViewing(!viewing)

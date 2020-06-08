@@ -3,26 +3,25 @@ import {
     createStyles,
     LinearProgress,
     makeStyles,
-    MenuItem,
     Paper,
-    Select,
     Theme,
     Typography,
     useMediaQuery,
     useTheme
 } from "@material-ui/core";
-import { Field, Form, Formik, FormikErrors } from "formik";
+import { Form, Formik, FormikErrors } from "formik";
 import _ from 'lodash';
 import React, { useContext, useState } from "react";
 import AppContext, { Business } from "../../context/AppContext";
 import SaveChangesSnackbar from "../common/SaveChangesSnackbar";
-import Product from "../products/Product";
 import { TextField } from "formik-material-ui";
 import HelpIcon from "@material-ui/icons/Help";
 import Tooltip from "@material-ui/core/Tooltip";
 import { updateBusiness } from "../../services/businessService";
 import useRequest from "../../hooks/useRequest";
 import RetryButton from "../common/button/RetryButton";
+import PrivacyLink from "../common/PrivacyLink";
+import { isEmail } from "../../util/Validate";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -33,8 +32,8 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         field: {
             width: '100%',
-            marginTop: '20px',
-            marginBottom: '20px'
+            marginTop: '25px',
+            marginBottom: '3px'
         },
         mainTitle: {
             color: 'ghostwhite',
@@ -50,34 +49,30 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         helpIcon: {
             marginLeft: '20px'
+        },
+        infoText: {
+            fontSize: '11px'
         }
     }));
 
-const weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-
-
 export default function () {
-
     const classes = useStyles();
-
     const context = useContext(AppContext);
-
-    const [saved, setSaved] = useState(true);
 
     const theme = useTheme();
     const bigScreen = useMediaQuery(theme.breakpoints.up('md'));
 
-    const otherRequests = useRequest()
+    const [saved, setSaved] = useState(true);
 
-    const { error, loading } = otherRequests;
+    const request = useRequest()
+    const { error } = request;
 
-    // If changed will update the state so the snackbar opens
     const validateAndSnackbar = (value: Business) => {
-        const errors: FormikErrors<Product> = {};
-        // TODO: validate
-        if (!_.isEqual(value, context.business)) {
-            setSaved(false);
+        const errors: FormikErrors<Business> = {};
+        if (value.email && !isEmail(value.email)) {
+            errors.email = 'Invalid email address'
         }
+        setSaved(_.isEqual(value, context.business));
         return errors;
     }
 
@@ -89,14 +84,27 @@ export default function () {
                 align="center"
             >Business Details</Typography>
             {error && <RetryButton error={error}/>}
-            {loading ? <LinearProgress/> : (
+            {/*
+                Workaround because Formik doesn't change the values correctly
+                Comparing the length of the business id will make sure the page waits for the business to load.
+             */}
+            {(context.business._id?.length !== 24) ? <LinearProgress/> : (
                 <Formik
                     initialValues={context.business}
-                    validateOnChange={true}
+                    validateOnChange
+                    enableReinitialize
                     validate={validateAndSnackbar}
                     onSubmit={(business, actions) => {
                         actions.setSubmitting(true)
-                        otherRequests.performRequest(() => updateBusiness(business));
+                        request.performRequest(
+                            () => updateBusiness(business),
+                            (res) => {
+                                setSaved(true);
+                                context.setBusiness(res.data);
+                                actions.setSubmitting(false);
+                            },
+                            () => actions.setSubmitting(false)
+                        );
 
                     }}
                 >
@@ -159,6 +167,9 @@ export default function () {
                                         label="Private Email"
                                         placeholder="example@email.com"
                                     />
+                                    <p className={classes.infoText}>We may send updates and more to this email. We won't
+                                        spam you!</p>
+                                    <PrivacyLink/>
                                 </Form>
                             </Paper>
 
@@ -173,41 +184,5 @@ export default function () {
                 </Formik>
             )}
         </div>
-    )
-}
-
-
-interface WeekDaySelectProps {
-    key?: string,
-    defaultValue: string,
-
-    handleChange<T = string | React.ChangeEvent<any>>(field: T): T extends React.ChangeEvent<any> ? void : (e: string | React.ChangeEvent<any>) => void;
-}
-
-function WeekDaySelect({ key, defaultValue, handleChange }: WeekDaySelectProps) {
-
-    const classes = useStyles();
-
-    key = key || defaultValue;
-
-    return (
-        < Field
-            className={classes.field}
-            component={Select}
-            type="text"
-            name={key}
-            defaultValue={defaultValue}
-            onChange={(event: any) => {
-                handleChange(key)(event)
-            }}
-        >
-            {weekDays.map(day => {
-                return (
-                    <MenuItem className={classes.option} key={day} value={day}>
-                        {day}
-                    </MenuItem>
-                )
-            })}
-        </Field>
     )
 }

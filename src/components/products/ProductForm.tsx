@@ -13,7 +13,7 @@ import RetryButton from "../common/button/RetryButton";
 
 
 const emptyCategories: Category[] = [];
-const emptyProduct = new Product(`new_product_${Math.random() * 1000 | 0}`, '');
+const emptyProduct = new Product({ id: `new_product_${Math.random() * 1000 | 0}`, name: '' });
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -72,7 +72,7 @@ export default function (props: ProductFormProps) {
                     actions.setSubmitting(false)
                     performRequest(
                         () => editing ? updateProduct(product) : addProduct(product),
-                        () => props.onProductSubmitted(product)
+                        (res) => props.onProductSubmitted(res.data)
                     );
                 }}
             >{({ submitForm, isSubmitting }) => (
@@ -101,7 +101,7 @@ export default function (props: ProductFormProps) {
                             onClick={submitForm}
                         >Save</Button>
                     </div>
-                    <IdText id={product._id}/>
+                    <IdText id={product.id}/>
                 </Form>
             )}
             </Formik>
@@ -109,8 +109,13 @@ export default function (props: ProductFormProps) {
     )
 }
 
-function validate(values: Product): FormikErrors<Product> {
+function validate(value: Product): FormikErrors<Product> {
     const errors: FormikErrors<Product> = {};
-    // TODO
+    if (value.name?.trim().length < 3) {
+        errors.name = 'Invalid name'
+    }
+    if (value.categories.length > 5) {
+        errors.categories = 'Too many categories. Please keep it simple :)'
+    }
     return errors;
 }

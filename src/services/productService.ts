@@ -14,12 +14,12 @@ function addProduct(product: Product) {
 
 function deleteProduct(product: Product) {
     const subUrl = `/business/${BUSINESS_ID}/product`
-    return remove(`${subUrl}/${product._id}`)
+    return remove(`${subUrl}/${product.id}`)
 }
 
 function updateProduct(product: Product) {
     const subUrl = `/business/${BUSINESS_ID}/product`
-    return patch(`${subUrl}/${product._id}`, product)
+    return patch(`${subUrl}/${product.id}`, product)
 }
 
 export {

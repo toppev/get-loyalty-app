@@ -3,20 +3,31 @@ import LinkIcon from "@material-ui/icons/Link";
 import QRCode from "qrcode.react";
 import React from "react";
 import CopyToClipboard from '../../common/CopyToClipboarad';
+import { APP_URL, BUSINESS_ID } from "../../../config/axios";
 
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         typography: {
-            color: theme.palette.grey[400]
+            color: theme.palette.grey[400],
+            fontSize: '22px',
+            margin: '10px 0px'
         },
-        box: {
+        secondTypography: {
+            color: theme.palette.grey[500],
+            fontSize: '14px'
+        },
+        editLink: {
+            color: theme.palette.info.light,
+        },
+        boxDesktop: {
             textAlign: 'center',
         },
         item: {
             padding: '10px',
             margin: '0px 20px'
         },
+        qrCodeStuff: {},
         linkItem: {
             marginTop: '50px',
             color: theme.palette.grey[100],
@@ -24,33 +35,41 @@ const useStyles = makeStyles((theme: Theme) =>
         copyBtn: {
             marginLeft: '4px'
         },
+        pagePreview: {
+            border: 'solid 30px #1d1d1d',
+            borderLeftWidth: '15px',
+            borderRightWidth: '15px',
+            borderRadius: '20px'
+        }
     }));
 
 export default function () {
 
     const classes = useStyles();
 
-    const src = "https://www.google.com/";
+    const src = `${APP_URL}/?business=${BUSINESS_ID}`;
 
     return (
-        <Box display="flex" flexWrap="wrap" flexDirection="row" className={classes.box}>
+        <Box display="flex" flexWrap="wrap" flexDirection="row" alignItems="center" className={classes.boxDesktop}>
             <Box className={classes.item}>
                 <PreviewWebsite src={src}/>
             </Box>
             <Box className={classes.item}>
-                <Typography className={classes.typography} variant="h5">
-                    Scan the QR code or share the link to try on other devices
-                </Typography>
-                <p className={classes.typography}>
-                    This is what you would see as an customer. Only published sites will display.
-                    Edit pages <Link href='/pages' underline='always' color='inherit'>here</Link>
-                </p>
-                <div className={classes.linkItem}>
-                    <QRCode value={src}/>
-                </div>
-                <div className={classes.linkItem}>
-                    <Link href={src} color="inherit" target="_blank" rel="noopener"><u>{src}</u></Link>
-                    <span className={classes.copyBtn}>
+                <div className={classes.qrCodeStuff}>
+                    <Typography className={classes.typography} variant="h5">
+                        Scan the QR code or share the link to try on other devices
+                    </Typography>
+                    <Typography className={classes.secondTypography} variant="h6">
+                        This is what you would see as an customer. Only published sites will display.
+                    </Typography>
+                    <p className={classes.editLink}> Edit pages <Link href='/pages' underline='always'
+                                                                      color='inherit'>here</Link></p>
+                    <div className={classes.linkItem}>
+                        <QRCode value={src}/>
+                    </div>
+                    <div className={classes.linkItem}>
+                        <Link href={src} color="inherit" target="_blank" rel="noopener"><u>{src}</u></Link>
+                        <span className={classes.copyBtn}>
                     <CopyToClipboard>
                         {({ copy }) => (
                             <Button
@@ -62,7 +81,7 @@ export default function () {
                         )}
                     </CopyToClipboard>
                     </span>
-
+                    </div>
                 </div>
             </Box>
 
@@ -76,7 +95,9 @@ interface PreviewWebsiteProps {
 
 function PreviewWebsite(props: PreviewWebsiteProps) {
 
+    const classes = useStyles();
+
     return (
-        <iframe title="Page Preview" src={props.src} height={640} width={360}/>
+        <iframe className={classes.pagePreview} title="Page Preview" src={props.src} height={640} width={360}/>
     )
 }

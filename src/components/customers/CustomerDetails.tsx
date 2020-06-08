@@ -5,11 +5,11 @@ import Reward from "../rewards/Reward";
 import { Button, createStyles, Divider, Grid, LinearProgress, Theme, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { YesNo } from "../common/StringUtils";
-import RewardFormDialog from "../rewards/RewardFormDialog";
 import RetryButton from "../common/button/RetryButton";
 import { addCustomerReward, revokeCustomerReward, updateCustomerReward } from "../../services/customerService";
 import RewardSelector from "../rewards/RewardSelector";
 import useRequest from "../../hooks/useRequest";
+import RewardFormDialog from "../rewards/RewardFormDialog";
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -74,7 +74,7 @@ export default function ({ initialCustomer }: CustomerDetailsProps) {
                     <Grid container direction="row" alignItems="flex-start">
 
                         {rewards.map(reward =>
-                            <Grid item key={reward._id} className={classes.rewardItem}>
+                            <Grid item key={reward.id} className={classes.rewardItem}>
                                 <CustomerReward
                                     reward={reward}
                                     customer={customer}
@@ -86,21 +86,21 @@ export default function ({ initialCustomer }: CustomerDetailsProps) {
 
                 </Grid>
             </Grid>
-
+            {newRewardOpen &&
             <RewardSelector
                 open={newRewardOpen}
                 onClose={() => setNewRewardOpen(false)}
                 onSelect={newReward => {
                     performRequest(
                         () => addCustomerReward(customer, newReward),
-                        () => {
+                        (res) => {
                             const clone = Object.assign({}, customer);
-                            clone.customerData.rewards.push(newReward);
+                            clone.customerData.rewards = res.data.rewards;
                             setCustomer(clone);
                         }
                     )
                 }}
-            />
+            />}
         </>
     )
 }
@@ -131,7 +131,14 @@ function CustomerReward({ reward, customer, onUpdate }: CustomerRewardProps) {
                         onEdit={() => setEditing(true)}
                         onRemove={() => {
                             if (window.confirm('Do you want to revoke the reward from this customer? This action is irreversible.')) {
-                                performRequest(() => revokeCustomerReward(customer, reward));
+                                performRequest(
+                                    () => revokeCustomerReward(customer, reward),
+                                    () => {
+                                        const clone: Customer = Object.assign({}, customer);
+                                        clone.customerData.rewards = customer.customerData.rewards.filter(r => r.id !== reward.id);
+                                        onUpdate(clone);
+                                    }
+                                );
                             }
                         }}
                         removeText="Revoke"
@@ -145,12 +152,13 @@ function CustomerReward({ reward, customer, onUpdate }: CustomerRewardProps) {
                 onClose={() => setEditing(false)}
                 onSubmitted={updatedReward => {
                     setEditing(false);
+                    const updatedRewards = [...customer.customerData.rewards.filter(r => r.id !== updatedReward.id), updatedReward];
                     performRequest(
-                        // Always update only, never adds new rewards
-                        () => updateCustomerReward(customer, reward),
+                        // Update only. Will never add new rewards using this RewardFormDialog
+                        () => updateCustomerReward(customer, updatedRewards),
                         () => {
                             const clone: Customer = Object.assign({}, customer);
-                            clone.customerData.rewards = [...clone.customerData.rewards.filter(r => r._id !== updatedReward._id), updatedReward]
+                            clone.customerData.rewards = updatedRewards;
                             onUpdate(clone);
                         }
                     );

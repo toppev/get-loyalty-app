@@ -4,14 +4,15 @@ import grapesjsTabs from 'grapesjs-tabs';
 import grapesjsTouch from 'grapesjs-touch';
 import 'grapesjs/dist/css/grapes.min.css';
 import React, { useContext, useEffect, useState } from "react";
-import { BASE_URL, post } from "../../../config/axios";
+import { getBusinessUrl } from "../../../config/axios";
 import AppContext from '../../../context/AppContext';
 import Alert from "@material-ui/lab/Alert";
 import { addPlaceholderBlock, registerListener } from "./blocks/placeholderBlock";
 import { addCampaignsBlock } from "./blocks/campaignBlock";
-import { addUserRewardsBlocK } from "./blocks/userRewardBlock";
-import { addRichTextEditorPlaceholders } from "./blocks/richPlaceholder";
+import { addUserRewardsBlock } from "./blocks/userRewardsBlock";
 import { usePlaceholderContext } from "./placeholderContext";
+import Cookie from "js-cookie";
+import { uploadHtmlCss } from "../../../services/pageService";
 
 // So the editor is not rendered every time if the page id didn't change
 export default React.memo(GrapesPageEditor, propsAreEqual);
@@ -22,13 +23,7 @@ function propsAreEqual(prev, next) {
 
 function GrapesPageEditor(props) {
 
-    const url = BASE_URL + "/page";
-
-    const appContext = useContext(AppContext);
-
-    const [savingError, setSavingError] = useState('');
-
-    const placeholderContext = usePlaceholderContext()
+    const url = getBusinessUrl() + "/page";
 
     useEffect(() => {
         const editor = GrapesJS.init({
@@ -52,11 +47,21 @@ function GrapesPageEditor(props) {
                 // Either save or create if undefined
                 urlStore: `${url}/${props.page._id || ""}/?gjsOnly=true`,
                 urlLoad: `${url}/${props.page._id}/?gjsOnly=true`,
+                headers: {
+                    'x-xsrf-token': Cookie.get('XSRF-TOKEN')
+                }
             }
         });
 
         // Open the blocks view
         editor.runCommand('core:open-blocks');
+
+        editor.on('storage:start:store', () => {
+            uploadHtmlCss(props.page, editor.getHtml(), editor.getCss())
+                .catch(err => {
+                    props.onSaveFail(err?.response?.message || `Oops... Something went wrong. ${err}`, editor.store)
+                });
+        });
 
         // Add custom blocks
         const bm = editor.BlockManager;
@@ -64,17 +69,8 @@ function GrapesPageEditor(props) {
         registerListener(editor, props.selectPlaceholder);
 
         addCampaignsBlock(bm);
-        addUserRewardsBlocK(bm);
-      //  addRichTextEditorPlaceholders(editor, placeholderContext);
-
-        editor.on('storage:store', () => {
-            post(`/business/${appContext.business._id}/page/${props._id}/upload`, {
-                html: editor.getHtml(),
-                css: editor.getCss()
-            }).then().catch(err => {
-                setSavingError(err?.response?.message || `Oops.. Please, check your internet connection. ${err}`)
-            });
-        });
+        addUserRewardsBlock(bm);
+        //  addRichTextEditorPlaceholders(editor, placeholderContext);
 
         return function () {
             if (editor.getDirtyCount()) {
@@ -85,7 +81,6 @@ function GrapesPageEditor(props) {
 
     return (
         <div>
-            {savingError && <Alert severity="error">Failed to save the page! {savingError}</Alert>}
             <div id="page-editor"/>
         </div>
     )

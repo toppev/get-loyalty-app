@@ -1,4 +1,7 @@
-import { post } from "../config/axios";
+import { get, post } from "../config/axios";
+import { AppContextInterface } from "../context/AppContext";
+import { createBusiness, getBusiness } from "./businessService";
+import { AxiosResponse } from "axios";
 
 type LoginCredentials = {
     email?: string,
@@ -9,13 +12,47 @@ function loginRequest({ email, password }: LoginCredentials = {}) {
     return post('/user/login', { email, password });
 }
 
+function profileRequest() {
+    return get('/user/profile');
+}
 
 function registerRequest({ email, password }: LoginCredentials = {}) {
     return post('/user/register', { email, password });
 }
 
+/**
+ * Handles business stuff after the user logs in or creates a new account.
+ * Either fetches the business or creates one and updates the context.
+ */
+function onLoginOrAccountCreate(context: AppContextInterface, res: AxiosResponse) {
+    context.setUser(res.data)
+    const setBusiness = (business: any) => {
+        context.setBusiness(business);
+    }
+    const create = () => {
+        createBusiness()
+            .then(businessResponse => setBusiness(businessResponse.data))
+            .catch(err => console.log(err))
+    }
+    // Either create or fetch the business (and if 404 then create)
+    if (!res.data.businessOwner) {
+        create();
+    } else {
+        getBusiness(res.data.businessOwner)
+            .then(businessResponse => setBusiness(businessResponse.data))
+            .catch(err => {
+                console.log(err)
+                if (err.response && err.response.status === 404) {
+                    create();
+                }
+            })
+    }
+}
+
 
 export {
+    profileRequest,
     loginRequest,
-    registerRequest
+    registerRequest,
+    onLoginOrAccountCreate
 }

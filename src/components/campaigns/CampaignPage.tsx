@@ -44,10 +44,9 @@ export default function () {
                     onClick: () => setFormOpen(true)
                 }}
             />
-            {loading && <LinearProgress/>}
             <Grid className={classes.container} container direction="row" alignItems="flex-start">
                 {campaigns.map(campaign => (
-                    <Grid item xs={12} md={6} key={campaign._id}>
+                    <Grid item xs={12} md={6} key={campaign.id}>
                         <CampaignPaper campaign={campaign}/>
                     </Grid>
                 ))}
@@ -58,7 +57,7 @@ export default function () {
                 initialCampaign={formCampaign}
                 onSubmitted={campaign => {
                     setFormOpen(false)
-                    setCampaigns([...campaigns.filter(c => c._id !== campaign._id), campaign])
+                    setCampaigns([...campaigns.filter(c => c.id !== campaign.id), campaign])
                 }}/>
         </div>
     )

@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) =>
             color: theme.palette.secondary.main,
         },
         typography: {},
-        box: {},
+        boxDesktop: {},
         boxItem: {
             flex: '1 1 0px'
         }
@@ -71,7 +71,7 @@ export default function (props: CampaignPaperProps) {
 
             <Divider/>
 
-            <Box display="flex" flexWrap="none" flexDirection="row" p={1} m={1} className={classes.box}>
+            <Box display="flex" flexWrap="none" flexDirection="row" p={1} m={1} className={classes.boxDesktop}>
                 <Box className={classes.boxItem}>
                     {campaign.requirements.length !== 0 && (
                         <>

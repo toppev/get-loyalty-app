@@ -18,13 +18,21 @@ function addCampaignsBlock(blockManager: any) {
                 {{#each campaigns}}
                 <div class="${campaignItemClass}">
                     <h3>{{name}}</h3>
-                    // TODO
+                    <p>{{description}}</p>
+                    <p>{{start}} - {{end}}</p>
                     <br/>
+                    <div>
+                        {{#each campaign.rewards}}
+                        <p>{{name}}</p>                   
+                    </div>
                     <div class="${campaignRewardsClass}">
                         {{#each campaign.rewards}}
                         <div class="${campaignRewardClass}">
-                            {{name}}
-                            // TODO
+                            <p>{{name}}</p>
+                            <p>{{description}}</p>
+                            <p>{{itemDiscount}}</p>
+                            <p>{{requirement}}</p>
+                            <p>{{customerPoints}} {{translation.points.plural}}</p>
                         </div>
                     </div>
                 </div>

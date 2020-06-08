@@ -4,7 +4,6 @@ import Customer from "./Customer";
 import RetryButton from "../common/button/RetryButton";
 import CustomerRow from "./CustomerRow";
 import SearchField from "../common/SearchField";
-import Reward from "../rewards/Reward";
 import { listCustomers } from "../../services/customerService";
 import useRequest from "../../hooks/useRequest";
 import useSearch from "../../hooks/useSearch";
@@ -30,31 +29,6 @@ const useStyles = makeStyles((theme: Theme) =>
         }
     }));
 
-
-export const testReward = new Reward(
-    "12312",
-    'Birthday gift',
-    "Free",
-    'Free items',
-    100,
-    'If birthday',
-    new Date(),
-)
-
-const testCustomers: Customer[] = [{
-    _id: '21315',
-    birthday: new Date(),
-    email: "awda@adw.cadw",
-    customerData: {
-        role: "admin",
-        rewards: [testReward],
-        properties: {
-            points: 100
-        }
-    }
-}];
-
-
 export default function () {
 
     const classes = useStyles();
@@ -73,11 +47,12 @@ export default function () {
         }
         setTypingTimeout(setTimeout(function () {
             performRequest(() => listCustomers(search))
+            setTypingTimeout(undefined)
         }, searchTimeout));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [performRequest, search]);
 
-    const [customers, setCustomers] = useResponseState<Customer[]>(response, []);
+    const [customers, setCustomers] = useResponseState<Customer[]>(response, [], (res) => res.data.customers.map((it: any) => new Customer(it)));
 
     return error ? (
         <RetryButton error={error}/>
@@ -101,11 +76,11 @@ export default function () {
                 name={"customer_search"}
             />
             <p className={classes.p}>Showing up to {renderLimit} customers at once</p>
-            {loading && <LinearProgress/>}
+            {(loading || typingTimeout !== undefined) && <LinearProgress/>}
             {customers.filter(searchFilter).slice(0, renderLimit).map(customer => (
                 <CustomerRow
                     className={classes.row}
-                    key={customer._id}
+                    key={customer.id}
                     customer={customer}
                 />
             ))}

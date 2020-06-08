@@ -23,6 +23,9 @@ import ProductRow from '../ProductRow';
 import ColumnMapping, { KeyValue } from './ColumnMapping';
 import ProductsDropzone from './ImportDropzone';
 import { fromReadableName, toReadableNames } from './importNameUtil';
+import useRequest from "../../../hooks/useRequest";
+import { addProduct } from "../../../services/productService";
+import RetryButton from "../../common/button/RetryButton";
 
 const URL_PREFIX = 'http://localhost:8080'
 
@@ -124,7 +127,7 @@ export default function ImportProducts(props: ImportProductsProps): ReactElement
                                         if (!p.categories) {
                                             p.categories = []
                                         }
-                                        p._id = `import_${Math.random()}`
+                                        p.id = `import_${Math.random()}`
                                     });
                                     setPreviewProducts(products);
                                 }
@@ -248,6 +251,25 @@ function ProductPreview({ open, onClickClose, initialProducts }: PreviewProps) {
 
     const [products, setProducts] = useState<Product[]>(initialProducts);
 
+    const { error, loading, performRequest } = useRequest();
+
+    const submitProducts = () => {
+        // FIXME: we can only send one at a time (not sure if useRequest can handle multiple simultaneous requests)
+        // Perhaps backend could accept multiple?
+        const sendOneRecursive = () => {
+            if (products.length) {
+                let product = products[0];
+                performRequest(
+                    () => addProduct(product),
+                    () => {
+                        setProducts(products.slice(1));
+                        sendOneRecursive();
+                    });
+            }
+        }
+        sendOneRecursive();
+    }
+
     return (
         <Dialog open={open} fullWidth={true}>
             <IconButton className={classes.closeButton} aria-label="close" onClick={onClickClose}>
@@ -277,20 +299,19 @@ function ProductPreview({ open, onClickClose, initialProducts }: PreviewProps) {
                         if (!editingProduct) {
                             setProducts([...products, product])
                         } else {
-                            setProducts([product, ...products.filter(p => p._id !== product._id)])
+                            setProducts([product, ...products.filter(p => p.id !== product.id)])
                         }
                         setFormOpen(false);
                         setEditingProduct(undefined);
                     }}/>
 
                 <div className={classes.submitDiv}>
+                    {error && <RetryButton error={error}/>}
                     <Button
                         className={classes.submitButton}
                         aria-haspopup="true"
                         variant="contained"
-                        onClick={() => {
-                            // TODO: submit all products
-                        }}
+                        onClick={submitProducts}
                     >Import Products</Button>
 
                     <Button
@@ -299,6 +320,7 @@ function ProductPreview({ open, onClickClose, initialProducts }: PreviewProps) {
                         variant="contained"
                         onClick={onClickClose}
                     >Cancel</Button>
+                    {loading && <LinearProgress/>}
                 </div>
             </DialogContent>
 

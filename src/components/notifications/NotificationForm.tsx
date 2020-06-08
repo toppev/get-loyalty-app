@@ -42,7 +42,6 @@ export default function ({ notification, onSubmitted }: NotificationFormProps) {
     const classes = useStyles();
 
     const { loading, error, performRequest } = useRequest();
-    console.log(error)
 
     return (
         <Paper className={classes.paper}>

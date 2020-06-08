@@ -6,9 +6,15 @@ import { PUBLISHED, UNPUBLISHED } from "./Page";
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         formControl: {
-            margin: theme.spacing(1),
-            width: 160,
+            margin: theme.spacing(2),
+            width: 180,
         },
+        title: {
+            fontSize: '22px',
+        },
+        select: {
+            paddingTop: '10px'
+        }
     }));
 
 interface StageSelectorProps {
@@ -30,8 +36,9 @@ export default function ({ initialStage, onChange }: StageSelectorProps) {
 
     return (
         <FormControl className={classes.formControl}>
-            <InputLabel htmlFor="page-stage-select">Stage of the Page</InputLabel>
+            <InputLabel className={classes.title} htmlFor="page-stage-select">Stage of the Page</InputLabel>
             <Select
+                className={classes.select}
                 native
                 value={stage}
                 onChange={(e) => handleChange(e.target.value)}

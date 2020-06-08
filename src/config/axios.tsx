@@ -1,30 +1,35 @@
 import axios from "axios";
 
-//axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
-//axios.defaults.withCredentials = true // TODO: only for testing
 
+export const BASE_URL = 'http://localhost:3001';
+// Where the PWA is hosted
+export const APP_URL = 'https://pwa.getloyalty.app';
 
-export const BASE_URL = '';
-export const BUSINESS_ID = 'fakebusinessid';
+export const instance = axios.create({
+    baseURL: BASE_URL,
+    withCredentials: true,
+});
+
+// Used in requests. Easier if it's stored here instead of state
+export let BUSINESS_ID: string;
+
+export function setBusinessId(id: string) {
+    BUSINESS_ID = id;
+}
+
+/**
+ * Returns BASE_URL/business/:id
+ * For example,
+ * http://localhost:3000/business/5ed26d9d9a3bf3a7eb7dd587
+ */
+export function getBusinessUrl() {
+    return `${BASE_URL}/business/${BUSINESS_ID}`;
+}
 
 const headers = {}
 
-/*
-
-axios.interceptors.response.use(response => {
-   return response;
-}, error => {
-  if (error.response.status === 401) {
-   // login
-  }
-  return error;
-});
-
-*/
-
 export async function get(path: string, fullPath: boolean = false) {
-
-    return axios({
+    return instance({
         method: 'GET',
         url: fullPath ? path : BASE_URL + path,
         headers: headers
@@ -35,7 +40,7 @@ export async function get(path: string, fullPath: boolean = false) {
  * Delete, just renamed to remove
  */
 export async function remove(path: string, fullPath: boolean = false) {
-    return axios({
+    return instance({
         method: 'DELETE',
         url: fullPath ? path : BASE_URL + path,
         headers: headers
@@ -43,7 +48,7 @@ export async function remove(path: string, fullPath: boolean = false) {
 }
 
 export async function post(path: string, data: Object, fullPath: boolean = false) {
-    return axios({
+    return instance({
         method: 'POST',
         url: fullPath ? path : BASE_URL + path,
         data: transformDataObjects(data),
@@ -55,7 +60,7 @@ export async function post(path: string, data: Object, fullPath: boolean = false
 }
 
 export async function patch(path: string, data: Object, fullPath: boolean = false) {
-    return axios({
+    return instance({
         method: 'PATCH',
         url: fullPath ? path : BASE_URL + path,
         data: transformDataObjects(data),
@@ -69,7 +74,7 @@ export async function patch(path: string, data: Object, fullPath: boolean = fals
 export async function uploadFile(path: string, file: File, fullPath: boolean = false) {
     const formData = new FormData();
     formData.append('file', file)
-    return axios({
+    return instance({
         method: 'POST',
         url: fullPath ? path : BASE_URL + path,
         data: formData,
@@ -85,7 +90,7 @@ export async function uploadFile(path: string, file: File, fullPath: boolean = f
  * E.g full objects to ObjectId references only
  */
 function transformDataObjects(data: any) {
-    if (data.toRequestObject) {
+    if (data?.toRequestObject) {
         return data.toRequestObject();
     }
     if (Array.isArray(data)) {

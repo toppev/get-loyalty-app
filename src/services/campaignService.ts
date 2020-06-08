@@ -13,12 +13,12 @@ function createCampaign(campaign: Campaign) {
 }
 
 function updateCampaign(campaign: Campaign) {
-    const subUrl = `/business/${BUSINESS_ID}/campaign/${campaign?._id}`
+    const subUrl = `/business/${BUSINESS_ID}/campaign/${campaign?.id}`
     return patch(`${subUrl}`, campaign);
 }
 
 function deleteCampaign(campaign: Campaign) {
-    const subUrl = `/business/${BUSINESS_ID}/campaign/${campaign?._id}`
+    const subUrl = `/business/${BUSINESS_ID}/campaign/${campaign?.id}`
     return remove(`${subUrl}`)
 }
 

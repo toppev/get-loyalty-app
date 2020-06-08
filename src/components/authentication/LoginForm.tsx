@@ -16,13 +16,8 @@ import React, { useContext, useState } from 'react';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import PasswordResetRequestDialog from "./PasswordResetRequestDialog";
 import AppContext from "../../context/AppContext";
-import { loginRequest } from '../../services/authenticationService';
-import { validateEmail } from "../../util/Validate";
-
-interface FormValues {
-    email: string,
-    password: string
-}
+import { loginRequest, onLoginOrAccountCreate } from '../../services/authenticationService';
+import { isEmail } from "../../util/Validate";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -52,11 +47,17 @@ const useStyles = makeStyles((theme: Theme) =>
         },
     }));
 
-interface LoginFormProps {
-    headerErrorMessage?: string
+interface FormValues {
+    email: string,
+    password: string
 }
 
-export default function LoginForm({ headerErrorMessage }: LoginFormProps) {
+interface LoginFormProps {
+    headerErrorMessage?: string
+    onLogin?: () => any
+}
+
+export default function LoginForm({ headerErrorMessage, onLogin }: LoginFormProps) {
 
     const classes = useStyles();
     const context = useContext(AppContext);
@@ -67,7 +68,12 @@ export default function LoginForm({ headerErrorMessage }: LoginFormProps) {
 
     const onSubmit = (values: typeof initialValues, { setSubmitting, setErrors }: any) => {
         loginRequest(values)
-            .then(res => context.setUser(res.data))
+            .then(res => {
+                onLoginOrAccountCreate(context, res);
+                if (onLogin) {
+                    onLogin();
+                }
+            })
             .catch(err => {
                 if (err.response) {
                     const { status, data } = err.response
@@ -81,7 +87,7 @@ export default function LoginForm({ headerErrorMessage }: LoginFormProps) {
     const validate = (values: FormValues) => {
         const errors: FormikErrors<FormValues> = {};
         setEmail(values.email);
-        if(!validateEmail(values.email)) {
+        if (!isEmail(values.email)) {
             errors.email = 'Invalid email address :/';
         }
         if (values.password.length <= 6) {

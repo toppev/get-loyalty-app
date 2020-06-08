@@ -8,7 +8,9 @@ function listPages() {
 
 function createPage(page: Page) {
     const subUrl = `/business/${BUSINESS_ID}/page`;
-    return post(subUrl, page);
+    // Ignore the _id if it exists
+    const { _id, ...data } = page;
+    return post(subUrl, data);
 }
 
 function updatePage(page: Page, gjsOnly: boolean) {

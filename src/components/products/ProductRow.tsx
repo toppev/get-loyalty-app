@@ -4,8 +4,8 @@ import EditIcon from '@material-ui/icons/Edit';
 import FastfoodIcon from '@material-ui/icons/Fastfood';
 import React from 'react';
 import Product from './Product';
-import { deleteProduct } from "../../services/productService";
 import useRequest from "../../hooks/useRequest";
+import { deleteProduct } from "../../services/productService";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -47,6 +47,7 @@ interface ProductRowProps {
     product: Product,
     CustomActions?: JSX.Element
     startEditing?: (product: Product) => any
+    onDelete?: () => any
 }
 
 export default function (props: ProductRowProps) {
@@ -90,7 +91,7 @@ function EditDeleteActions(props: ProductRowProps) {
 
     const classes = useStyles();
 
-    const { error, loading, response, execute } = useRequest(() => deleteProduct(props.product));
+    const { error, loading, response, performRequest } = useRequest();
 
     return (
         <>
@@ -108,7 +109,10 @@ function EditDeleteActions(props: ProductRowProps) {
                 color="secondary"
                 onClick={() => {
                     if (window.confirm('Do you want to delete the item? This action is irreversible.')) {
-                        execute()
+                        performRequest(
+                            () => deleteProduct(props.product),
+                            props.onDelete
+                        );
                     }
                 }}
             >Delete</Button>

@@ -4,11 +4,14 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Form, Formik, FormikErrors } from "formik";
 import SaveChangesSnackbar from "../common/SaveChangesSnackbar";
 import AppContext, { Business } from "../../context/AppContext";
-import Product from "../products/Product";
 import _ from "lodash";
 import { TextField } from "formik-material-ui";
 import HelpIcon from '@material-ui/icons/Help';
 import Tooltip from '@material-ui/core/Tooltip';
+import { isDomain } from "../../util/Validate";
+import { updateBusiness } from "../../services/businessService";
+import { Alert } from "@material-ui/lab";
+import { APP_URL } from "../../config/axios";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -16,7 +19,8 @@ const useStyles = makeStyles((theme: Theme) =>
         item: {},
         typography: {
             textAlign: 'center',
-            color: 'lightgray'
+            color: 'lightgray',
+            margin: '15px'
         },
         paper: {
             padding: '25px',
@@ -28,7 +32,8 @@ const useStyles = makeStyles((theme: Theme) =>
             marginBottom: '20px'
         },
         field: {
-            width: '85%'
+            width: '85%',
+            margin: '8px 0px'
         },
         helpIcon: {
             marginLeft: '10px'
@@ -54,6 +59,7 @@ export default function () {
     const context = useContext(AppContext);
 
     const [saved, setSaved] = useState(true);
+    const [error, setError] = useState('');
 
     const theme = useTheme();
 
@@ -63,8 +69,11 @@ export default function () {
 
     // If changed will update the state so the snackbar opens
     const validateAndSnackbar = (value: Business) => {
-        const errors: FormikErrors<Product> = {};
-        // TODO: validate
+        const errors: FormikErrors<Business> = {};
+        if (!errors.config) errors.config = {}
+        if (value.config.loyaltyWebsite?.trim() && !isDomain(value.config.loyaltyWebsite)) {
+            errors.config.loyaltyWebsite = "That doesn't look like a domain!"
+        }
         if (!_.isEqual(value, business)) {
             setSaved(false);
             console.log(value, business)
@@ -74,14 +83,17 @@ export default function () {
 
     return (
         <div>
-            <Typography className={classes.typography} variant="h5">This page is still under construction</Typography>
+            <Typography className={classes.typography} variant="h5">Your loyalty app pages</Typography>
+            {error.length > 0 && <Alert severity="error">{error}</Alert>}
             <Formik
                 initialValues={business}
                 validateOnBlur
                 validate={validateAndSnackbar}
                 onSubmit={(updatedBusiness, actions) => {
                     actions.setSubmitting(true)
-                    // TODO send updated stuff
+                    updateBusiness(business)
+                        .then(() => actions.setSubmitting(false))
+                        .catch(err => setError(err.response?.data?.message || err.toString()))
                 }}
             >
                 {({ submitForm, isSubmitting }) => (
@@ -96,20 +108,12 @@ export default function () {
 
                                             const { plural, singular, placeholder } = translations[k];
                                             return (
-                                                <>
+                                                <div key={k}>
                                                     {plural && <TextField
                                                         className={classes.field}
                                                         name={`config.translations.${k}.plural`}
                                                         type="text"
                                                         label={`"${k}" translation (plural)`}
-                                                        placeholder={placeholder}
-                                                    />
-                                                    }
-                                                    {singular && <TextField
-                                                        className={classes.field}
-                                                        name={`config.translations.${k}.singular`}
-                                                        type="text"
-                                                        label={`"${k}" translation (singular)`}
                                                         placeholder={placeholder}
                                                     />
                                                     }
@@ -127,7 +131,15 @@ export default function () {
                                                         <HelpIcon className={classes.helpIcon}/>
                                                     </Tooltip>
                                                     }
-                                                </>
+                                                    {singular && <TextField
+                                                        className={classes.field}
+                                                        name={`config.translations.${k}.singular`}
+                                                        type="text"
+                                                        label={`"${k}" translation (singular)`}
+                                                        placeholder={placeholder}
+                                                    />
+                                                    }
+                                                </div>
                                             )
                                         }
                                     )}
@@ -142,11 +154,23 @@ export default function () {
                             <Form>
                                 <TextField
                                     className={classes.field}
-                                    name="text"
+                                    name="config.loyaltyWebsite"
                                     type="text"
-                                    label="Some field"
-                                    placeholder=""
+                                    label="Your loyalty app domain"
+                                    placeholder="yourdomain.com"
                                 />
+                                <Tooltip
+                                    enterDelay={200}
+                                    leaveDelay={300}
+                                    title={
+                                        <React.Fragment>
+                                            <Typography>{`Your domain`}</Typography>
+                                            Redirect your domain (or a subdomain) to "{APP_URL}" and enter your domain here
+                                        </React.Fragment>
+                                    }
+                                >
+                                    <HelpIcon className={classes.helpIcon}/>
+                                </Tooltip>
                             </Form>
                         </Paper>
 

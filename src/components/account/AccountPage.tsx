@@ -17,7 +17,7 @@ import { Form, Formik, FormikErrors } from "formik";
 import { TextField } from "formik-material-ui";
 import React, { useContext, useState } from "react";
 import AppContext, { User } from "../../context/AppContext";
-import { validateEmail } from "../../util/Validate";
+import { isEmail } from "../../util/Validate";
 import { updateUser } from "../../services/userService";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -38,6 +38,9 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         passwordBtn: {
             backgroundColor: theme.palette.success.light,
+        },
+        progressErrorDiv: {
+            margin: '20px 10px'
         }
     }));
 
@@ -66,13 +69,13 @@ export default function () {
     )
 }
 
-function handleUpdate(userId: string, value: object, setSubmitting: (state: boolean) => any, setError: (err: string) => any) {
+function handleUpdate(userId: string, value: any, setSubmitting: (state: boolean) => any, setError: (err: string) => any, callback?: () => any) {
     setSubmitting(true)
     setError("");
     updateUser(userId, value)
-        .then()
+        .then(callback)
         .catch(err => {
-            setError(`${err?.response?.message || err?.response || err}. Please try again.`);
+            setError(`${err?.response?.data?.message || err?.response?.data || err.toString()}`);
         })
         .finally(() => {
             setSubmitting(false);
@@ -90,24 +93,35 @@ function EmailForm({ user }: EmailFormProps) {
     const [error, setError] = useState("");
     const [canSubmit, setCanSubmit] = useState(false);
 
-    const validate = ({ email }: User) => {
+    const context = useContext(AppContext);
+
+    type EmailValues = { email: string };
+
+    const validate = ({ email }: EmailValues) => {
         const errors: FormikErrors<User> = {};
-        if (!validateEmail(email)) {
+        if (!isEmail(email)) {
             errors.email = "That doesn't look like an email address.";
         }
-        setCanSubmit(!!!errors.email);
+        setCanSubmit(!errors.email);
         return errors;
     }
 
+    const initials: EmailValues = { email: user.email };
+
     return (
         <Formik
-            initialValues={user}
+            initialValues={initials}
             validateOnBlur
             validate={validate}
-            onSubmit={(value, actions) => handleUpdate(value._id, value, actions.setSubmitting, setError)}
+            onSubmit={(value, actions) => {
+                handleUpdate(user._id, value, actions.setSubmitting, setError,
+                    () => context.setUser({
+                        ...user, ...value
+                    }))
+            }}
         >
             {({ submitForm, isSubmitting, handleChange }) => (
-                <Paper className={!!!user.email ? clsx(classes.paper, classes.highlight) : classes.paper}>
+                <Paper className={!user.email ? clsx(classes.paper, classes.highlight) : classes.paper}>
                     <Form>
                         <TextField
                             className={classes.field}
@@ -116,7 +130,10 @@ function EmailForm({ user }: EmailFormProps) {
                             label="Account Email"
                             placeholder="example@email.com"
                         />
-
+                        <div className={classes.progressErrorDiv}>
+                            {isSubmitting && <LinearProgress/>}
+                            {error && <Typography align="center" color="error">{error}</Typography>}
+                        </div>
                         <Button
                             disabled={isSubmitting || !canSubmit}
                             onClick={submitForm}
@@ -124,10 +141,7 @@ function EmailForm({ user }: EmailFormProps) {
                             color="primary"
                             startIcon={<MailOutlineIcon/>}
                         >Update email</Button>
-
                     </Form>
-                    {error && <Typography align="center" color="error">{error}</Typography>}
-                    {isSubmitting && <LinearProgress/>}
                 </Paper>
             )}
         </Formik>
@@ -140,12 +154,13 @@ interface ResetPasswordProps {
     highlight: boolean
 }
 
-function ResetPassword({ user, title, highlight }: ResetPasswordProps) {
+interface PasswordReset {
+    password: string,
+    repeatPassword: string
+}
 
-    interface PasswordReset {
-        password: string,
-        repeatPassword: string
-    }
+
+function ResetPassword({ user, title, highlight }: ResetPasswordProps) {
 
     const validate = (value: PasswordReset) => {
         const errors: FormikErrors<PasswordReset> = {};
@@ -162,6 +177,7 @@ function ResetPassword({ user, title, highlight }: ResetPasswordProps) {
     const [error, setError] = useState("");
 
     const classes = useStyles();
+    const context = useContext(AppContext);
 
     return (
 
@@ -169,35 +185,31 @@ function ResetPassword({ user, title, highlight }: ResetPasswordProps) {
             initialValues={{ password: "", repeatPassword: "" }}
             validate={validate}
             onSubmit={(value, actions) => {
-                handleUpdate(user._id, { password: value.password }, actions.setSubmitting, setError)
+                handleUpdate(user._id, { password: value.password }, actions.setSubmitting, setError, () => {
+                    context.setUser({ ...user, hasPassword: true })
+                })
             }}
         >
             {({ submitForm, isSubmitting, handleChange }) => (
                 <Paper className={highlight ? clsx(classes.paper, classes.highlight) : classes.paper}>
-
                     <Typography
                         variant="h6"
                         align="center">
                         {title}
                     </Typography>
-
                     <Form>
                         <TextField
                             className={classes.field}
                             name="password"
                             type="password"
-                            label="Password"
-                            placeholder="Password123"
+                            label="New Password"
                         />
-
                         <TextField
                             className={classes.field}
                             name="repeatPassword"
                             type="password"
                             label="Repeat Password"
-                            placeholder="Password123"
                         />
-
                         <Button
                             className={classes.passwordBtn}
                             disabled={isSubmitting || !canSubmit}

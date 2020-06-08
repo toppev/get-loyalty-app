@@ -1,4 +1,4 @@
-import { Box, createStyles, LinearProgress, ListItem, makeStyles, Theme } from '@material-ui/core';
+import { Box, createStyles, makeStyles, Theme } from '@material-ui/core';
 import React, { useState } from 'react';
 import RetryButton from '../common/button/RetryButton';
 import ImportProducts from './importer/ImportProducts';
@@ -7,7 +7,7 @@ import ProductFormDialog from './ProductFormDialog';
 import ProductRow from './ProductRow';
 import SearchField from "../common/SearchField";
 import NewButton from "../common/button/NewButton";
-import { addProduct, listProducts, updateProduct } from "../../services/productService";
+import { listProducts } from "../../services/productService";
 import useRequest from "../../hooks/useRequest";
 import useResponseState from "../../hooks/useResponseState";
 import useSearch from "../../hooks/useSearch";
@@ -66,9 +66,6 @@ export default function () {
                     name={"product_search"}
                     placeholder={"Search products..."}
                 />
-
-                {loading && <LinearProgress/>}
-
                 <ul className={classes.productList}>
                     {products
                         .filter(searchFilter)
@@ -77,6 +74,7 @@ export default function () {
                                 key={index}
                                 product={item}
                                 startEditing={product => setEditingProduct(product)}
+                                onDelete={() => setProducts(products.filter(p => p.id !== item.id))}
                             />
                         ))}
                 </ul>
@@ -89,19 +87,7 @@ export default function () {
                         setEditingProduct(undefined);
                     }}
                     onProductSubmitted={(product: Product) => {
-                        // Whether it's a new product or editing
-                        console.log(product)
-                        if (!editingProduct) {
-                            otherRequest.performRequest(
-                                () => addProduct(product),
-                                () => setProducts([...products, product])
-                            );
-                        } else {
-                            otherRequest.performRequest(
-                                () => updateProduct(product),
-                                () => setProducts([product, ...products.filter(p => p._id !== product._id)])
-                            )
-                        }
+                        setProducts([...products, product])
                         setFormOpen(false);
                         setEditingProduct(undefined);
                     }}/>

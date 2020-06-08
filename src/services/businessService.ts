@@ -5,13 +5,12 @@ async function createBusiness(params?: any) {
     return post('/business/create', params);
 }
 
-async function getBusiness() {
-    // TODO
-    return get('/TODO');
+async function getBusiness(businessId: string) {
+    return get(`/business/${businessId}`);
 }
 
 async function updateBusiness(business: Business) {
-    return patch(`/business/${business._id}`, business);
+    return patch(`/business/${BUSINESS_ID}`, business);
 }
 
 async function setBusinessRole(userId: string, role: string) {

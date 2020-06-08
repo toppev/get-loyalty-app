@@ -1,7 +1,7 @@
 import React from 'react'
 import { AppBar, Hidden, IconButton, Toolbar, Typography, withWidth } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
-import { APP_URL } from "./Navigator";
+import { DOMAIN_HOME_PAGE } from "./Navigator";
 
 interface HeaderProps {
     handleDrawerToggle: () => any,
@@ -28,7 +28,7 @@ function Header(props: HeaderProps) {
                             <MenuIcon/>
                         </IconButton>
                         <Typography variant="h6" noWrap>
-                            {APP_URL}
+                            {DOMAIN_HOME_PAGE}
                         </Typography>
                     </Toolbar>
                 </AppBar>

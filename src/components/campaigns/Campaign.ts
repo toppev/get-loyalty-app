@@ -4,28 +4,42 @@ import Reward from "../rewards/Reward";
 
 class Campaign {
 
-    constructor(
-        public _id: string,
-        public name: string,
-        public description: string,
-        public products: Product[] = [],
-        public categories: Category[] = [],
-        public requirements: Requirement[] = [],
-        public rewardedCount?: number,
-        public maxRewards: MaxRewards = {},
-        public transactionPoints?: number,
-        public endReward: Reward[] = [],
-        public couponCode?: string,
-        public start?: Date,
-        public end?: Date,
-    ) {
+    id: string
+    name: string
+    description: string
+    products: Product[]
+    categories: Category[]
+    requirements: Requirement[]
+    rewardedCount?: number
+    maxRewards: MaxRewards
+    transactionPoints?: number
+    endReward: Reward[]
+    couponCode?: string
+    start?: Date
+    end?: Date
+
+
+    constructor(data: any) {
+        this.id = data.id;
+        this.name = data.name;
+        this.description = data.description;
+        this.products = data.products || [];
+        this.categories = data.categories || [];
+        this.requirements = data.requirements || [];
+        this.rewardedCount = data.rewardedCount;
+        this.maxRewards = data.maxRewards || {};
+        this.transactionPoints = data.transactionPoints;
+        this.endReward = data.endReward || [];
+        this.couponCode = data.couponCode;
+        this.start = data.start;
+        this.end = data.end;
     }
 
     toRequestObject() {
         const res = {
             ...this,
             categories: this.categories.map(i => i._id),
-            products: this.products.map(i => i._id)
+            products: this.products.map(i => i.id)
         };
         return res;
     }

@@ -60,22 +60,20 @@ const placeholders: Placeholders = {
                 name: 'Email',
                 description: "The customer's email",
             },
-            // TODO: implement in backend, where can the message be configured?
             birthdayGreeting: {
                 name: 'Birthday greetings',
                 description: 'Display a birthday greeting message if today is the customers birthday'
             }
         }
     },
-    rewards: {
+    customerRewards: {
         name: 'Customer Rewards',
         identifier: 'rewards',
         placeholders: {
-            length: {
+            unused: {
                 name: 'Number of rewards',
-                description: 'Number of customer rewards'
+                description: 'Number of unused customer rewards'
             },
-            // TODO: implement in backend
             used: {
                 name: 'Number of used rewards',
                 description: 'Number of rewards the customer has used'

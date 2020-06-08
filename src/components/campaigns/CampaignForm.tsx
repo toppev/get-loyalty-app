@@ -29,7 +29,7 @@ import RequirementSelector from "./RequirementSelector";
 import useRequest from "../../hooks/useRequest";
 import RetryButton from "../common/button/RetryButton";
 import { createCampaign, updateCampaign } from "../../services/campaignService";
-import { alphanumeric } from "../../util/Validate";
+import { isAlphanumeric } from "../../util/Validate";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -74,7 +74,7 @@ export interface CampaignFormProps {
 
 }
 
-const emptyCampaign = new Campaign("new_campaign", "", "")
+const emptyCampaign = new Campaign({ id: "new_campaign", name: "", description: "" })
 
 export default function ({ initialCampaign, onSubmitted }: CampaignFormProps) {
 
@@ -217,7 +217,7 @@ export default function ({ initialCampaign, onSubmitted }: CampaignFormProps) {
                                         onRemove={() => {
                                             if (window.confirm('Confirm removing a reward from this campaign. ' +
                                                 'This does not affect customers who were previously rewarded.')) {
-                                                setEndRewards(endRewards.filter(r => r._id !== reward._id))
+                                                setEndRewards(endRewards.filter(r => r.id !== reward.id))
                                             }
                                         }}
                                     />
@@ -230,7 +230,7 @@ export default function ({ initialCampaign, onSubmitted }: CampaignFormProps) {
                             onClose={() => setEditReward(undefined)}
                             onSubmitted={reward => {
                                 setEditReward(undefined);
-                                setEndRewards(endRewards.map(r => r._id === reward._id ? reward : r))
+                                setEndRewards(endRewards.map(r => r.id === reward.id ? reward : r))
                             }}
                         />
                         <Button
@@ -289,7 +289,7 @@ export default function ({ initialCampaign, onSubmitted }: CampaignFormProps) {
                         {(isSubmitting || loading) && <LinearProgress/>}
                     </div>
 
-                    <IdText id={campaign._id}/>
+                    <IdText id={campaign.id}/>
                 </Form>
             )}
             </Formik>
@@ -311,7 +311,7 @@ function validate(values: Campaign): FormikErrors<Campaign> {
     if (values.transactionPoints && values.transactionPoints < 0) {
         errors.transactionPoints = 'Points per purchase can not be negative.'
     }
-    if (values.couponCode && !alphanumeric(values.couponCode)) {
+    if (values.couponCode && !isAlphanumeric(values.couponCode)) {
         errors.couponCode = 'The code must be alphanumeric. Allowed characters: numbers, letters (a-z or A-Z), underscore ("_") and hyphen ("-").'
     }
     return errors;

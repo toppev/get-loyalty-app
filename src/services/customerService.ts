@@ -1,4 +1,4 @@
-import { BUSINESS_ID, get, patch } from "../config/axios";
+import { BUSINESS_ID, get, patch, post, remove } from "../config/axios";
 import Reward from "../components/rewards/Reward";
 import Customer from "../components/customers/Customer";
 
@@ -10,36 +10,34 @@ function listCustomers(search?: string) {
     return get(subUrl);
 }
 
-function updateCustomer(customer: Customer) {
-    const subUrl = `/business/${BUSINESS_ID}/customer`;
-    return patch(`${subUrl}/${customer._id}`, customer);
-}
-
 function loadCustomer(customerId: string) {
     const subUrl = `/business/${BUSINESS_ID}/customer`;
     return get(`${subUrl}/${customerId}`)
 }
 
-function revokeCustomerReward(customer: Customer, reward: Reward) {
-    customer.customerData.rewards = customer.customerData.rewards.filter(r => r._id !== reward._id);
-    return updateCustomer(customer)
+function updateCustomerProperties(customer: Customer) {
+    const subUrl = `/business/${BUSINESS_ID}/customer`;
+    return patch(`${subUrl}/${customer.id}/properties`, customer.customerData.properties);
 }
 
-function updateCustomerReward(customer: Customer, updatedReward: Reward) {
-    customer.customerData.rewards = customer.customerData.rewards.map(r => r._id === updatedReward._id ? updatedReward : r);
-    return updateCustomer(customer)
+function revokeCustomerReward(customer: Customer, reward: Reward) {
+    const subUrl = `/business/${BUSINESS_ID}/customer`;
+    return remove(`${subUrl}/${customer.id}/reward/${reward.id}`);
+}
+
+function updateCustomerReward(customer: Customer, updatedRewards: Reward[]) {
+    const subUrl = `/business/${BUSINESS_ID}/customer`;
+    return post(`${subUrl}/${customer.id}/rewards`, updatedRewards);
 }
 
 function addCustomerReward(customer: Customer, reward: Reward) {
-    if (reward) {
-        customer.customerData.rewards.push(reward);
-    }
-    return updateCustomer(customer)
+    const subUrl = `/business/${BUSINESS_ID}/customer`;
+    return post(`${subUrl}/${customer.id}/reward`, reward);
 }
 
 export {
     loadCustomer,
-    updateCustomer,
+    updateCustomerProperties,
     listCustomers,
     addCustomerReward,
     revokeCustomerReward,

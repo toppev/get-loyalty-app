@@ -13,7 +13,7 @@ import {
 import CloseButton from "../common/button/CloseButton";
 import EmailIcon from '@material-ui/icons/Email';
 import { post } from "../../config/axios";
-import { validateEmail } from "../../util/Validate";
+import { isEmail } from "../../util/Validate";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -45,7 +45,7 @@ export default function (props: PasswordResetRequestDialogProps) {
     const [buttonText, setButtonText] = useState('Reset Password');
     const [buttonDisabled, setButtonDisabled] = useState(false);
 
-    useEffect(() => setButtonDisabled(!validateEmail(email)), [email])
+    useEffect(() => setButtonDisabled(!isEmail(email)), [email])
 
     return (
         <Dialog open={props.open} fullWidth className={classes.dialog}>
