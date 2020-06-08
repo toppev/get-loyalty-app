@@ -1,5 +1,5 @@
 // Edit this if you're hosting this web app yourself
-// Then you won't need to add the url in the business git push -u origin mastersettings
+// Then you won't need to add the url in the business settings
 /**
  * Insert the ID of your business inside the quotation marks.
  *
