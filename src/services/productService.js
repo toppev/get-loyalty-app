@@ -1,4 +1,6 @@
 const Product = require('../models/product');
+const Business = require('../models/business');
+const StatusError = require('../helpers/statusError');
 
 module.exports = {
     getAllById,
@@ -34,8 +36,13 @@ async function getById(productId) {
  * @param {*} product the product to save
  */
 async function create(businessId, product) {
+    const business = await Business.findById(businessId);
+    const limit = business.plan.limits.products.total;
+    if (limit !== -1 && await Product.countDocuments({ business: businessId }) >= limit) {
+        throw new StatusError('Plan limit reached', 402)
+    }
     product.business = businessId;
-    return await Product.create(product);
+    return Product.create(product);
 }
 
 /**

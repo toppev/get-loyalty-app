@@ -5,6 +5,8 @@ const pageScreenshot = require('./pageScreenshot');
 const fs = require('fs');
 const Business = require("../models/business");
 const handlebars = require("handlebars");
+const StatusError = require('../helpers/statusError');
+const customerService = require('./customerService');
 
 module.exports = {
     createPage,
@@ -19,6 +21,14 @@ module.exports = {
 };
 
 async function createPage(businessId, pageParam) {
+    const business = await Business.findById(businessId);
+    const limit = business.plan.limits.pages.total;
+    if (limit !== -1 && await PageData.countDocuments({
+        business: this.business,
+        stage: { $ne: 'discarded' }
+    }) >= limit) {
+        throw new StatusError('Plan limit reached', 402)
+    }
     const newPage = new PageData(pageParam);
     newPage.business = businessId;
     return await newPage.save();
@@ -64,12 +74,15 @@ async function getPublicPage(businessId) {
 }
 
 async function uploadPage(pageId, { html, css }) {
+    const res = await validateHandlebars(html)
+    if (res.error) {
+        throw new StatusError(`Invalid placeholders. ${res.error}`, 400)
+    }
     // Inline the css
     const tmpl = `${html}<style>${css}</style>`;
     const inlineHtml = juice(tmpl);
     await uploader.upload(`page_${pageId}.html`, inlineHtml);
-    // TODO: should we create the screenshot here or queue or something?
-    // Good performance improvement probably
+    // TODO: queue screenshot or something?
     const page = await PageData.findById(pageId);
     if (page) {
         createScreenshot(page.business, pageId)
@@ -80,6 +93,16 @@ async function uploadPage(pageId, { html, css }) {
     } else {
         console.log(`Page with invalid id was uploaded ${pageId}`);
     }
+}
+
+async function validateHandlebars(html) {
+    try {
+        const template = handlebars.compile(html);
+        template({})
+    } catch (e) {
+        return { error: e };
+    }
+    return true;
 }
 
 async function createScreenshot(businessId, pageId) {
@@ -122,17 +145,23 @@ async function getPageContent(pageId) {
 async function getPageContext(businessId, user) {
     const business = await Business.findById(businessId).populate().lean();
     if (business) {
-        // FIXME, very hacky
-        // without this handlebar can't access fields because of remote code execution prevention (and we don't want RCE)
-        // .lean() fixes it for business
-        const userJSON = JSON.parse(JSON.stringify(user));
         // Add all placeholders here
+        const userInfo = await customerService.getCustomerInfo(user, businessId)
+        const customerData = userInfo.customerData;
+        const { products, campaigns, config } = business;
+        const { translations } = config;
         return {
-            user: userJSON,
-            business: business,
-            products: business.products,
-            campaigns: business.campaigns,
-            rewards: userJSON.rewards,
+            user: userInfo,
+            // Other information about rewards
+            customerRewards: {
+                unused: customerData.rewards.length,
+                used: customerData.usedRewards.length,
+            },
+            birthdayGreeting: user.isBirthday ? business.config.translations.birthdayGreeting : undefined,
+            business,
+            products,
+            campaigns,
+            translations
         }
     }
 }

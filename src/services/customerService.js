@@ -13,6 +13,7 @@ module.exports = {
     deleteReward,
     addCampaignRewards,
     findCustomerData,
+    getCustomerInfo,
     updateRewards,
     useReward,
     listCustomers
@@ -40,7 +41,7 @@ async function findCustomerData(user, businessId) {
  * @param businessId
  * @returns {Promise<{birthday, lastVisit, customerData: *, email, authentication: {service: {type: StringConstructor}}}>}
  */
-async function getCustomerData(user, businessId) {
+async function getCustomerInfo(user, businessId) {
     if (!user.customerData) { // Does not exists so it's the user id
         user = await User.findById(user);
     }
@@ -265,5 +266,5 @@ async function listCustomers(businessId, limit, search) {
         // FIXME: bad
         users = users.filter(u => JSON.stringify(u).toLowerCase().includes(search));
     }
-    return Promise.all(users.map(u => getCustomerData(u, businessId)));
+    return Promise.all(users.map(u => getCustomerInfo(u, businessId)));
 }

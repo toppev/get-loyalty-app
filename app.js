@@ -23,7 +23,7 @@ if (!isTesting) {
         useFindAndModify: false
     });
     console.log("Connected to mongo database");
-    app.use(morgan('":method :url" :status (len: :res[content-length]) ":user-agent" - :response-time ms',
+    app.use(morgan('":method :url" :status (len: :res[content-length] - :response-time ms) ":user-agent"',
         { stream: logger.stream }));
 }
 // If this app is sitting behind a reverse proxy (e.g nginx)

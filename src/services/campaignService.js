@@ -1,4 +1,5 @@
 const Campaign = require('../models/campaign');
+const Business = require('../models/business');
 const StatusError = require('../helpers/statusError');
 const customerService = require('./customerService');
 const userService = require('./userService');
@@ -39,8 +40,12 @@ async function getAllRewards(businessId) {
 
 async function getOnGoingCampaigns(businessId, populate) {
     const all = await getAllByBusinessId(businessId, populate);
+    return all.filter(isActive);
+}
+
+function isActive({ end, start }) {
     const now = Date.now();
-    return all.filter(c => c.start <= now && (!c.end || c.end > now));
+    return start <= now && (!end || end > now)
 }
 
 /**
@@ -57,6 +62,11 @@ async function getById(campaignId) {
  * @param {Object} campaign the campaign to create
  */
 async function create(businessId, campaign) {
+    const business = await Business.findById(businessId);
+    const limit = business.plan.limits.campaigns.total;
+    if (limit !== -1 && await Campaign.countDocuments({ business: businessId }) >= limit) {
+        throw new StatusError('Plan limit reached', 402)
+    }
     campaign.business = businessId;
     return Campaign.create(campaign);
 }
@@ -67,9 +77,15 @@ async function create(businessId, campaign) {
  * @param {Object} updatedCampaign the object with the values to update
  */
 async function update(campaignId, updatedCampaign) {
+    const campaign = await Campaign.findById(campaignId);
+    const businessId = campaign.business;
+    const business = await Business.findById(businessId);
+    const limit = business.plan.limits.campaigns.active;
+    if (limit !== -1 && isActive(updatedCampaign) && (await getOnGoingCampaigns(businessId)).length >= limit - 1) {
+        throw new StatusError('Plan limit reached', 402)
+    }
     // Update and return the new document
-    const campaign = await Campaign.findByIdAndUpdate(campaignId, updatedCampaign, { new: true });
-    return campaign;
+    return await Campaign.findByIdAndUpdate(campaignId, updatedCampaign, { new: true });
 }
 
 /**
