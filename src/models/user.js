@@ -112,7 +112,7 @@ userSchema.methods.customerDataByBusiness = async function (business) {
  * Check whether user can perform the specified operation.
  */
 userSchema.methods.hasPermission = async function (operation, params) {
-    // If superRole is set use it otherwise defaults to 'user
+    // If superRole is set use it otherwise defaults to 'user'
     let userRole = this.superRole || 'user';
     const businessId = params.reqParams.businessId;
     // and check if they have a greater role in the given business

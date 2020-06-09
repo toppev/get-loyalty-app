@@ -67,9 +67,11 @@ async function getBusinessPages(businessId) {
 /**
  * Return only the ids of the published pages. First should be the home page
  */
-// TODO: order the pages
 async function getPublicPage(businessId) {
-    const pages = await PageData.find({ business: businessId, stage: 'published' }).select('_id icon ');
+    const pages = await PageData.find({
+        business: businessId,
+        stage: 'published'
+    }).sort('pageIndex').select('_id icon ');
     return pages;
 }
 

@@ -34,6 +34,9 @@ const PageDataSchema = new Schema({
     icon: {
         type: String
     },
+    pageIndex: {
+        type: Number,
+    },
     gjs: {
         "gjs-components": {
             type: String
@@ -48,9 +51,14 @@ const PageDataSchema = new Schema({
 });
 
 PageDataSchema.pre('save', async function () {
+    let pagesCount;
+    const getPagesCount = async () => pagesCount === undefined ? pagesCount = await PageData.countDocuments({ business: this.business }) : pagesCount
+
     if (!this.pathname || this.pathname === 'unnamed') {
-        const pagesCount = await PageData.countDocuments({ business: this.business });
-        this.pathname = `page${pagesCount}`;
+        this.pathname = `page${await getPagesCount()}`;
+    }
+    if (!this.pageIndex) {
+        this.pageIndex = await getPagesCount();
     }
 })
 
