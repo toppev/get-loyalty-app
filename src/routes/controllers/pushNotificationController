@@ -5,8 +5,8 @@ const pushNotificationService = require('../../services/pushNotificationService'
 const validator = require('../../helpers/validation');
 const notificationValidator = validator.validate(validator.pushNotificationValidator);
 
-router.get('/', permit('notification:list'), getNotifications); // TODO: test
-router.post('/', permit('notification:send'), notificationValidator, sendNotifications); // TODO: test
+router.get('/', permit('notification:list'), getNotifications);
+router.post('/', permit('notification:send'), notificationValidator, sendNotifications);
 
 module.exports = router;
 

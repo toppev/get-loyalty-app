@@ -1,8 +1,11 @@
 const { initDatabase, closeDatabase } = require('./testUtils');
 const PushNotification = require('../src/models/pushNotification');
 const Business = require('../src/models/business');
+const User = require('../src/models/user');
 const notificationService = require('../src/services/pushNotificationService');
-
+const businessService = require('../src/services/businessService');
+const app = require('../app');
+const api = require('supertest')(app);
 
 beforeAll(async () => {
     await initDatabase('notification');
@@ -38,6 +41,41 @@ it('send notification', async () => {
     const res = await PushNotification.find({ business: businessId })
     expect(res.length).toBe(1);
 });
+
+describe('user can', () => {
+
+    const userParam = { email: 'asdasd@wada.com', password: 'asdasdasddwa' }
+    const testNotification = { title: 'Hello world!', message: 'test notification' }
+    let cookie;
+    let business;
+
+    beforeAll(async () => {
+        // Login
+        const userId = (await new User(userParam).save())._id;
+        const res = await api
+            .post('/user/login/local')
+            .send(userParam)
+            .expect(200);
+        business = await businessService.createBusiness({}, userId)
+        cookie = res.headers['set-cookie'];
+    });
+
+    it('send notification', async () => {
+        await api
+            .post(`/business/${business.id}/notifications`)
+            .send(testNotification)
+            .set('Cookie', cookie)
+            .expect(200);
+    });
+
+    it('get notifications', async () => {
+        const res = await api
+            .get(`/business/${business.id}/notifications`)
+            .set('Cookie', cookie)
+            .expect(200);
+        expect(res.body.notifications[0].title).toBe(testNotification.title)
+    });
+})
 
 
 afterAll(() => {
