@@ -1,8 +1,8 @@
 const router = require('express').Router({ mergeParams: true });
 const categoryService = require('../../services/categoryService')
 
-// TODO: validate
 // Doesn't really need validation at the moment, categoryService#create makes sure it's not official category
+// mongoose handles validating data types/NoSQL injection
 router.post('/', createCategory);
 router.get('/:categoryId', findById);
 router.get('/', find);

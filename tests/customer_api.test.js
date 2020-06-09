@@ -60,7 +60,9 @@ describe('Logged in user with permissions can modify customer purchases', () => 
             .delete(`/business/${business.id}/customer/${userId}/purchase/${purchaseId}`)
             .set('Cookie', cookie)
             .expect(200);
-        // TODO check if it really was deleted
+        const user = await User.findById(userId);
+        const data = await user.customerDataByBusiness(business.id);
+        expect(data.purchases.length).toBe(0);
     });
 });
 

@@ -9,13 +9,12 @@ const purchaseValidator = validation.validate(validation.purchaseValidator);
 const propertiesValidator = validation.validate(validation.customerPropertiesValidator);
 const rewardValidator = validation.validate(validation.rewardValidator);
 
-
 router.post('/purchase/', permit('purchase:create'), purchaseValidator, newPurchase);
 router.patch('/purchase/:purchaseId', permit('purchase:update'), purchaseValidator, updatePurchase);
 router.delete('/purchase/:purchaseId', permit('purchase:delete'), deletePurchase);
 
 router.post('/rewards', permit('reward:update'), rewardValidator, updateRewards); // TODO: test
-router.delete('/reward/:rewardId', permit('reward:revoke'), rewardValidator, revokeReward);
+router.delete('/reward/:rewardId', permit('reward:revoke'), revokeReward);
 router.post('/reward', permit('reward:give'), rewardValidator, giveReward);
 router.patch('/properties', permit('customer:update'), propertiesValidator, updateCustomerProperties);
 router.get('/', permit('customer:get'), getCustomerData);

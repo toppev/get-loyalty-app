@@ -25,16 +25,18 @@ ajv.addKeyword('objectid', {
 function validate(validator, bypassPermission = "validation:bypass") {
     return (req, res, next) => {
         // Check if the user has permission to bypass validation (site admins)
-        if (req.user && req.user.hasPermission(bypassPermission, {
+        Promise.resolve(!req.user ? false : req.user.hasPermission(bypassPermission, {
             userId: req.user.id,
             reqParams: req.params
-        })) {
-            next();
-        } else {
-            validator(req.body)
-                .then(allowed => next())
-                .catch(err => next(err));
-        }
+        })).then(result => {
+            if (result) {
+                next();
+            } else {
+                validator(req.body)
+                    .then(() => next())
+                    .catch(err => next(err));
+            }
+        }).catch(err => next(err))
     }
 }
 
@@ -337,6 +339,46 @@ const pushNotificationValidator = ajv.compile({
     }
 })
 
+const pageValidator = ajv.compile({
+    "$async": true,
+    "additionalProperties": false,
+    "properties": {
+        "name": {
+            "type": "string",
+        },
+        "pathname": {
+            "type": "string",
+        },
+        "description": {
+            "type": "string",
+        },
+        "stage": {
+            "type": "string",
+        },
+        "icon": {
+            "type": "string",
+        },
+        "gjs": {
+            "type": "object",
+            "properties": {
+                "gjs-components": {
+                    "type": "string"
+                },
+                "gjs-styles": {
+                    "type": "string"
+                }
+            }
+        },
+        // GrapesJS will only send these, use same validation for it too
+        "gjs-components": {
+            "type": "string"
+        },
+        "gjs-styles": {
+            "type": "string"
+        }
+    }
+})
+
 module.exports = {
     validate,
     userValidator,
@@ -347,5 +389,6 @@ module.exports = {
     purchaseValidator,
     customerPropertiesValidator,
     rewardValidator,
-    pushNotificationValidator
+    pushNotificationValidator,
+    pageValidator
 };

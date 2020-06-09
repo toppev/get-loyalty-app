@@ -1,8 +1,8 @@
 const router = require('express').Router({ mergeParams: true });
 const pageService = require('../../services/pageService');
 const permit = require('../../middlewares/permitMiddleware');
-
-// TODO: validate?
+const validation = require('../../helpers/validation');
+const pageValidator = validation.validate(validation.pageValidator);
 
 // Get templates (no html/css only other data)
 router.get('/templates', getTemplates);
@@ -17,13 +17,13 @@ router.get('/:pageId/html', getHtml);
 router.get('/:pageId/thumbnail', getThumbnail);
 // Loading the GJS data
 router.get('/:pageId', permit('page:load'), loadPage);
-// Uploading html pages
+// Uploading html/css (only mongoose validation)
 router.post('/:pageId/upload', permit('page:upload'), uploadPage);
 // Saving the GJS data
 // Even though it's a post (because it's easier with grapesjs in frontend) pageService uses Object.assign so partial updates work
-router.post('/:pageId', permit('page:save'), savePage);
+router.post('/:pageId', permit('page:save'), pageValidator, savePage);
 // Creating a new page
-router.post('/', permit('page:create'), createPage);
+router.post('/', permit('page:create'), pageValidator, createPage);
 
 module.exports = router;
 
