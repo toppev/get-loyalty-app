@@ -12,14 +12,14 @@ module.exports = router;
 
 function getNotifications(req, res, next) {
     const { businessId } = req.params;
-    pushNotificationService.getPushNotificationHistory(businessId)
-        .then(result => res.json({ notifications: result }))
+    pushNotificationService.getPushNotificationInfo(businessId)
+        .then(result => res.json(result))
         .catch(err => next(err))
 }
 
 function sendNotifications(req, res, next) {
     const { businessId } = req.params;
     pushNotificationService.sendPushNotification(businessId, req.body)
-        .then(data => res.json({ success: true, data }))
+        .then(data => res.json({ success: true, ...data }))
         .catch(err => next(err))
 }

@@ -79,6 +79,16 @@ const planSchema = new Schema({
                 type: Number,
                 default: 3
             },
+        },
+        pushNotifications: {
+            total: {
+                type: Number,
+                default: 5
+            },
+            cooldownMinutes: {
+                type: Number,
+                default: 2880
+            }
         }
     }
 })

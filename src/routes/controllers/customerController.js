@@ -13,7 +13,7 @@ router.post('/purchase/', permit('purchase:create'), purchaseValidator, newPurch
 router.patch('/purchase/:purchaseId', permit('purchase:update'), purchaseValidator, updatePurchase);
 router.delete('/purchase/:purchaseId', permit('purchase:delete'), deletePurchase);
 
-router.post('/rewards', permit('reward:update'), rewardValidator, updateRewards); // TODO: test
+router.post('/rewards', permit('reward:update'), rewardValidator, updateRewards);
 router.delete('/reward/:rewardId', permit('reward:revoke'), revokeReward);
 router.post('/reward', permit('reward:give'), rewardValidator, giveReward);
 router.patch('/properties', permit('customer:update'), propertiesValidator, updateCustomerProperties);

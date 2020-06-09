@@ -61,11 +61,12 @@ describe('user can', () => {
     });
 
     it('send notification', async () => {
-        await api
+        const res = await api
             .post(`/business/${business.id}/notifications`)
             .send(testNotification)
             .set('Cookie', cookie)
             .expect(200);
+        expect(res.body.cooldownExpires).toBeDefined();
     });
 
     it('get notifications', async () => {
