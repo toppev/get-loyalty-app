@@ -336,6 +336,9 @@ const pushNotificationValidator = ajv.compile({
         "message": {
             "type": "string",
         },
+        "link": {
+            "type": "string",
+        }
     }
 })
 

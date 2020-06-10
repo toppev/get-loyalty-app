@@ -7,7 +7,6 @@ const User = require('../src/models/user');
 const app = require('../app');
 const api = require('supertest')(app);
 
-const businessParam = { email: "coupon.test.business@email.com", public: { address: 'this is an address' } };
 const userParams = { email: "coupon.test@email.com", password: "password123" };
 
 let cookie;
@@ -26,14 +25,7 @@ beforeAll(async () => {
         .send(userParams);
     // Setting the cookie
     cookie = res.headers['set-cookie'];
-    // Create new business
-    // TODO: maybe use service instead of requests
-    const res2 = await api
-        .post('/business/create')
-        .send(businessParam)
-        .set('Cookie', cookie);
-    business = await businessService.getBusiness(res2.body._id);
-
+    business = await businessService.createBusiness({}, userId)
     endReward = { name: "Test Reward", itemDiscount: "20% OFF" }
     const campaignParam = { name: "Test Campaign", couponCode: couponCode, endReward: [endReward] }
     await campaignService.create(business.id, campaignParam);

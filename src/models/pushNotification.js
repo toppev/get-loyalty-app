@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-const productSchema = new Schema({
+const notificationSchema = new Schema({
     business: {
         type: mongoose.Types.ObjectId,
         ref: 'Business',
@@ -16,13 +16,21 @@ const productSchema = new Schema({
         type: String,
         required: true,
     },
+    link: {
+        type: String,
+        required: false
+    },
     sent: {
         type: Date,
         default: Date.now
+    },
+    // How many users will/should receive the notification
+    receivers: {
+        type: Number,
     }
 }, {
     toJSON: { virtuals: true },
     toObject: { virtuals: true }
 });
 
-module.exports = mongoose.model('PushNotification', productSchema);
+module.exports = mongoose.model('PushNotification', notificationSchema);

@@ -52,7 +52,7 @@ async function sendPushNotification(businessId, notificationParam) {
     }
     const expires = await getCooldownExpiration(business, notifications);
     if (expires) {
-        throw new StatusError(`You're on still cooldown. You can send next push notification ${expires.toISOString()}`, 400);
+        throw new StatusError(`You're on still cooldown. You can send next push notification ${expires.toUTCString()}`, 400);
     }
     const newNotification = new PushNotification(notificationParam);
     newNotification.business = businessId;
