@@ -3,7 +3,7 @@ const businessService = require('../../services/businessService');
 const customerService = require('../../services/customerService');
 const campaignService = require('../../services/campaignService');
 const permit = require('../../middlewares/permitMiddleware');
-const validation = require('../../helpers/validation');
+const validation = require('../../helpers/bodyFilter');
 const businessValidator = validation.validate(validation.businessValidator);
 
 router.post('/create', businessValidator, createBusiness);

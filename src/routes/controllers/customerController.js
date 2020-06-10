@@ -4,7 +4,7 @@ const router = require('express').Router({ mergeParams: true });
 const customerService = require('../../services/customerService');
 const permit = require('../../middlewares/permitMiddleware');
 
-const validation = require('../../helpers/validation');
+const validation = require('../../helpers/bodyFilter');
 const purchaseValidator = validation.validate(validation.purchaseValidator);
 const propertiesValidator = validation.validate(validation.customerPropertiesValidator);
 const rewardValidator = validation.validate(validation.rewardValidator);

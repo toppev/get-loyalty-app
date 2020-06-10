@@ -131,7 +131,10 @@ userSchema.methods.hasPermission = async function (operation, params) {
 
 userSchema.pre('save', async function (next) {
     // only hash if modified (or new)
-    if (this.isModified('password')) {
+    if (this.isModified('password') && this.password) {
+        if (this.password.length <= 6) {
+            throw new Error('Invalid password')
+        }
         this.password = await bcrypt.hash(this.password, 12);
     }
     next();

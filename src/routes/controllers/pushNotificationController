@@ -2,7 +2,7 @@ const router = require('express').Router({ mergeParams: true });
 const permit = require('../../middlewares/permitMiddleware');
 const pushNotificationService = require('../../services/pushNotificationService');
 
-const validator = require('../../helpers/validation');
+const validator = require('../../helpers/bodyFilter');
 const notificationValidator = validator.validate(validator.pushNotificationValidator);
 
 router.get('/', permit('notification:list'), getNotifications);

@@ -4,7 +4,7 @@ const businessService = require('../../services/businessService');
 const permit = require('../../middlewares/permitMiddleware');
 const authenticator = require('../../middlewares/authenticator');
 
-const validation = require('../../helpers/validation');
+const validation = require('../../helpers/bodyFilter');
 const userValidator = validation.validate(validation.userValidator);
 
 // Not logged in, no perms

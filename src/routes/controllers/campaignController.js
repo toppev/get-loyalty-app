@@ -3,7 +3,7 @@ const campaignService = require('../../services/campaignService')
 
 const permit = require('../../middlewares/permitMiddleware');
 
-const validation = require('../../helpers/validation');
+const validation = require('../../helpers/bodyFilter');
 const campaignValidator = validation.validate(validation.campaignValidator);
 
 router.post('/', permit('campaign:create'), campaignValidator, addCampaign);

@@ -1,4 +1,3 @@
-const ajv = require('ajv');
 const logger = require('../config/logger');
 
 function errorHandler(err, req, res, _next) {
@@ -25,19 +24,6 @@ function errorHandler(err, req, res, _next) {
     if (err.name === 'UnauthorizedError') {
         return res.status(err.status || 401).json({
             message: 'Invalid authentication token'
-        });
-    }
-    if (err.message == 'validation failed') {
-        const errorMessage = (ajv.errors || []).map(error => {
-            try {
-                const [, , fieldName] = /\[(.*)\].(.*)/.exec(error.dataPath);
-                return `Error with field "${fieldName}": ${error.message}`;
-            } catch (e) {
-                return e.message;
-            }
-        }).join('\n');
-        return res.status(err.status || 401).json({
-            message: errorMessage(err)
         });
     }
     return res.status(err.status || 500).json({

@@ -2,7 +2,7 @@ const router = require('express').Router({ mergeParams: true });
 const productService = require('../../services/productService')
 const permit = require('../../middlewares/permitMiddleware');
 
-const validation = require('../../helpers/validation');
+const validation = require('../../helpers/bodyFilter');
 const productValidator = validation.validate(validation.productValidator);
 
 router.post('/', permit('product:create'), productValidator, addProduct);

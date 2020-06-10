@@ -54,12 +54,15 @@ async function sendPushNotification(businessId, notificationParam) {
     if (expires) {
         throw new StatusError(`You're on still cooldown. You can send next push notification ${expires.toUTCString()}`, 400);
     }
-    const newNotification = new PushNotification(notificationParam);
+    let receivers = 0;
+    // TODO: send the actual push notification
+
+    const newNotification = new PushNotification({...notificationParam, receivers});
     newNotification.business = businessId;
     await newNotification.save();
-    // TODO: send the actual push notification
     const newCooldown = await getCooldownExpiration(business, [newNotification]);
     return {
-        cooldownExpires: newCooldown
+        cooldownExpires: newCooldown,
+        notification: newNotification
     }
 }

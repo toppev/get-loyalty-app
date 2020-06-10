@@ -1,7 +1,7 @@
 const router = require('express').Router({ mergeParams: true });
 const pageService = require('../../services/pageService');
 const permit = require('../../middlewares/permitMiddleware');
-const validation = require('../../helpers/validation');
+const validation = require('../../helpers/bodyFilter');
 const pageValidator = validation.validate(validation.pageValidator);
 
 // Get templates (no html/css only other data)
