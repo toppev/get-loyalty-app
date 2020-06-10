@@ -21,8 +21,14 @@ if (!isTesting) {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useFindAndModify: false
+    }, function (err) {
+        if (err) throw err;
+        console.log("Connected to the mongo database");
+        const port = 3001;
+        app.listen(port, function () {
+            console.log('Listening on port ' + port);
+        });
     });
-    console.log("Connected to mongo database");
     app.use(morgan('":method :url" :status (len: :res[content-length] - :response-time ms) ":user-agent"',
         { stream: logger.stream }));
 }
@@ -59,12 +65,5 @@ if (!isTesting) {
 }
 app.use(routes);
 app.use(require('./src/middlewares/errorHandler'));
-
-if (!isTesting) {
-    const port = 3001;
-    app.listen(port, function () {
-        console.log('Listening on port ' + port);
-    });
-}
 
 module.exports = app;
