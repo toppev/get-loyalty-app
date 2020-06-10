@@ -10,7 +10,7 @@ interface NavbarProps {
 export default function (props: NavbarProps) {
     const { pages } = props
 
-    return (
+    return pages?.length > 1 ? (
         <div className="navbar">
             {pages?.map(page => (
                 <Link to={page.pathname}>
@@ -18,5 +18,5 @@ export default function (props: NavbarProps) {
                 </Link>
             ))}
         </div>
-    )
+    ) : null
 }
