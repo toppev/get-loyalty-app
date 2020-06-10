@@ -37,7 +37,7 @@ export default function () {
     const { search, setSearch, searchFilter } = useSearch()
 
     const { error: errorListing, loading: listing, response } = useRequest(listProducts);
-    const [products, setProducts] = useResponseState<Product[]>(response, []);
+    const [products, setProducts] = useResponseState<Product[]>(response, [], res => res.data.map((it: any) => new Product(it)));
     const otherRequest = useRequest();
 
     const classes = useStyles();
@@ -87,7 +87,7 @@ export default function () {
                         setEditingProduct(undefined);
                     }}
                     onProductSubmitted={(product: Product) => {
-                        setProducts([...products, product])
+                        setProducts([...products.filter(it => it.id !== product.id), product])
                         setFormOpen(false);
                         setEditingProduct(undefined);
                     }}/>

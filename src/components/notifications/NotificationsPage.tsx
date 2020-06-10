@@ -5,6 +5,9 @@ import NotificationForm from "./NotificationForm";
 import { PushNotification } from "./PushNotification";
 import AppContext from "../../context/AppContext";
 import NotificationHistory from "./NotificationHistory";
+import useRequest from "../../hooks/useRequest";
+import { listNotificationHistory } from "../../services/pushNotificationService";
+import useResponseState from "../../hooks/useResponseState";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -26,7 +29,14 @@ export default function () {
     const context = useContext(AppContext);
     const bigScreen = useMediaQuery(useTheme().breakpoints.up('md'));
 
+    const [cooldownExpires, setCooldownExpires] = useState('');
     const [newNotifications, setNewNotifications] = useState<PushNotification[]>([]);
+
+    const { loading, error, response } = useRequest(listNotificationHistory);
+    const [history, setHistory] = useResponseState<PushNotification[]>(response, [], res => {
+        setCooldownExpires(res.data.cooldownExpires)
+        return res.data.notifications.map((it: any) => new PushNotification(it))
+    });
 
     // IDEA: maybe a google maps link if website doesn't exist but the address does?
     const initialNotification = new PushNotification({
@@ -36,14 +46,14 @@ export default function () {
         date: new Date()
     });
 
-    const notificationSent = (notification: PushNotification) => setNewNotifications([...newNotifications, notification]);
+    const notificationSubmitted = (notification: PushNotification) => setNewNotifications([...newNotifications, notification]);
 
     return (
         <div>
             <Box display="flex" flexDirection={bigScreen ? "row" : "column"}
                  className={classes.box}>
-                <NotificationForm onSubmitted={notificationSent} notification={initialNotification}/>
-                <NotificationHistory addToHistory={newNotifications}/>
+                <NotificationForm onSubmitted={notificationSubmitted} notification={initialNotification} intialCooldownExpires={cooldownExpires}/>
+                <NotificationHistory history={history} loading={loading} error={error} newNotifications={newNotifications}/>
             </Box>
         </div>
     )

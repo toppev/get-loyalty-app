@@ -12,4 +12,10 @@ export class PushNotification {
         this.link = data.link
         this.sent = data.sent ? new Date(data.sent) : undefined
     }
+
+    toRequestObject() {
+        const res = { ...this }
+        delete res.id
+        return res;
+    }
 }

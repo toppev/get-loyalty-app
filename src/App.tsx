@@ -62,6 +62,7 @@ export default function () {
                     setLoginDialog(true);
                 } else {
                     window.confirm('Something went wrong... Perhaps our servers are down :( Please try refreshing the page or logging in')
+                    setLoginDialog(true);
                 }
             });
     }, [])

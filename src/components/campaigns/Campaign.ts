@@ -18,7 +18,6 @@ class Campaign {
     start?: Date
     end?: Date
 
-
     constructor(data: any) {
         this.id = data.id;
         this.name = data.name;
@@ -41,6 +40,7 @@ class Campaign {
             categories: this.categories.map(i => i._id),
             products: this.products.map(i => i.id)
         };
+        delete res.id;
         return res;
     }
 }

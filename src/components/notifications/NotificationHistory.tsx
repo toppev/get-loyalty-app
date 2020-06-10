@@ -1,11 +1,9 @@
 import React from "react";
-import useRequest from "../../hooks/useRequest";
-import { listNotificationHistory } from "../../services/pushNotificationService";
-import useResponseState from "../../hooks/useResponseState";
 import { PushNotification } from "./PushNotification";
 import { Card, CardProps, createStyles, LinearProgress, Paper, Theme, Typography } from "@material-ui/core";
 import RetryButton from "../common/button/RetryButton";
 import { makeStyles } from "@material-ui/core/styles";
+import RequestError from "../../util/requestError";
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -44,25 +42,24 @@ const useStyles = makeStyles((theme: Theme) =>
     }));
 
 interface NotificationHistoryProps {
-    addToHistory?: PushNotification[]
+    history: PushNotification[]
+    newNotifications?: PushNotification[]
+    loading?: boolean
+    error?: RequestError
 }
 
 export default function (props: NotificationHistoryProps) {
 
+    const { error, history, loading, newNotifications } = props;
+    const empty = !history.length && !newNotifications?.length;
     const classes = useStyles();
-
-    const { loading, error, response } = useRequest(listNotificationHistory);
-
-    const [history, setHistory] = useResponseState<PushNotification[]>(response, [], res => res.data.notifications.map((it: any) => new PushNotification(it)));
-
-    const empty = !history.length && !props.addToHistory?.length;
 
     return (
         <Paper className={classes.paper}>
             <Typography variant="h5" className={classes.typography}>Notification History</Typography>
             {loading && <LinearProgress/>}
             {error && <RetryButton error={error}/>}
-            {props.addToHistory?.map(n => (
+            {newNotifications?.map(n => (
                 <NotificationCard key={n.id} notification={n} className={`${classes.card} ${classes.newCard}`}/>
             ))}
             {history.map(n => (
