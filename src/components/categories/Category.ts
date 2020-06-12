@@ -1,7 +1,7 @@
 export default class Category {
 
     constructor(
-        public _id: string,
+        public id: string,
         public name: string,
         public parents: string[] = [],
         public children: string[] = [],

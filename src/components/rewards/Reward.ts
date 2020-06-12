@@ -29,7 +29,7 @@ export default class Reward {
     toRequestObject() {
         const all = {
             ...this,
-            categories: this.categories.map(i => i._id),
+            categories: this.categories.map(i => i.id),
             products: this.products.map(i => i.id)
         };
         const { id, ...result } = all;

@@ -104,7 +104,7 @@ export default function ({ initialCampaign, onSubmitted }: CampaignFormProps) {
 
     const mergeCampaign = (campaign: Campaign) => {
         // Update categories and other stuff here
-        Object.assign(campaign, { categories, products, endRewards, requirements })
+        Object.assign(campaign, { categories, products, endReward: endRewards, requirements })
         if (isDates) {
             campaign.start = startDate;
             campaign.end = endDate;
@@ -210,6 +210,7 @@ export default function ({ initialCampaign, onSubmitted }: CampaignFormProps) {
                     <div>
                         {endRewards.map(reward => (
                             <RewardItem
+                                key={reward.id}
                                 reward={reward}
                                 actions={(
                                     <RemoveEditRewardActions
@@ -302,12 +303,15 @@ function validate(values: Campaign): FormikErrors<Campaign> {
     if (!values.name.trim().length) {
         errors.name = 'Name can not be empty.'
     }
+    /*
+    // FIXME: does not work
     if (values.maxRewards?.user && values.maxRewards.user < 1) {
         errors.maxRewards!!.user = 'Max rewards per user can not be less than 1.';
     }
     if (values.maxRewards?.total && values.maxRewards.total < 0) {
         errors.maxRewards!!.total = 'Max (total) rewards can not be less than 0.';
     }
+    */
     if (values.transactionPoints && values.transactionPoints < 0) {
         errors.transactionPoints = 'Points per purchase can not be negative.'
     }

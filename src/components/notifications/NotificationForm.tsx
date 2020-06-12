@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Form, Formik, FormikErrors } from "formik";
 import RetryButton from "../common/button/RetryButton";
 import SaveIcon from "@material-ui/icons/Save";
-import React, { useState } from "react";
+import React from "react";
 import { PushNotification } from "./PushNotification";
 import useRequest from "../../hooks/useRequest";
 import { sendPushNotification } from "../../services/pushNotificationService";
@@ -29,19 +29,29 @@ const useStyles = makeStyles((theme: Theme) =>
             paddingTop: '20px'
         },
         submitButton: {},
+        cooldownDiv: {
+            margin: '30px 10px',
+        },
+        cooldownTitle: {
+            fontSize: '14px'
+        },
+        cooldownText: {
+            color: theme.palette.grey[600],
+            fontSize: '12px'
+        }
 
     }));
 
 interface NotificationFormProps {
     notification: PushNotification
+    cooldownExpires?: Date
+    setCooldownExpires: (s: Date) => any
     onSubmitted?: (notification: PushNotification) => any
-    initialCooldownExpires?: string
 }
 
-export default function ({ notification, onSubmitted, initialCooldownExpires }: NotificationFormProps) {
+export default function ({ notification, onSubmitted, cooldownExpires, setCooldownExpires }: NotificationFormProps) {
 
     const classes = useStyles();
-    const [cooldownExpires, setCooldownExpires] = useState(initialCooldownExpires);
     const { loading, error, performRequest } = useRequest();
 
     return (
@@ -56,7 +66,7 @@ export default function ({ notification, onSubmitted, initialCooldownExpires }: 
                             () => sendPushNotification(notification),
                             (res) => {
                                 actions.setSubmitting(false)
-                                setCooldownExpires(res.data.cooldownExpires)
+                                setCooldownExpires(new Date(res.data.cooldownExpires))
                                 if (onSubmitted) {
                                     onSubmitted(notification);
                                 }
@@ -95,16 +105,20 @@ export default function ({ notification, onSubmitted, initialCooldownExpires }: 
                             className={classes.submitButton}
                             variant="contained"
                             color="primary"
-                            disabled={isSubmitting || !!initialCooldownExpires}
+                            disabled={isSubmitting || !!cooldownExpires}
                             startIcon={(<SaveIcon/>)}
                             onClick={submitForm}
                         >Send Notification</Button>
-                        {initialCooldownExpires &&
-                        <>
-                            <Typography variant="h6" color="secondary">Cooldown
-                                expires {initialCooldownExpires}</Typography>
-                            <p>You are still on cooldown and can not send push notifications until it expires.</p>
-                        </>
+                        {cooldownExpires &&
+                        <div className={classes.cooldownDiv}>
+                            <Typography
+                                color="secondary"
+                                className={classes.cooldownTitle}
+                            >Cooldown expires {cooldownExpires.toLocaleString(undefined, { hour12: false })}
+                            </Typography>
+                            <p className={classes.cooldownText}>You are still on cooldown and can not send push
+                                notifications until it expires.</p>
+                        </div>
                         }
                     </div>
                 </Form>

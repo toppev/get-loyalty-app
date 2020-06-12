@@ -29,12 +29,12 @@ export default function () {
     const context = useContext(AppContext);
     const bigScreen = useMediaQuery(useTheme().breakpoints.up('md'));
 
-    const [cooldownExpires, setCooldownExpires] = useState('');
+    const [cooldownExpires, setCooldownExpires] = useState<Date | undefined>();
     const [newNotifications, setNewNotifications] = useState<PushNotification[]>([]);
 
     const { loading, error, response } = useRequest(listNotificationHistory);
     const [history, setHistory] = useResponseState<PushNotification[]>(response, [], res => {
-        setCooldownExpires(res.data.cooldownExpires)
+        setCooldownExpires(new Date(res.data.cooldownExpires))
         return res.data.notifications.map((it: any) => new PushNotification(it))
     });
 
@@ -52,8 +52,18 @@ export default function () {
         <div>
             <Box display="flex" flexDirection={bigScreen ? "row" : "column"}
                  className={classes.box}>
-                <NotificationForm onSubmitted={notificationSubmitted} notification={initialNotification} intialCooldownExpires={cooldownExpires}/>
-                <NotificationHistory history={history} loading={loading} error={error} newNotifications={newNotifications}/>
+                <NotificationForm
+                    onSubmitted={notificationSubmitted}
+                    notification={initialNotification}
+                    cooldownExpires={cooldownExpires}
+                    setCooldownExpires={setCooldownExpires}
+                />
+                <NotificationHistory
+                    history={history}
+                    loading={loading}
+                    error={error}
+                    newNotifications={newNotifications}
+                />
             </Box>
         </div>
     )

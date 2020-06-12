@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         card: {
             margin: '10px',
-            padding: '10px'
+            padding: '2px 10px'
         },
         newCard: {
             backgroundColor: 'powderblue'
@@ -38,6 +38,10 @@ const useStyles = makeStyles((theme: Theme) =>
         message: {
             fontSize: '20px',
             color: theme.palette.grey[700]
+        },
+        receivers: {
+            fontSize: '12px',
+            color: theme.palette.grey[500]
         }
     }));
 
@@ -77,12 +81,13 @@ interface NotificationCardProps extends CardProps {
 
 function NotificationCard({ notification, ...cardProps }: NotificationCardProps) {
     const classes = useStyles();
-    const { sent, title, message } = notification;
+    const { sent, title, message, receivers } = notification;
     return (
         <Card {...cardProps}>
             <p className={classes.sentDate}>{sent?.toLocaleString()}</p>
             <Typography variant="h6" className={classes.title}>{title}</Typography>
             <p className={classes.message}>{message}</p>
+            {receivers !== undefined && <p className={classes.receivers}>Receivers: {receivers}</p>}
         </Card>
     )
 }
