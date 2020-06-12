@@ -102,7 +102,7 @@ function EmailForm({ user }: EmailFormProps) {
         if (!isEmail(email)) {
             errors.email = "That doesn't look like an email address.";
         }
-        setCanSubmit(!errors.email);
+        setCanSubmit(!errors.email && email !== user.email);
         return errors;
     }
 
