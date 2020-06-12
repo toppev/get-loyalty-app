@@ -61,7 +61,7 @@ export default function () {
                     console.log(err);
                     setLoginDialog(true);
                 } else {
-                    window.confirm('Something went wrong... Perhaps our servers are down :( Please try refreshing the page or logging in')
+                    window.confirm('Something went wrong...\nPerhaps our servers are down :(\nPlease try refreshing the page or logging in')
                 }
             });
     }, [])
