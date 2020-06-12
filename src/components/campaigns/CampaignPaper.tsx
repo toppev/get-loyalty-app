@@ -1,23 +1,29 @@
-import { Box, Button, createStyles, Divider, makeStyles, Paper, Theme, Typography } from "@material-ui/core";
+import { Button, createStyles, Divider, makeStyles, Paper, Theme, Typography } from "@material-ui/core";
 import React, { useState } from "react";
 import { Campaign } from "./Campaign";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import RewardItem from "../rewards/RewardItem";
 import { plural } from "../common/StringUtils";
+import Tooltip from "@material-ui/core/Tooltip";
+import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         paper: {
-            width: '100%',
-            padding: '10px',
-            margin: '10px',
+            padding: '15px',
+            minHeight: '600px'
         },
         description: {
             textAlign: 'center',
-            color: theme.palette.grey[600],
-            fontSize: '16px'
+            color: theme.palette.grey[700],
+            fontSize: '16px',
+            height: '30px',
+            wordBreak: 'break-word',
+            overflow: 'overlay',
+            marginBlockStart: '0.5em',
+            marginBlockEnd: '0.1em',
         },
         couponCode: {
             color: theme.palette.secondary.main,
@@ -26,7 +32,13 @@ const useStyles = makeStyles((theme: Theme) =>
         boxDesktop: {},
         boxItem: {
             flex: '1 1 0px'
-        }
+        },
+        detail: {
+            color: theme.palette.grey[600]
+        },
+        helpIcon: {
+            marginLeft: '20px'
+        },
     }));
 
 
@@ -52,7 +64,7 @@ export default function (props: CampaignPaperProps) {
     const diffString = (date?: Date) => {
         if (date) {
             const toDate = dateDiffInDays(new Date(), date)
-            return toDate < 0 ? `${toDate} days ago` : `in ${toDate} ${plural("day", toDate)}`
+            return `(${toDate <= 0 ? `${toDate} days ago` : `in ${toDate} ${plural("day", toDate)}`})`
         }
         return ""
     }
@@ -66,62 +78,72 @@ export default function (props: CampaignPaperProps) {
             <Typography className={classes.typography} variant="h5" align="center">
                 {campaign.name}
             </Typography>
-
             <p className={classes.description}>{campaign.description}</p>
-
             <Divider/>
-
-            <Box display="flex" flexWrap="none" flexDirection="row" p={1} m={1} className={classes.boxDesktop}>
-                <Box className={classes.boxItem}>
-                    {campaign.requirements.length !== 0 && (
-                        <>
-                            <b>Campaign
-                                Type</b> ({`${campaign.requirements.length} ${plural("trait", campaign.requirements)}`})
-                            <ul>
-                                {campaign.requirements.map(req => (
-                                    <li key={req.type}>
-                                        <b>{req.type}</b>
-                                        <p>Question: <i>{req.question}</i></p>
-                                        {req.values.length !== 0 &&
-                                        <p>{plural("Value", req.values)}: {req.values.join(', ')}</p>}
-                                    </li>
-                                ))}
-                            </ul>
-                        </>)
+            {campaign.requirements.length !== 0 && (
+                <>
+                    <b>Campaign
+                        Type</b> ({`${campaign.requirements.length} ${plural("trait", campaign.requirements)}`})
+                    <ul>
+                        {campaign.requirements.map(req => (
+                            <li key={req.type}>
+                                <b>{req.type}</b>
+                                <p>Question: <i>{req.question}</i></p>
+                                {req.values.length !== 0 &&
+                                <p>{plural("Value", req.values)}: {req.values.join(', ')}</p>}
+                            </li>
+                        ))}
+                    </ul>
+                </>)
+            }
+            <br/>
+            <p>Starts: {start?.toDateString()} <span className={classes.detail}>{toStartStr}</span></p>
+            <p>Ends: {end?.toDateString()} <span className={classes.detail}>{toEndStr}</span></p>
+            <br/>
+            <p>
+                Rewarded: <b>{campaign.rewardedCount || 0}/{campaign.maxRewards.total || 'unlimited'}</b>
+                <br/>
+                <span className={classes.detail}>
+                    (max <b>{campaign.maxRewards.user}</b> {plural('reward', campaign.maxRewards.user)} per user)
+                </span>
+            </p>
+            <br/>
+            <p>Per purchase points: <b>{campaign.transactionPoints}</b>
+                <Tooltip
+                    enterDelay={200}
+                    leaveDelay={300}
+                    title={
+                        <React.Fragment>
+                            <Typography>Transaction/purchase points</Typography>
+                            Points the customer earns every time they make a purchase that is compliant with this
+                            campaign
+                        </React.Fragment>
                     }
-                    <br/>
-                    <p>Starts: {start?.toDateString()} ({toStartStr})</p>
-                    <p>Ends: {end?.toDateString()} ({toEndStr})</p>
-                    <br/>
-                    <p>
-                        Rewarded: <b>{campaign.rewardedCount}/{campaign.maxRewards.total || 'unlimited'}</b>
-                        <br/>
-                        (Max rewards per user: {campaign.maxRewards.user})
-                    </p>
-                    <br/>
-                    <p>Coupon Code: <span className={classes.couponCode}>{campaign.couponCode}</span></p>
-                    <br/>
-                    <p>Per purchase points: <b>{campaign.transactionPoints}</b> (?)</p>
-
-                </Box>
-                <Box className={classes.boxItem}>
-                    <RenderList
-                        list={campaign.endReward}
-                        title="End Rewards:"
-                        renderer={item => <RewardItem reward={item}/>}
-                    />
-                    <RenderList
-                        list={campaign.categories}
-                        title="Categories:"
-                        renderer={item => <p>{item.toString()}</p>}
-                    />
-                    <RenderList
-                        list={campaign.products}
-                        title="Products:"
-                        renderer={item => <p>{item.toString()}</p>}
-                    />
-                </Box>
-            </Box>
+                >
+                    <HelpOutlineIcon fontSize="small" className={classes.helpIcon}/>
+                </Tooltip>
+            </p>
+            <p style={{ visibility: campaign.couponCode?.length ? 'visible' : 'hidden' }}>
+                Coupon Code: <span className={classes.couponCode}>{campaign.couponCode}</span>
+            </p>
+            <br/>
+            <div>
+                <RenderList
+                    list={campaign.endReward}
+                    title="End Rewards:"
+                    renderer={item => <RewardItem reward={item}/>}
+                />
+                <RenderList
+                    list={campaign.categories}
+                    title="Categories:"
+                    renderer={item => <p>{item.toString()}</p>}
+                />
+                <RenderList
+                    list={campaign.products}
+                    title="Products:"
+                    renderer={item => <p>{item.toString()}</p>}
+                />
+            </div>
         </Paper>
     )
 }
@@ -138,15 +160,13 @@ interface RenderListProps<T> {
  */
 function RenderList(props: RenderListProps<any>) {
 
-
     const [showRewards, setShowRewards] = useState(props.showRewards || false);
-
     const { list, title, renderer } = props;
 
     return (
         <div>
             <p>
-                {title} <b>{(list.length || "all") + " "}</b>
+                <b>{title}</b> {(list.length || "all")}
                 {list.length !== 0 && (
                     <Button
                         onClick={() => {

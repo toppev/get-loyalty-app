@@ -4,7 +4,7 @@ import { AxiosResponse } from "axios";
 
 // IF TRUE THERE WONT BE ERRORS
 // FOR TESTING ONLY
-const NO_ERROR = true;
+const NO_ERROR = false;
 
 type Request = () => Promise<any>
 type Callback = (response: AxiosResponse) => any
@@ -27,7 +27,7 @@ export default function useRequest(
     initialRequest?: Request,
     options?: {
         /**
-         * Experimental feature. Whether to perform on first render. Defaults to true if initialRequest is set, otherwise false
+         * Whether to perform on first render. Defaults to true if initialRequest is set, otherwise false
          */
         performInitially?: boolean,
         /**
@@ -45,10 +45,10 @@ export default function useRequest(
 
     // Options to use
     const opts = {
-        ...{ options },
         performInitially: !!initialRequest,
         performAutomatically: true,
-        errorMessage: "Failed to perform a request"
+        errorMessage: "Failed to perform a request",
+        ...{ options },
     }
 
     const [requestContext, setRequestContext] = useState<RequestWithCallback>({

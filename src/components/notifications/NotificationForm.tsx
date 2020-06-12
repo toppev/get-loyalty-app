@@ -1,13 +1,13 @@
 import { Button, createStyles, LinearProgress, Paper, Theme, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Form, Formik, FormikErrors } from "formik";
-import { TextField } from "formik-material-ui";
 import RetryButton from "../common/button/RetryButton";
 import SaveIcon from "@material-ui/icons/Save";
 import React from "react";
 import { PushNotification } from "./PushNotification";
 import useRequest from "../../hooks/useRequest";
 import { sendPushNotification } from "../../services/pushNotificationService";
+import { TextField } from "formik-material-ui";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -29,18 +29,29 @@ const useStyles = makeStyles((theme: Theme) =>
             paddingTop: '20px'
         },
         submitButton: {},
+        cooldownDiv: {
+            margin: '30px 10px',
+        },
+        cooldownTitle: {
+            fontSize: '14px'
+        },
+        cooldownText: {
+            color: theme.palette.grey[600],
+            fontSize: '12px'
+        }
 
     }));
 
 interface NotificationFormProps {
     notification: PushNotification
+    cooldownExpires?: Date
+    setCooldownExpires: (s: Date) => any
     onSubmitted?: (notification: PushNotification) => any
 }
 
-export default function ({ notification, onSubmitted }: NotificationFormProps) {
+export default function ({ notification, onSubmitted, cooldownExpires, setCooldownExpires }: NotificationFormProps) {
 
     const classes = useStyles();
-
     const { loading, error, performRequest } = useRequest();
 
     return (
@@ -50,11 +61,12 @@ export default function ({ notification, onSubmitted }: NotificationFormProps) {
                 initialValues={notification}
                 validate={validate}
                 onSubmit={(notification, actions) => {
-                    if (window.confirm('Are you sure you want to send this notification to all customers that can receive notifications?')) {
+                    if (window.confirm('Are you sure you want to send this notification to all customers that can receive push notifications?')) {
                         performRequest(
                             () => sendPushNotification(notification),
-                            () => {
+                            (res) => {
                                 actions.setSubmitting(false)
+                                setCooldownExpires(new Date(res.data.cooldownExpires))
                                 if (onSubmitted) {
                                     onSubmitted(notification);
                                 }
@@ -93,10 +105,21 @@ export default function ({ notification, onSubmitted }: NotificationFormProps) {
                             className={classes.submitButton}
                             variant="contained"
                             color="primary"
-                            disabled={isSubmitting}
+                            disabled={isSubmitting || !!cooldownExpires}
                             startIcon={(<SaveIcon/>)}
                             onClick={submitForm}
                         >Send Notification</Button>
+                        {cooldownExpires &&
+                        <div className={classes.cooldownDiv}>
+                            <Typography
+                                color="secondary"
+                                className={classes.cooldownTitle}
+                            >Cooldown expires {cooldownExpires.toLocaleString(undefined, { hour12: false })}
+                            </Typography>
+                            <p className={classes.cooldownText}>You are still on cooldown and can not send push
+                                notifications until it expires.</p>
+                        </div>
+                        }
                     </div>
                 </Form>
             )}

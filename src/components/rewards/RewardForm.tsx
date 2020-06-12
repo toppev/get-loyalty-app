@@ -173,6 +173,11 @@ function validate(values: Reward): FormikErrors<Reward> {
     if (!values.itemDiscount.trim()) {
         errors.itemDiscount = 'Discount must be specified';
     }
-    // TODO
+    if (values.categories?.length > 5) {
+        errors.categories = 'Too many categories. Keep it simple: either specify a few categories or none at all'
+    }
+    if (values.products?.length > 10) {
+        errors.products = 'Too many products. Keep it simple: either specify a few products or none at all'
+    }
     return errors;
 }

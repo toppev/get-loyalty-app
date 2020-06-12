@@ -43,7 +43,7 @@ export function DateExpired({ date, alt }: ExpiredProps) {
 }
 
 export function plural(text: string, amount: any) {
-    if (amount.length !== 1 || (amount instanceof Number && amount !== 1)) {
+    if ((amount.length !== undefined && amount.length !== 1) || (typeof amount === "number" && amount !== 1)) {
         return text + "s"
     }
     return text;

@@ -11,8 +11,6 @@ import { addProduct, updateProduct } from "../../services/productService";
 import useRequest from "../../hooks/useRequest";
 import RetryButton from "../common/button/RetryButton";
 
-
-const emptyCategories: Category[] = [];
 const emptyProduct = new Product({ id: `new_product_${Math.random() * 1000 | 0}`, name: '' });
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -114,8 +112,9 @@ function validate(value: Product): FormikErrors<Product> {
     if (value.name?.trim().length < 3) {
         errors.name = 'Invalid name'
     }
-    if (value.categories.length > 5) {
-        errors.categories = 'Too many categories. Please keep it simple :)'
+    const categoryLimit = 5;
+    if (value.categories.length > categoryLimit) {
+        errors.categories = `Too many categories. You can specify up to ${categoryLimit} categories`
     }
     return errors;
 }

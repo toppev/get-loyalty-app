@@ -18,7 +18,6 @@ class Campaign {
     start?: Date
     end?: Date
 
-
     constructor(data: any) {
         this.id = data.id;
         this.name = data.name;
@@ -27,25 +26,26 @@ class Campaign {
         this.categories = data.categories || [];
         this.requirements = data.requirements || [];
         this.rewardedCount = data.rewardedCount;
-        this.maxRewards = data.maxRewards || {};
+        this.maxRewards = data.maxRewards || { user: 1 };
         this.transactionPoints = data.transactionPoints;
         this.endReward = data.endReward || [];
         this.couponCode = data.couponCode;
-        this.start = data.start;
-        this.end = data.end;
+        this.start = data.start && new Date(data.start);
+        this.end = data.end && new Date(data.end);
     }
 
     toRequestObject() {
         const res = {
             ...this,
-            categories: this.categories.map(i => i._id),
+            categories: this.categories.map(i => i.id),
             products: this.products.map(i => i.id)
         };
+        delete res.id;
         return res;
     }
 }
 
-type MaxRewards = { total?: number, user?: number }
+type MaxRewards = { total: number, user: number }
 
 /**
  * The saved requirement

@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { createStyles, Dialog, DialogContent, Grid, LinearProgress, Theme } from "@material-ui/core";
+import { createStyles, Dialog, DialogContent, Grid, Theme } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Campaign } from "./Campaign";
 import CampaignPaper from "./CampaignPaper";
 import NewButton from "../common/button/NewButton";
 import CloseButton from "../common/button/CloseButton";
 import CampaignForm, { CampaignFormProps } from "./CampaignForm";
-import { listCampaigns, updateCampaign } from "../../services/campaignService";
+import { listCampaigns } from "../../services/campaignService";
 import RetryButton from "../common/button/RetryButton";
 import useRequest from "../../hooks/useRequest";
 import useResponseState from "../../hooks/useResponseState";
@@ -14,7 +14,9 @@ import useResponseState from "../../hooks/useResponseState";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
-        container: {},
+        container: {
+            marginTop: '30px'
+        },
         newBtn: {
             marginBottom: '15px'
         },
@@ -31,7 +33,7 @@ export default function () {
     const [formOpen, setFormOpen] = useState(false);
 
     const { error, loading, response } = useRequest(listCampaigns, {});
-    const [campaigns, setCampaigns] = useResponseState<Campaign[]>(response, []);
+    const [campaigns, setCampaigns] = useResponseState<Campaign[]>(response, [], res => res.data.map((it: any) => new Campaign(it)));
 
     return error ? (
         <RetryButton error={error}/>
@@ -44,9 +46,9 @@ export default function () {
                     onClick: () => setFormOpen(true)
                 }}
             />
-            <Grid className={classes.container} container direction="row" alignItems="flex-start">
+            <Grid className={classes.container} spacing={4} container direction="row" alignItems="flex-start">
                 {campaigns.map(campaign => (
-                    <Grid item xs={12} md={6} key={campaign.id}>
+                    <Grid item xs={12} md={6} lg={3} key={campaign.id}>
                         <CampaignPaper campaign={campaign}/>
                     </Grid>
                 ))}
@@ -77,7 +79,7 @@ function CampaignFormDialog(props: CampaignFormDialogProps) {
             <CloseButton onClick={props.onClose}/>
             <DialogContent>
                 <div className={classes.contentDiv}>
-                <CampaignForm {...props} />
+                    <CampaignForm {...props} />
                 </div>
             </DialogContent>
         </Dialog>

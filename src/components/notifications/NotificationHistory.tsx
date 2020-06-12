@@ -1,18 +1,16 @@
 import React from "react";
-import useRequest from "../../hooks/useRequest";
-import { listNotificationHistory } from "../../services/pushNotificationService";
-import useResponseState from "../../hooks/useResponseState";
 import { PushNotification } from "./PushNotification";
 import { Card, CardProps, createStyles, LinearProgress, Paper, Theme, Typography } from "@material-ui/core";
 import RetryButton from "../common/button/RetryButton";
 import { makeStyles } from "@material-ui/core/styles";
+import RequestError from "../../util/requestError";
 
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         card: {
             margin: '10px',
-            padding: '10px'
+            padding: '2px 10px'
         },
         newCard: {
             backgroundColor: 'powderblue'
@@ -40,29 +38,32 @@ const useStyles = makeStyles((theme: Theme) =>
         message: {
             fontSize: '20px',
             color: theme.palette.grey[700]
+        },
+        receivers: {
+            fontSize: '12px',
+            color: theme.palette.grey[500]
         }
     }));
 
 interface NotificationHistoryProps {
-    addToHistory?: PushNotification[]
+    history: PushNotification[]
+    newNotifications?: PushNotification[]
+    loading?: boolean
+    error?: RequestError
 }
 
 export default function (props: NotificationHistoryProps) {
 
+    const { error, history, loading, newNotifications } = props;
+    const empty = !history.length && !newNotifications?.length;
     const classes = useStyles();
-
-    const { loading, error, response } = useRequest(listNotificationHistory);
-
-    const [history, setHistory] = useResponseState<PushNotification[]>(response, [], res => res.data.notifications.map((it: any) => new PushNotification(it)));
-
-    const empty = !history.length && !props.addToHistory?.length;
 
     return (
         <Paper className={classes.paper}>
             <Typography variant="h5" className={classes.typography}>Notification History</Typography>
             {loading && <LinearProgress/>}
             {error && <RetryButton error={error}/>}
-            {props.addToHistory?.map(n => (
+            {newNotifications?.map(n => (
                 <NotificationCard key={n.id} notification={n} className={`${classes.card} ${classes.newCard}`}/>
             ))}
             {history.map(n => (
@@ -80,12 +81,13 @@ interface NotificationCardProps extends CardProps {
 
 function NotificationCard({ notification, ...cardProps }: NotificationCardProps) {
     const classes = useStyles();
-    const { sent, title, message } = notification;
+    const { sent, title, message, receivers } = notification;
     return (
         <Card {...cardProps}>
             <p className={classes.sentDate}>{sent?.toLocaleString()}</p>
             <Typography variant="h6" className={classes.title}>{title}</Typography>
             <p className={classes.message}>{message}</p>
+            {receivers !== undefined && <p className={classes.receivers}>Receivers: {receivers}</p>}
         </Card>
     )
 }

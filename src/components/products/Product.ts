@@ -17,7 +17,8 @@ export default class Product {
     }
 
     toRequestObject() {
-        const res = { ...this, categories: this.categories.map(c => c._id) };
+        const res = { ...this, categories: this.categories.map(c => c.id) };
+        delete res.id;
         return res;
     }
 }
