@@ -22,7 +22,7 @@ import clsx from 'clsx';
 import React from 'react';
 import { NavLink } from "react-router-dom";
 import { AccountNotificationValues } from './account/AccountNotifications';
-import ReactDOMServer from 'react-dom/server';
+
 const drawerWidth = 240;
 export const DOMAIN_HOME_PAGE = "GetLoyalty.App"
 

@@ -84,7 +84,7 @@ export default function ({ page }: PageEditorProps) {
             <div className={classes.saveChangesDiv}>
                 <span className={classes.savedText}>Changes are automatically saved</span>
             </div>
-            {error && <Alert className={classes.error}severity="error">{error}</Alert>}
+            {error && <Alert className={classes.error} severity="error">{error}</Alert>}
             <GrapesPageEditor
                 page={page}
                 _id={page._id}

@@ -3,14 +3,11 @@ import gjsBlocksBasic from 'grapesjs-blocks-basic';
 import grapesjsTabs from 'grapesjs-tabs';
 import grapesjsTouch from 'grapesjs-touch';
 import 'grapesjs/dist/css/grapes.min.css';
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { getBusinessUrl } from "../../../config/axios";
-import AppContext from '../../../context/AppContext';
-import Alert from "@material-ui/lab/Alert";
 import { addPlaceholderBlock, registerListener } from "./blocks/placeholderBlock";
 import { addCampaignsBlock } from "./blocks/campaignBlock";
 import { addUserRewardsBlock } from "./blocks/userRewardsBlock";
-import { usePlaceholderContext } from "./placeholderContext";
 import Cookie from "js-cookie";
 import { uploadHtmlCss } from "../../../services/pageService";
 

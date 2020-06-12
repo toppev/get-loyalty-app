@@ -3,7 +3,6 @@ import SaveIcon from '@material-ui/icons/Save';
 import { Form, Formik, FormikErrors } from 'formik';
 import { TextField } from 'formik-material-ui';
 import React, { useState } from 'react';
-import Category from '../categories/Category';
 import CategorySelector from '../categories/CategorySelector';
 import IdText from '../common/IdText';
 import Product from './Product';

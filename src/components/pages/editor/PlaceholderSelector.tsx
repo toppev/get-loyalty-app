@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import { placeholders } from "./Placeholders";
 import {
     Button,
@@ -11,7 +11,6 @@ import {
     Theme,
     Typography
 } from "@material-ui/core";
-import AppContext from "../../../context/AppContext";
 import Tooltip from "@material-ui/core/Tooltip";
 import { makeStyles } from "@material-ui/core/styles";
 import { usePlaceholderContext } from "./placeholderContext";
