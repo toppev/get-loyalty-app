@@ -39,6 +39,12 @@ const useStyles = makeStyles((theme: Theme) =>
         helpIcon: {
             marginLeft: '20px'
         },
+        buttonsDiv: {
+            textAlign: 'center'
+        },
+        button: {
+            margin: '15px 12px 0px 12px'
+        }
     }));
 
 
@@ -52,6 +58,8 @@ function dateDiffInDays(from: Date, to: Date): number {
 
 interface CampaignPaperProps {
     campaign: Campaign
+    startEditing: () => any
+    deleteCampaign: () => any
     showRewards?: boolean
 }
 
@@ -143,6 +151,25 @@ export default function (props: CampaignPaperProps) {
                     title="Products:"
                     renderer={item => <p>{item.toString()}</p>}
                 />
+            </div>
+            <div className={classes.buttonsDiv}>
+                <Button
+                    className={classes.button}
+                    variant="contained"
+                    color="primary"
+                    onClick={props.startEditing}
+                >Edit</Button>
+
+                <Button
+                    className={classes.button}
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => {
+                        if (window.confirm('Do you want to delete this campaign? This action is irreversible.')) {
+                            props.deleteCampaign()
+                        }
+                    }}
+                >Delete</Button>
             </div>
         </Paper>
     )
