@@ -84,7 +84,6 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _buildButtons() {
     var userService = Provider.of<UserService>(context);
-
     return new Container(
       child: new Column(
         children: <Widget>[
@@ -94,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
             onPressed: () {
               userService
                   .login(UserCredentials(_email.trim(), _password.trim()))
-                  .then((value) {
+                  .then((_user) {
                 Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) => ScannerPage()));
               }).catchError((e) {
@@ -108,5 +107,22 @@ class _LoginPageState extends State<LoginPage> {
         ],
       ),
     );
+  }
+
+  @override
+  void didChangeDependencies() {
+    attemptAutoLogin();
+    super.didChangeDependencies();
+  }
+
+  /// Tries to login using cookies. Redirects if logged in successfully
+  void attemptAutoLogin() {
+    var userService = Provider.of<UserService>(context);
+    userService.profile().then((success) {
+      if (success != null) {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => ScannerPage()));
+      }
+    }).catchError((e) => print(e));
   }
 }

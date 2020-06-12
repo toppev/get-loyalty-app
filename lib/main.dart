@@ -20,9 +20,8 @@ void main() {
                   Provider.of<SessionService>(context, listen: false))),
         ],
         child: MaterialApp(
-            // TODO login automatically?
             home: LoginPage(
-          title: 'Scanner App - Login',
+          title: 'GetLoyalty.App - Scanner App',
         ))),
   );
 }

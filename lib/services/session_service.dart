@@ -90,7 +90,7 @@ class SessionService {
   }
 
   /// Generate the cookie header from #values map
-  // TODO: don't include businessId in cookie headers
+  // FIXME: don't include businessId in cookie headers
   String _generateCookieHeader() {
     String cookie = "";
     for (var key in values.keys) {
