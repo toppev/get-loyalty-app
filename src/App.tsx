@@ -42,8 +42,7 @@ function App() {
 
     const onLogin = (_res: AxiosResponse) => {
         getBusinessId()
-            .then(res => {
-                const bId = res.data.businessId;
+            .then(bId => {
                 if (!bId || bId.length !== 24) {
                     setError('Received invalid business')
                 } else {

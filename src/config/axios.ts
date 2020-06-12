@@ -25,19 +25,19 @@ function getBusinessUrl() {
     return `${BASE_URL}/business/${businessId}`;
 }
 
-async function get(path: string, fullPath = false) {
+async function get(path: string) {
     return instance({
         method: 'GET',
-        url: fullPath ? path : BASE_URL + path,
+        url: BASE_URL + path,
         headers: headers
     });
 }
 
-async function post(path: string, data: any, fullPath = false) {
+async function post(path: string, data: any) {
     return instance({
         method: 'POST',
-        url: fullPath ? path : BASE_URL + path,
-        data: transformDataObjects(data),
+        url: BASE_URL + path,
+        data: data,
         headers: {
             'Content-Type': 'application/json',
             ...headers
@@ -45,31 +45,16 @@ async function post(path: string, data: any, fullPath = false) {
     });
 }
 
-async function patch(path: string, data: any, fullPath = false) {
+async function patch(path: string, data: any) {
     return instance({
         method: 'PATCH',
-        url: fullPath ? path : BASE_URL + path,
-        data: transformDataObjects(data),
+        url: BASE_URL + path,
+        data: data,
         headers: {
             'Content-Type': 'application/json',
             ...headers
         }
     });
-}
-
-
-/**
- * Add toRequestObject if you want to serialize a different version of the object.
- * E.g full objects to ObjectId references only
- */
-function transformDataObjects(data: any) {
-    if (data?.toRequestObject) {
-        return data.toRequestObject();
-    }
-    if (Array.isArray(data)) {
-        return data.map(item => item.toRequestObject ? item.toRequestObject() : item);
-    }
-    return data;
 }
 
 export {

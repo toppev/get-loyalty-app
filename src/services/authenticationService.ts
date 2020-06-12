@@ -17,11 +17,11 @@ function registerRequest({ email, password }: LoginCredentials = {}) {
     return post('/user/register', { email, password })
 }
 
-function getBusinessId() {
+async function getBusinessId() {
     if (businessId?.length === 24) {
         return businessId
     }
-    return get(`/business/whois/?url=${document.location.href}`)
+    return (await get(`/business/whois/?url=${document.location.href}`)).data.businessId;
 }
 
 
