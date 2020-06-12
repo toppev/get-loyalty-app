@@ -105,40 +105,40 @@ export default function () {
                             <Form>
                                 <div className={classes.fieldDiv}>
                                     {Object.keys(translations).map(k => {
-
                                             const { plural, singular, placeholder } = translations[k];
+                                            const both = plural && singular;
+                                            const replacedText = both ? `"${singular}" or "${plural}"` : `"${singular}"` || `"${plural}"`
+                                            const tooltip = (
+                                                (!!plural || !!singular) && <Tooltip
+                                                    enterDelay={200}
+                                                    leaveDelay={300}
+                                                    title={
+                                                        <React.Fragment>
+                                                            <Typography>{`Name or translation for "${k}"`}</Typography>
+                                                            {`Choose a custom name or translation that will replace ${replacedText}.`}
+                                                            <p>{placeholder}</p>
+                                                        </React.Fragment>
+                                                    }
+                                                ><HelpIcon className={classes.helpIcon}/></Tooltip>
+                                            )
                                             return (
                                                 <div key={k}>
                                                     {plural && <TextField
                                                         className={classes.field}
                                                         name={`config.translations.${k}.plural`}
                                                         type="text"
-                                                        label={`"${k}" translation (plural)`}
+                                                        label={`"${k}" translation ${both ? "(plural)" : ""}`}
                                                         placeholder={placeholder}
-                                                    />
-                                                    }
-                                                    {(!!plural || !!singular) && <Tooltip
-                                                        enterDelay={200}
-                                                        leaveDelay={300}
-                                                        title={
-                                                            <React.Fragment>
-                                                                <Typography>{`Name or translation for "${k}"`}</Typography>
-                                                                {`Choose a custom name or translation that will replace "${k}".`}
-                                                                <p>{placeholder}</p>
-                                                            </React.Fragment>
-                                                        }
-                                                    >
-                                                        <HelpIcon className={classes.helpIcon}/>
-                                                    </Tooltip>
-                                                    }
+                                                    />}
+                                                    {both && tooltip}
                                                     {singular && <TextField
                                                         className={classes.field}
                                                         name={`config.translations.${k}.singular`}
                                                         type="text"
-                                                        label={`"${k}" translation (singular)`}
+                                                        label={`"${k}" translation ${both ? "(singular)" : ""}`}
                                                         placeholder={placeholder}
-                                                    />
-                                                    }
+                                                    />}
+                                                    {!both && tooltip}
                                                 </div>
                                             )
                                         }
@@ -165,7 +165,8 @@ export default function () {
                                     title={
                                         <React.Fragment>
                                             <Typography>{`Your domain`}</Typography>
-                                            Redirect your domain (or a subdomain) to "{APP_URL}" and enter your domain here
+                                            Redirect your domain (or a subdomain) to "{APP_URL}" and enter your domain
+                                            here
                                         </React.Fragment>
                                     }
                                 >
