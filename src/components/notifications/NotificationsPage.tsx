@@ -34,7 +34,8 @@ export default function () {
 
     const { loading, error, response } = useRequest(listNotificationHistory);
     const [history, setHistory] = useResponseState<PushNotification[]>(response, [], res => {
-        setCooldownExpires(new Date(res.data.cooldownExpires))
+        const expires = res.data.cooldownExpires;
+        setCooldownExpires(expires ? new Date(expires) : undefined)
         return res.data.notifications.map((it: any) => new PushNotification(it))
     });
 
