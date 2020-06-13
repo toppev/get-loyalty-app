@@ -16,7 +16,8 @@ module.exports = {
     getCustomerInfo,
     updateRewards,
     useReward,
-    listCustomers
+    searchCustomers,
+    rewardAllCustomers
 };
 
 /**
@@ -37,12 +38,11 @@ async function findCustomerData(user, businessId) {
 
 /**
  * Get customerData AND other data that is available (e.g email, birthday)
- * @param user
- * @param businessId
- * @returns {Promise<{birthday, lastVisit, customerData: *, email, authentication: {service: {type: StringConstructor}}}>}
+ * @param user the user or the id of the user
+ * @param businessId the id of the business
  */
 async function getCustomerInfo(user, businessId) {
-    if (!user.customerData) { // Does not exists so it's the user id
+    if (!user.customerData) { // Does not exists, the given param is the user id
         user = await User.findById(user);
     }
     const customerData = await findCustomerData(user, businessId);
@@ -260,10 +260,28 @@ async function addCampaignRewards(user, campaign) {
     return campaign.endReward
 }
 
-async function listCustomers(businessId, limit, search) {
-    let users = await User.find({ "customerData.business": businessId }).limit(search ? (limit || 100) : 500); // If searching limit at 500, might fix later
+function _listCustomers(businessId) {
+    return User.find({ "customerData.business": businessId })
+}
+
+async function rewardAllCustomers(businessId, reward) {
+    const customers = await _listCustomers(businessId);
+    customers.forEach(it => addReward(it, businessId, reward))
+    return { rewarded: customers.length }
+}
+
+/**
+ * List customers of the business
+ * @param businessId the id of the business
+ * @param limit maximum number of customers to return, defaults to 100 first if "search" is not specified, otherwise 500
+ * @param search the string to search, if no limit is given, only the first 500 will be searched
+ */
+async function searchCustomers(businessId, limit, search) {
+    // If searching, get first 500 customers and filter, otherwise return first 100
+    // might fix later
+    // FIXME: could be a lot better
+    let users = await _listCustomers(businessId).limit(limit ? limit : search ? 500 : 100);
     if (search && search.trim().length) {
-        // FIXME: bad
         users = users.filter(u => JSON.stringify(u).toLowerCase().includes(search));
     }
     return Promise.all(users.map(u => getCustomerInfo(u, businessId)));

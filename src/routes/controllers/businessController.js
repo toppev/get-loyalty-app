@@ -14,6 +14,7 @@ router.post('/:businessId/role', permit('business:role'), validation.validate(va
 
 router.get('/:businessId/customers', permit('customer:list'), listCustomers);
 router.get('/:businessId/reward/list', permit('reward:list'), listRewards);
+router.post('/:businessId/reward/all', permit('reward:customers'), rewardCustomers);
 // Get the business who owns the current site
 router.get('/whois', getWebsiteOwner);
 
@@ -59,7 +60,7 @@ function listCustomers(req, res, next) {
     const { businessId } = req.params;
     const limit = req.query.limit || 50;
     const searchStr = req.query.search;
-    customerService.listCustomers(businessId, limit, searchStr)
+    customerService.searchCustomers(businessId, limit, searchStr)
         .then(data => res.json({ customers: data }))
         .catch(err => next(err));
 }
@@ -72,15 +73,15 @@ function listRewards(req, res, next) {
 }
 
 function getWebsiteOwner(req, res, next) {
-    // TODO: make sure no one is using this to get their query params and remove lol (?)
-    const { business } = req.query;
-    if (business) {
-        res.json({ business })
-    } else {
-        // Client can specify with query param "url"
-        const url = req.query.url || req.hostname + req.originalUrl
-        businessService.getCurrentBusiness(req.user, url)
-            .then(res => res.json({ business: res.id }))
-            .catch(err => next(err))
-    }
+    const url = req.query.url || req.hostname + req.originalUrl
+    businessService.getCurrentBusiness(req.user, url)
+        .then(data => res.json({ business: data.id }))
+        .catch(err => next(err))
+}
+
+function rewardCustomers(req, res, next) {
+    const { businessId } = req.params;
+    customerService.rewardAllCustomers(businessId, req.body)
+        .then(data => res.json(data))
+        .catch(err => next(err))
 }

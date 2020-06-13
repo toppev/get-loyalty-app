@@ -10,6 +10,7 @@ const otherBusiness = { email: "example@email.com", public: { address: 'this is 
 let otherBusinessId;
 const userParams = { email: "example@email.com", password: "password123" };
 let userId;
+const testReward = { name: 'Test reward #123151', itemDiscount: 'free' }
 
 beforeAll(async () => {
     await initDatabase('business');
@@ -116,6 +117,29 @@ describe('Logged in user can', () => {
             .expect(403);
     });
 
+    it('list rewards', async () => {
+        await campaignService.create(business.id, {
+            name: 'dasdawdasd',
+            endReward: [{ name: 'free stuff', itemDiscount: 'free' }]
+        });
+        const res = await api
+            .get(`/business/${business.id}/reward/list`)
+            .set('Cookie', cookie)
+            .expect(200)
+        expect(res.body.length).toBe(1);
+        expect(res.body[0].name).toBe('free stuff');
+    })
+
+    it('reward all', async () => {
+        const res = await api
+            .post(`/business/${business.id}/reward/all`)
+            .send(testReward)
+            .set('Cookie', cookie)
+            .expect(200)
+        expect(res.body.rewarded).toBe(1)
+    })
+
+
     it('get customers', async () => {
         const res = await api
             .get(`/business/${business.id}/customers`)
@@ -123,16 +147,8 @@ describe('Logged in user can', () => {
             .expect(200)
         expect(res.body.customers.length).toBe(1);
         expect(res.body.customers[0].email).toBe(userParams.email);
-    })
-
-    it('list rewards', async () => {
-        await campaignService.create(business.id, { name: 'dasdawdasd', endReward: [{ name: 'free stuff', itemDiscount: 'free' }] });
-        const res = await api
-            .get(`/business/${business.id}/reward/list`)
-            .set('Cookie', cookie)
-            .expect(200)
-        expect(res.body.length).toBe(1);
-        expect(res.body[0].name).toBe('free stuff');
+        expect(res.body.customers[0].customerData.rewards.length).toBe(1);
+        expect(res.body.customers[0].customerData.rewards[0].name).toBe(testReward.name);
     })
 
 });
