@@ -92,7 +92,7 @@ export default function (props: RewardSelectorProps) {
                         textColor="black"
                         setSearch={setSearch}
                         name={"reward_search"}
-                        placeholder={"Reward products..."}
+                        placeholder={"Search rewards..."}
                     />
                     <ListItem className={classes.tools}>
                         <Button

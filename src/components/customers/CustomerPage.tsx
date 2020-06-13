@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import { Box, Button, createStyles, LinearProgress, makeStyles, Theme } from "@material-ui/core";
 import Customer from "./Customer";
 import RetryButton from "../common/button/RetryButton";
-import CustomerRow from "./CustomerRow";
 import SearchField from "../common/SearchField";
-import { listCustomers } from "../../services/customerService";
+import { listCustomers, rewardAllCustomers } from "../../services/customerService";
 import useRequest from "../../hooks/useRequest";
 import useSearch from "../../hooks/useSearch";
 import useResponseState from "../../hooks/useResponseState";
 import { Link } from "react-router-dom";
+import RewardSelector from "../rewards/RewardSelector";
+import CustomerRow from "./CustomerRow";
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -24,10 +25,11 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         actionBtn: {
             backgroundColor: theme.palette.grey[400],
-            margin: '0px 15px',
+            margin: '0px 12px',
             right: '15px'
         }
     }));
+
 
 export default function () {
 
@@ -39,7 +41,7 @@ export default function () {
 
     const { search, setSearch, searchFilter } = useSearch();
     const { error, loading, response, performRequest } = useRequest();
-    // Timeout so we won't spam the API
+    // Timeout so we won't spam the API endpoint
     const [typingTimeout, setTypingTimeout] = useState<any>();
     useEffect(() => {
         if (typingTimeout) {
@@ -51,8 +53,10 @@ export default function () {
         }, searchTimeout));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [performRequest, search]);
-
-    const [customers, setCustomers] = useResponseState<Customer[]>(response, [], (res) => res.data.customers.map((it: any) => new Customer(it)));
+    const [customers, setCustomers] = useResponseState<Customer[]>(response, [], (res) => {
+        return res.data.customers?.map((it: any) => new Customer(it)) || []
+    });
+    const [rewardAllSelector, setRewardAllSelector] = useState(false);
 
     return error ? (
         <RetryButton error={error}/>
@@ -66,6 +70,11 @@ export default function () {
                     variant="contained"
                 >Send Notification</Button>
                 <Button
+                    className={classes.actionBtn}
+                    variant="contained"
+                    onClick={() => setRewardAllSelector(true)}
+                >Reward All</Button>
+                <Button
                     disabled
                     className={classes.actionBtn}
                     variant="contained"
@@ -74,6 +83,21 @@ export default function () {
             <SearchField
                 setSearch={setSearch}
                 name={"customer_search"}
+            />
+            <RewardSelector
+                onClose={() => setRewardAllSelector(false)}
+                open={rewardAllSelector}
+                onSelect={(reward) => {
+                    if (window.confirm('You are about to reward to EVERYONE.' +
+                        '\nThis action is irreversible.' +
+                        '\nClick OK to confirm rewarding all customers.')) {
+                        setRewardAllSelector(false)
+                        performRequest(
+                            () => rewardAllCustomers(reward),
+                            () => performRequest(() => listCustomers(search))
+                        )
+                    }
+                }}
             />
             <p className={classes.p}>Showing up to {renderLimit} customers at once</p>
             {(loading || typingTimeout !== undefined) && <LinearProgress/>}

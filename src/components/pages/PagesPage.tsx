@@ -44,12 +44,14 @@ const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         cardsDiv: {},
         card: {
-            textAlign: 'center',
             margin: '15px',
             width: '350px',
+            height: '200px',
+        },
+        lowCard: {
+            height: '150px',
         },
         actionCardsDivider: {
-            margin: '12px 0px',
             backgroundColor: theme.palette.grey[800]
         },
         cardMedia: {},
@@ -77,14 +79,14 @@ const useStyles = makeStyles((theme: Theme) =>
             color: theme.palette.grey[500],
         },
         published: {
-            color: "#2ae330",
-        },
-        settingPaper: {
-            width: 'fit-content',
-            margin: '15px'
+            color: "#26a829",
         },
         settingDiv: {
-            padding: '15px',
+            textAlign: 'center',
+            paddingTop: '20px',
+            position: 'relative',
+            height: '100%',
+            width: '100%',
         },
         divider: {
             backgroundColor: theme.palette.grey[700]
@@ -96,10 +98,20 @@ const useStyles = makeStyles((theme: Theme) =>
         center: {
             textAlign: 'center'
         },
-        stageSelectorTypography: {
-            fontSize: '16px',
-            paddingTop: '18px'
+        iconTitle: {
+            color: theme.palette.grey[600]
         },
+        info: {
+            color: theme.palette.info.dark,
+            fontSize: '12px',
+            position: 'absolute',
+            bottom: 5,
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            left: 0,
+            right: 0,
+            textAlign: 'center',
+        }
     }));
 
 export default function () {
@@ -113,7 +125,7 @@ export default function () {
     const [pageOpen, setPageOpen] = useState<Page | null>(null);
     const [templateSelectorOpen, setTemplateSelectorOpen] = useState(false);
 
-    const { error: listError, loading: listLoading, response, execute: fetchPages } = useRequest(listPages);
+    const { error: listError, loading: listLoading, response, execute } = useRequest(listPages);
     const [pages, setPages] = useResponseState<Page[]>(response, [], res => res.data.map((it: any) => new Page(it)));
 
     const otherRequests = useRequest();
@@ -125,7 +137,7 @@ export default function () {
             <div className={classes.cardsDiv}>
                 <div>
                     <PageCard
-                        className={`${classes.card} ${classes.templateSelectorCard}`}
+                        className={`${classes.card} ${classes.lowCard} ${classes.center} ${classes.templateSelectorCard}`}
                         page={new Page({ _id: '123', name: 'Create a new page' })}
                         displayId={false}
                         displayStage={false}
@@ -201,7 +213,7 @@ export default function () {
             <div>
                 <Divider className={classes.divider}/>
                 <Box display="flex" flexDirection={bigScreen ? "row" : "column"}>
-                    <Paper className={classes.settingPaper}>
+                    <Paper className={classes.card}>
                         <div className={classes.settingDiv}>
                             <div>
                                 <StageSelector
@@ -212,10 +224,6 @@ export default function () {
                                                 () => {
                                                     pageOpen.stage = value;
                                                     return updatePage(pageOpen, false)
-                                                },
-                                                () => {
-                                                    setPageOpen(null);
-                                                    fetchPages();
                                                 }
                                             )
                                             return true;
@@ -223,30 +231,22 @@ export default function () {
                                         return false;
                                     }}/>
                             </div>
-                            <Typography
-                                className={classes.stageSelectorTypography}
-                                variant="subtitle1"
-                                color={pageOpen.stage === PUBLISHED ? "secondary" : "primary"}
-                            >Published sites are visible to anyone vising the site</Typography>
+                            <p className={classes.info}>Published sites are visible to anyone vising the site</p>
                         </div>
                     </Paper>
-                    <Paper className={classes.settingPaper}>
+                    <Paper className={classes.card}>
                         <div className={`${classes.settingDiv} ${classes.center}`}>
-                            <Typography variant="h6">Icon</Typography>
+                            <Typography className={classes.iconTitle} variant="h6">Icon</Typography>
                             <p dangerouslySetInnerHTML={{ __html: pageOpen.icon }}/>
-                            <p>Select a new icon for this page</p>
                             <IconSelector onSubmit={(icon) => {
                                 otherRequests.performRequest(
                                     () => {
                                         pageOpen.icon = icon;
                                         return updatePage(pageOpen, false)
-                                    },
-                                    () => {
-                                        setPageOpen(null);
-                                        fetchPages();
                                     }
                                 )
                             }}/>
+                            <p className={classes.info}>Icons are used in the site navigation bar</p>
                         </div>
                     </Paper>
                 </Box>

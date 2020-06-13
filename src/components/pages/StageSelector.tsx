@@ -1,16 +1,13 @@
-import { createStyles, FormControl, InputLabel, Select, Theme } from "@material-ui/core";
+import { createStyles, FormControl, FormControlLabel, Radio, RadioGroup, Theme, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import React, { useState } from "react";
 import { PUBLISHED, UNPUBLISHED } from "./Page";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
-        formControl: {
-            margin: theme.spacing(2),
-            width: 180,
-        },
         title: {
-            fontSize: '22px',
+            fontSize: '20px',
+            color: theme.palette.grey[600]
         },
         select: {
             paddingTop: '10px'
@@ -34,23 +31,25 @@ export default function ({ initialStage, onChange }: StageSelectorProps) {
         }
     }
 
+
     return (
-        <FormControl className={classes.formControl}>
-            <InputLabel className={classes.title} htmlFor="page-stage-select">Stage of the Page</InputLabel>
-            <Select
-                className={classes.select}
-                native
-                value={stage}
-                onChange={(e) => handleChange(e.target.value)}
-                label="Page Stage"
-                inputProps={{
-                    name: 'stage',
-                    id: 'page-stage-select',
-                }}
-            >
-                <option value={UNPUBLISHED}>{UNPUBLISHED}</option>
-                <option value={PUBLISHED}>{PUBLISHED}</option>
-            </Select>
+        <FormControl>
+            <Typography className={classes.title}>Stage of the page</Typography>
+
+            <RadioGroup name="Dates" value={stage} onChange={(e, val) => handleChange(val)}>
+                <FormControlLabel
+                    value={UNPUBLISHED}
+                    control={<Radio/>}
+                    checked={stage === UNPUBLISHED}
+                    label={`${UNPUBLISHED}`}
+                />
+                <FormControlLabel
+                    value={PUBLISHED}
+                    control={<Radio/>}
+                    checked={stage === PUBLISHED}
+                    label={`${PUBLISHED}`}
+                />
+            </RadioGroup>
         </FormControl>
     )
 }

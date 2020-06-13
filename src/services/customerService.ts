@@ -35,11 +35,17 @@ function addCustomerReward(customer: Customer, reward: Reward) {
     return post(`${subUrl}/${customer.id}/reward`, reward);
 }
 
+function rewardAllCustomers(reward: Reward) {
+    const subUrl = `/business/${BUSINESS_ID}/reward/all`;
+    return post(subUrl, reward);
+}
+
 export {
     loadCustomer,
     updateCustomerProperties,
     listCustomers,
     addCustomerReward,
     revokeCustomerReward,
-    updateCustomerReward
+    updateCustomerReward,
+    rewardAllCustomers
 };

@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) =>
         select: {
             width: '100%',
             margin: '4px 0px'
-        }
+        },
     }));
 
 interface RequirementSelectorProps {
@@ -26,11 +26,13 @@ export default function (props: RequirementSelectorProps) {
     const classes = useStyles();
 
     const [requirements, setRequirements] = useState<Requirement[]>([]);
+    const [open, setOpen] = useState(false);
 
     useEffect(() => props.onChange(requirements), [props, requirements])
 
     const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
         const selected = event.target.value as string[];
+        setOpen(false);
         const values: Requirement[] = [];
         selected.forEach(str => {
             const type = allRequirements[str];
@@ -47,6 +49,9 @@ export default function (props: RequirementSelectorProps) {
         <div className={classes.div}>
             <div>
                 <Select
+                    open={open}
+                    onOpen={() => setOpen(true)}
+                    onClose={() => setOpen(false)}
                     className={classes.select}
                     multiple={true}
                     value={requirements.map(req => req.type)}
@@ -59,11 +64,11 @@ export default function (props: RequirementSelectorProps) {
                     }}
                 >
                     {Object.entries(allRequirements).map(([key, value]) => {
-                        const name = value.name;
+                        const { name, description } = value;
                         return (
-                            <MenuItem key={`item_${key}`} value={key}>
+                            <MenuItem value={key} key={`item_${key}`}>
                                 <Checkbox checked={requirements.some(r => r.type === key)}/>
-                                <ListItemText primary={name}/>
+                                <ListItemText primary={name} secondary={description}/>
                             </MenuItem>
                         )
                     })}

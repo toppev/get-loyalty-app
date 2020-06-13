@@ -38,7 +38,10 @@ export default function (props: IconSelectorProps) {
                 <Grid container>
                     {icons.map((icon) => (
                         <Grid item xs={4}>
-                            <Icon icon={icon} onSelect={() => onSubmit(icon)}/>
+                            <Icon icon={icon} onSelect={() => {
+                                setOpen(false)
+                                onSubmit(icon)
+                            }}/>
                         </Grid>
                     ))}
                 </Grid>

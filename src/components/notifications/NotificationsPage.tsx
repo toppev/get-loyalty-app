@@ -14,10 +14,10 @@ const useStyles = makeStyles((theme: Theme) =>
         box: {
             "& > .MuiPaper-root": {
                 height: '550px',
-                marginTop: '20px',
-                [theme.breakpoints.up('sm')]: {
-                    minWidth: '550px',
-                    margin: '20px',
+                margin: '20px 6px',
+                width: '550px',
+                [theme.breakpoints.up('lg')]: {
+                    margin: '25px',
                 },
             }
         },
@@ -27,7 +27,6 @@ export default function () {
 
     const classes = useStyles();
     const context = useContext(AppContext);
-    const bigScreen = useMediaQuery(useTheme().breakpoints.up('md'));
 
     const [cooldownExpires, setCooldownExpires] = useState<Date | undefined>();
     const [newNotifications, setNewNotifications] = useState<PushNotification[]>([]);
@@ -51,7 +50,7 @@ export default function () {
 
     return (
         <div>
-            <Box display="flex" flexDirection={bigScreen ? "row" : "column"}
+            <Box display="flex" flexWrap="wrap"
                  className={classes.box}>
                 <NotificationForm
                     onSubmitted={notificationSubmitted}
