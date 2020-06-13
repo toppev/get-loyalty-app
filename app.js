@@ -45,22 +45,18 @@ app.use(cors({
     credentials: true
 }));
 require('./src/config/passport');
-
 app.use(require('./src/config/sessionConfig'));
 app.use(passport.initialize());
 app.use(passport.session());
 if (!isTesting) {
     app.use(function (req, res, next) {
-        if (req.url === '/user/register' || req.url === '/user/login') {
-            return next();
-        }
         csurf()(req, res, next);
     });
     app.use(function (err, req, res, next) {
-        if (err.code !== 'EBADCSRFTOKEN') return next(err);
         res.cookie('XSRF-TOKEN', req.csrfToken());
-        res.status(403);
-        res.send({ message: 'session has expired or form tampered' });
+        if (req.url === '/user/login' || req.url === '/user/register') {
+            return next();
+        }
     });
 }
 app.use(routes);
