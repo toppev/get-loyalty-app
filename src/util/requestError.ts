@@ -6,7 +6,7 @@ export default interface RequestError {
     /**
      * Detailed error
      */
-    error?: Error
+    error?: any
     /**
      * Callback to call to retry the
      */

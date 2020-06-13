@@ -31,15 +31,17 @@ export default function ({ error: errorObject }: ButtonProps) {
 
     const { message, error, retry, clearError } = errorObject;
 
+    const errorString = error?.response?.data?.message || error?.toString() || 'unknown error';
+
     return !!errorObject ? (
         <div className={classes.errorDiv}>
             <p className={classes.errorText}>{message}</p>
-            <p className={classes.errorName}>{error?.toString()}</p>
+            <p className={classes.errorName}>{errorString}</p>
             {retry &&
             <Button
                 variant="contained"
                 color="secondary"
-                onClick={(event: React.MouseEvent<HTMLElement>) => {
+                onClick={() => {
                     retry()
                     if (clearError) {
                         clearError();
