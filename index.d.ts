@@ -1,6 +1,8 @@
 declare interface RequirementType {
     name: string
     description: string
+    experimental?: boolean
+    note?: string
     question?: string
     valueDescriptions?: ValueDescription[]
     requirement?: (values: string[], user: any, purchase: any, customerData: any) => boolean
