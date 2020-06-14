@@ -30,8 +30,8 @@ module.exports = {
     },
     isBirthday: {
         name: 'Customer Birthday',
-        description: "If it's the customers birthday!",
-        requirement: function (values, user, _purchase, _customerData) {
+        description: "If it's the customer's birthday!",
+        requirement: function (values, user) {
             const { birthday: bd } = user;
             if (bd) {
                 const now = new Date();
