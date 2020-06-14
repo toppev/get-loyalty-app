@@ -4,7 +4,7 @@ const customerService = require('./customerService');
 const campaignService = require('./campaignService');
 const pollingService = require('./pollingService');
 const format = require('../helpers/stringUtils').format;
-
+const { asyncFilter } = require('../helpers/asyncFilter');
 
 const IDENTIFIERS = {
     CONFIRM: 'confirm',
@@ -64,7 +64,15 @@ async function getScan(scanStr, businessId) {
         questions.push({ id: 'success', question: `Use reward "${reward.name}"?`, options: ['Yes', 'No'] });
         otherData.reward = reward;
     } else {
-        const campaigns = await campaignService.getOnGoingCampaigns(businessId, true);
+        const currentCampaigns = await campaignService.getOnGoingCampaigns(businessId, true);
+        // Campaigns the user can (possibly) receive. I.e has not received and the campaign limits haven't been reached
+        const campaigns = await asyncFilter(currentCampaigns, campaign => {
+            return campaignService.canReceiveCampaignRewards(userId, businessId, campaign, () => true).catch(err => {
+                if (err.name !== 'StatusError') {
+                    throw err;
+                }
+            })
+        });
         otherData.campaigns = campaigns;
         const categories = [].concat(...campaigns.map(c => c.categories));
         const products = [].concat(...campaigns.map(c => c.products));

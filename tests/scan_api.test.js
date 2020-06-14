@@ -63,17 +63,29 @@ describe('Logged in user can', () => {
             categories: [category]
         };
         // Hasn't started
-        const campaign3 = { name: 'Campaign #2', start: (now + 10000) };
+        const campaign3 = {
+            name: 'Campaign #2',
+            start: (now + 10000)
+        };
+        const product2 = await productService.create(business._id, { name: 'Product2' })
+        // No rewards available, this campaign should be ignored (won't ask about product2)
+        // (as no one can receive the reward anymore)
+        const campaign4 = {
+            name: 'Campaign #2',
+            start: now,
+            end: (now + 10000),
+            maxRewards: { total: 0 },
+            products: [product2],
+        };
         await campaignService.create(business._id, campaign1)
         await campaignService.create(business._id, campaign2)
         await campaignService.create(business._id, campaign3)
-
+        await campaignService.create(business._id, campaign4)
         const scan = userId;
         const res = await api
             .get(`/business/${business.id}/scan/${scan}`)
             .set('Cookie', cookie)
             .expect(200);
-
         expect(res.body.questions).toBeDefined();
         expect(res.body.customerData).toBeDefined();
         expect(res.body.campaigns.length).toBe(1);
@@ -82,8 +94,9 @@ describe('Logged in user can', () => {
         expect(res.body.questions.length).toBe(3);
         expect(res.body.questions[0].question).toBe('Select categories');
         expect(res.body.questions[1].options).toStrictEqual(['Product1']);
-
-
+        // Just to be sure changes won't break this test
+        expect(res.body.questions[1].options).not.toContain('Product2');
+        console.log(res.body.questions)
     });
 
     it('scan (use) userId:rewardId', async () => {
