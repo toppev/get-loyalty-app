@@ -8,50 +8,15 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import { setBusinessId } from "./config/axios";
 import { AxiosResponse } from "axios";
+import { useQuery } from "./useQuery";
+import { claimCoupon } from "./services/couponService";
 
 function App() {
 
-    const [error, setError] = useState<string | undefined>()
+    const [error, setError] = useState<any>()
     const [pages, setPages] = useState<Page[]>()
 
     const updatePage = (page: Page) => setPages([...(pages?.filter(p => p._id !== page._id) || []), page])
-
-    const loadPages = () => {
-        getPages()
-            .then(res => {
-                const newPages = res.data
-                setPages(newPages) // So the page contents will be loaded
-            })
-            .catch(err => {
-                console.log(err)
-                setError('Failed to load pages')
-            })
-    }
-
-    const fetchHtml = async (page: Page) => {
-        try {
-            const res = await getPageHtml(page._id)
-            page.html = res.data
-            updatePage(page)
-        } catch (err) {
-            console.log(err)
-            page.html = ERROR_HTML
-            updatePage(page)
-        }
-    }
-
-    const onLogin = (_res: AxiosResponse) => {
-        getBusinessId()
-            .then(bId => {
-                if (!bId || bId.length !== 24) {
-                    setError('Received invalid business')
-                } else {
-                    setBusinessId(bId)
-                }
-                loadPages()
-            })
-            .catch(_err => setError('Failed to identify business :('))
-    }
 
     // Authentication
     useEffect(() => {
@@ -70,7 +35,38 @@ function App() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    // Loading page content
+    const onLogin = (_res: AxiosResponse) => {
+        getBusinessId()
+            .then(bId => {
+                if (!bId || bId.length !== 24) {
+                    setError('Invalid business')
+                } else {
+                    setBusinessId(bId)
+                }
+                checkCoupon()
+                    .then(loadPages)
+                    .catch(err => setError(err))
+            })
+            .catch(_err => setError('Failed to identify business :('))
+    }
+
+    const query = useQuery();
+    const couponCode = query.get('coupon') || query.get('code');
+    const checkCoupon = async () => couponCode && claimCoupon(couponCode)
+
+    // Load pages
+    const loadPages = () => {
+        getPages()
+            .then(res => {
+                const newPages = res.data
+                setPages(newPages) // So the page contents will be loaded
+            })
+            .catch(err => {
+                console.log(err)
+                setError('Failed to load pages')
+            })
+    }
+
     useEffect(() => {
         // For slightly better performance, load the first page (landing page) first
         if (pages?.length) {
@@ -80,9 +76,21 @@ function App() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pages])
 
+    const fetchHtml = async (page: Page) => {
+        try {
+            const res = await getPageHtml(page._id)
+            page.html = res.data
+            updatePage(page)
+        } catch (err) {
+            console.log(err)
+            page.html = ERROR_HTML
+            updatePage(page)
+        }
+    }
+
     return (
         <div className="App">
-            {error && <p className="ErrorMessage">Error</p>}
+            {error && <p className="ErrorMessage">Error: {error.response?.message || error.toString()}</p>}
             <Router>
                 <Switch>
                     {pages?.map(page => (
