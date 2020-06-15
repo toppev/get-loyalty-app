@@ -3,6 +3,7 @@ const StatusError = require('../helpers/statusError');
 const customerService = require('./customerService');
 const campaignService = require('./campaignService');
 const pollingService = require('./pollingService');
+const businessService = require('./businessService');
 const format = require('../helpers/stringUtils').format;
 const { asyncFilter } = require('../helpers/asyncFilter');
 
@@ -85,8 +86,8 @@ async function getScan(scanStr, businessId) {
         addQuestions(questions, categories, products, requirements);
         questions.push({ question: 'Confirm', options: ['Yes', 'No'] });
     }
-    // TODO: change message
-    pollingService.sendToUser(userId, { message: 'QR code scanned!' }, 'scan')
+    const business = await businessService.getBusiness(businessId);
+    pollingService.sendToUser(userId, { message: business.config.messages.qrScanned.singular }, 'scan');
     return { questions, ...otherData };
 }
 
@@ -122,11 +123,13 @@ async function useScan(scanStr, data, businessId) {
     const { user, userId, rewardId } = await parseScanString(scanStr);
     const customerData = await customerService.findCustomerData(user, businessId);
     const reward = await validateRewardId(rewardId, customerData);
+    const business = await businessService.getBusiness(businessId);
+    const translations = business.config.translations;
     let responseMessage;
     let usedReward = reward;
     if (reward) {
         await customerService.useReward(user, customerData, reward)
-        responseMessage = 'Reward Used!';
+        responseMessage = translations.rewardUsed.singular;
         pollingService.sendToUser(userId, { message: responseMessage }, 'reward_use')
     }
     const { answers } = data;
@@ -156,7 +159,7 @@ async function useScan(scanStr, data, businessId) {
             // Not eligible
             eligible = false;
             if (err.name !== 'StatusError') {
-                console.log(`ERROR! User not eligible to participate in campaign because ${err}`)
+                console.log(`ERROR! User not eligible to participate in a campaign because an error occurred ${err}`)
             }
             // IDEA: should we return reasons why the customer was not eligible?
         }
@@ -166,11 +169,11 @@ async function useScan(scanStr, data, businessId) {
         }
     }
     if (newRewards.length) {
-        const rewardString = newRewards.length > 1 ? 'new rewards' : 'a new reward';
-        responseMessage = `The customer got ${rewardString}!`;
-        pollingService.sendToUser(userId, { message: `You got ${rewardString}!` }, 'reward_get');
+        const rewardNames = newRewards.map(it => it.name).join(', ')
+        const message = format(newRewards.length === 1 ? translations.newReward.singular : translations.newReward.plural, rewardNames);
+        pollingService.sendToUser(userId, { message: message }, 'reward_get');
     } else {
-        pollingService.sendToUser(userId, { message: 'Done!' }, 'scan_end');
+        pollingService.sendToUser(userId, { message: translations.scanRegistered.singular }, 'scan_end');
     }
     return { message: responseMessage, newRewards, usedReward }
 }

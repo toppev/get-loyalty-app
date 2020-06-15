@@ -18,6 +18,34 @@ const configSchema = new Schema({
                 type: String,
                 default: 'Happy birthday!'
             }
+        },
+        qrScanned: {
+            singular: {
+                type: String,
+                default: 'QR code scanned!'
+            }
+        },
+        rewardUsed: {
+            singular: {
+                type: String,
+                default: 'Reward used!'
+            }
+        },
+        scanRegistered: {
+            singular: {
+                type: String,
+                default: 'Done!' // change?
+            }
+        },
+        newReward: {
+            singular: {
+                type: String,
+                default: 'You got a new reward: {0}'
+            },
+            plural: {
+                type: String,
+                default: 'You got new rewards: {0}'
+            }
         }
     },
     // Where the loyalty app is located
