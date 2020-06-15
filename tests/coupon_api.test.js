@@ -14,7 +14,8 @@ let business;
 let userId;
 let endReward;
 
-const couponCode = 'TEST_COUPON'
+// Coupons should be case insensitive
+const couponCode = 'test_COUPON'
 
 beforeAll(async () => {
     await initDatabase('category');
@@ -35,7 +36,7 @@ describe('Logged in user can', () => {
 
     it('claim coupon rewards', async () => {
         const res = await api
-            .post(`/business/${business.id}/coupon/${couponCode}`)
+            .post(`/business/${business.id}/coupon/${couponCode.toLowerCase()}`) // Make sure lowercase works
             .set('Cookie', cookie)
             .expect(200);
         expect(res.body.rewards.length).toBe(1); // Enough good
@@ -43,7 +44,7 @@ describe('Logged in user can', () => {
 
     it('not reclaim coupon rewards', async () => {
         await api
-            .post(`/business/${business.id}/coupon/${couponCode}`)
+            .post(`/business/${business.id}/coupon/${couponCode.toUpperCase()}`) // Make sure uppercase works
             .set('Cookie', cookie)
             .expect(403);
         const user = await userService.getById(userId)

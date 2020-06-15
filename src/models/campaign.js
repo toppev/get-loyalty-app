@@ -81,4 +81,11 @@ const campaignSchema = new Schema({
     toObject: { virtuals: true }
 });
 
+campaignSchema.pre('save', async function (next) {
+    if (this.isModified('couponCode') && this.couponCode) {
+        this.couponCode = this.couponCode.toLowerCase()
+    }
+    next();
+});
+
 module.exports = mongoose.model('Campaign', campaignSchema);
