@@ -87,7 +87,7 @@ async function getScan(scanStr, businessId) {
         questions.push({ question: 'Confirm', options: ['Yes', 'No'] });
     }
     const business = await businessService.getBusiness(businessId);
-    pollingService.sendToUser(userId, { message: business.config.messages.qrScanned.singular }, 'scan');
+    pollingService.sendToUser(userId, { message: business.config.translations.qrScanned.singular }, 'scan');
     return { questions, ...otherData };
 }
 

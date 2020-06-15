@@ -96,7 +96,6 @@ describe('Logged in user can', () => {
         expect(res.body.questions[1].options).toStrictEqual(['Product1']);
         // Just to be sure changes won't break this test
         expect(res.body.questions[1].options).not.toContain('Product2');
-        console.log(res.body.questions)
     });
 
     it('scan (use) userId:rewardId', async () => {
