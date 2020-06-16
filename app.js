@@ -41,7 +41,7 @@ app.use(parser.urlencoded({
 app.use(parser.json());
 
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: ['http://localhost:3000', 'http://localhost:3002'],
     credentials: true
 }));
 require('./src/config/passport');

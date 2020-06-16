@@ -2,7 +2,7 @@ const Business = require('../models/business');
 const User = require('../models/user');
 
 module.exports = {
-    getCurrentBusiness,
+    getBusinessByWebsite,
     getOwnBusiness,
     createBusiness,
     getBusiness,
@@ -25,8 +25,8 @@ function getOwnBusiness(user) {
  * @param user the user object
  * @param url the website url
  */
-async function getCurrentBusiness(user, url) {
-    const business = await Business.find({ 'config.loyaltyWebsite': url })
+async function getBusinessByWebsite(user, url) {
+    const business = await Business.findOne({ 'config.loyaltyWebsite': url })
     return business;
 }
 

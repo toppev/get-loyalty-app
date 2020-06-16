@@ -6,6 +6,8 @@ const permit = require('../../middlewares/permitMiddleware');
 const validation = require('../../helpers/bodyFilter');
 const businessValidator = validation.validate(validation.businessValidator);
 
+// Get the business who owns the current site
+router.get('/whois', getWebsiteOwner); // TODO: create a test?
 router.post('/create', businessValidator, createBusiness);
 router.get('/:businessId/public', getPublicInformation);
 router.get('/:businessId', permit('business:get'), getBusiness);
@@ -15,8 +17,6 @@ router.post('/:businessId/role', permit('business:role'), validation.validate(va
 router.get('/:businessId/customers', permit('customer:list'), listCustomers);
 router.get('/:businessId/reward/list', permit('reward:list'), listRewards);
 router.post('/:businessId/reward/all', permit('reward:customers'), rewardCustomers);
-// Get the business who owns the current site
-router.get('/whois', getWebsiteOwner);
 
 module.exports = router;
 
@@ -29,7 +29,7 @@ function createBusiness(req, res, next) {
 function getBusiness(req, res, next) {
     const id = req.params.businessId;
     businessService.getBusiness(id)
-        .then(business => res.json(business))
+        .then(business => business ? res.json(business) : res.status(404).json({ message: 'business not found' }))
         .catch(err => next(err));
 }
 
@@ -74,8 +74,8 @@ function listRewards(req, res, next) {
 
 function getWebsiteOwner(req, res, next) {
     const url = req.query.url || req.hostname + req.originalUrl
-    businessService.getCurrentBusiness(req.user, url)
-        .then(data => res.json({ business: data.id }))
+    businessService.getBusinessByWebsite(req.user, url)
+        .then(data => res.json({ business: data && data.id }))
         .catch(err => next(err))
 }
 

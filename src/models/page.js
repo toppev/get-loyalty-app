@@ -1,15 +1,15 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
+const UNNAMED_PAGE = 'unnamed'
+
 const PageDataSchema = new Schema({
     name: {
         type: String
     },
     pathname: {
         type: String,
-        default: function () {
-            return this.name ? this.name.replace(/[^a-zA-Z0-9]/, '') : 'unnamed';
-        }
+        default: UNNAMED_PAGE
     },
     // Mainly just for the templates
     description: {
@@ -51,11 +51,15 @@ const PageDataSchema = new Schema({
 });
 
 PageDataSchema.pre('save', async function () {
+    // Lazy loading
     let pagesCount;
     const getPagesCount = async () => pagesCount === undefined ? pagesCount = await PageData.countDocuments({ business: this.business }) : pagesCount
 
-    if (!this.pathname || this.pathname === 'unnamed') {
+    if (!this.pathname || this.pathname === UNNAMED_PAGE) {
         this.pathname = `page${await getPagesCount()}`;
+    }
+    if (this.pathname.startsWith('/')) {
+        this.pathname = this.pathname.substring(1)
     }
     if (!this.pageIndex) {
         this.pageIndex = await getPagesCount();

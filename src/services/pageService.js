@@ -71,7 +71,7 @@ async function getPublicPage(businessId) {
     const pages = await PageData.find({
         business: businessId,
         stage: 'published'
-    }).sort('pageIndex').select('_id icon ');
+    }).sort('pageIndex').select('_id icon pathname');
     return pages;
 }
 
@@ -160,7 +160,7 @@ async function getPageContext(businessId, user) {
                 used: customerData.usedRewards.length,
             },
             birthdayGreeting: user.isBirthday ? business.config.translations.birthdayGreeting : undefined,
-            business,
+            business: business.public,
             products,
             campaigns,
             translations
