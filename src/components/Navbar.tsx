@@ -11,12 +11,12 @@ export default function (props: NavbarProps) {
     const { pages } = props
 
     return pages?.length > 1 ? (
-        <div className="navbar">
+        <nav className="navbar">
             {pages?.map(page => (
-                <Link to={page.pathname}>
-                    <PageIcon page={page} key={`icon_${page._id}`}/>
+                <Link to={page.pathname} key={page._id}>
+                    <PageIcon page={page}/>
                 </Link>
             ))}
-        </div>
+        </nav>
     ) : null
 }

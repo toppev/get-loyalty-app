@@ -1,7 +1,7 @@
 import axios from "axios";
 import { BUSINESS_ID } from "./businessConfig"
 
-const BASE_URL = '';
+const BASE_URL = 'http://localhost:3001';
 
 const instance = axios.create({
     baseURL: BASE_URL,
@@ -9,7 +9,7 @@ const instance = axios.create({
 });
 
 // Used in requests. Easier if it's stored here instead of state
-export let businessId = BUSINESS_ID;
+export let businessId = BUSINESS_ID || 'undefined';
 const headers = {}
 
 function setBusinessId(id: string) {
@@ -22,7 +22,7 @@ function setBusinessId(id: string) {
  * http://localhost:3000/business/5ed26d9d9a3bf3a7eb7dd587
  */
 function getBusinessUrl() {
-    return `${BASE_URL}/business/${businessId}`;
+    return `/business/${businessId}`;
 }
 
 async function get(path: string) {

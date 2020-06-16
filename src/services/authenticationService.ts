@@ -21,7 +21,7 @@ async function getBusinessId() {
     if (businessId?.length === 24) {
         return businessId
     }
-    return (await get(`/business/whois/?url=${document.location.href}`)).data.businessId;
+    return (await get(`/business/whois/?url=${document.location.origin}`)).data.business;
 }
 
 

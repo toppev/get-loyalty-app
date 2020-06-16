@@ -4,19 +4,18 @@ import { getPageHtml, getPages } from "./services/pageService";
 import Page, { ERROR_HTML } from "./model/Page";
 import PageView from "./components/PageView";
 import { getBusinessId, profileRequest, registerRequest } from "./services/authenticationService";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Redirect, Route, Switch } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import { setBusinessId } from "./config/axios";
 import { AxiosResponse } from "axios";
-import { useQuery } from "./useQuery";
 import { claimCoupon } from "./services/couponService";
 
 function App() {
 
     const [error, setError] = useState<any>()
-    const [pages, setPages] = useState<Page[]>()
+    const [pages, setPages] = useState<Page[]>([])
 
-    const updatePage = (page: Page) => setPages([...(pages?.filter(p => p._id !== page._id) || []), page])
+    const updatePage = (page: Page) => setPages(prev => [...prev.filter(p => p._id !== page._id), page])
 
     // Authentication
     useEffect(() => {
@@ -42,15 +41,15 @@ function App() {
                     setError('Invalid business')
                 } else {
                     setBusinessId(bId)
+                    checkCoupon()
+                        .then(loadPages)
+                        .catch(err => setError(err))
                 }
-                checkCoupon()
-                    .then(loadPages)
-                    .catch(err => setError(err))
             })
             .catch(_err => setError('Failed to identify business :('))
     }
 
-    const query = useQuery();
+    const query = new URLSearchParams(window.location.search);
     const couponCode = query.get('coupon') || query.get('code');
     const checkCoupon = async () => couponCode && claimCoupon(couponCode)
 
@@ -59,22 +58,17 @@ function App() {
         getPages()
             .then(res => {
                 const newPages = res.data
-                setPages(newPages) // So the page contents will be loaded
+                // For slightly better performance, load the first page (landing page) first
+                if (newPages?.length) {
+                    const first = newPages[0]
+                    fetchHtml(first).then(() => newPages.forEach(fetchHtml))
+                }
             })
             .catch(err => {
                 console.log(err)
                 setError('Failed to load pages')
             })
     }
-
-    useEffect(() => {
-        // For slightly better performance, load the first page (landing page) first
-        if (pages?.length) {
-            const first = pages[0]
-            fetchHtml(first).then(() => pages.forEach(fetchHtml))
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [pages])
 
     const fetchHtml = async (page: Page) => {
         try {
@@ -94,10 +88,11 @@ function App() {
             <Router>
                 <Switch>
                     {pages?.map(page => (
-                        <Route exact path={page.pathname}>
-                            <PageView page={page} key={page._id}/>
+                        <Route exact path={`/${page.pathname}`} key={page._id}>
+                            <PageView page={page}/>
                         </Route>
                     ))}
+                    {pages.length > 0 && <Redirect to={pages[0].pathname}/>}
                 </Switch>
                 <Navbar pages={pages || []}/>
             </Router>
