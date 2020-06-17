@@ -49,14 +49,13 @@ app.use(require('./src/config/sessionConfig'));
 app.use(passport.initialize());
 app.use(passport.session());
 if (!isTesting) {
-    app.use(function (req, res, next) {
-        csurf()(req, res, next);
-    });
+    app.use(csurf());
     app.use(function (err, req, res, next) {
         res.cookie('XSRF-TOKEN', req.csrfToken());
         if (req.url === '/user/login' || req.url === '/user/register') {
             return next();
         }
+        return next(err)
     });
 }
 app.use(routes);
