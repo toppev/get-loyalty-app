@@ -6,8 +6,9 @@
 const StatusError = require('../helpers/statusError');
 
 /**
- * If the user doesn't have the given permission the filter will remove fields from the request that the user is not allowed to modify
- * In some cases the validator may throw an error. For example, if the property is allowed by it's value is not (e.g a role)
+ * If the user doesn't have the given permission the filter will remove fields from the request that the user is not
+ * allowed to modify. In some cases the validator may throw an error. For example, if the property is allowed by
+ * it's value is not (e.g a role)
  *
  * @param filter the filter to use
  * @param bypassPermission bypass permission, by default "validation:bypass"

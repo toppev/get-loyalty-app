@@ -81,10 +81,18 @@ function resetPassword(req, res, next) {
 
 function getCurrent(req, res, next) {
     userService.getById(req.user.id)
-        .then(user => user ? res.json({
-            ...user.toJSON(),
-            businessOwner: businessService.getOwnBusiness(user),
-        }) : res.sendStatus(404))
+        .then(user => {
+            if (user) {
+                userService.markLastVisit(req.user)
+                    .catch(err => console.log("Failed to update 'lastVisit' in #getCurrent", err))
+                res.json({
+                    ...user.toJSON(),
+                    businessOwner: businessService.getOwnBusiness(user),
+                })
+            } else {
+                res.sendStatus(404)
+            }
+        })
         .catch(err => next(err));
 }
 

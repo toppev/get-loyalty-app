@@ -11,6 +11,7 @@ module.exports = {
     forgotPassword,
     resetPassword,
     deleteUser,
+    markLastVisit
 };
 
 /**
@@ -84,8 +85,20 @@ async function getById(id) {
         delete user.password;
         return user;
     }
-    // Just so tests won't break
+    // Return null so tests won't break
     return null;
+}
+
+/**
+ * Set lastVisit property to current time
+ * @param user the user or the id of an user
+ */
+async function markLastVisit(user) {
+    if (!user.save) {
+        user = await User.findById(user.id || user);
+    }
+    user.lastVisit = Date.now()
+    await user.save()
 }
 
 /**

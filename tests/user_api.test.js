@@ -132,6 +132,19 @@ describe('Logged in user should', () => {
 
 });
 
+describe('userService', () => {
+
+    it('lastVisit updates', async () => {
+        const user = await userService.create({ lastVisit: (Date.now() - 1000) });
+        const old = user.lastVisit;
+        await userService.markLastVisit(user)
+        const now = (await userService.getById(user.id)).lastVisit;
+        expect(old).toBeTruthy()
+        expect(now).toBeTruthy()
+        expect(old).not.toEqual(now)
+    })
+})
+
 /*
 * Testing patching, deleting and getting other users is not currently tested.
 * Only site admins can do it anyway. Might implement later
