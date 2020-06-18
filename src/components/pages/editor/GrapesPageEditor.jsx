@@ -52,6 +52,10 @@ function GrapesPageEditor(props) {
 
         // Open the blocks view
         editor.runCommand('core:open-blocks');
+        editor.on('load', () => {
+            editor.setDevice("Mobile portrait")
+        })
+
 
         editor.on('storage:start:store', () => {
             uploadHtmlCss(props.page, editor.getHtml(), editor.getCss())
