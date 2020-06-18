@@ -1,11 +1,11 @@
-declare interface RequirementType {
+declare interface CampaignType {
     name: string
     description: string
     experimental?: boolean
     note?: string
     question?: string
     valueDescriptions?: ValueDescription[]
-    requirement?: (values: string[], user: any, purchase: any, customerData: any) => boolean
+    requirement?: (context: { values: string[], user: any, purchase: any, customerData: any, campaign: any }) => boolean
 }
 
 declare interface ValueDescription {
@@ -17,11 +17,12 @@ declare interface ValueDescription {
 }
 
 declare const index: {
-    [key: string]: RequirementType
+    [key: string]: CampaignType
     // To access typed individual properties
-    basicCampaign: RequirementType
-    isPurchaseGreaterThan: RequirementType
-    isBirthday: RequirementType
+    basicCampaign: CampaignType
+    isPurchaseGreaterThan: CampaignType
+    isBirthday: CampaignType
+    stamps: CampaignType
 }
 
 export = index

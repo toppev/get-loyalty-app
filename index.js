@@ -31,15 +31,28 @@ module.exports = {
     isBirthday: {
         name: 'Customer Birthday',
         description: "If it's the customer's birthday!",
-        requirement: function (values, user) {
-            const { birthday: bd } = user;
+        requirement: function ({ user }) {
+            const { birthday: bd } = user
             if (bd) {
-                const now = new Date();
-                return bd.getMonth() === now.getMonth() && bd.getDate() === now.getDate();
+                const now = new Date()
+                return bd.getMonth() === now.getMonth() && bd.getDate() === now.getDate()
             }
             return false
         },
     },
-    // TODO: more campaigns types (e.g. buy x number in y days)
+    stamps: {
+        name: 'Stamp card',
+        description: "Scan the user's QR code every time they make a purchase. After X scans they earn the reward.",
+        valueDescriptions: [{
+            name: 'Stamps to earn the reward',
+            type: 5,
+        }],
+        requirement: function ({ values, customerData, purchase, campaign }) {
+            const maxStamps = parseInt(values[0], 10)
+            if (!maxStamps || !purchase) return false
+            const currentStamps = customerData.purchases.filter(purchase => purchase.campaigns.includes(campaign.id))
+            return currentStamps.length + 1 === maxStamps
+        }
+    }
 
-};
+}
