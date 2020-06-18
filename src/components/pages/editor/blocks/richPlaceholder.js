@@ -1,5 +1,6 @@
 import React from "react";
 import { placeholders } from "../Placeholders";
+import { ellipsis } from "../../../common/StringUtils";
 
 function addRichTextEditorPlaceholders(editor, context) {
     editor.RichTextEditor.add('loyalty-placeholders', {
@@ -18,15 +19,21 @@ function addRichTextEditorPlaceholders(editor, context) {
 }
 
 function listPlaceholderOptions(context) {
+    const { values } = context;
+    console.log(values);
     const result = [];
     Object.entries(placeholders).map(([key, value]) => {
         Object.entries(value.placeholders).map(([property, placeholder]) => {
             const text = `{{${value.identifier}.${property}}}`;
+            const subObj = values[value.identifier];
+            const val = subObj && subObj[property];
+            const currentValue = val ? `(${ellipsis(val, 12)})` : '*';
             //  if (!placeholder.available || placeholder.available(context)) {
-            result.push(`<option style="color: #bab8b8" value="${text}">${placeholder.name}</option>`)
+            result.push(`<option style="color: #bab8b8" value="${text}">${placeholder.name} ${currentValue}</option>`)
             //}
         })
     })
+    result.push(`<option disabled value=""> * unknown value</option>`)
     return result;
 }
 

@@ -10,6 +10,8 @@ import { addCampaignsBlock } from "./blocks/campaignBlock";
 import { addUserRewardsBlock } from "./blocks/userRewardsBlock";
 import Cookie from "js-cookie";
 import { uploadHtmlCss } from "../../../services/pageService";
+import { addRichTextEditorPlaceholders } from "./blocks/richPlaceholder";
+import { usePlaceholderContext } from "./placeholderContext";
 
 // So the editor is not rendered every time if the page id didn't change
 export default React.memo(GrapesPageEditor, propsAreEqual);
@@ -21,6 +23,7 @@ function propsAreEqual(prev, next) {
 function GrapesPageEditor(props) {
 
     const url = getBusinessUrl() + "/page";
+    const placeholderContext = usePlaceholderContext()
 
     useEffect(() => {
         const editor = GrapesJS.init({
@@ -68,7 +71,7 @@ function GrapesPageEditor(props) {
 
         addCampaignsBlock(bm);
         addUserRewardsBlock(bm);
-        // addRichTextEditorPlaceholders(editor, placeholderContext);
+        addRichTextEditorPlaceholders(editor, placeholderContext);
 
         const saveIfNeeded = () => {
             if (editor.getDirtyCount()) {

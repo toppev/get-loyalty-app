@@ -5,7 +5,11 @@ function usePlaceholderContext() {
 
     const appContext = useContext(AppContext);
 
-    return { appContext }
+    const values = {
+        business: appContext.business.public
+    }
+
+    return { appContext, values }
 }
 
 export {
