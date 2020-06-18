@@ -35,10 +35,15 @@ if (!isTesting) {
 // If this app is sitting behind a reverse proxy (e.g nginx)
 // app.enable('trust proxy')
 app.use(cookieParser());
+
+const limit = '5mb';
 app.use(parser.urlencoded({
+    limit: limit,
     extended: false
 }));
-app.use(parser.json());
+app.use(parser.json({
+    limit: limit,
+}));
 
 app.use(cors({
     origin: ['http://localhost:3000', 'http://localhost:3002'],
@@ -51,7 +56,9 @@ app.use(passport.session());
 if (!isTesting) {
     app.use(csurf());
     app.use(function (err, req, res, next) {
-        res.cookie('XSRF-TOKEN', req.csrfToken());
+        if (req.csrfToken) {
+            res.cookie('XSRF-TOKEN', req.csrfToken());
+        }
         if (req.url === '/user/login' || req.url === '/user/register') {
             return next();
         }
