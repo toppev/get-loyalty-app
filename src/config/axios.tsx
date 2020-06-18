@@ -3,7 +3,8 @@ import axios from "axios";
 
 export const BASE_URL = 'http://localhost:3001';
 // Where the PWA is hosted
-export const APP_URL = 'https://pwa.getloyalty.app';
+export const APP_URL = 'http://localhost:3002';
+//export const APP_URL = 'https://pwa.getloyalty.app';
 
 export const instance = axios.create({
     baseURL: BASE_URL,

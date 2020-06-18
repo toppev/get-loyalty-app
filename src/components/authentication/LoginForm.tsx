@@ -18,6 +18,8 @@ import PasswordResetRequestDialog from "./PasswordResetRequestDialog";
 import AppContext from "../../context/AppContext";
 import { loginRequest, onLoginOrAccountCreate } from '../../services/authenticationService';
 import { isEmail } from "../../util/Validate";
+import usePasswordReset from "./usePasswordReset";
+import { AxiosResponse } from "axios";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -66,14 +68,19 @@ export default function LoginForm({ headerErrorMessage, onLogin }: LoginFormProp
     const [passwordResetOpen, setPasswordResetOpen] = useState(false);
     const [email, setEmail] = useState(initialValues.email);
 
-    const onSubmit = (values: typeof initialValues, { setSubmitting, setErrors }: any) => {
+    const _login = (res: AxiosResponse) => {
+        onLoginOrAccountCreate(context, res);
+        if (onLogin) {
+            onLogin();
+        }
+    }
+
+    // if passwordReset is in the url (search params) this will try to reset the password (will automatically login)
+    usePasswordReset(_login) // TODO: use the error callback?
+
+    const onFormSubmit = (values: typeof initialValues, { setSubmitting, setErrors }: any) => {
         loginRequest(values)
-            .then(res => {
-                onLoginOrAccountCreate(context, res);
-                if (onLogin) {
-                    onLogin();
-                }
-            })
+            .then(_login)
             .catch(err => {
                 if (err.response) {
                     const { status, data } = err.response
@@ -112,7 +119,7 @@ export default function LoginForm({ headerErrorMessage, onLogin }: LoginFormProp
                 <Typography variant="h4" color="secondary">{headerErrorMessage}</Typography>
                 <Formik
                     initialValues={initialValues}
-                    onSubmit={onSubmit}
+                    onSubmit={onFormSubmit}
                     validate={validate}
                 >
                     {props => {

@@ -1,5 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, createStyles, LinearProgress, makeStyles, Theme } from "@material-ui/core";
+import {
+    Box,
+    Button,
+    Collapse,
+    createStyles,
+    IconButton,
+    LinearProgress,
+    makeStyles,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Theme
+} from "@material-ui/core";
 import Customer from "./Customer";
 import RetryButton from "../common/button/RetryButton";
 import SearchField from "../common/SearchField";
@@ -9,14 +24,14 @@ import useSearch from "../../hooks/useSearch";
 import useResponseState from "../../hooks/useResponseState";
 import { Link } from "react-router-dom";
 import RewardSelector from "../rewards/RewardSelector";
-import CustomerRow from "./CustomerRow";
+import IdText from "../common/IdText";
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import CustomerDetails from "./CustomerDetails";
 
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
-        row: {
-            margin: '5px 0px'
-        },
         p: {
             color: theme.palette.grey[600]
         },
@@ -27,6 +42,20 @@ const useStyles = makeStyles((theme: Theme) =>
             backgroundColor: theme.palette.grey[400],
             margin: '0px 12px',
             right: '15px'
+        },
+        boxDesktop: {
+            textAlign: 'center',
+            margin: '5px 15px',
+            padding: '5px 15px'
+        },
+        head: {
+            backgroundColor: '#c9d2d4'
+        },
+        root: {
+            backgroundColor: 'ghostwhite',
+            '& > *': {
+                borderBottom: 'unset',
+            }
         }
     }));
 
@@ -101,13 +130,86 @@ export default function () {
             />
             <p className={classes.p}>Showing up to {renderLimit} customers at once</p>
             {(loading || typingTimeout !== undefined) && <LinearProgress/>}
-            {customers.filter(searchFilter).slice(0, renderLimit).map(customer => (
-                <CustomerRow
-                    className={classes.row}
-                    key={customer.id}
-                    customer={customer}
-                />
-            ))}
+
+            <TableContainer>
+                <Table>
+                    <TableHead className={classes.head}>
+                        <TableRow>
+                            <TableCell>Show/Hide</TableCell>
+                            <TableCell>Email</TableCell>
+                            <TableCell>Rewards</TableCell>
+                            <TableCell>Points</TableCell>
+                            <TableCell>Last website visit</TableCell>
+                            <TableCell>Role</TableCell>
+                            <TableCell></TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {customers.filter(searchFilter).slice(0, renderLimit).map(customer => (
+                            <CustomerRow
+                                key={customer.id}
+                                customer={customer}
+                            />
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+
         </div>
+    )
+}
+
+
+interface CustomerRowProps {
+    customer: Customer
+}
+
+function CustomerRow(props: CustomerRowProps) {
+
+    const { customer } = props;
+    const { rewards, role, properties } = customer.customerData;
+
+    const classes = useStyles();
+
+    const [viewing, setViewing] = useState(false)
+
+    return (
+        <>
+            <TableRow className={classes.root}>
+                <TableCell>
+                    <IconButton
+                        onClick={() => setViewing(!viewing)}
+                    >{viewing ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>}</IconButton>
+                </TableCell>
+                <TableCell>
+                    {customer.email}
+                </TableCell>
+                <TableCell>
+                    {rewards.length} rewards
+                </TableCell>
+                <TableCell>
+                    {properties.points} points
+                </TableCell>
+                <TableCell>
+                    {customer.lastVisit?.toLocaleString()}
+                </TableCell>
+                <TableCell>
+                    { /* Might change the default role from user to customer later */}
+                    {role !== 'user' && role !== 'customer' ? role : ""}
+                </TableCell>
+                <TableCell>
+                    <IdText id={customer.id} text={false}/>
+                </TableCell>
+            </TableRow>
+            <TableRow className={classes.root}>
+                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
+                    <Collapse in={viewing} timeout="auto" unmountOnExit>
+                        <div className={classes.root}>
+                            <CustomerDetails initialCustomer={customer}/>
+                        </div>
+                    </Collapse>
+                </TableCell>
+            </TableRow>
+        </>
     )
 }

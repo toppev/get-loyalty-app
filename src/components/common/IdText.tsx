@@ -3,6 +3,7 @@ import React from "react";
 
 interface IdTextProps {
     id: string
+    text?: string | boolean
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -18,9 +19,9 @@ const useStyles = makeStyles((theme: Theme) =>
         },
     }));
 
-export default function ({ id }: IdTextProps) {
+export default function ({ id, text }: IdTextProps) {
 
     const classes = useStyles();
 
-    return (<p className={classes.itemId}>ID: {id}</p>)
+    return (<p className={classes.itemId}>{text === false ? "" : text || "ID:"} {id}</p>)
 }

@@ -55,8 +55,9 @@ function GrapesPageEditor(props) {
 
         editor.on('storage:start:store', () => {
             uploadHtmlCss(props.page, editor.getHtml(), editor.getCss())
+                .then(() => props.setError())
                 .catch(err => {
-                    props.onSaveFail(err?.response?.message || `Oops... Something went wrong. ${err}`, editor.store)
+                    props.setError(err?.response?.message || `Oops... Something went wrong. ${err}`, editor.store)
                 });
         });
 
@@ -67,12 +68,26 @@ function GrapesPageEditor(props) {
 
         addCampaignsBlock(bm);
         addUserRewardsBlock(bm);
-        //  addRichTextEditorPlaceholders(editor, placeholderContext);
+        // addRichTextEditorPlaceholders(editor, placeholderContext);
 
-        return function () {
+        const saveIfNeeded = () => {
             if (editor.getDirtyCount()) {
                 editor.store();
             }
+        }
+
+        let timeout = setTimeout(autosave, 10000);
+
+        // Auto-save every 5 seconds
+        function autosave() {
+            saveIfNeeded()
+            timeout = setTimeout(autosave, 5000);
+        }
+
+        // Save when closing
+        return function () {
+            clearInterval(timeout);
+            saveIfNeeded();
         }
     });
 

@@ -6,6 +6,7 @@ class Page {
     stage: string
     icon: string
     pageIndex: number
+    pathname: string
 
     constructor(data: any) {
         this._id = data._id;
@@ -14,6 +15,7 @@ class Page {
         this.stage = data.stage;
         this.icon = data.icon;
         this.pageIndex = data.pageIndex;
+        this.pathname = data.pathname
     }
 
     isPublished() {

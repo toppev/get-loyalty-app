@@ -78,7 +78,7 @@ export default function (props: PasswordResetRequestDialogProps) {
                         onClick={() => {
                             setButtonText('Sending...')
                             setButtonDisabled(true)
-                            passwordResetRequest(email).then(r => {
+                            forgotPassword(email).then(_res => {
                                 setMessage('We have emailed you a password request link if the email exists.')
                             }).catch(() => {
                                 setMessage('An error occurred.');
@@ -94,6 +94,6 @@ export default function (props: PasswordResetRequestDialogProps) {
 }
 
 
-async function passwordResetRequest(email: string) {
-    await post('/user/resetpassword', { email })
+function forgotPassword(email: string) {
+    return post('/user/forgotpassword', { email })
 }

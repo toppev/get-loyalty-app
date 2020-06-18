@@ -98,6 +98,11 @@ const useStyles = makeStyles((theme: Theme) =>
         center: {
             textAlign: 'center'
         },
+        saveButton: {},
+        pathnameDiv: {},
+        pathnameField: {
+            margin: '10px 0px'
+        },
         iconTitle: {
             color: theme.palette.grey[600]
         },
@@ -180,6 +185,7 @@ export default function () {
                             actions={(
                                 <>
                                     <Button
+                                        disabled={pageOpen?._id === page._id}
                                         className={classes.actionButton}
                                         color="primary"
                                         variant="contained"
@@ -238,20 +244,65 @@ export default function () {
                         <div className={`${classes.settingDiv} ${classes.center}`}>
                             <Typography className={classes.iconTitle} variant="h6">Icon</Typography>
                             <p dangerouslySetInnerHTML={{ __html: pageOpen.icon }}/>
-                            <IconSelector onSubmit={(icon) => {
-                                otherRequests.performRequest(
-                                    () => {
-                                        pageOpen.icon = icon;
-                                        return updatePage(pageOpen, false)
-                                    }
-                                )
-                            }}/>
+                            <IconSelector
+                                initialIcon={pageOpen.icon}
+                                onSubmit={(icon) => {
+                                    otherRequests.performRequest(
+                                        () => {
+                                            pageOpen.icon = icon;
+                                            return updatePage(pageOpen, false)
+                                        }
+                                    )
+                                }}/>
                             <p className={classes.info}>Icons are used in the site navigation bar</p>
+                        </div>
+                    </Paper>
+                    <Paper className={classes.card}>
+                        <div className={`${classes.settingDiv} ${classes.center}`}>
+                            <Typography className={classes.iconTitle} variant="h6">Pathname</Typography>
+                            <PathnameField
+                                initialValue={pageOpen.pathname}
+                                onSubmit={(pathname) => {
+                                    otherRequests.performRequest(
+                                        () => {
+                                            pageOpen.pathname = pathname;
+                                            return updatePage(pageOpen, false)
+                                        }
+                                    )
+                                }}
+                            />
                         </div>
                     </Paper>
                 </Box>
                 <PageEditor page={pageOpen}/>
             </div>}
+        </div>
+    )
+}
+
+interface PathnameFieldProps {
+    onSubmit: (pathname: string) => any
+    initialValue: string
+}
+
+function PathnameField({ onSubmit, initialValue }: PathnameFieldProps) {
+
+    if (!initialValue.startsWith('/')) {
+        initialValue = `/${initialValue}`;
+    }
+
+    const classes = useStyles();
+
+    return (
+        <div className={classes.pathnameDiv}>
+            <TextField
+                className={classes.pathnameField}
+                name="pathname"
+                label="URL pathname of this page"
+                placeholder="e.g /home or /rewards"
+                defaultValue={initialValue}
+                onChange={(e) => onSubmit(e.target.value)}
+            />
         </div>
     )
 }

@@ -1,16 +1,38 @@
 import React, { useState } from "react";
 import CloseButton from "../../common/button/CloseButton";
-import { Button, createStyles, Dialog, Grid, Theme } from "@material-ui/core";
+import { Button, Collapse, createStyles, Dialog, Grid, TextField, Theme } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import SVGIcons from "./SVGIcons";
+import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
+import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
-        icon: {},
+        icon: {
+            textAlign: 'center'
+        },
         selectButton: {},
         iconDiv: {
             margin: '7px',
             textAlign: 'center'
+        },
+        customHtmlDiv: {
+            textAlign: 'center',
+            margin: '10px 0px'
+        },
+        htmlField: {
+            width: '85%',
+        },
+        saveButton: {
+            marginTop: '8px'
+        },
+        info: {
+            color: theme.palette.info.light
+        },
+        iconPreview: {
+            '& *': {
+                height: '60px'
+            }
         }
     }));
 
@@ -19,49 +41,95 @@ interface IconSelectorProps {
      * When user selects an icon. Returns HTML
      */
     onSubmit: (icon: string) => any
+    initialIcon: string
 }
 
 export default function (props: IconSelectorProps) {
-    const { onSubmit } = props;
+
+    const classes = useStyles();
+
+    const { onSubmit, initialIcon } = props;
 
     const [open, setOpen] = useState(false);
     const [icons, setIcons] = useState<string[]>(SVGIcons);
+    const [customOpen, setCustomOpen] = useState(false);
+    // TODO: only set initialIcon if it was a custom icon
+    const [html, setHtml] = useState(initialIcon);
 
     return (
         <div>
             <Button
+                size="small"
                 variant="contained"
                 onClick={() => setOpen(true)}
-            >View Icons</Button>
+            >Select Icon</Button>
             <Dialog open={open} fullWidth>
                 <CloseButton onClick={() => setOpen(false)}/>
                 <Grid container>
-                    {icons.map((icon) => (
-                        <Grid item xs={4}>
-                            <Icon icon={icon} onSelect={() => {
+                    {icons.map((icon, i) => (
+                        <Grid item xs={4} key={i}>
+                            <SeletableIcon icon={icon} onSelect={() => {
                                 setOpen(false)
                                 onSubmit(icon)
                             }}/>
                         </Grid>
                     ))}
                 </Grid>
+
+                <div>
+                    <div className={classes.customHtmlDiv}>
+                        <Button
+                            variant="outlined"
+                            onClick={() => setCustomOpen(!customOpen)}
+                            startIcon={customOpen ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>}
+                        >Custom HTML</Button>
+                        <Collapse in={customOpen} timeout="auto" unmountOnExit>
+                            <p className={classes.info}>If you want a custom icon, insert valid HTML (and inlined css)
+                                below</p>
+                            <TextField
+                                className={classes.htmlField}
+                                label="Insert your custom HTML here"
+                                multiline
+                                rows={2}
+                                rowsMax={8}
+                                variant="outlined"
+                                defaultValue={initialIcon}
+                                onChange={(e) => setHtml(e.target.value)}
+                            />
+                            <div>
+                                <p className={`${classes.iconPreview} ${classes.icon}`}
+                                   dangerouslySetInnerHTML={{ __html: html }}/>
+                                <Button
+                                    className={classes.saveButton}
+                                    disabled={!html.trim() || html === initialIcon}
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={() => {
+                                        setOpen(false)
+                                        onSubmit(html)
+                                    }}
+                                >Save</Button>
+                            </div>
+                        </Collapse>
+                    </div>
+                </div>
             </Dialog>
         </div>
     )
 }
 
-interface IconProps {
+interface SelectableIconProps {
     icon: string
     onSelect: () => any
 }
 
-function Icon({ icon, onSelect }: IconProps) {
+function SeletableIcon({ icon, onSelect }: SelectableIconProps) {
 
     const classes = useStyles();
 
     return (
         <div className={classes.iconDiv}>
-            <p dangerouslySetInnerHTML={{ __html: icon }} className={classes.icon}/>
+            <p className={`${classes.iconPreview} ${classes.icon}`} dangerouslySetInnerHTML={{ __html: icon }}/>
             <Button
                 className={classes.selectButton}
                 variant="contained"

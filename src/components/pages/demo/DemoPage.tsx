@@ -4,6 +4,7 @@ import QRCode from "qrcode.react";
 import React from "react";
 import CopyToClipboard from '../../common/CopyToClipboarad';
 import { APP_URL, BUSINESS_ID } from "../../../config/axios";
+import PreviewIframe from "../../common/PreviewIframe";
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -52,7 +53,7 @@ export default function () {
     return (
         <Box display="flex" flexWrap="wrap" flexDirection="row" alignItems="center" className={classes.boxDesktop}>
             <Box className={classes.item}>
-                <PreviewWebsite src={src}/>
+                <PreviewIframe src={src} className={classes.pagePreview}/>
             </Box>
             <Box className={classes.item}>
                 <div className={classes.qrCodeStuff}>
@@ -86,18 +87,5 @@ export default function () {
             </Box>
 
         </Box>
-    )
-}
-
-interface PreviewWebsiteProps {
-    src: string
-}
-
-function PreviewWebsite(props: PreviewWebsiteProps) {
-
-    const classes = useStyles();
-
-    return (
-        <iframe className={classes.pagePreview} title="Page Preview" src={props.src} height={640} width={360}/>
     )
 }

@@ -1,16 +1,6 @@
 import React from "react";
 import { placeholders } from "./Placeholders";
-import {
-    Button,
-    createStyles,
-    Divider,
-    Table,
-    TableCell,
-    TableContainer,
-    TableRow,
-    Theme,
-    Typography
-} from "@material-ui/core";
+import { Button, createStyles, Table, TableCell, TableContainer, TableRow, Theme, Typography, TableBody } from "@material-ui/core";
 import Tooltip from "@material-ui/core/Tooltip";
 import { makeStyles } from "@material-ui/core/styles";
 import { usePlaceholderContext } from "./placeholderContext";
@@ -54,17 +44,18 @@ export default function ({ onSelect }: PlaceholderSelectorProps) {
                 <p>You also just type the placeholder.</p>
             </div>
             {Object.entries(placeholders).map(([key, value]) => (
-                <div>
+                <div key={key}>
                     <TableContainer>
                         <Typography variant="h6" className={classes.categoryName}>{value.name}</Typography>
                         <Table>
+                            <TableBody>
                             {Object.entries(value.placeholders).map(([property, placeholder]) => {
 
                                     const available = !placeholder.available || placeholder.available(placeholderContext)
                                     const text = `{{${value.identifier}.${property}}}`;
 
                                     return (
-                                        <TableRow>
+                                        <TableRow key={placeholder.name}>
                                             <TableCell align="left">{placeholder.name}</TableCell>
                                             <TableCell align="center">{placeholder.description}</TableCell>
                                             <TableCell align="right">
@@ -94,7 +85,7 @@ export default function ({ onSelect }: PlaceholderSelectorProps) {
                                     )
                                 }
                             )}
-                            <Divider/>
+                            </TableBody>
                         </Table>
                     </TableContainer>
                 </div>

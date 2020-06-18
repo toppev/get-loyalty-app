@@ -2,24 +2,28 @@ import { useQuery } from "../../hooks/useQuery";
 import { useContext, useEffect, useState } from "react";
 import AppContext from "../../context/AppContext";
 import { get } from "../../config/axios";
+import { AxiosResponse } from "axios";
 
-export default function () {
 
-    const [error, setError] = useState('');
+export default function (callback?: (res: AxiosResponse) => any, onError?: (err: any) => any) {
+
     const resetCode = useQuery().get('passwordReset');
-    const appContext = useContext(AppContext);
 
     useEffect(() => {
         if (resetCode) {
             get(`/resetpassword/${resetCode}`)
                 .then(res => {
-                    appContext.setUser(res.data);
+                    if (callback) {
+                        callback(res);
+                    }
                 })
                 .catch((err) => {
-                    setError(`Error ${err.response.status}: ${err.response?.message || err}`)
+                    // setError(`Error ${err.response.status}: ${err.response?.message || err}`)
+                    if (onError) {
+                        onError(err);
+                    }
                 })
         }
     }, [resetCode])
 
-    return { error }
 }

@@ -89,7 +89,7 @@ export default function ({ page }: PageEditorProps) {
                 page={page}
                 _id={page._id}
                 selectPlaceholder={selectPlaceholder}
-                onSaveFail={(err: string) => setError(err)}
+                setError={(err: string) => setError(err)}
             />
             <Dialog fullWidth open={!!selectPlaceholderCallback}>
                 <CloseButton onClick={() => {
