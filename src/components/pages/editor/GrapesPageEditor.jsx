@@ -2,6 +2,7 @@ import GrapesJS from 'grapesjs';
 import gjsBlocksBasic from 'grapesjs-blocks-basic';
 import grapesjsTabs from 'grapesjs-tabs';
 import grapesjsTouch from 'grapesjs-touch';
+import grapesjsTuiImageEditor from 'grapesjs-tui-image-editor';
 import 'grapesjs/dist/css/grapes.min.css';
 import React, { useEffect } from "react";
 import { getBusinessUrl } from "../../../config/axios";
@@ -35,11 +36,7 @@ function GrapesPageEditor(props) {
                 gjsBlocksBasic,
                 grapesjsTabs,
                 grapesjsTouch,
-
-                // Add CKEditor?
-                // didn't really work :/
-
-                // Add grapesjs-tui-image-editor?
+                grapesjsTuiImageEditor
             ],
             storageManager: {
                 type: 'remote',
@@ -74,10 +71,13 @@ function GrapesPageEditor(props) {
         addRichTextEditorPlaceholders(editor, placeholderContext);
 
         const saveIfNeeded = () => {
+            console.log(editor.getDirtyCount());
             if (editor.getDirtyCount()) {
-                editor.store();
+                editor.store()
             }
         }
+
+        /* Currently disabled because editor#getDirtyCount does not reset for some reason
 
         let timeout = setTimeout(autosave, 10000);
 
@@ -86,10 +86,11 @@ function GrapesPageEditor(props) {
             saveIfNeeded()
             timeout = setTimeout(autosave, 5000);
         }
+        */
 
         // Save when closing
         return function () {
-            clearInterval(timeout);
+            // clearInterval(timeout);
             saveIfNeeded();
         }
     });
