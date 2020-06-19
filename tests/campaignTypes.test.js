@@ -61,8 +61,10 @@ describe('basic campaign', () => {
 
 describe('stamps campaign', () => {
 
-    const campaign1 = { id: '5eebc5b43c36700f335428d4' }
-    const campaign2 = { id: '5eebc5d6d8d37b456ec1f4e0' }
+    // Current campaign
+    const campaign1 = { id: '5eebc5b43c36700f335428d4', start: (Date.now() - 1000), end: (Date.now() + 120000) }
+    const purchase1 = { createdAt: Date.now() }
+    const purchase2 = { createdAt: (Date.now() - 60000) }
 
     it('invalid purchase does not trigger', () => {
         expect(stamps.requirement({ values: ['1'], customerData: { purchases: [] }, campaign: campaign1 })).toBeFalsy()
@@ -78,33 +80,39 @@ describe('stamps campaign', () => {
     })
 
     it('has 1 purchase, requires 2', () => {
-        const purchase = { campaigns: [campaign1.id] }
         expect(stamps.requirement({
             values: ['2'],
             purchase: {},
-            customerData: { purchases: [purchase] },
+            customerData: { purchases: [purchase1] },
             campaign: campaign1
         })).toBeTruthy()
     })
 
     it('has 2 purchases, requires 2', () => {
-        const purchase = { campaigns: [campaign1.id] }
         expect(stamps.requirement({
             values: ['2'],
             purchase: {},
-            customerData: { purchases: [purchase, purchase] },
+            customerData: { purchases: [purchase1, purchase1] },
             campaign: campaign1
         })).toBeFalsy()
     })
 
-    it('has 1 purchase from other campaign, requires 2', () => {
-        const purchase = { campaigns: [campaign2.id] }
+    it('has 1 too old purchase, requires 2', () => {
         expect(stamps.requirement({
             values: ['2'],
             purchase: {},
-            customerData: { purchases: [purchase] },
+            customerData: { purchases: [purchase2] },
             campaign: campaign1
         })).toBeFalsy()
+    })
+
+    it('campaign has no end, requires 1', () => {
+        expect(stamps.requirement({
+            values: ['1'],
+            purchase: {},
+            customerData: { purchases: [] },
+            campaign: { id: '5eec74a71c780d72dc5d1374', start: (Date.now() - 5000) }
+        })).toBeTruthy()
     })
 
 })

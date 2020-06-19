@@ -4,7 +4,7 @@
  *
  * All types should have a meaningful "name" property and a brief "description" property
  *
- * Each type may have "requirement" function that calculates if the requirement is met.
+ * Each type may have "requirement" function that calculates if the user can receive the rewards
  * If humans are needed (to answer a question), the "question" attribute should be specified
  *
  * Parameters to the requirement function: values (from database, valueDescriptions property should describe these values),
@@ -49,8 +49,11 @@ module.exports = {
         }],
         requirement: function ({ values, customerData, purchase, campaign }) {
             const maxStamps = parseInt(values[0], 10)
-            if (!maxStamps || !purchase) return false
-            const currentStamps = customerData.purchases.filter(purchase => purchase.campaigns.includes(campaign.id))
+            if (!maxStamps || !purchase) {
+                return false
+            }
+            const duringCampaign = (date) => date > campaign.start && (!campaign.end || date < campaign.end)
+            const currentStamps = customerData.purchases.filter(purchase => duringCampaign(purchase.createdAt))
             return currentStamps.length + 1 === maxStamps
         }
     }
