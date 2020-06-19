@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import CloseButton from "../../common/button/CloseButton";
-import { Button, Collapse, createStyles, Dialog, Grid, TextField, Theme } from "@material-ui/core";
+import { Button, Collapse, createStyles, Dialog, Grid, Paper, TextField, Theme } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import SVGIcons from "./SVGIcons";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
@@ -33,6 +33,13 @@ const useStyles = makeStyles((theme: Theme) =>
             '& *': {
                 height: '60px'
             }
+        },
+        previewDiv: {
+            textAlign: 'center'
+        },
+        previewPaper: {
+            width: '140px',
+            margin: 'auto'
         }
     }));
 
@@ -53,8 +60,7 @@ export default function (props: IconSelectorProps) {
     const [open, setOpen] = useState(false);
     const [icons, setIcons] = useState<string[]>(SVGIcons);
     const [customOpen, setCustomOpen] = useState(false);
-    // TODO: only set initialIcon if it was a custom icon
-    const [html, setHtml] = useState(initialIcon);
+    const [html, setHtml] = useState(icons.includes(initialIcon) ? '' : initialIcon);
 
     return (
         <div>
@@ -93,13 +99,16 @@ export default function (props: IconSelectorProps) {
                                 rows={2}
                                 rowsMax={8}
                                 variant="outlined"
-                                defaultValue={initialIcon}
+                                defaultValue={html}
                                 onChange={(e) => setHtml(e.target.value)}
                             />
                             <div>
-                                <p className={`${classes.iconPreview} ${classes.icon}`}
-                                   dangerouslySetInnerHTML={{ __html: html }}/>
+                                    <Paper className={classes.previewPaper}>
+                                        <p className={`${classes.iconPreview} ${classes.icon}`}
+                                           dangerouslySetInnerHTML={{ __html: html }}/>
+                                    </Paper>
                                 <Button
+                                    size="small"
                                     className={classes.saveButton}
                                     disabled={!html.trim() || html === initialIcon}
                                     variant="contained"
@@ -108,7 +117,7 @@ export default function (props: IconSelectorProps) {
                                         setOpen(false)
                                         onSubmit(html)
                                     }}
-                                >Save</Button>
+                                >Save HTML</Button>
                             </div>
                         </Collapse>
                     </div>

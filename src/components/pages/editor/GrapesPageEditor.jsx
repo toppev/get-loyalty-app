@@ -56,12 +56,11 @@ function GrapesPageEditor(props) {
             editor.setDevice("Mobile portrait")
         })
 
-
         editor.on('storage:start:store', () => {
             uploadHtmlCss(props.page, editor.getHtml(), editor.getCss())
                 .then(() => props.setError())
                 .catch(err => {
-                    props.setError(err?.response?.message || `Oops... Something went wrong. ${err}`, editor.store)
+                    props.setError(err?.response?.message || `Oops... Something went wrong. ${`Status code: ${err?.response?.status}` || err}`, editor.store)
                 });
         });
 
