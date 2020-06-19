@@ -7,17 +7,13 @@ const productSchema = require('./product').schema;
 const { Schema } = mongoose;
 
 const purchaseSchema = new Schema({
-    // Campaigns that "accepted" this purchase
-    // i.e their requirement function returned true
-    campaigns: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Campaign',
-    }],
     categories: [{
         type: Schema.Types.ObjectId,
         ref: 'Category',
     }],
     products: [productSchema],
+}, {
+    timestamps: true,
 });
 
 const userSchema = new Schema({
