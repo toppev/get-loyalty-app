@@ -151,7 +151,7 @@ userSchema.methods.comparePassword = function (password) {
 };
 
 userSchema.methods.isBirthday = function () {
-    return campaigns.isBirthday.requirement([], this, undefined, undefined)
+    return campaigns.isBirthday.requirement({ user: this })
 }
 
 userSchema.methods.toJSON = function () {

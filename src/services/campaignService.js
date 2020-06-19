@@ -156,7 +156,7 @@ async function isEligible(user, campaign, answerQuestion) {
         // Return true if the user is not eligible
         const campaignType = campaignTypes[req.type];
         if (campaignType && campaignType.requirement) {
-            if (!campaignType.requirement(req.values, user, undefined, customerData)) {
+            if (!campaignType.requirement({ values: req.values, user, customerData })) {
                 return true;
             }
         }
