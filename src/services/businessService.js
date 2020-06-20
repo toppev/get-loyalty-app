@@ -2,7 +2,6 @@ const Business = require('../models/business');
 const User = require('../models/user');
 
 module.exports = {
-    getBusinessByWebsite,
     getOwnBusiness,
     createBusiness,
     getBusiness,
@@ -18,16 +17,6 @@ module.exports = {
 function getOwnBusiness(user) {
     const customerData = user.customerData.find(cd => cd.role === 'business');
     return customerData ? customerData.business : null;
-}
-
-/**
- * Get the business the user is currently visiting
- * @param user the user object
- * @param url the website url
- */
-async function getBusinessByWebsite(user, url) {
-    const business = await Business.findOne({ 'config.loyaltyWebsite': url })
-    return business;
 }
 
 /**

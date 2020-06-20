@@ -47,25 +47,7 @@ const configSchema = new Schema({
                 default: 'You got new rewards: {0}'
             }
         }
-    },
-    // Where the loyalty app is located
-    loyaltyWebsite: {
-        type: String,
-        default: '',
-        // IDEA: trim the url so it will work? e.g no https:// or trailing slashes etc to break it?
-        // SEE businessService #getCurrentBusiness and also implement trimming there
-        index: true, // Used to get whose site it is
-        validate: {
-            // IDEA: Should we require redirect to our servers before adding the website?
-            validator: async function (value) {
-                if (!value) {
-                    return true;
-                }
-                const business = await Business.find({ 'public.website': value }).limit(2);
-                return !business.length || (business[0].id === this.id && business.length === 1);
-            }, message: 'Someone has already entered that business. Contact us if you want it removed.',
-        },
-    },
+    }
 });
 
 const planSchema = new Schema({

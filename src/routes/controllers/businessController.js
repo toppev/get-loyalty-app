@@ -7,7 +7,6 @@ const validation = require('../../helpers/bodyFilter');
 const businessValidator = validation.validate(validation.businessValidator);
 
 // Get the business who owns the current site
-router.get('/whois', getWebsiteOwner); // TODO: create a test?
 router.post('/create', businessValidator, createBusiness);
 router.get('/:businessId/public', getPublicInformation);
 router.get('/:businessId', permit('business:get'), getBusiness);
@@ -69,13 +68,6 @@ function listRewards(req, res, next) {
     const { businessId } = req.params;
     campaignService.getAllRewards(businessId)
         .then(rewards => res.json(rewards))
-        .catch(err => next(err))
-}
-
-function getWebsiteOwner(req, res, next) {
-    const url = req.query.url || req.hostname + req.originalUrl
-    businessService.getBusinessByWebsite(req.user, url)
-        .then(data => res.json({ business: data && data.id }))
         .catch(err => next(err))
 }
 
