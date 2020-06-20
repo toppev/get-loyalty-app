@@ -3,7 +3,7 @@ import './App.css';
 import { getPageHtml, getPages } from "./services/pageService";
 import Page, { ERROR_HTML } from "./model/Page";
 import PageView from "./components/PageView";
-import { getBusinessId, profileRequest, registerRequest } from "./services/authenticationService";
+import { profileRequest, registerRequest } from "./services/authenticationService";
 import { BrowserRouter as Router, Redirect, Route, Switch } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import { setBusinessId } from "./config/axios";
@@ -35,22 +35,21 @@ function App() {
     }, [])
 
     const onLogin = (_res: AxiosResponse) => {
-        getBusinessId()
-            .then(bId => {
-                if (!bId || bId.length !== 24) {
-                    setError('Invalid business')
-                } else {
-                    setBusinessId(bId)
-                    checkCoupon()
-                        .then(loadPages)
-                        .catch(err => setError(err))
-                }
-            })
-            .catch(_err => setError('Failed to identify business :('))
+        checkCoupon()
+            .then(loadPages)
+            .catch(err => setError(err))
     }
 
-    const query = new URLSearchParams(window.location.search);
-    const couponCode = query.get('coupon') || query.get('code');
+    const query = new URLSearchParams(window.location.search)
+
+    const businessId = query.get('business') || query.get('businessID')
+    if (!businessId || businessId.length !== 24) {
+        setError('Invalid business')
+    } else {
+        setBusinessId(businessId)
+    }
+
+    const couponCode = query.get('coupon') || query.get('code')
     const checkCoupon = async () => couponCode && claimCoupon(couponCode)
 
     // Load pages

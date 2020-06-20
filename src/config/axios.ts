@@ -10,7 +10,6 @@ const instance = axios.create({
 
 // Used in requests. Easier if it's stored here instead of state
 export let businessId = BUSINESS_ID || 'undefined';
-const headers = {}
 
 function setBusinessId(id: string) {
     businessId = id;
@@ -29,7 +28,6 @@ async function get(path: string) {
     return instance({
         method: 'GET',
         url: BASE_URL + path,
-        headers: headers
     });
 }
 
@@ -40,7 +38,6 @@ async function post(path: string, data: any) {
         data: data,
         headers: {
             'Content-Type': 'application/json',
-            ...headers
         }
     });
 }
@@ -52,7 +49,6 @@ async function patch(path: string, data: any) {
         data: data,
         headers: {
             'Content-Type': 'application/json',
-            ...headers
         }
     });
 }

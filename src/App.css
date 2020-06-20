@@ -20,7 +20,7 @@
   display: table-cell;
   color: #c6c6c6;
   text-align: center;
-  padding: 7px;
+  padding: 2px;
   font-size: 16px;
   text-decoration: none;
 }
@@ -36,7 +36,7 @@
 }
 
 .pageIcon {
-  width: 40px;
+  width: 28px;
   margin: auto;
   display: block;
 }
