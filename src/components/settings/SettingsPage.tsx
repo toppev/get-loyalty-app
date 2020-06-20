@@ -74,11 +74,6 @@ export default function () {
     // If changed will update the state so the snackbar opens
     const validateAndSnackbar = (value: Business) => {
         const errors: FormikErrors<Business> = {};
-        if (value.config.loyaltyWebsite?.trim() && !isDomain(value.config.loyaltyWebsite)) {
-            // FIXME: breaks #submitForm
-            // errors.config.loyaltyWebsite = "That doesn't look like a domain!"
-        }
-        // FIXME: does not work correctly
         if (!_.isEqual(value, business)) {
             setSaved(false);
             console.log(value, business)
@@ -156,10 +151,9 @@ export default function () {
                             <Form>
                                 <TextField
                                     className={classes.field}
-                                    name="config.loyaltyWebsite"
+                                    name="todo.todo"
                                     type="text"
-                                    label="Your loyalty app domain"
-                                    placeholder="yourdomain.com"
+                                    label="TODO: add something here"
                                 />
                                 <Tooltip
                                     enterDelay={200}
