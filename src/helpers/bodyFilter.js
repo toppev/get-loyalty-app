@@ -34,9 +34,7 @@ const userValidator = (user) => {
     delete user._id
     delete user.superRole
     delete user.lastVisit
-    if (user.authentication) {
-        delete user.authentication.profile
-    }
+    delete user.authentication
     delete user.customerData
 };
 

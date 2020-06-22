@@ -29,7 +29,7 @@ const userSchema = new Schema({
                 if (!value) {
                     return true;
                 }
-                const users = await User.find({ email: value }).limit(2);
+                const users = await User.find({ email: value.toLowerCase() }).limit(2);
                 return !users.length || (users[0].id === this.id && users.length === 1);
             }, message: 'Email is already taken.',
         },
@@ -142,6 +142,9 @@ userSchema.pre('save', async function (next) {
             throw new Error('Invalid password')
         }
         this.password = await bcrypt.hash(this.password, 12);
+    }
+    if (this.isModified('email') && this.email) {
+        this.email = this.email.toLowerCase()
     }
     next();
 });

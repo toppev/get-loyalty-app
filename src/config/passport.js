@@ -8,6 +8,7 @@ passport.use(new LocalStrategy({
         passwordField: 'password'
     },
     async function (email, password, next) {
+        email = email.toLowerCase()
         return User.findOne({ email }).then(user => {
             if (user) {
                 if (user.authentication.service && user.authentication.service.valueOf() !== 'local') {
