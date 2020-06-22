@@ -45,10 +45,25 @@ app.use(parser.json({
     limit: limit,
 }));
 
-app.use(cors({
-    origin: ['http://localhost:3000', 'http://localhost:3002'],
-    credentials: true
+const corsOptions = {
+    'http://localhost:3000': {
+        credentials: true
+    },
+    'http://localhost:3002': {
+        credentials: true,
+    },
+    'https://pwa.getloyalty.app': {
+        credentials: true,
+        methods: ['GET', 'HEAD']
+    },
+}
+app.use(cors(function (req, callback) {
+    let options = corsOptions[req.header('Origin')]
+    if (!options) options = { origin: false }
+    else options = { origin: true, ...options }
+    callback(null, options)
 }));
+
 require('./src/config/passport');
 app.use(require('./src/config/sessionConfig'));
 app.use(passport.initialize());
