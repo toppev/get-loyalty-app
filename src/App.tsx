@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
-import { getPageHtml, getPages } from "./services/pageService";
-import Page, { ERROR_HTML } from "./model/Page";
+import { getPages } from "./services/pageService";
+import Page from "./model/Page";
 import PageView from "./components/PageView";
 import { profileRequest, registerRequest } from "./services/authenticationService";
-import { BrowserRouter as Router, Redirect, Route, Switch } from "react-router-dom";
+import { Redirect, Route, Switch } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import { setBusinessId } from "./config/axios";
+import { businessId, setBusinessId } from "./config/axios";
 import { AxiosResponse } from "axios";
 import { claimCoupon } from "./services/couponService";
 
@@ -15,15 +15,14 @@ function App() {
     const [error, setError] = useState<any>()
     const [pages, setPages] = useState<Page[]>([])
 
-    const updatePage = (page: Page) => setPages(prev => [...prev.filter(p => p._id !== page._id), page])
-
     // Authentication
     useEffect(() => {
         profileRequest()
             .then(onLogin)
             .catch(err => {
                 // TODO: Option to login on other responses?
-                if (err.response?.status === 403) {
+                const { status } = err.response;
+                if (status === 403 || status === 404) {
                     registerRequest()
                         .then(onLogin)
                         .catch(_err => setError('Could not register a new account. Something went wrong :('))
@@ -35,33 +34,27 @@ function App() {
     }, [])
 
     const onLogin = (_res: AxiosResponse) => {
+        const query = new URLSearchParams(window.parent.location.search)
+        const id = query.get('business') || query.get('businessID')
+        if (!id || id.length !== 24) {
+            if (!error && businessId.length !== 24) {
+                setError('Invalid business')
+            }
+        } else {
+            setBusinessId(id)
+        }
+        const couponCode = query.get('coupon') || query.get('code')
+        const checkCoupon = async () => couponCode && claimCoupon(couponCode)
         checkCoupon()
-            .then(loadPages)
+            .then(() => loadPages())
             .catch(err => setError(err))
     }
 
-    const query = new URLSearchParams(window.location.search)
-
-    const businessId = query.get('business') || query.get('businessID')
-    if (!businessId || businessId.length !== 24) {
-        setError('Invalid business')
-    } else {
-        setBusinessId(businessId)
-    }
-
-    const couponCode = query.get('coupon') || query.get('code')
-    const checkCoupon = async () => couponCode && claimCoupon(couponCode)
-
-    // Load pages
     const loadPages = () => {
         getPages()
             .then(res => {
                 const newPages = res.data
-                // For slightly better performance, load the first page (landing page) first
-                if (newPages?.length) {
-                    const first = newPages[0]
-                    fetchHtml(first).then(() => newPages.forEach(fetchHtml))
-                }
+                setPages(newPages)
             })
             .catch(err => {
                 console.log(err)
@@ -69,34 +62,20 @@ function App() {
             })
     }
 
-    const fetchHtml = async (page: Page) => {
-        try {
-            const res = await getPageHtml(page._id)
-            page.html = res.data
-            updatePage(page)
-        } catch (err) {
-            console.log(err)
-            page.html = ERROR_HTML
-            updatePage(page)
-        }
-    }
-
     return (
         <div className="App">
             {error && <p className="ErrorMessage">Error: {error.response?.message || error.toString()}</p>}
-            <Router>
-                <Switch>
-                    {pages?.map(page => (
-                        <Route exact path={`/${page.pathname}`} key={page._id}>
-                            <PageView page={page}/>
-                        </Route>
-                    ))}
-                    {pages.length > 0 && <Redirect to={pages[0].pathname}/>}
-                </Switch>
-                <Navbar pages={pages || []}/>
-            </Router>
+            <Switch>
+                {pages?.map(page => (
+                    <Route exact path={`/${page.pathname}`} key={page._id}>
+                        <PageView page={page}/>
+                    </Route>
+                ))}
+                {pages.length > 0 && <Redirect to={{ pathname: pages[0].pathname, search: window.location.search }}/>}
+            </Switch>
+            <Navbar pages={pages || []}/>
         </div>
     )
 }
 
-export default App;
+export default App

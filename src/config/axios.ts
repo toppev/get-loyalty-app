@@ -16,9 +16,9 @@ function setBusinessId(id: string) {
 }
 
 /**
- * Returns BASE_URL/business/:id
+ * Returns "/business/:id"
  * For example,
- * http://localhost:3000/business/5ed26d9d9a3bf3a7eb7dd587
+ * /business/5ed26d9d9a3bf3a7eb7dd587
  */
 function getBusinessUrl() {
     return `/business/${businessId}`;

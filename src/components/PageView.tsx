@@ -1,5 +1,6 @@
 import React from "react";
-import Page, { LOADING_HTML } from "../model/Page";
+import Page from "../model/Page";
+import { getPageHtmlSource } from "../services/pageService";
 
 interface PageViewProps {
     page: Page
@@ -7,9 +8,10 @@ interface PageViewProps {
 
 export default function (props: PageViewProps) {
     const { page } = props
-    const html = page.html || LOADING_HTML
 
     return (
-        <div className="page-view" dangerouslySetInnerHTML={{ __html: html }}/>
+        <div className="page-holder">
+            <iframe height="100%" width="100%" frameBorder="0" title={page.pathname} src={getPageHtmlSource(page._id)}/>
+        </div>
     )
 }
