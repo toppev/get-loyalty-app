@@ -1,11 +1,19 @@
 const PushNotification = require('../models/pushNotification');
 const Business = require('../models/business');
+const customerService = require('../services/customerService');
+const webpushService = require('../services/webpushService');
 const StatusError = require('../helpers/statusError');
 
 module.exports = {
+    addSubscription,
     getPushNotificationHistory,
     sendPushNotification,
     getPushNotificationInfo
+}
+
+async function addSubscription(userId, businessId, data) {
+    const { token, auth, endpoint } = data;
+    await customerService.updateCustomer(userId, businessId, { pushNotifications: { token, auth, endpoint } })
 }
 
 /**
@@ -52,17 +60,26 @@ async function sendPushNotification(businessId, notificationParam) {
     }
     const expires = await getCooldownExpiration(business, notifications);
     if (expires) {
-        throw new StatusError(`You're on still cooldown. You can send next push notification ${expires.toUTCString()}`, 400);
+        throw new StatusError(`You're still on cooldown. You can send next push notification ${expires.toUTCString()}`, 400);
     }
-    let receivers = 0;
-    // TODO: send the actual push notification
-
-    const newNotification = new PushNotification({...notificationParam, receivers});
+    let users = await customerService.searchCustomers(businessId, 0)
+    users = users.filter(u => {
+        const pn = u.customerData.pushNotifications
+        return pn && pn.endpoint // good enough
+    })
+    const { title, message: body, link } = notificationParam;
+    // TODO: placeholders?
+    // TODO: add icon? what about tag?
+    const payload = { title, body, link }
+    // FIXME: might not want to await sendNotifications as it may take some time and return before it
+    const result = await webpushService.sendNotification(users.map(u => u.customerData.pushNotifications), payload);
+    const newNotification = new PushNotification({ ...notificationParam, receivers: users.length });
     newNotification.business = businessId;
     await newNotification.save();
     const newCooldown = await getCooldownExpiration(business, [newNotification]);
     return {
         cooldownExpires: newCooldown,
+        result: result,
         notification: newNotification
     }
 }

@@ -88,6 +88,11 @@ const userSchema = new Schema({
                 required: true
             }
         }],
+        pushNotifications: {
+            token: { type: String },
+            auth: { type: String },
+            endpoint: { type: String },
+        },
         // Other customer properties that business can modify freely
         properties: {
             points: {

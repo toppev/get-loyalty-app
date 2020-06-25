@@ -273,14 +273,15 @@ async function rewardAllCustomers(businessId, reward) {
 /**
  * List customers of the business
  * @param businessId the id of the business
- * @param limit maximum number of customers to return, defaults to 100 first if "search" is not specified, otherwise 500
+ * @param limit maximum number of customers to return, defaults to 100 first if "search" is not specified,
+ * otherwise500. 0 for unlimited
  * @param search the string to search, if no limit is given, only the first 500 will be searched
  */
 async function searchCustomers(businessId, limit, search) {
     // If searching, get first 500 customers and filter, otherwise return first 100
     // might fix later
     // FIXME: could be a lot better
-    let users = await _listCustomers(businessId).limit(limit ? limit : search ? 500 : 100);
+    let users = await _listCustomers(businessId).limit(limit !== undefined ? limit : search ? 500 : 100);
     if (search && search.trim().length) {
         users = users.filter(u => JSON.stringify(u).toLowerCase().includes(search));
     }

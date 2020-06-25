@@ -46,12 +46,13 @@ describe('user can', () => {
 
     const userParam = { email: 'asdasd@wada.com', password: 'asdasdasddwa' }
     const testNotification = { title: 'Hello world!', message: 'test notification' }
+    let userId;
     let cookie;
     let business;
 
     beforeAll(async () => {
         // Login
-        const userId = (await new User(userParam).save())._id;
+        userId = (await new User(userParam).save())._id;
         const res = await api
             .post('/user/login/local')
             .send(userParam)
@@ -60,12 +61,30 @@ describe('user can', () => {
         cookie = res.headers['set-cookie'];
     });
 
+    it('subscribe', async () => {
+        const data = {
+            token: 'testtoken',
+            auth: 'testauth',
+            endpoint: 'testendpoint'
+        }
+        await api
+            .post(`/business/${business.id}/notifications/subscribe`)
+            .send(data)
+            .set('Cookie', cookie)
+            .expect(200)
+        const saved = (await User.findById(userId)).customerData[0].pushNotifications
+        expect(saved.token).toBe(data.token)
+        expect(saved.auth).toBe(data.auth)
+        expect(saved.endpoint).toBe(data.endpoint)
+    })
+
     it('send notification', async () => {
         const res = await api
             .post(`/business/${business.id}/notifications`)
             .send(testNotification)
             .set('Cookie', cookie)
             .expect(200);
+        expect(res.body.result.failed).toEqual(1);
         expect(res.body.cooldownExpires).toBeDefined();
     });
 
@@ -76,6 +95,7 @@ describe('user can', () => {
             .expect(200);
         expect(res.body.notifications[0].title).toBe(testNotification.title)
     });
+
 })
 
 
