@@ -71,7 +71,7 @@ async function sendPushNotification(businessId, notificationParam) {
     // TODO: placeholders?
     // TODO: add icon? what about tag?
     const payload = { title, body, link }
-    // FIXME: might not want to await sendNotifications as it may take some time and return before it
+    // FIXME: might not want to await sendNotifications as it may take some time and instead return before it
     const result = await webpushService.sendNotification(users.map(u => u.customerData.pushNotifications), payload);
     const newNotification = new PushNotification({ ...notificationParam, receivers: users.length });
     newNotification.business = businessId;

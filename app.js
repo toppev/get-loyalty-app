@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const parser = require('body-parser');
@@ -12,8 +13,6 @@ const morgan = require('morgan');
 const logger = require('./src/config/logger');
 
 const isTesting = process.env.NODE_ENV === 'test';
-
-require('dotenv').config();
 
 if (!isTesting) {
     mongoose.connect(process.env.MONGO_URI, {
