@@ -110,7 +110,7 @@ export default function (props: IconSelectorProps) {
                                 <Button
                                     size="small"
                                     className={classes.saveButton}
-                                    disabled={!html.trim() || html === initialIcon}
+                                    disabled={!html?.trim() || html === initialIcon}
                                     variant="contained"
                                     color="primary"
                                     onClick={() => {

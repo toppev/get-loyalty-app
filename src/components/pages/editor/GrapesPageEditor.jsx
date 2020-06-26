@@ -13,6 +13,7 @@ import Cookie from "js-cookie";
 import { uploadHtmlCss } from "../../../services/pageService";
 import { addRichTextEditorPlaceholders } from "./blocks/richPlaceholder";
 import { usePlaceholderContext } from "./placeholderContext";
+import { addQRCodeBlock, addQRCodeType } from "./blocks/qrCodeBlock";
 
 // So the editor is not rendered every time if the page id didn't change
 export default React.memo(GrapesPageEditor, propsAreEqual);
@@ -72,6 +73,9 @@ function GrapesPageEditor(props) {
         addCampaignsBlock(bm);
         addUserRewardsBlock(bm);
         addRichTextEditorPlaceholders(editor, placeholderContext);
+
+        addQRCodeType(editor);
+        addQRCodeBlock(bm);
 
         const saveIfNeeded = () => {
             console.log(editor.getDirtyCount());

@@ -22,6 +22,7 @@ import useRequest from "../../hooks/useRequest";
 import RetryButton from "../common/button/RetryButton";
 import PrivacyLink from "../common/PrivacyLink";
 import { isEmail } from "../../util/Validate";
+import IdText from "../common/IdText";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -155,6 +156,7 @@ export default function () {
                                         label="Website (if any)"
                                     />
                                 </Form>
+                                <IdText id={context.business._id}/>
                             </Paper>
                             <Paper className={classes.paper}>
                                 <Typography className={classes.sectionTypography} variant="h6" align="center">Other

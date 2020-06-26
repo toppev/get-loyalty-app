@@ -42,7 +42,7 @@ export default function () {
     const initialNotification = new PushNotification({
         title: '',
         message: '',
-        link: context.business.config.loyaltyWebsite,
+        link: context.business.public.website,
         date: new Date()
     });
 
