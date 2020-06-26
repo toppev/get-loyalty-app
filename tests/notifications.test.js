@@ -63,8 +63,10 @@ describe('user can', () => {
 
     it('subscribe', async () => {
         const data = {
-            token: 'testtoken',
-            auth: 'testauth',
+            keys: {
+                auth: 'testauth',
+                p256dh: 'testtoken'
+            },
             endpoint: 'testendpoint'
         }
         await api
@@ -73,8 +75,8 @@ describe('user can', () => {
             .set('Cookie', cookie)
             .expect(200)
         const saved = (await User.findById(userId)).customerData[0].pushNotifications
-        expect(saved.token).toBe(data.token)
-        expect(saved.auth).toBe(data.auth)
+        expect(saved.token).toBe(data.keys.p256dh)
+        expect(saved.auth).toBe(data.keys.auth)
         expect(saved.endpoint).toBe(data.endpoint)
     })
 
