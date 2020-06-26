@@ -21,7 +21,7 @@ function App() {
             .then(onLogin)
             .catch(err => {
                 // TODO: Option to login on other responses?
-                const { status } = err.response;
+                const status = err?.response?.status;
                 if (status === 403 || status === 404) {
                     registerRequest()
                         .then(onLogin)

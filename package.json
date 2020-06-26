@@ -12,6 +12,7 @@
     "@types/react-dom": "^16.9.8",
     "@types/react-router-dom": "^5.1.5",
     "axios": "^0.19.2",
+    "cra-append-sw": "^2.7.0",
     "qrcode-generator": "^1.4.4",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -21,7 +22,7 @@
   },
   "scripts": {
     "start": "PORT=3002 react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build react-scripts build && cra-append-sw ./public/custom-sw.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

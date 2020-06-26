@@ -1,18 +1,28 @@
 import axios from "axios";
-import { BUSINESS_ID } from "./businessConfig"
 
-const BASE_URL = 'http://localhost:3001';
-
+const BASE_URL = process.env.REACT_APP_API_URL
 const instance = axios.create({
     baseURL: BASE_URL,
     withCredentials: true,
-});
+})
 
 // Used in requests. Easier if it's stored here instead of state
-export let businessId = BUSINESS_ID || 'undefined';
+export let businessId = 'undefined'
+
+const QUEUED: (() => any)[] = []
+
+/**
+ * Queue a function be called when we can send requests
+ * (i.e ID of the business is known)
+ */
+function onReady(func: () => any) {
+    QUEUED.push(func)
+}
 
 function setBusinessId(id: string) {
-    businessId = id;
+    businessId = id
+    QUEUED.forEach(it => it())
+    QUEUED.length = 0
 }
 
 /**
@@ -21,14 +31,14 @@ function setBusinessId(id: string) {
  * /business/5ed26d9d9a3bf3a7eb7dd587
  */
 function getBusinessUrl() {
-    return `/business/${businessId}`;
+    return `/business/${businessId}`
 }
 
 async function get(path: string) {
     return instance({
         method: 'GET',
         url: BASE_URL + path,
-    });
+    })
 }
 
 async function post(path: string, data: any) {
@@ -39,7 +49,7 @@ async function post(path: string, data: any) {
         headers: {
             'Content-Type': 'application/json',
         }
-    });
+    })
 }
 
 async function patch(path: string, data: any) {
@@ -50,7 +60,7 @@ async function patch(path: string, data: any) {
         headers: {
             'Content-Type': 'application/json',
         }
-    });
+    })
 }
 
 export {
@@ -60,4 +70,5 @@ export {
     getBusinessUrl,
     setBusinessId,
     BASE_URL,
+    onReady
 }
