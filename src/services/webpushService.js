@@ -3,12 +3,12 @@ const webpush = require('web-push');
 // TODO: add in .env.example
 const vapidPublicKey = process.env.VAPID_PUBLIC_KEY
 const vapidPrivateKey = process.env.VAPID_PRIVATE_KEY
-// e.g mailto:email@example.com
-let vapidMailto = process.env.VAPID_SUBJECT
+// e.g mailto:email@example.com or a URL
+let vapidSubject = process.env.VAPID_CONTACT
 
 if (process.env.NODE_ENV !== 'test') {
     webpush.setVapidDetails(
-        vapidMailto,
+        vapidSubject,
         vapidPublicKey,
         vapidPrivateKey
     );
@@ -20,12 +20,18 @@ const options = {
     // if we want to support legacy browsers
     //gcmAPIKey: '< GCM API Key >',
     vapidDetails: {
-        subject: vapidMailto,
+        subject: vapidSubject,
         publicKey: vapidPublicKey,
         privateKey: vapidPrivateKey
     }
 };
 
+/**
+ *
+ * @param users One user or an array of users
+ * @param payload A valid payload (e.g a string, JSON is not allowed)
+ * @returns {Promise<{failed: number, sent: number}>}
+ */
 async function sendNotification(users, payload) {
     users = Array.isArray(users) ? users : [users]
     let sent = 0

@@ -12,8 +12,14 @@ module.exports = {
 }
 
 async function addSubscription(userId, businessId, data) {
-    const { token, auth, endpoint } = data;
-    await customerService.updateCustomer(userId, businessId, { pushNotifications: { token, auth, endpoint } })
+    const { endpoint, keys } = data;
+    await customerService.updateCustomer(userId, businessId, {
+        pushNotifications: {
+            endpoint: endpoint,
+            auth: keys.auth,
+            token: keys.p256dh
+        }
+    })
 }
 
 /**
@@ -69,10 +75,17 @@ async function sendPushNotification(businessId, notificationParam) {
     })
     const { title, message: body, link } = notificationParam;
     // TODO: placeholders?
-    // TODO: add icon? what about tag?
-    const payload = { title, body, link }
+    // TODO: add icon?
+    const payloadString = JSON.stringify({
+        title: title,
+        body: body,
+        tag: `loyalty-${businessId}`,
+        data: {
+            link
+        },
+    })
     // FIXME: might not want to await sendNotifications as it may take some time and instead return before it
-    const result = await webpushService.sendNotification(users.map(u => u.customerData.pushNotifications), payload);
+    const result = await webpushService.sendNotification(users.map(u => u.customerData.pushNotifications), payloadString);
     const newNotification = new PushNotification({ ...notificationParam, receivers: users.length });
     newNotification.business = businessId;
     await newNotification.save();
