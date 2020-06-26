@@ -30,7 +30,7 @@ class _ScannerPageState extends State<ScannerPage> {
         children: <Widget>[
           Expanded(
             child: Transform.scale(
-                scale: 0.7,
+                scale: 0.8,
                 child: ScannerWidget(
                   key: globalKey,
                   onScan: _onScanGet,
@@ -62,20 +62,6 @@ class _ScannerPageState extends State<ScannerPage> {
                           child: Text(isScanning ? SCANNING : PAUSED,
                               style: TextStyle(fontSize: 20)),
                           color: isScanning ? Colors.redAccent : Colors.green,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.all(8.0),
-                        child: RaisedButton(
-                          onPressed: () {},
-                          child: Text('unused button',
-                              style: TextStyle(fontSize: 20)),
                         ),
                       ),
                     ],
