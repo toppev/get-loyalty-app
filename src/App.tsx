@@ -15,6 +15,7 @@ function App() {
 
     const [error, setError] = useState<any>()
     const [pages, setPages] = useState<Page[]>([])
+    const [pageRefreshKey, setPageRefreshKey] = useState(0);
 
     // Authentication
     useEffect(() => {
@@ -63,6 +64,8 @@ function App() {
             })
     }
 
+    const refreshPages = () => setPageRefreshKey(pageRefreshKey + 1)
+
     return (
         <div className="App">
             <Helmet>
@@ -72,7 +75,7 @@ function App() {
             <Switch>
                 {pages.map(page => (
                     <Route exact path={`/${page.pathname}`} key={page._id}>
-                        <PageView page={page}/>
+                        <PageView refreshKey={pageRefreshKey} page={page}/>
                     </Route>
                 ))}
                 {pages.length > 0 && <Redirect to={{ pathname: pages[0].pathname, search: window.location.search }}/>}

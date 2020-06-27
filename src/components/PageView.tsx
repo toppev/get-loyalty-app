@@ -4,14 +4,27 @@ import { getPageHtmlSource } from "../services/pageService";
 
 interface PageViewProps {
     page: Page
+    /**
+     * Change value of this prop to reload the iframe
+     */
+    refreshKey?: any
 }
 
 export default function (props: PageViewProps) {
-    const { page } = props
+    const { page, refreshKey } = props
+
+    // TODO: smoother transition?
 
     return (
         <div className="page-holder">
-            <iframe height="100%" width="100%" frameBorder="0" title={page.pathname} src={getPageHtmlSource(page._id)}/>
+            <iframe
+                key={refreshKey}
+                height="100%"
+                width="100%"
+                frameBorder="0"
+                title={page.pathname}
+                src={getPageHtmlSource(page._id)}
+            />
         </div>
     )
 }
