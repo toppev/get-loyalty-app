@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
-import { getPages } from "./services/pageService";
+import { getPageHtmlSource, getPages } from "./services/pageService";
 import Page from "./model/Page";
 import PageView from "./components/PageView";
 import { profileRequest, registerRequest } from "./services/authenticationService";
@@ -9,6 +9,7 @@ import Navbar from "./components/Navbar";
 import { businessId, setBusinessId } from "./config/axios";
 import { AxiosResponse } from "axios";
 import { claimCoupon } from "./services/couponService";
+import { Helmet } from "react-helmet";
 
 function App() {
 
@@ -64,9 +65,12 @@ function App() {
 
     return (
         <div className="App">
+            <Helmet>
+                {pages.map(page => <link key={page._id} rel="prefetch" href={getPageHtmlSource(page._id)}></link>)}
+            </Helmet>
             {error && <p className="ErrorMessage">Error: {error.response?.message || error.toString()}</p>}
             <Switch>
-                {pages?.map(page => (
+                {pages.map(page => (
                     <Route exact path={`/${page.pathname}`} key={page._id}>
                         <PageView page={page}/>
                     </Route>
