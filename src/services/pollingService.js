@@ -2,6 +2,13 @@ const request = require("request");
 
 const BASE_URL = process.env.POLLING_BASE_URL || 'http://localhost:8080/';
 
+const POLLING_IDENTIFIERS = {
+    SCAN: 'scan',
+    REWARD_GET: 'reward_get',
+    SCAN_GET: 'scan_get',
+    REWARD_USE: 'reward_use'
+}
+
 function sendToUser(userId, data, type = '') {
     const testing = process.env.NODE_ENV === 'test';
     if (testing) return;
@@ -25,5 +32,6 @@ function sendToUser(userId, data, type = '') {
 
 
 module.exports = {
-    sendToUser
+    sendToUser,
+    IDENTIFIERS: POLLING_IDENTIFIERS
 }

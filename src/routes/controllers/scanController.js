@@ -1,4 +1,6 @@
 /** Controller for QR code scans */
+const POLLING_IDENTIFIERS = require('../../services/pollingService').IDENTIFIERS;
+
 const router = require('express').Router({ mergeParams: true });
 const permit = require('../../middlewares/permitMiddleware');
 const scanService = require('../../services/scanService');
@@ -22,7 +24,7 @@ function getScan(req, res, next) {
         .catch(err => {
             next(err);
             // Notify user that the request failed
-            pollingService.sendToUser(scan.split(':')[0], { message: 'Scan failed!' }, 'scan')
+            pollingService.sendToUser(scan.split(':')[0], { message: 'Scan failed!' }, POLLING_IDENTIFIERS.SCAN)
         });
 }
 

@@ -7,6 +7,9 @@ const businessService = require('./businessService');
 const format = require('../helpers/stringUtils').format;
 const { asyncFilter } = require('../helpers/asyncFilter');
 
+const POLLING_IDENTIFIERS = pollingService.IDENTIFIERS;
+
+// IDs used to identify questions so the actual human-readable question does not matter
 const IDENTIFIERS = {
     CONFIRM: 'confirm',
     PRODUCTS: 'products',
@@ -50,9 +53,6 @@ async function validateRewardId(rewardId, customerData) {
 
 /**
  * Get data from the scan
- * @param scanStr the scanned string
- * @param businessId
- * @returns {Promise<{questions: [], customerData: *, reward: Reward|undefined, campaigns: Campaign[]|undefined}>}
  */
 async function getScan(scanStr, businessId) {
     const { user, userId, rewardId } = await parseScanString(scanStr);
@@ -87,7 +87,7 @@ async function getScan(scanStr, businessId) {
         questions.push({ question: 'Confirm', options: ['Yes', 'No'] });
     }
     const business = await businessService.getBusiness(businessId);
-    pollingService.sendToUser(userId, { message: business.config.translations.qrScanned.singular }, 'scan');
+    pollingService.sendToUser(userId, { message: business.config.translations.qrScanned.singular }, POLLING_IDENTIFIERS.SCAN);
     return { questions, ...otherData };
 }
 
@@ -130,7 +130,7 @@ async function useScan(scanStr, data, businessId) {
     if (reward) {
         await customerService.useReward(user, customerData, reward)
         responseMessage = translations.rewardUsed.singular;
-        pollingService.sendToUser(userId, { message: responseMessage }, 'reward_use')
+        pollingService.sendToUser(userId, { message: responseMessage }, POLLING_IDENTIFIERS.REWARD_USE)
     }
     const { answers } = data;
 
@@ -171,9 +171,9 @@ async function useScan(scanStr, data, businessId) {
     if (newRewards.length) {
         const rewardNames = newRewards.map(it => it.name).join(', ')
         const message = format(newRewards.length === 1 ? translations.newReward.singular : translations.newReward.plural, rewardNames);
-        pollingService.sendToUser(userId, { message: message }, 'reward_get');
+        pollingService.sendToUser(userId, { message: message }, POLLING_IDENTIFIERS.REWARD_GET);
     } else {
-        pollingService.sendToUser(userId, { message: translations.scanRegistered.singular }, 'scan_end');
+        pollingService.sendToUser(userId, { message: translations.scanRegistered.singular }, POLLING_IDENTIFIERS.SCAN_GET);
     }
     return { message: responseMessage, newRewards, usedReward }
 }

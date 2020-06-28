@@ -34,8 +34,7 @@ router.use('/category', category)
 // and admin panel will be easy to implement
 router.use('/business/:businessId/campaign', requireLogin, campaigns);
 router.use('/business/:businessId/product', requireLogin, products);
-// No need to be logged in to view pages
-router.use('/business/:businessId/page', page);
+router.use('/business/:businessId/page', requireLogin, page);
 router.use('/business/:businessId/customer/:userId', requireLogin, customer);
 // Coupon codes
 router.use('/business/:businessId/coupon', requireLogin, coupon);
