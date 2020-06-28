@@ -10,12 +10,17 @@ import { businessId, setBusinessId } from "./config/axios";
 import { AxiosResponse } from "axios";
 import { claimCoupon } from "./services/couponService";
 import { Helmet } from "react-helmet";
+import PopupNotification from "./components/PopupNotification";
+import { AppContext, defaultAppContext } from './AppContext';
+import { useSubscribe } from "./services/messageService";
 
 function App() {
 
+    const [contextState, setContextState] = useState(defaultAppContext)
+
     const [error, setError] = useState<any>()
     const [pages, setPages] = useState<Page[]>([])
-    const [pageRefreshKey, setPageRefreshKey] = useState(0);
+    const [pageRefreshKey, setPageRefreshKey] = useState(0)
 
     // Authentication
     useEffect(() => {
@@ -35,7 +40,8 @@ function App() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    const onLogin = (_res: AxiosResponse) => {
+    const onLogin = (res: AxiosResponse) => {
+        setContextState({ ...contextState, user: res.data })
         const query = new URLSearchParams(window.parent.location.search)
         const id = query.get('business') || query.get('businessID')
         if (!id || id.length !== 24) {
@@ -66,22 +72,38 @@ function App() {
 
     const refreshPages = () => setPageRefreshKey(pageRefreshKey + 1)
 
+    // Subscribe to long polling messages/notifications (e.g "Scanned", "Received a reward")
+    const { notification } = useSubscribe(['scan', 'reward_get', 'scan_get', 'reward_use'])
+
+    // Refresh the pages by default if not set to false
+    if (notification?.refresh !== false) {
+        refreshPages()
+    }
+    const vibrate = notification?.vibrate
+    if (vibrate) {
+        window.navigator.vibrate(vibrate === true ? 200 : vibrate)
+    }
+
     return (
-        <div className="App">
-            <Helmet>
-                {pages.map(page => <link key={page._id} rel="prefetch" href={getPageHtmlSource(page._id)}></link>)}
-            </Helmet>
-            {error && <p className="ErrorMessage">Error: {error.response?.message || error.toString()}</p>}
-            <Switch>
-                {pages.map(page => (
-                    <Route exact path={`/${page.pathname}`} key={page._id}>
-                        <PageView refreshKey={pageRefreshKey} page={page}/>
-                    </Route>
-                ))}
-                {pages.length > 0 && <Redirect to={{ pathname: pages[0].pathname, search: window.location.search }}/>}
-            </Switch>
-            <Navbar pages={pages || []}/>
-        </div>
+        <AppContext.Provider value={contextState}>
+            <div className="App">
+                <Helmet>
+                    {pages.map(page => <link key={page._id} rel="prefetch" href={getPageHtmlSource(page._id)}/>)}
+                </Helmet>
+                <PopupNotification notification={notification}/>
+                {error && <p className="ErrorMessage">Error: {error.response?.message || error.toString()}</p>}
+                <Switch>
+                    {pages.map(page => (
+                        <Route exact path={`/${page.pathname}`} key={page._id}>
+                            <PageView refreshKey={pageRefreshKey} page={page}/>
+                        </Route>
+                    ))}
+                    {pages.length > 0 &&
+                    <Redirect to={{ pathname: pages[0].pathname, search: window.location.search }}/>}
+                </Switch>
+                <Navbar pages={pages || []}/>
+            </div>
+        </AppContext.Provider>
     )
 }
 

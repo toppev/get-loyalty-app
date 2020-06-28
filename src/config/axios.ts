@@ -8,7 +8,6 @@ const instance = axios.create({
 
 // Used in requests. Easier if it's stored here instead of state
 export let businessId = 'undefined'
-
 const QUEUED: (() => any)[] = []
 
 /**
@@ -34,17 +33,24 @@ function getBusinessUrl() {
     return `/business/${businessId}`
 }
 
-async function get(path: string) {
+async function get(path: string, fullPath?: boolean) {
     return instance({
         method: 'GET',
-        url: BASE_URL + path,
+        url: fullPath ? path : BASE_URL + path,
     })
 }
 
-async function post(path: string, data: any) {
+async function deleteRequest(path: string, fullPath?: boolean) {
+    return instance({
+        method: 'DELETE',
+        url: fullPath ? path : BASE_URL + path,
+    })
+}
+
+async function post(path: string, data: any, fullPath?: boolean) {
     return instance({
         method: 'POST',
-        url: BASE_URL + path,
+        url: fullPath ? path : BASE_URL + path,
         data: data,
         headers: {
             'Content-Type': 'application/json',
@@ -52,10 +58,10 @@ async function post(path: string, data: any) {
     })
 }
 
-async function patch(path: string, data: any) {
+async function patch(path: string, data: any, fullPath?: boolean) {
     return instance({
         method: 'PATCH',
-        url: BASE_URL + path,
+        url: fullPath ? path : BASE_URL + path,
         data: data,
         headers: {
             'Content-Type': 'application/json',
@@ -67,6 +73,7 @@ export {
     post,
     get,
     patch,
+    deleteRequest,
     getBusinessUrl,
     setBusinessId,
     BASE_URL,
