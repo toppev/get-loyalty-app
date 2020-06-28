@@ -73,6 +73,7 @@ function App() {
     const refreshPages = () => setPageRefreshKey(pageRefreshKey + 1)
 
     // Subscribe to long polling messages/notifications (e.g "Scanned", "Received a reward")
+    // We could subscribe when needed or migrate to websockets but this is good enough for now
     const { notification } = useSubscribe(['scan', 'reward_get', 'scan_get', 'reward_use'])
 
     // Refresh the pages by default if not set to false

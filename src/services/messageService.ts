@@ -26,7 +26,14 @@ function useSubscribe(identifiers: string[]) {
                 }
                 subscribeRecursively(id)
             })
-            .catch(err => console.log(err))
+            .catch(err => {
+                // Resubscribe if timed out
+                if (err?.response?.status === 408) {
+                    subscribeRecursively(id)
+                } else {
+                    console.log('An error occurred while subscribing to messages.', err)
+                }
+            })
     }
 
     if (user?.id) {
