@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
+const { sanitizeInput } = require('../helpers/sanitize')
 
 const UNNAMED_PAGE = 'unnamed'
 
@@ -63,6 +64,9 @@ PageDataSchema.pre('save', async function () {
     }
     if (!this.pageIndex) {
         this.pageIndex = await getPagesCount();
+    }
+    if (this.isModified('icon') && this.icon) {
+        this.icon = sanitizeInput(this.icon)
     }
 })
 
