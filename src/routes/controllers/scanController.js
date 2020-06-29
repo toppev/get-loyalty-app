@@ -24,7 +24,7 @@ function getScan(req, res, next) {
         .catch(err => {
             next(err);
             // Notify user that the request failed
-            pollingService.sendToUser(scan.split(':')[0], { message: 'Scan failed!' }, POLLING_IDENTIFIERS.SCAN)
+            pollingService.sendToUser(scan.split(':')[0], { message: 'Scan failed!', refresh: false }, POLLING_IDENTIFIERS.SCAN)
         });
 }
 

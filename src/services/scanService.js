@@ -60,6 +60,7 @@ async function getScan(scanStr, businessId) {
     const otherData = { customerData };
     const questions = [];
     const reward = await validateRewardId(rewardId, customerData);
+
     if (reward) {
         addQuestions(questions, reward.categories, reward.products, [reward.requirement]);
         questions.push({ id: 'success', question: `Use reward "${reward.name}"?`, options: ['Yes', 'No'] });
@@ -75,9 +76,11 @@ async function getScan(scanStr, businessId) {
             })
         });
         otherData.campaigns = campaigns;
+
         const categories = [].concat(...campaigns.map(c => c.categories));
         const products = [].concat(...campaigns.map(c => c.products));
         const requirements = [];
+
         campaigns.map(c => c.requirements).forEach(req => {
             if (req.question) {
                 requirements.push(format(req.question, req.values))
@@ -87,7 +90,11 @@ async function getScan(scanStr, businessId) {
         questions.push({ question: 'Confirm', options: ['Yes', 'No'] });
     }
     const business = await businessService.getBusiness(businessId);
-    pollingService.sendToUser(userId, { message: business.config.translations.qrScanned.singular }, POLLING_IDENTIFIERS.SCAN);
+    pollingService.sendToUser(userId, {
+        message: business.config.translations.qrScanned.singular,
+        refresh: false,
+        vibrate: [200]
+    }, POLLING_IDENTIFIERS.SCAN);
     return { questions, ...otherData };
 }
 
@@ -125,13 +132,15 @@ async function useScan(scanStr, data, businessId) {
     const reward = await validateRewardId(rewardId, customerData);
     const business = await businessService.getBusiness(businessId);
     const translations = business.config.translations;
+
     let responseMessage;
-    let usedReward = reward;
+
     if (reward) {
         await customerService.useReward(user, customerData, reward)
         responseMessage = translations.rewardUsed.singular;
-        pollingService.sendToUser(userId, { message: responseMessage }, POLLING_IDENTIFIERS.REWARD_USE)
+        pollingService.sendToUser(userId, { message: responseMessage, refresh: true }, POLLING_IDENTIFIERS.REWARD_USE)
     }
+
     const { answers } = data;
 
     const productQuestion = answers.find(e => e.id === IDENTIFIERS.PRODUCTS);
@@ -171,11 +180,14 @@ async function useScan(scanStr, data, businessId) {
     if (newRewards.length) {
         const rewardNames = newRewards.map(it => it.name).join(', ')
         const message = format(newRewards.length === 1 ? translations.newReward.singular : translations.newReward.plural, rewardNames);
-        pollingService.sendToUser(userId, { message: message }, POLLING_IDENTIFIERS.REWARD_GET);
+        pollingService.sendToUser(userId, { message: message, refresh: true }, POLLING_IDENTIFIERS.REWARD_GET);
     } else {
-        pollingService.sendToUser(userId, { message: translations.scanRegistered.singular }, POLLING_IDENTIFIERS.SCAN_GET);
+        pollingService.sendToUser(userId, {
+            message: translations.scanRegistered.singular,
+            refresh: true
+        }, POLLING_IDENTIFIERS.SCAN_GET);
     }
-    return { message: responseMessage, newRewards, usedReward }
+    return { message: responseMessage, newRewards, usedReward: reward }
 }
 
 module.exports = {
