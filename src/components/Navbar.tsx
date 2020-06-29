@@ -1,6 +1,6 @@
 import React from "react";
 import Page from "../model/Page";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import PageIcon from "./PageIcon";
 
 interface NavbarProps {
@@ -13,9 +13,9 @@ export default function (props: NavbarProps) {
     return pages?.length > 1 ? (
         <nav className="navbar">
             {pages?.map(page => (
-                <Link to={{ pathname: page.pathname, search: window.location.search }} key={page._id}>
+                <NavLink key={page._id} to={page.pathname + window.location.search}>
                     <PageIcon page={page}/>
-                </Link>
+                </NavLink>
             ))}
         </nav>
     ) : null

@@ -25,14 +25,9 @@
   text-decoration: none;
 }
 
-.navbar a:hover {
-  background-color: #ddd;
+.navbar .active {
+  background-color: #dddddd;
   color: black;
-}
-
-.navbar a.active {
-  background-color: #0b5ed5;
-  color: white;
 }
 
 .pageIcon {
