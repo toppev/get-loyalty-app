@@ -10,9 +10,8 @@ import { businessId, setBusinessId } from "./config/axios";
 import { AxiosResponse } from "axios";
 import { claimCoupon } from "./services/couponService";
 import { Helmet } from "react-helmet";
-import PopupNotification from "./components/PopupNotification";
 import { AppContext, defaultAppContext } from './AppContext';
-import { useSubscribe } from "./services/messageService";
+import NotificationHandler from "./components/NotificationHandler";
 
 function App() {
 
@@ -20,6 +19,7 @@ function App() {
 
     const [error, setError] = useState<any>()
     const [pages, setPages] = useState<Page[]>([])
+    // Use setPageRefreshKey with a new value to refresh
     const [pageRefreshKey, setPageRefreshKey] = useState(0)
 
     // Authentication
@@ -70,28 +70,13 @@ function App() {
             })
     }
 
-    const refreshPages = () => setPageRefreshKey(pageRefreshKey + 1)
-
-    // Subscribe to long polling messages/notifications (e.g "Scanned", "Received a reward")
-    // We could subscribe when needed or migrate to websockets but this is good enough for now
-    const { notification } = useSubscribe(['scan', 'reward_get', 'scan_get', 'reward_use'])
-
-    // Refresh the pages by default if not set to false
-    if (notification?.refresh !== false) {
-        refreshPages()
-    }
-    const vibrate = notification?.vibrate
-    if (vibrate) {
-        window.navigator.vibrate(vibrate === true ? 200 : vibrate)
-    }
-
     return (
         <AppContext.Provider value={contextState}>
             <div className="App">
                 <Helmet>
                     {pages.map(page => <link key={page._id} rel="prefetch" href={getPageHtmlSource(page._id)}/>)}
                 </Helmet>
-                <PopupNotification notification={notification}/>
+                <NotificationHandler onRefresh={setPageRefreshKey}/>
                 {error && <p className="ErrorMessage">Error: {error.response?.message || error.toString()}</p>}
                 <Switch>
                     {pages.map(page => (
