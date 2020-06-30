@@ -1,8 +1,8 @@
 import { StandardTextFieldProps, TextField } from "@material-ui/core";
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import React, { useEffect, useState } from "react";
-import { get } from "../../config/axios";
 import Category from "./Category";
+import { createCategories, getAllCategories } from "../../services/categoryService";
 
 interface Props extends StandardTextFieldProps {
     initialCategories: Category[],
@@ -20,12 +20,11 @@ export default function (props: Props) {
     }, [categories, props])
 
     useEffect(() => {
-        get(`/category/`).then(res => {
+        getAllCategories().then(res => {
             if (res.status === 200) {
                 setAllCategories(res.data);
             }
-        }).catch(error => {
-        });
+        })
     }, []);
 
     return (
@@ -40,14 +39,20 @@ export default function (props: Props) {
             getOptionLabel={c => c.name}
 
             onChange={(event, values: any[]) => {
-                setCategories(values.map(value => {
-                    return typeof value === 'string' ? new Category(`${Math.random()}`, value) : value;
-                }));
+                const newValues = values.map(value => {
+                    return typeof value === 'string' ? new Category({ id: `${Math.random()}`, name: value }) : value;
+                })
+                createCategories(newValues).then(setCategories)
             }}
 
-            renderInput={params => <TextField {...params} name="category" label="Categories"
-                                              placeholder="Press Enter to add more"
-            />}
+            renderInput={params => (
+                <TextField
+                    {...params}
+                    name="category"
+                    label="Categories"
+                    placeholder="Press Enter to add more"
+                />
+            )}
         />)
 
 }

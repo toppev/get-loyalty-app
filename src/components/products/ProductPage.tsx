@@ -11,6 +11,7 @@ import { listProducts } from "../../services/productService";
 import useRequest from "../../hooks/useRequest";
 import useResponseState from "../../hooks/useResponseState";
 import useSearch from "../../hooks/useSearch";
+import Tip from "../common/Tip";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -26,6 +27,11 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         importBtn: {
             backgroundColor: theme.palette.grey[400],
+        },
+        info: {
+            fontSize: '14px',
+            color: theme.palette.grey[300],
+            marginBottom: '40px'
         }
     }));
 
@@ -49,6 +55,14 @@ export default function () {
             {error ? (
                 <RetryButton error={error}/>
             ) : (<div className={classes.paper}>
+
+                <div className={classes.info}>
+                    <p>You can create or import existing products from a .csv file here.</p>
+                    <Tip>
+                        You don't have to create all products.
+                        You can create generic products, for example "Pizza", "Vegan burgers" or "Men's haircut".
+                    </Tip>
+                </div>
 
                 <Box display="flex" className={classes.tools}>
                     <NewButton

@@ -1,12 +1,11 @@
 import { Button, createStyles, Divider, makeStyles, Paper, Theme, Typography } from "@material-ui/core";
-import React, { useState } from "react";
+import React from "react";
 import { Campaign } from "./Campaign";
-import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
-import VisibilityIcon from "@material-ui/icons/Visibility";
 import RewardItem from "../rewards/RewardItem";
 import { plural } from "../common/StringUtils";
 import Tooltip from "@material-ui/core/Tooltip";
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
+import { RenderList } from "../common/RenderList";
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -27,6 +26,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         couponCode: {
             color: theme.palette.secondary.main,
+            textTransform: 'uppercase'
         },
         typography: {},
         boxDesktop: {},
@@ -68,11 +68,14 @@ export default function (props: CampaignPaperProps) {
     const { campaign } = props;
     const { start, end } = campaign;
 
-    // days from/till campaign start and end
+    // Days from/till campaign start/end date
     const diffString = (date?: Date) => {
         if (date) {
             const toDate = dateDiffInDays(new Date(), date)
-            return `(${toDate <= 0 ? `${toDate} days ago` : `in ${toDate} ${plural("day", toDate)}`})`
+            if (toDate === 0) return '(today)'
+            if (toDate === -1) return '(yesterday)'
+            if (toDate === 1) return '(tomorrow)'
+            return `(${toDate < 0 ? `${-toDate} days ago` : `in ${toDate} ${plural("day", toDate)}`})`
         }
         return ""
     }
@@ -105,8 +108,11 @@ export default function (props: CampaignPaperProps) {
                 </>)
             }
             <br/>
-            <p>Starts: {start?.toDateString()} <span className={classes.detail}>{toStartStr}</span></p>
-            <p>Ends: {end?.toDateString()} <span className={classes.detail}>{toEndStr}</span></p>
+            <p>Start: {start?.toDateString()} <span className={classes.detail}>{toStartStr}</span></p>
+            <p>
+                End: {end?.toDateString() || <i>not specified</i>}
+                <span className={classes.detail}>{toEndStr}</span>
+            </p>
             <br/>
             <p>
                 Rewarded: <b>{campaign.rewardedCount || 0}/{campaign.maxRewards.total || 'unlimited'}</b>
@@ -139,17 +145,26 @@ export default function (props: CampaignPaperProps) {
                 <RenderList
                     list={campaign.endReward}
                     title="End Rewards:"
-                    renderer={item => <RewardItem reward={item}/>}
+                    emptyString="none"
+                    renderAll={items => items.map(item => <RewardItem key={item.id} reward={item}/>)}
                 />
                 <RenderList
                     list={campaign.categories}
                     title="Categories:"
-                    renderer={item => <p>{item.toString()}</p>}
+                    renderAll={items => (
+                        <ul>
+                            {items.map(item => <li key={item.id}>{item.name?.toString()}</li>)}
+                        </ul>
+                    )}
                 />
                 <RenderList
                     list={campaign.products}
                     title="Products:"
-                    renderer={item => <p>{item.toString()}</p>}
+                    renderAll={items => (
+                        <ul>
+                            {items.map(item => <li key={item.id}>{item.name?.toString()}</li>)}
+                        </ul>
+                    )}
                 />
             </div>
             <div className={classes.buttonsDiv}>
@@ -172,41 +187,5 @@ export default function (props: CampaignPaperProps) {
                 >Delete</Button>
             </div>
         </Paper>
-    )
-}
-
-interface RenderListProps<T> {
-    title?: string
-    list: T[],
-    renderer: (item: T) => JSX.Element
-    showRewards?: boolean
-}
-
-/**
- * Render the given list with a toggle button
- */
-function RenderList(props: RenderListProps<any>) {
-
-    const [showRewards, setShowRewards] = useState(props.showRewards || false);
-    const { list, title, renderer } = props;
-
-    return (
-        <div>
-            <p>
-                <b>{title}</b> {(list.length || "all")}
-                {list.length !== 0 && (
-                    <Button
-                        onClick={() => {
-                            setShowRewards(!showRewards)
-                        }}
-                        color="primary"
-                        size="small"
-                        variant="text"
-                        endIcon={showRewards ? (<VisibilityOffIcon/>) : (<VisibilityIcon/>)}
-                    >View</Button>
-                )}
-            </p>
-            {showRewards && list.map(item => renderer(item))}
-        </div>
     )
 }

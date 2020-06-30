@@ -8,7 +8,7 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
-        div: {
+        paper: {
             margin: '12px 0px'
         },
         select: {
@@ -46,7 +46,7 @@ export default function (props: RequirementSelectorProps) {
     };
 
     return (
-        <div className={classes.div}>
+        <div className={classes.paper}>
             <div>
                 <Select
                     open={open}

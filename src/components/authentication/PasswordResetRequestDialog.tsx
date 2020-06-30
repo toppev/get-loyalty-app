@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) =>
         content: {
             padding: '20px 0px'
         },
-        div: {
+        paper: {
             margin: '40px'
         }
     }));
@@ -52,7 +52,7 @@ export default function (props: PasswordResetRequestDialogProps) {
             <CloseButton onClick={props.onClose}/>
             <DialogContent className={classes.content}>
                 <Typography variant="h6">Reset Password</Typography>
-                <div className={classes.div}>
+                <div className={classes.paper}>
                     <TextField
                         className={classes.emailInput}
                         InputProps={{
@@ -68,7 +68,7 @@ export default function (props: PasswordResetRequestDialogProps) {
                         onChange={(e) => setEmail(e.target.value)}
                     />
                 </div>
-                <div className={classes.div}>
+                <div className={classes.paper}>
                     <div>
                         <Typography variant="caption">{message}</Typography>
                     </div>

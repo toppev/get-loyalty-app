@@ -20,6 +20,7 @@ const CustomerPage = lazy(() => import('./components/customers/CustomerPage'));
 const SettingsPage = lazy(() => import('./components/settings/SettingsPage'));
 const CampaignPage = lazy(() => import('./components/campaigns/CampaignPage'));
 const NotificationsPage = lazy(() => import('./components/notifications/NotificationsPage'));
+const FeedbackPage = lazy(() => import('./components/feedback/FeedbackPage'));
 
 export default function () {
 
@@ -134,6 +135,9 @@ export default function () {
                             </Route>
                             <Route path="/account">
                                 <AccountPage/>
+                            </Route>
+                            <Route path="/feedback">
+                                <FeedbackPage/>
                             </Route>
                         </Switch>
                     </Suspense>

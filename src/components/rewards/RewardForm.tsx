@@ -81,7 +81,6 @@ export default function (props: RewardFormProps) {
                 }}
             >{({ submitForm, isSubmitting }) => (
                 <Form className={classes.form}>
-
                     <TextField
                         className={classes.field}
                         name="name"
@@ -107,8 +106,8 @@ export default function (props: RewardFormProps) {
                         className={classes.field}
                         name="requirement"
                         type="text"
-                        label="Description"
-                        placeholder='e.g "If total purchase is more than 10€\" or leave empty'
+                        label="Note/Requirement"
+                        placeholder='e.g "If total purchase is more than 10€" or just leave empty'
                     />
 
                     <TextField
@@ -118,7 +117,6 @@ export default function (props: RewardFormProps) {
                         label="Customer Points"
                         placeholder="Customer points to receive"
                     />
-
 
                     <p className={classes.typography}>
                         (Optional) Select which categories or products are included in the discount
@@ -171,7 +169,7 @@ function validate(values: Reward): FormikErrors<Reward> {
         errors.name = 'Name is required';
     }
     if (!values.itemDiscount.trim()) {
-        errors.itemDiscount = 'Discount must be specified';
+        errors.itemDiscount = 'Discount must be specified. Examples: -50%, Free Coffee or a burger for 7€';
     }
     if (values.categories?.length > 5) {
         errors.categories = 'Too many categories. Keep it simple: either specify a few categories or none at all'

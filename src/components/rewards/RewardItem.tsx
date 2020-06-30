@@ -54,9 +54,9 @@ export default function (props: RewardRowProps) {
                 <Grid item>
                     Name: <b>{reward.name}</b>
                 </Grid>
-                <Grid item>
+                {reward.description && <Grid item>
                     Description: <b>{reward.description}</b>
-                </Grid>
+                </Grid>}
                 <Grid item>
                     Discount: <b>{reward.itemDiscount}</b>
                 </Grid>
@@ -66,9 +66,9 @@ export default function (props: RewardRowProps) {
                 <Grid item>
                     Expires: <DateExpired date={reward.expires} alt="never"/>
                 </Grid>
-                <Grid item>
-                    Type: {reward.requirement} {/* Optional rendering? might seem confusing to see this in customer rewards */}
-                </Grid>
+                {reward.requirement && <Grid
+                    item> Note: {reward.requirement}
+                </Grid>}
                 <Grid item>
                     Products: {reward.products.length ? reward.products.map(p => p.name).join(", ") : 'Any product'}
                 </Grid>

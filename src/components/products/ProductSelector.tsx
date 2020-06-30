@@ -91,7 +91,7 @@ export default function ({ open, text, onClickClose, onSubmit, limitNotification
                             assumed!</p>}
                         {loading && <LinearProgress/>}
                         {!loading && products.length === 0 &&
-                        <p>You don't have any products. Add a few products <a href={'/products'}>here</a></p>}
+                        <p>You don't have any products. You can add a few products on <a href={'/products'}>this</a> page</p>}
                     </div>
                     <ul>
                         {products

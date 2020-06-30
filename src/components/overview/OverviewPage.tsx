@@ -1,6 +1,6 @@
 import {
     Box,
-    createStyles,
+    createStyles, Divider,
     LinearProgress,
     makeStyles,
     Paper,
@@ -23,6 +23,7 @@ import RetryButton from "../common/button/RetryButton";
 import PrivacyLink from "../common/PrivacyLink";
 import { isEmail } from "../../util/Validate";
 import IdText from "../common/IdText";
+import CustomerLevelView from "./levels/CustomerLevelView";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -53,6 +54,11 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         infoText: {
             fontSize: '11px'
+        },
+        divider: {
+            marginTop: '35px',
+            marginBottom: '60px',
+            backgroundColor: theme.palette.grey[600]
         }
     }));
 
@@ -185,6 +191,16 @@ export default function () {
                     )}
                 </Formik>
             )}
+
+            <Divider className={classes.divider}/>
+
+            <Typography
+                className={classes.mainTitle}
+                variant="h4"
+                align="center"
+            >Customer Levels</Typography>
+
+            <CustomerLevelView/>
         </div>
     )
 }

@@ -18,6 +18,9 @@ import PermMediaOutlinedIcon from '@material-ui/icons/PhotoSizeSelectActual';
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import RedeemIcon from '@material-ui/icons/Redeem';
 import SettingsIcon from '@material-ui/icons/Settings';
+import FeedbackIcon from '@material-ui/icons/Feedback';
+import HelpIcon from '@material-ui/icons/Help';
+import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import clsx from 'clsx';
 import React from 'react';
 import { NavLink } from "react-router-dom";
@@ -49,6 +52,8 @@ const categories = [
         id: 'Other',
         children: [
             { id: 'My Account', icon: <AccountBox/>, to: '/account' },
+            { id: 'Feedback', icon: <FeedbackIcon/>, to: '/feedback' },
+            { id: 'Help & Support', icon: <HelpIcon/>, to: `https://support.${DOMAIN_HOME_PAGE}` },
         ],
     },
 ];
@@ -171,29 +176,36 @@ export default function Navigator(props: NavigatorProps) {
                         {id}
                     </ListItemText>
                 </ListItem>
-                {children.map(({ id: childId, icon, to }) => (
-                    <ListItem
-                        key={childId}
-                        button
-                        component={NavLink} exact to={to}
-                        activeClassName={classes.active}
-                        className={classes.item}
-                    >
-                        <ListItemIcon className={classes.itemIcon}>
-                            <Badge
-                                badgeContent={props.notifications[childId]}
-                                color="secondary"
-                            >{icon}</Badge>
-                        </ListItemIcon>
-                        <ListItemText
-                            classes={{
-                                primary: classes.itemPrimary,
-                            }}
+                {children.map(({ id: childId, icon, to }) => {
+
+                    const external = to.startsWith('http');
+                    const component = external ? Link : NavLink;
+                    const otherProps = external ? {
+                        href: to,
+                        target: "_blank",
+                        rel: "noopener noreferrer"
+                    } : {
+                        activeClassName: classes.active,
+                        exact: true,
+                        to: to
+                    }
+
+                    return (
+                        <ListItem
+                            key={childId}
+                            button
+                            component={component}
+                            className={classes.item}
+                            {...otherProps}
                         >
-                            {childId}
-                        </ListItemText>
-                    </ListItem>
-                ))}
+                            <ListItemIcon className={classes.itemIcon}>
+                                <Badge badgeContent={props.notifications[childId]} color="secondary">{icon}</Badge>
+                            </ListItemIcon>
+                            <ListItemText classes={{ primary: classes.itemPrimary }}>{childId}</ListItemText>
+                            {external && <OpenInNewIcon fontSize="small"/>}
+                        </ListItem>
+                    )
+                })}
                 <div className={classes.divider}/>
             </React.Fragment>
         ))}
@@ -202,21 +214,18 @@ export default function Navigator(props: NavigatorProps) {
     return (
         <div className={classes.root}>
             <nav className={classes.drawer}>
-                {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
                 <Hidden smUp implementation="css">
                     <Drawer
                         variant="temporary"
                         className={classes.drawerPaper}
-                        onClose={(e) => props.handleDrawerToggle()}
+                        onClose={props.handleDrawerToggle}
                         ModalProps={{
-                            keepMounted: true, // Better open performance on mobile.
+                            keepMounted: true, // Better performance on mobile
                         }}
                         open={props.open}
                     >
                         <IconButton
-                            onClick={(event: React.MouseEvent<HTMLElement>) => {
-                                props.handleDrawerToggle()
-                            }}
+                            onClick={props.handleDrawerToggle}
                             className={classes.closeMenuButton}>
                             <CloseIcon/>
                         </IconButton>
@@ -228,10 +237,7 @@ export default function Navigator(props: NavigatorProps) {
                         className={classes.drawer}
                         variant="permanent"
                         open={props.open}
-                    >
-                        <div/>
-                        {drawer}
-                    </Drawer>
+                    >{drawer}</Drawer>
                 </Hidden>
             </nav>
         </div>

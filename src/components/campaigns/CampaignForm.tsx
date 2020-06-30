@@ -18,18 +18,15 @@ import ProductSelector from "../products/ProductSelector";
 import SaveIcon from "@material-ui/icons/Save";
 import IdText from "../common/IdText";
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
-import AddIcon from "@material-ui/icons/Add";
-import RewardItem, { RemoveEditRewardActions } from "../rewards/RewardItem";
 import Reward from "../rewards/Reward";
-import RewardFormDialog from "../rewards/RewardFormDialog";
 import DateFnsUtils from "@date-io/date-fns";
-import RewardSelector from "../rewards/RewardSelector";
 import SelectProductsButton from "../products/button/SelectProductsButton";
 import RequirementSelector from "./RequirementSelector";
 import useRequest from "../../hooks/useRequest";
 import RetryButton from "../common/button/RetryButton";
 import { createCampaign, updateCampaign } from "../../services/campaignService";
 import { isAlphanumeric } from "../../util/Validate";
+import RewardManager from "../rewards/RewardManager";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -112,11 +109,12 @@ export default function ({ initialCampaign, onSubmitted }: CampaignFormProps) {
             campaign.start = undefined;
             campaign.end = undefined;
         }
+        return campaign
     }
 
     return (
         <div className={classes.paper}>
-            <Typography component="h1" variant="h4">{title}</Typography>
+            <Typography color="primary" component="h1" variant="h4">{title}</Typography>
             <Formik
                 initialValues={campaign}
                 validate={validate}
@@ -178,13 +176,12 @@ export default function ({ initialCampaign, onSubmitted }: CampaignFormProps) {
                     <Typography variant="h6" className={classes.typography}>Duration & Dates</Typography>
                     <RadioGroup name="Dates" value={isDates} onChange={(e, val) => setIsDates(val === "true")}>
                         <FormControlLabel value="true" control={<Radio/>} checked={isDates}
-                                          label="Temporary campaign (start and end dates)"/>
+                                          label="Temporary campaign (ends automatically)"/>
                         <FormControlLabel value="false" control={<Radio/>} checked={!isDates}
-                                          label="Continuous (no start or end dates)"/>
+                                          label="Continuous (no specified end date)"/>
                     </RadioGroup>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <KeyboardDatePicker
-                            disabled={!isDates}
                             disablePast
                             margin="normal"
                             label="Campaign start date (dd/MM/yyyy)"
@@ -207,40 +204,8 @@ export default function ({ initialCampaign, onSubmitted }: CampaignFormProps) {
                     <RequirementSelector onChange={setRequirements}/>
 
                     <Typography variant="h6" className={classes.typography}>End Rewards</Typography>
-                    <div>
-                        {endRewards.map(reward => (
-                            <RewardItem
-                                key={reward.id}
-                                reward={reward}
-                                actions={(
-                                    <RemoveEditRewardActions
-                                        onEdit={() => setEditReward(reward)}
-                                        onRemove={() => {
-                                            if (window.confirm('Confirm removing a reward from this campaign. ' +
-                                                'This does not affect customers who were previously rewarded.')) {
-                                                setEndRewards(endRewards.filter(r => r.id !== reward.id))
-                                            }
-                                        }}
-                                    />
-                                )}
-                            />
-                        ))}
-                        <RewardFormDialog
-                            open={!!editReward}
-                            initialReward={editReward}
-                            onClose={() => setEditReward(undefined)}
-                            onSubmitted={reward => {
-                                setEditReward(undefined);
-                                setEndRewards(endRewards.map(r => r.id === reward.id ? reward : r))
-                            }}
-                        />
-                        <Button
-                            className={classes.newRewardBtn}
-                            variant="contained"
-                            startIcon={(<AddIcon/>)}
-                            onClick={() => setRewardSelectorOpen(true)}
-                        >Add Reward</Button>
-                    </div>
+
+                    <RewardManager rewards={endRewards} setRewards={setEndRewards}/>
 
                     <div className={classes.catProdDiv}>
                         <p className={classes.tip}>
@@ -269,11 +234,6 @@ export default function ({ initialCampaign, onSubmitted }: CampaignFormProps) {
                             }}
                             text="Select products that are included in the campaign"
                         />
-                        <RewardSelector
-                            open={rewardSelectorOpen}
-                            onClose={() => setRewardSelectorOpen(false)}
-                            onSelect={reward => setEndRewards([...endRewards, reward])}
-                        />
                     </div>
 
                     {error && <RetryButton error={error}/>}
@@ -287,7 +247,7 @@ export default function ({ initialCampaign, onSubmitted }: CampaignFormProps) {
                             startIcon={(<SaveIcon/>)}
                             onClick={submitForm}
                         >Save</Button>
-                        {(isSubmitting || loading) && <LinearProgress/>}
+                        {loading && <LinearProgress/>}
                     </div>
 
                     <IdText id={campaign.id}/>
