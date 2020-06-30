@@ -68,12 +68,16 @@ app.use(require('./src/config/sessionConfig'));
 app.use(passport.initialize());
 app.use(passport.session());
 if (!isTesting) {
+    // CSRF middlewares
     app.use(csurf());
+    app.use(function (req, res, next) {
+        res.cookie('XSRF-TOKEN', req.csrfToken());
+        next()
+    });
     app.use(function (err, req, res, next) {
-        if (req.csrfToken) {
-            res.cookie('XSRF-TOKEN', req.csrfToken());
-        }
-        if (req.url === '/user/login' || req.url === '/user/register') {
+        if (err.code !== 'EBADCSRFTOKEN') return next(err)
+        // Bypass csrf error on login because the scanner app does not support it (currently)
+        if (req.url === '/user/login') {
             return next();
         }
         return next(err)

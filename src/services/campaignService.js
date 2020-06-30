@@ -57,7 +57,7 @@ async function getById(campaignId) {
 }
 
 /**
- * Create a new campaign. The business is automatically assigned to the campaign
+ * Create a new campaign. The business is automatically assigned to the campaign.
  * @param {any} businessId the business's _id field
  * @param {Object} campaign the campaign to create
  */

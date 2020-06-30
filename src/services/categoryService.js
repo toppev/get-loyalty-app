@@ -10,6 +10,7 @@ module.exports = {
 /**
  * Create a new category
  * @param {any} categoryParam the initial params, "official" key is always false in the returned category object
+ * @return the created campaign
  */
 async function create(categoryParam) {
     const category = new Category(categoryParam);
