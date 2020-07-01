@@ -191,7 +191,7 @@ async function getPurchases(id, business) {
  * @returns {Promise<[*]>} the user's updated customerData in the given business
  */
 async function addReward(userParam, businessId, reward) {
-    // For some reason userParam.id is always truthy???
+    // For some reason userParam.id is always truthy even if userParam is the id???
     const user = userParam.save ? userParam : await User.findById(userParam);
     let data = await findCustomerData(user, businessId);
     if (!data) {
@@ -266,7 +266,7 @@ function _listCustomers(businessId) {
 
 async function rewardAllCustomers(businessId, reward) {
     const customers = await _listCustomers(businessId);
-    customers.forEach(it => addReward(it, businessId, reward))
+    await Promise.all(customers.map(it => addReward(it, businessId, reward)));
     return { rewarded: customers.length }
 }
 
@@ -286,4 +286,5 @@ async function searchCustomers(businessId, limit, search) {
         users = users.filter(u => JSON.stringify(u).toLowerCase().includes(search));
     }
     return Promise.all(users.map(u => getCustomerInfo(u, businessId)));
+
 }

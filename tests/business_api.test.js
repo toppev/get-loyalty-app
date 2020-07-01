@@ -137,6 +137,8 @@ describe('Logged in user can', () => {
             .set('Cookie', cookie)
             .expect(200)
         expect(res.body.rewarded).toBe(1)
+        const rewardedUser = await User.findById(userId)
+        expect(rewardedUser.customerData[0].rewards[0].name).toEqual(testReward.name)
     })
 
 
