@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
+const rewardSchema = require('./reward');
 
 const configSchema = new Schema({
     translations: {
@@ -149,7 +150,12 @@ const businessSchema = new Schema({
             requiredPoints: {
                 type: Schema.Types.Number,
                 default: 0,
-            }
+            },
+            color: {
+                type: String,
+            },
+            // IDEA: background image?
+            rewards: [rewardSchema]
         }]
     }
 }, {
