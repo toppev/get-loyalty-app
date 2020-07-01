@@ -69,7 +69,7 @@ export default function (props: IconSelectorProps) {
                 variant="contained"
                 onClick={() => setOpen(true)}
             >Select Icon</Button>
-            <Dialog open={open} fullWidth>
+            <Dialog open={open} fullWidth onClose={() => setOpen(false)}>
                 <CloseButton onClick={() => setOpen(false)}/>
                 <Grid container>
                     {icons.map((icon, i) => (

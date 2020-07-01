@@ -8,7 +8,8 @@ const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         paper: {
             padding: '10px 25px',
-            margin: '15px 15px 15px 0px'
+            margin: '15px 15px 15px 0px',
+            minHeight: '168px'
         },
         name: {
             fontSize: '24px'
@@ -31,7 +32,7 @@ export default function ({ level, startEditing, onDelete }: CustomerLevelProps) 
     return (
         <Paper className={classes.paper} style={{ backgroundColor: level.color || "" }}>
             <Typography className={classes.name}>{level.name}</Typography>
-            <b>Points: {level.requiredPoints}</b>
+            <b>Required points: {level.requiredPoints}</b>
             <RenderList
                 list={level.rewards}
                 title="End Rewards:"

@@ -6,6 +6,7 @@ import CustomerLevelItem from "./CustomerLevelItem";
 import useRequest from "../../../hooks/useRequest";
 import { updateBusiness } from "../../../services/businessService";
 import NewButton from "../../common/button/NewButton";
+import RetryButton from "../../common/button/RetryButton";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -34,18 +35,22 @@ export default function () {
         );
     }
 
+    const orderedLevels = [...context.business.public.customerLevels].sort((a, b) => {
+        return (a.requiredPoints || 0) - (b.requiredPoints || 0)
+    })
+
     return (
         <div>
             <NewButton
                 name="New Level"
                 buttonProps={{
                     className: classes.newBtn,
-                    onClick: () => setEditing({ _id: 'new_level', name: "", requiredPoints: undefined, rewards: [] })
+                    onClick: () => setEditing({ name: "", rewards: [] })
                 }}
             />
             <Box display="flex" flexWrap="wrap">
-                {context.business.public.customerLevels.map(level => (
-                        <div key={level._id}>
+                {orderedLevels.map(level => (
+                        <div key={level._id || 'new_level'}>
                             <CustomerLevelItem
                                 level={level}
                                 startEditing={() => setEditing(level)}
@@ -59,6 +64,7 @@ export default function () {
                         </div>
                     )
                 )}
+                {request.error && <RetryButton error={request.error}/>}
             </Box>
 
             {!!editing &&
@@ -67,10 +73,10 @@ export default function () {
                 onClose={() => setEditing(undefined)}
                 initialLevel={editing}
                 onSubmit={(level, setSubmitting) => {
-                    // TODO: add or edit level
                     const business = { ...context.business }
                     business.public.customerLevels = [...business.public.customerLevels.filter(it => it._id !== level._id), level]
                     submitUpdate(business, setSubmitting)
+                    setEditing(undefined)
                 }}
             />}
         </div>

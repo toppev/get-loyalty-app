@@ -1,6 +1,7 @@
 import {
     Box,
-    createStyles, Divider,
+    createStyles,
+    Divider,
     LinearProgress,
     makeStyles,
     Paper,
@@ -27,6 +28,9 @@ import CustomerLevelView from "./levels/CustomerLevelView";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
+        page: {
+            paddingBottom: '270px'
+        },
         paper: {
             padding: '25px',
             margin: '20px',
@@ -56,8 +60,7 @@ const useStyles = makeStyles((theme: Theme) =>
             fontSize: '11px'
         },
         divider: {
-            marginTop: '35px',
-            marginBottom: '60px',
+            margin: '35px 0px',
             backgroundColor: theme.palette.grey[600]
         }
     }));
@@ -84,7 +87,7 @@ export default function () {
     }
 
     return (
-        <div>
+        <div className={classes.page}>
             <Typography
                 className={classes.mainTitle}
                 variant="h4"

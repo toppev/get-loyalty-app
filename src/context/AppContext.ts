@@ -48,7 +48,7 @@ export interface BusinessPublic {
 }
 
 export interface CustomerLevel {
-    _id: any
+    _id?: any
     name: string
     rewards: Reward[]
     requiredPoints?: number

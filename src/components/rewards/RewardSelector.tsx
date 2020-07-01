@@ -3,7 +3,6 @@ import {
     createStyles,
     Dialog,
     DialogContent,
-    IconButton,
     LinearProgress,
     ListItem,
     makeStyles,
@@ -18,10 +17,10 @@ import RewardFormDialog from "./RewardFormDialog";
 import RewardItem from "./RewardItem";
 import SelectRewardButton from "./SelectRewardButton";
 import SearchField from "../common/SearchField";
-import CloseIcon from "@material-ui/icons/Close";
 import useRequest from "../../hooks/useRequest";
 import useResponseState from "../../hooks/useResponseState";
 import { listRewards } from "../../services/rewardService";
+import CloseButton from "../common/button/CloseButton";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -49,11 +48,6 @@ const useStyles = makeStyles((theme: Theme) =>
             marginRight: '15px'
         },
         importBtn: {},
-        closeButton: {
-            position: 'absolute',
-            right: 0,
-            color: theme.palette.grey[500],
-        },
     }));
 
 interface RewardSelectorProps {
@@ -80,10 +74,8 @@ export default function (props: RewardSelectorProps) {
     const searchFilter = (reward: Reward) => search.length ? JSON.stringify(reward).toLowerCase().includes(search) : true;
 
     return (
-        <Dialog open={props.open} fullWidth>
-            <IconButton className={classes.closeButton} aria-label="close" onClick={props.onClose}>
-                <CloseIcon/>
-            </IconButton>
+        <Dialog open={props.open} fullWidth onClose={props.onClose}>
+            <CloseButton onClick={props.onClose}/>
             <DialogContent className={classes.dialogContent}>
                 {loading && <LinearProgress/>}
                 {error && <RetryButton error={error}/>}

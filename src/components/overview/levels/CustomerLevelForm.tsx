@@ -39,7 +39,6 @@ interface CustomerLevelProps {
 
 export default function ({ initialLevel, onSubmit, onClose }: CustomerLevelProps) {
 
-    const [rewardSelectorOpen, setRewardSelectorOpen] = useState(false);
     const [colorPickerOpen, setColorPickerOpen] = useState(false);
     const [levelColor, setLevelColor] = useState(initialLevel.color || '#aaaaaa');
     const [rewards, setRewards] = useState<Reward[]>(initialLevel.rewards || []);
@@ -58,7 +57,7 @@ export default function ({ initialLevel, onSubmit, onClose }: CustomerLevelProps
     }
 
     return (
-        <Dialog open fullWidth maxWidth="sm">
+        <Dialog open fullWidth maxWidth="sm" onClose={onClose}>
             <CloseButton onClick={onClose}/>
             <DialogContent>
                 <Formik

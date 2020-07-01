@@ -10,7 +10,9 @@ const useStyles = makeStyles((theme: Theme) =>
         rowDiv: {
             backgroundColor: 'ghostwhite',
             marginBottom: '5px',
-            padding: '5px 25px 5px 0px'
+            padding: '15px',
+            borderRadius: '3px',
+            lineHeight: '1.5'
         },
         icon: {
             marginLeft: '8px'
@@ -44,13 +46,7 @@ export default function (props: RewardRowProps) {
 
     return (
         <div className={classes.rowDiv}>
-
-            <Grid
-                container
-                direction="column"
-                justify="space-evenly"
-                alignItems="flex-start"
-            >
+            <Grid container direction="column" justify="space-evenly" alignItems="flex-start">
                 <Grid item>
                     Name: <b>{reward.name}</b>
                 </Grid>
@@ -79,7 +75,6 @@ export default function (props: RewardRowProps) {
                     {actions}
                 </Grid>
             </Grid>
-
         </div>
     )
 }
