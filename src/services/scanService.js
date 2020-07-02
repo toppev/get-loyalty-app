@@ -22,7 +22,7 @@ const IDENTIFIERS = {
 /**
  * Parse the scanned string
  * @param scanStr the string to parse, values separated with ":"
- * @returns {{userId: string, rewardId: string|undefined,}}
+ * @return {Promise<{rewardId: string, user: *, userId: string}>}
  */
 async function parseScanString(scanStr) {
     const split = scanStr.split(":");
@@ -159,15 +159,23 @@ async function useScan(scanStr, data, businessId) {
 
     await customerService.addPurchase(userId, businessId, { products, categories })
 
-    // TODO add per scan customer points "transactionPoints"
-
     let newRewards = [];
     const campaigns = await campaignService.getOnGoingCampaigns(businessId, true)
     for (const campaign of campaigns) {
         let eligible;
+        // May throw (status)errors, catch them so it won't affect the response status
         try {
-            // May throw (status)errors, catch them so it won't affect the response status
-            eligible = await campaignService.canReceiveCampaignRewards(userId, businessId, campaign, isTruthyAnswer);
+            eligible = await campaignService.isEligible(user, campaign, isTruthyAnswer)
+            if (eligible) {
+                if (await campaignService.canReceiveCampaignRewards(userId, businessId, campaign, isTruthyAnswer)) {
+                    const rewards = await customerService.addCampaignRewards(user, campaign);
+                    newRewards.push(...rewards);
+                }
+                // transactionPoints are always given if the user is eligible for the campaign
+                if (campaign.transactionPoints) {
+                    customerData.properties.points += campaign.transactionPoints;
+                }
+            }
         } catch (err) {
             // Not eligible
             eligible = false;
@@ -176,10 +184,6 @@ async function useScan(scanStr, data, businessId) {
             }
             // IDEA: should we return reasons why the customer was not eligible?
         }
-        if (eligible) {
-            const rewards = await customerService.addCampaignRewards(user, campaign);
-            newRewards.push(...rewards);
-        }
     }
 
     // Campaigns may reward with customer points so recalculate customer level and add the customer level
@@ -187,7 +191,7 @@ async function useScan(scanStr, data, businessId) {
     // FIXME: we are ignoring customer points they may receive from the customer level rewards.
     //  Probably fine to ignore as there's no point rewarding with points when the user reaches X points
     const customerLevel = await customerService.updateCustomerLevel(user, business);
-    newRewards = newRewards.concat(customerLevel.newRewards)
+    newRewards.push(...customerLevel.newRewards)
 
     if (newRewards.length) {
         _sendRewardsMessage(userId, business, newRewards)
@@ -197,6 +201,7 @@ async function useScan(scanStr, data, businessId) {
             refresh: true
         }, POLLING_IDENTIFIERS.SCAN_GET);
     }
+    await user.save()
     return { message: responseMessage, newRewards, usedReward: reward }
 }
 

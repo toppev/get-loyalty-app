@@ -14,7 +14,8 @@ module.exports = {
     deleteCampaign,
     byCouponCode,
     canReceiveCampaignRewards,
-    getAllRewards
+    getAllRewards,
+    isEligible
 };
 
 /**
@@ -141,8 +142,9 @@ async function canReceiveCampaignRewards(userId, businessId, campaign, answerQue
 }
 
 /**
- * Whether the user is eligible to receive the rewards (requirements are met, for example enough purchases).
- * Only checks requirements it can check with the given data. Therefore, this function ignores requirements with (cashier) questions.
+ * Checks that the campaign requirements are met.
+ * For example, the user has enough purchases or the purchase was a specific product (see answerQuestion param).
+ * Ignores campaign dates etc. Only checks the requirements.
  *
  * @param answerQuestion callback to answer whether the specified requirement question got a truthy answer. The callback gets the type as an argument.
  */
