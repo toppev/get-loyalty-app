@@ -255,10 +255,10 @@ async function deleteReward(userId, businessId, rewardId) {
  */
 async function addCampaignRewards(user, campaign) {
     if (campaign.endReward && campaign.endReward.length) {
-        campaign.endReward.forEach(reward => {
+        for (const reward of campaign.endReward) {
             reward.campaign = campaign.id;
-            addReward(user, campaign.business, reward);
-        });
+            await addReward(user, campaign.business, reward);
+        }
         campaign.rewardedCount++;
         await campaign.save();
     }
