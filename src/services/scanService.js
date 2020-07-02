@@ -156,13 +156,17 @@ async function useScan(scanStr, data, businessId) {
         // It should just be 'no' or 'yes' but make sure if we change it, it will still work
         return answer && answer.toLowerCase() === 'yes';
     }
+
     await customerService.addPurchase(userId, businessId, { products, categories })
-    const newRewards = [];
+
+    // TODO add per scan customer points "transactionPoints"
+
+    let newRewards = [];
     const campaigns = await campaignService.getOnGoingCampaigns(businessId, true)
     for (const campaign of campaigns) {
         let eligible;
         try {
-            // May throw (status)errors, catch them so it won't affect the response status now
+            // May throw (status)errors, catch them so it won't affect the response status
             eligible = await campaignService.canReceiveCampaignRewards(userId, businessId, campaign, isTruthyAnswer);
         } catch (err) {
             // Not eligible
@@ -177,10 +181,16 @@ async function useScan(scanStr, data, businessId) {
             newRewards.push(...rewards);
         }
     }
+
+    // Campaigns may reward with customer points so recalculate customer level and add the customer level
+    // rewards (if any) in the new rewards array so the user will be notified of them too
+    // FIXME: we are ignoring customer points they may receive from the customer level rewards.
+    //  Probably fine to ignore as there's no point rewarding with points when the user reaches X points
+    const customerLevel = await customerService.updateCustomerLevel(user, business);
+    newRewards = newRewards.concat(customerLevel.newRewards)
+
     if (newRewards.length) {
-        const rewardNames = newRewards.map(it => it.name).join(', ')
-        const message = format(newRewards.length === 1 ? translations.newReward.singular : translations.newReward.plural, rewardNames);
-        pollingService.sendToUser(userId, { message: message, refresh: true }, POLLING_IDENTIFIERS.REWARD_GET);
+        _sendRewardsMessage(userId, business, newRewards)
     } else {
         pollingService.sendToUser(userId, {
             message: translations.scanRegistered.singular,
@@ -189,6 +199,15 @@ async function useScan(scanStr, data, businessId) {
     }
     return { message: responseMessage, newRewards, usedReward: reward }
 }
+
+
+function _sendRewardsMessage(userId, business, newRewards) {
+    const translations = business.config.translations;
+    const rewardNames = newRewards.map(it => it.name).join(', ')
+    const message = format(newRewards.length === 1 ? translations.newReward.singular : translations.newReward.plural, rewardNames);
+    pollingService.sendToUser(userId, { message: message, refresh: true }, POLLING_IDENTIFIERS.REWARD_GET);
+}
+
 
 module.exports = {
     getScan,

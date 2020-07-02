@@ -151,10 +151,10 @@ const businessSchema = new Schema({
                 type: Schema.Types.Number,
                 default: 0,
             },
+            // IDEA: background image?
             color: {
                 type: String,
             },
-            // IDEA: background image?
             rewards: [rewardSchema]
         }]
     }

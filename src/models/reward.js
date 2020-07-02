@@ -42,6 +42,13 @@ const rewardSchema = new Schema({
     expires: {
         type: Date
     },
+    // Because rewards are copies of one reward (e.g customer receives a copy of campaign rewards) and id changes,
+    // but "recognition" property won't change and we can use it to identify if it's really the same reward even if
+    // other properties such as name change or there are duplicates
+    recognition: {
+        type: Schema.Types.ObjectId,
+        default: mongoose.Types.ObjectId
+    }
 }, {
     toJSON: { virtuals: true },
     toObject: { virtuals: true }

@@ -17,7 +17,8 @@ module.exports = {
     updateRewards,
     useReward,
     searchCustomers,
-    rewardAllCustomers
+    rewardAllCustomers,
+    updateCustomerLevel
 };
 
 /**
@@ -188,18 +189,22 @@ async function getPurchases(id, business) {
  * @param userParam the id of the user or the user object, user to receive the reward
  * @param businessId the business giving the reward
  * @param reward the reward to give
- * @returns {Promise<[*]>} the user's updated customerData in the given business
+ * @returns {Promise<[*]>} all customer rewards (including the new one)
  */
 async function addReward(userParam, businessId, reward) {
     // For some reason userParam.id is always truthy even if userParam is the id???
     const user = userParam.save ? userParam : await User.findById(userParam);
     let data = await findCustomerData(user, businessId);
+
     if (!data) {
         // create customer data for this business
-        user.customerData.push(data = { business: businessId, rewards: [reward] });
-    } else {
-        data.rewards.push(reward);
+        user.customerData.push(data = { business: businessId, rewards: [], properties: { points: 0 } });
     }
+    if (reward.customerPoints) {
+        data.properties.points += reward.customerPoints
+    }
+    // TODO: If there is nothing else than the points in the reward, don't give the reward(?) or what????
+    data.rewards.push(reward);
     await user.save();
     return data.rewards;
 }
@@ -286,5 +291,44 @@ async function searchCustomers(businessId, limit, search) {
         users = users.filter(u => JSON.stringify(u).toLowerCase().includes(search));
     }
     return Promise.all(users.map(u => getCustomerInfo(u, businessId)));
+}
+
+/**
+ * Get the current level and give rewards if the user hasn't received them yet
+ * @param user the user
+ * @param business the business
+ * @return {currentLevel, points, newRewards} currentLevel may be undefined
+ */
+async function updateCustomerLevel(user, business) {
+    const customerData = await findCustomerData(user, business.id)
+    const points = customerData.properties.points
+    const levels = business.public.customerLevels
+
+    let currentLevel = undefined;
+    levels.forEach(lvl => {
+        if (points >= lvl.requiredPoints && (!currentLevel || lvl.requiredPoints > currentLevel.requiredPoints)) {
+            currentLevel = lvl;
+        }
+    })
+
+    const hasReceived = (reward) => {
+        return customerData.rewards.some(it => it.recognition.equals(reward.recognition))
+    }
+
+    const newRewards = []
+    if (currentLevel) {
+        for (const reward of currentLevel.rewards) {
+            if (!hasReceived(reward)) {
+                await addReward(user, business, reward)
+                newRewards.push(reward)
+            }
+        }
+    }
+    return {
+        currentLevel,
+        points,
+        /** New rewards with original (therefore "wrong" ids) */
+        newRewards
+    }
 
 }

@@ -71,6 +71,7 @@ const campaignSchema = new Schema({
         },
     },
     // Reward for each purchase (or whatever transaction)
+    // TODO: give the points
     transactionPoints: {
         type: Schema.Types.Number,
         default: 0
