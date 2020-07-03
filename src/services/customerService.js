@@ -189,9 +189,10 @@ async function getPurchases(id, business) {
  * @param userParam the id of the user or the user object, user to receive the reward
  * @param businessId the business giving the reward
  * @param reward the reward to give
+ * @param save whether to save the user. Defaults to true
  * @returns {Promise<[*]>} all customer rewards (including the new one)
  */
-async function addReward(userParam, businessId, reward) {
+async function addReward(userParam, businessId, reward, save) {
     // For some reason userParam.id is always truthy even if userParam is the id???
     const user = userParam.save ? userParam : await User.findById(userParam);
     let data = await findCustomerData(user, businessId);
@@ -203,9 +204,10 @@ async function addReward(userParam, businessId, reward) {
     if (reward.customerPoints) {
         data.properties.points += reward.customerPoints
     }
-    // TODO: If there is nothing else than the points in the reward, don't give the reward(?) or what????
     data.rewards.push(reward);
-    await user.save();
+    if (save !== false) {
+        await user.save();
+    }
     return data.rewards;
 }
 
@@ -248,7 +250,9 @@ async function deleteReward(userId, businessId, rewardId) {
 
 /**
  * Add all rewards from the campaign.
- * Increases rewardedCount but does not perform any checks, (use #canReceiveCampaignRewards)
+ * Increases rewardedCount but does not perform any checks, (use #canReceiveCampaignRewards).
+ * Does not save the user!
+ *
  * @param user the id of the user or the user object
  * @param campaign
  * @returns all given rewards (campaign.endReward)
@@ -257,7 +261,7 @@ async function addCampaignRewards(user, campaign) {
     if (campaign.endReward && campaign.endReward.length) {
         for (const reward of campaign.endReward) {
             reward.campaign = campaign.id;
-            await addReward(user, campaign.business, reward);
+            await addReward(user, campaign.business, reward, false);
         }
         campaign.rewardedCount++;
         await campaign.save();
@@ -294,7 +298,8 @@ async function searchCustomers(businessId, limit, search) {
 }
 
 /**
- * Get the current level and give rewards if the user hasn't received them yet
+ * Get the current level and give rewards if the user hasn't received them yet.
+ * Saves the user if new rewards were given.
  * @param user the user
  * @param business the business
  * @return {currentLevel, points, newRewards} currentLevel may be undefined
@@ -319,10 +324,13 @@ async function updateCustomerLevel(user, business) {
     if (currentLevel) {
         for (const reward of currentLevel.rewards) {
             if (!hasReceived(reward)) {
-                await addReward(user, business, reward)
+                await addReward(user, business, reward, false)
                 newRewards.push(reward)
             }
         }
+    }
+    if (newRewards.length) {
+        await user.save()
     }
     return {
         currentLevel,

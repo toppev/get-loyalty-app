@@ -201,7 +201,7 @@ async function useScan(scanStr, data, businessId) {
             refresh: true
         }, POLLING_IDENTIFIERS.SCAN_GET);
     }
-    await user.save()
+    await user.save() // Save unsaved changes
     return { message: responseMessage, newRewards, usedReward: reward }
 }
 
