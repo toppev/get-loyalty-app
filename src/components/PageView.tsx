@@ -23,7 +23,7 @@ export default function (props: PageViewProps) {
                 width="100%"
                 frameBorder="0"
                 title={page.pathname}
-                src={getPageHtmlSource(page._id)}
+                src={getPageHtmlSource(page)}
             />
         </div>
     )

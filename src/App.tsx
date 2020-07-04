@@ -74,7 +74,7 @@ function App() {
         <AppContext.Provider value={contextState}>
             <div className="App">
                 <Helmet>
-                    {pages.map(page => <link key={page._id} rel="prefetch" href={getPageHtmlSource(page._id)}/>)}
+                    {pages.map(page => <link key={page._id} rel="prefetch" href={getPageHtmlSource(page)}/>)}
                 </Helmet>
                 <NotificationHandler onRefresh={setPageRefreshKey}/>
                 {error && <p className="ErrorMessage">Error: {error.response?.message || error.toString()}</p>}
