@@ -31,8 +31,13 @@ const PageDataSchema = new Schema({
     template: {
         type: Boolean
     },
-    // html icon
+    // the html icon of this page
     icon: {
+        type: String
+    },
+    // Optional url for external pages
+    // e.g if the business already has a page, they can use it
+    externalURL: {
         type: String
     },
     pageIndex: {
