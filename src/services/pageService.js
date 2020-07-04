@@ -152,6 +152,20 @@ async function getPageContext(businessId, user) {
         const customerData = userInfo.customerData;
         const { products, campaigns, config } = business;
         const { translations } = config;
+
+        const points = customerData.properties.points;
+        let customerLevels = business.public.customerLevels
+        const currentLevel = customerService.getCurrentLevel(customerLevels, points)
+        customerLevels = customerLevels.map(lvl => {
+            if (lvl.name === currentLevel.name) {
+                lvl.active = true
+            }
+            if (lvl.requiredPoints > points) {
+                lvl.pointsNeeded = lvl.requiredPoints - points
+            }
+            return lvl
+        })
+
         return {
             user: userInfo,
             // Other information about rewards
@@ -161,6 +175,7 @@ async function getPageContext(businessId, user) {
             },
             birthdayGreeting: user.isBirthday ? business.config.translations.birthdayGreeting : undefined,
             business: business.public,
+            customerLevels,
             products,
             campaigns,
             translations

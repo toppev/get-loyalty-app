@@ -18,7 +18,8 @@ module.exports = {
     useReward,
     searchCustomers,
     rewardAllCustomers,
-    updateCustomerLevel
+    updateCustomerLevel,
+    getCurrentLevel
 };
 
 /**
@@ -308,13 +309,7 @@ async function updateCustomerLevel(user, business) {
     const customerData = await findCustomerData(user, business.id)
     const points = customerData.properties.points
     const levels = business.public.customerLevels
-
-    let currentLevel = undefined;
-    levels.forEach(lvl => {
-        if (points >= lvl.requiredPoints && (!currentLevel || lvl.requiredPoints > currentLevel.requiredPoints)) {
-            currentLevel = lvl;
-        }
-    })
+    const currentLevel = getCurrentLevel(levels, points)
 
     const hasReceived = (reward) => {
         return customerData.rewards.some(it => it.recognition.equals(reward.recognition))
@@ -339,4 +334,14 @@ async function updateCustomerLevel(user, business) {
         newRewards
     }
 
+}
+
+function getCurrentLevel(levels, points) {
+    let currentLevel = undefined
+    levels.forEach(lvl => {
+        if (points >= lvl.requiredPoints && (!currentLevel || lvl.requiredPoints > currentLevel.requiredPoints)) {
+            currentLevel = lvl
+        }
+    })
+    return currentLevel
 }
