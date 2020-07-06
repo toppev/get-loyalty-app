@@ -75,7 +75,7 @@ function App() {
             <div className="App">
 
                 <Helmet>
-                    <link id="favicon" rel="icon" href={`${getBusinessUrl()}/icon`} type="image/x-icon"/>
+                    <link id="favicon" rel="icon" href={`${getBusinessUrl(true)}/icon`} type="image/x-icon"/>
                     {pages.map(page => <link key={page._id} rel="prefetch" href={getPageHtmlSource(page)}/>)}
                 </Helmet>
 

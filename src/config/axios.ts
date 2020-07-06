@@ -28,9 +28,11 @@ function setBusinessId(id: string) {
  * Returns "/business/:id"
  * For example,
  * /business/5ed26d9d9a3bf3a7eb7dd587
+ * @param full whether to append BASE_URL as a prefix
  */
-function getBusinessUrl() {
-    return `/business/${businessId}`
+function getBusinessUrl(full?: boolean) {
+    const pre = full ? BASE_URL : ''
+    return `${pre}/business/${businessId}`
 }
 
 async function get(path: string, fullPath?: boolean) {
