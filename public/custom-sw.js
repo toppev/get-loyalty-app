@@ -1,10 +1,6 @@
-import { getBusinessUrl } from "../src/config/axios";
-
 self.addEventListener('push', event => {
     const data = event.data.json()
     const options = {
-        icon: `${getBusinessUrl(true)}/icon`,
-        badge: `${getBusinessUrl(true)}/icon`,
         ...data,
     }
     event.waitUntil(
