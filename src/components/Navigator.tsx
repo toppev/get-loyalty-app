@@ -58,6 +58,17 @@ const categories = [
     },
 ];
 
+const otherLinks = [
+    {
+        id: 'Privacy',
+        to: `https://${DOMAIN_HOME_PAGE}/privacy`
+    },
+    {
+        id: 'Terms of Service',
+        to: `https://${DOMAIN_HOME_PAGE}/terms`
+    },
+]
+
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         categoryHeader: {
@@ -130,6 +141,14 @@ const useStyles = makeStyles((theme: Theme) =>
             marginLeft: 0,
         },
         drawerPaper: {},
+        footerItem: {
+            fontSize: '12px'
+        },
+        otherLinks: {
+            bottom: 0,
+            position: 'absolute',
+
+        }
     }));
 
 interface NavigatorProps {
@@ -141,75 +160,93 @@ interface NavigatorProps {
 export default function Navigator(props: NavigatorProps) {
     const classes = useStyles();
 
-    const drawer = (<List disablePadding>
-        <ListItem className={clsx(classes.appName, classes.item, classes.itemCategory)}>
-            <ListItemText
-                classes={{
-                    primary: classes.itemPrimary,
-                }}
-            >
-                <Link color="inherit" href={`https://${DOMAIN_HOME_PAGE}`}>{DOMAIN_HOME_PAGE}</Link>
-            </ListItemText>
-        </ListItem>
-        <ListItem className={clsx(classes.item, classes.itemCategory)}>
-            <ListItemIcon className={classes.itemIcon}>
-                <Link color="inherit" href={`https://panel.${DOMAIN_HOME_PAGE}`}>
-                    <HomeIcon/>
-                </Link>
-            </ListItemIcon>
-            <ListItemText
-                classes={{
-                    primary: classes.itemPrimary,
-                }}
-            >
-                <Link color="inherit" href={`https://panel.${DOMAIN_HOME_PAGE}`}>Management Panel</Link>
-            </ListItemText>
-        </ListItem>
-        {categories.map(({ id, children }) => (
-            <React.Fragment key={id}>
-                <ListItem className={classes.categoryHeader}>
+    const drawer = (
+        <>
+            <List disablePadding>
+                <ListItem className={clsx(classes.appName, classes.item, classes.itemCategory)}>
                     <ListItemText
                         classes={{
-                            primary: classes.categoryHeaderPrimary,
+                            primary: classes.itemPrimary,
                         }}
                     >
-                        {id}
+                        <Link color="inherit" href={`https://${DOMAIN_HOME_PAGE}`}>{DOMAIN_HOME_PAGE}</Link>
                     </ListItemText>
                 </ListItem>
-                {children.map(({ id: childId, icon, to }) => {
-
-                    const external = to.startsWith('http');
-                    const component = external ? Link : NavLink;
-                    const otherProps = external ? {
-                        href: to,
-                        target: "_blank",
-                        rel: "noopener noreferrer"
-                    } : {
-                        activeClassName: classes.active,
-                        exact: true,
-                        to: to
-                    }
-
-                    return (
-                        <ListItem
-                            key={childId}
-                            button
-                            component={component}
-                            className={classes.item}
-                            {...otherProps}
-                        >
-                            <ListItemIcon className={classes.itemIcon}>
-                                <Badge badgeContent={props.notifications[childId]} color="secondary">{icon}</Badge>
-                            </ListItemIcon>
-                            <ListItemText classes={{ primary: classes.itemPrimary }}>{childId}</ListItemText>
-                            {external && <OpenInNewIcon fontSize="small"/>}
+                <ListItem className={clsx(classes.item, classes.itemCategory)}>
+                    <ListItemIcon className={classes.itemIcon}>
+                        <Link color="inherit" href={`https://panel.${DOMAIN_HOME_PAGE}`}>
+                            <HomeIcon/>
+                        </Link>
+                    </ListItemIcon>
+                    <ListItemText
+                        classes={{
+                            primary: classes.itemPrimary,
+                        }}
+                    >
+                        <Link color="inherit" href={`https://panel.${DOMAIN_HOME_PAGE}`}>Management Panel</Link>
+                    </ListItemText>
+                </ListItem>
+                {categories.map(({ id, children }) => (
+                    <React.Fragment key={id}>
+                        <ListItem className={classes.categoryHeader}>
+                            <ListItemText
+                                classes={{
+                                    primary: classes.categoryHeaderPrimary,
+                                }}
+                            >
+                                {id}
+                            </ListItemText>
                         </ListItem>
-                    )
-                })}
-                <div className={classes.divider}/>
-            </React.Fragment>
-        ))}
-    </List>);
+                        {children.map(({ id: childId, icon, to }) => {
+
+                            const external = to.startsWith('http');
+                            const component = external ? Link : NavLink;
+                            const otherProps = external ? {
+                                href: to,
+                                target: "_blank",
+                                rel: "noopener noreferrer"
+                            } : {
+                                activeClassName: classes.active,
+                                exact: true,
+                                to: to
+                            }
+
+                            return (
+                                <ListItem
+                                    key={childId}
+                                    button
+                                    component={component}
+                                    className={classes.item}
+                                    {...otherProps}
+                                >
+                                    <ListItemIcon className={classes.itemIcon}>
+                                        <Badge badgeContent={props.notifications[childId]}
+                                               color="secondary">{icon}</Badge>
+                                    </ListItemIcon>
+                                    <ListItemText classes={{ primary: classes.itemPrimary }}>{childId}</ListItemText>
+                                    {external && <OpenInNewIcon fontSize="small"/>}
+                                </ListItem>
+                            )
+                        })}
+                        <div className={classes.divider}/>
+                    </React.Fragment>
+                ))}
+            </List>
+            <List className={classes.otherLinks}>
+                {otherLinks.map(link => (
+                    <ListItem
+                        className={classes.footerItem}
+                        key={link.id}
+                        button
+                        component={Link}
+                        href={link.to}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >{link.id}</ListItem>
+                ))}
+            </List>
+        </>
+    );
 
     return (
         <div className={classes.root}>
