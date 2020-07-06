@@ -25,6 +25,7 @@ interface Placeholders {
 
 const placeholders: Placeholders = {
     // Some placeholders are grapesjs blocks (campaigns, their rewards, products, user rewards etc)
+    // Because those are arrays, we can not have them here
     // see pages/editor/blocks directory
     businessPlaceholders: {
         name: 'Business Placeholders',
@@ -77,6 +78,24 @@ const placeholders: Placeholders = {
             used: {
                 name: 'Number of used rewards',
                 description: 'Number of rewards the customer has used'
+            }
+        }
+    },
+    currentLevel: {
+        name: 'Customer level (current)',
+        identifier: 'currentLevel',
+        placeholders: {
+            name: {
+                name: 'Level name',
+                description: 'Name of the level'
+            },
+            requiredPoints: {
+                name: 'Points needed',
+                description: 'Customer points that were needed for the current level'
+            },
+            color: {
+                name: 'Level color',
+                description: 'The hex color of this level. (Use in styling/css)'
             }
         }
     }
