@@ -9,17 +9,23 @@ if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir);
 }
 
+/**
+ * Returns the file path of the file.
+ * e.g /uploads/${fileName}
+ */
 function toPath(fileName) {
     return uploadDir + sep + fileName;
 }
 
 async function upload(fileName, data) {
-    fs.writeFile(toPath(fileName), data, function (err) {
+    const path = toPath(fileName);
+    fs.writeFile(path, data, function (err) {
         if (err) {
             throw err;
         }
         // Success
     });
+    return path
 }
 
 module.exports = {

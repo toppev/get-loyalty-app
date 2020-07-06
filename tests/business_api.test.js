@@ -1,10 +1,11 @@
+const fs = require('fs');
 const businessService = require('../src/services/businessService');
 const campaignService = require('../src/services/campaignService');
 const Business = require('../src/models/business');
 const User = require('../src/models/user');
 const app = require('../app');
 const api = require('supertest')(app);
-const { initDatabase, closeDatabase } = require('./testUtils');
+const { initDatabase, closeDatabase, deleteUploadsDirectory } = require('./testUtils');
 
 const otherBusiness = { email: "example@email.com", public: { address: 'this is an address' } };
 let otherBusinessId;
@@ -153,8 +154,31 @@ describe('Logged in user can', () => {
         expect(res.body.customers[0].customerData.rewards[0].name).toBe(testReward.name);
     })
 
+    it('upload icon', async () => {
+        await api
+            .post(`/business/${business.id}/icon`)
+            .type('multipart/form-data')
+            .attach('file', 'testresources/favicon.ico')
+            .set('Cookie', cookie)
+            .expect(200)
+    })
+
+    it('get icon', async () => {
+        const res = await api
+            .get(`/business/${business.id}/icon`)
+            .set('Cookie', cookie)
+            .expect(200)
+
+        expect(res.headers['content-type']).toBe('image/x-icon')
+
+        const buf = await fs.promises.readFile('testresources/favicon.ico')
+        expect(res.body).toEqual(buf);
+
+    })
+
 });
 
 afterAll(() => {
     closeDatabase();
+    deleteUploadsDirectory(1)
 });

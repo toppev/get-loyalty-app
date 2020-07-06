@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 
 module.exports = {
     initDatabase,
-    closeDatabase
+    closeDatabase,
+    deleteUploadsDirectory
 }
 
 async function initDatabase(identifier) {
@@ -19,4 +20,19 @@ async function initDatabase(identifier) {
 
 function closeDatabase() {
     mongoose.connection.close();
+}
+
+function deleteUploadsDirectory(maxFiles) {
+    const { uploadDir } = require('../src/helpers/uploader');
+
+    const fs = require('fs');
+    const files = fs.readdirSync(uploadDir);
+    if (files.length > maxFiles) {
+        console.log(`Warning: not deleting upload directory ${uploadDir} because it has more files than expected ${maxFiles}`)
+    } else {
+        files.forEach(file => {
+            fs.unlinkSync(uploadDir + '/' + file);
+        });
+        fs.rmdirSync(uploadDir);
+    }
 }

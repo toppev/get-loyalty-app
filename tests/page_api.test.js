@@ -1,4 +1,4 @@
-const { initDatabase, closeDatabase } = require('./testUtils');
+const { initDatabase, closeDatabase, deleteUploadsDirectory } = require('./testUtils');
 const businessService = require('../src/services/businessService');
 const User = require('../src/models/user');
 const app = require('../app');
@@ -146,16 +146,5 @@ describe('Logged in user with permissions can', () => {
 
 afterAll(() => {
     closeDatabase();
-    const { uploadDir } = require('../src/helpers/uploader');
-
-    const fs = require('fs');
-    const files = fs.readdirSync(uploadDir);
-    if (files.length > 1) {
-        console.log(`Warning: not deleting upload directory ${uploadDir} because it has more files than expected`)
-    } else {
-        files.forEach(file => {
-            fs.unlinkSync(uploadDir + '/' + file);
-        });
-        fs.rmdirSync(uploadDir);
-    }
+    deleteUploadsDirectory(1)
 });

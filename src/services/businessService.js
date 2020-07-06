@@ -1,5 +1,6 @@
 const Business = require('../models/business');
 const User = require('../models/user');
+const uploader = require('../helpers/uploader');
 
 module.exports = {
     getOwnBusiness,
@@ -7,7 +8,9 @@ module.exports = {
     getBusiness,
     update,
     setUserRole,
-    getPublicInformation
+    getPublicInformation,
+    getIcon,
+    uploadIcon
 };
 
 /**
@@ -82,4 +85,13 @@ async function setUserRole(id, userId, role) {
  */
 async function getPublicInformation(id) {
     return await Business.findById(id).select('public');
+}
+
+async function getIcon(businessId) {
+    return uploader.toPath(`icon_${businessId}.ico`);
+}
+
+async function uploadIcon(businessId, icon) {
+    const path = await uploader.upload(`icon_${businessId}.ico`, icon)
+    return { path }
 }
