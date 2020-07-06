@@ -12,6 +12,10 @@
   },
   "author": "toppev",
   "license": "SEE LICENSE IN LICENSE",
+  "files": [
+    "index.js",
+    "index.d.ts"
+  ],
   "bugs": {
     "url": "https://github.com/toppev/loyalty-campaigns/issues"
   },
