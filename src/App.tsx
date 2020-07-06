@@ -6,7 +6,7 @@ import PageView from "./components/PageView";
 import { profileRequest, registerRequest } from "./services/authenticationService";
 import { Redirect, Route, Switch } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import { businessId, setBusinessId } from "./config/axios";
+import { businessId, getBusinessUrl, setBusinessId } from "./config/axios";
 import { AxiosResponse } from "axios";
 import { claimCoupon } from "./services/couponService";
 import { Helmet } from "react-helmet";
@@ -73,9 +73,12 @@ function App() {
     return (
         <AppContext.Provider value={contextState}>
             <div className="App">
+
                 <Helmet>
+                    <link id="favicon" rel="icon" href={`${getBusinessUrl()}/icon`} type="image/x-icon"/>
                     {pages.map(page => <link key={page._id} rel="prefetch" href={getPageHtmlSource(page)}/>)}
                 </Helmet>
+
                 <NotificationHandler onRefresh={setPageRefreshKey}/>
                 {error && <p className="ErrorMessage">Error: {error.response?.message || error.toString()}</p>}
                 <Switch>
