@@ -68,11 +68,12 @@ function getIcon(req, res, next) {
 
 function uploadIcon(req, res, next) {
     const { businessId } = req.params;
-    const busboy = new Busboy({ headers: req.headers });
+    const fileSizeLimit = 16;
+    const busboy = new Busboy({ headers: req.headers, limits: { fileSize: (1024 * fileSizeLimit) } });
     busboy.on('file', function (fieldName, file, filename, encoding, mimetype) {
         // TODO: validate type etc?
         file.on('limit', function () {
-            res.status(400).json({ message: 'Max file size: 4KB' });
+            res.status(400).json({ message: `Max file size: ${fileSizeLimit}KB` });
         });
         file.on('data', function (data) {
             businessService.uploadIcon(businessId, data)
@@ -81,7 +82,6 @@ function uploadIcon(req, res, next) {
         });
     });
     return req.pipe(busboy);
-
 }
 
 function listCustomers(req, res, next) {

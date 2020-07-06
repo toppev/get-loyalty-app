@@ -1,6 +1,7 @@
 const Business = require('../models/business');
 const User = require('../models/user');
 const uploader = require('../helpers/uploader');
+const fs = require('fs');
 
 module.exports = {
     getOwnBusiness,
@@ -88,7 +89,8 @@ async function getPublicInformation(id) {
 }
 
 async function getIcon(businessId) {
-    return uploader.toPath(`icon_${businessId}.ico`);
+    const file = uploader.toPath(`icon_${businessId}.ico`)
+    return fs.existsSync(file) ? file : undefined;
 }
 
 async function uploadIcon(businessId, icon) {
