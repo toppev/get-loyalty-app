@@ -75,11 +75,13 @@ async function sendPushNotification(businessId, notificationParam) {
     })
     const { title, message: body, link } = notificationParam;
     // TODO: placeholders?
-    // TODO: add icon?
+    const iconURL = `${process.env.PUBLIC_URL}/business/${businessId}/icon`
     const payloadString = JSON.stringify({
         title: title,
         body: body,
         tag: `loyalty-${businessId}`,
+        icon: iconURL,
+        badge: iconURL,
         data: {
             link
         },
