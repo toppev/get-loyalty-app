@@ -41,6 +41,12 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         error: {
             margin: '7px 0px'
+        },
+        notEditable: {
+            color: theme.palette.error.main,
+            fontSize: '14px',
+            marginTop: '20px',
+            textAlign: 'center'
         }
     }));
 
@@ -85,12 +91,15 @@ export default function ({ page }: PageEditorProps) {
                 <span className={classes.savedText}>Changes are automatically saved</span>
             </div>
             {error && <Alert className={classes.error} severity="error">{error}</Alert>}
-            <GrapesPageEditor
-                page={page}
-                _id={page._id}
-                selectPlaceholder={selectPlaceholder}
-                setError={(err: string) => setError(err)}
-            />
+
+            {!!page.externalURL ? <p className={classes.notEditable}>Can not edit content of pages with external URL</p> :
+                <GrapesPageEditor
+                    page={page}
+                    _id={page._id}
+                    selectPlaceholder={selectPlaceholder}
+                    setError={(err: string) => setError(err)}
+                />
+            }
             <Dialog fullWidth open={!!selectPlaceholderCallback}>
                 <CloseButton onClick={() => {
                     if (selectPlaceholderCallback) {

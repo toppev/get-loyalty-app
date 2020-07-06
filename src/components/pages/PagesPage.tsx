@@ -39,6 +39,7 @@ import { createPage, deletePage, listPages, listTemplates, updatePage } from "..
 import StageSelector from "./StageSelector";
 import PreviewPage from "./PreviewPage";
 import IconSelector from "./editor/IconSelector";
+import URLSelectorDialog from "./URLSelectorDialog";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -49,7 +50,7 @@ const useStyles = makeStyles((theme: Theme) =>
             height: '200px',
         },
         lowCard: {
-            height: '150px',
+            height: '180px',
         },
         actionCardsDivider: {
             backgroundColor: theme.palette.grey[800]
@@ -95,6 +96,9 @@ const useStyles = makeStyles((theme: Theme) =>
         pageCard: {
             margin: '15px',
         },
+        pageDesc: {
+            color: theme.palette.grey[700],
+        },
         center: {
             textAlign: 'center'
         },
@@ -129,6 +133,7 @@ export default function () {
 
     const [pageOpen, setPageOpen] = useState<Page | null>(null);
     const [templateSelectorOpen, setTemplateSelectorOpen] = useState(false);
+    const [urlSelectorOpen, setUrlSelectorOpen] = useState(false);
 
     const { error: listError, loading: listLoading, response, execute } = useRequest(listPages);
     const [pages, setPages] = useResponseState<Page[]>(response, [], res => res.data.map((it: any) => new Page(it)));
@@ -140,10 +145,10 @@ export default function () {
     return error ? (<RetryButton error={error}/>) : (
         <div>
             <div className={classes.cardsDiv}>
-                <div>
+                <Box display="flex">
                     <PageCard
                         className={`${classes.card} ${classes.lowCard} ${classes.center} ${classes.templateSelectorCard}`}
-                        page={new Page({ _id: '123', name: 'Create a new page' })}
+                        page={new Page({ _id: '1', name: 'Create a new page' })}
                         displayId={false}
                         displayStage={false}
                         actions={(
@@ -171,7 +176,40 @@ export default function () {
                             );
                         }}
                     />
-                </div>
+
+                    <PageCard
+                        className={`${classes.card} ${classes.lowCard} ${classes.center} ${classes.templateSelectorCard}`}
+                        page={new Page({
+                            _id: '2',
+                            name: 'Use existing page',
+                            description: 'e.g social media site, form or existing homepage'
+                        })}
+                        displayId={false}
+                        displayStage={false}
+                        actions={(
+                            <Button
+                                className={classes.actionButton}
+                                color="primary"
+                                variant="contained"
+                                startIcon={(<WebIcon/>)}
+                                onClick={() => setUrlSelectorOpen(true)}
+                            >Set URL</Button>
+                        )}
+                    />
+                    <URLSelectorDialog
+                        open={urlSelectorOpen}
+                        onClose={() => setUrlSelectorOpen(false)}
+                        onSubmit={url => {
+                            otherRequests.performRequest(
+                                () => createPage(new Page({ name: 'New page', id: 'new_page', externalURL: url })),
+                                (res) => {
+                                    setUrlSelectorOpen(false);
+                                    setPages([...pages, new Page(res.data)])
+                                }
+                            );
+                        }}
+                    />
+                </Box>
                 <Divider className={classes.actionCardsDivider}/>
                 {loading && <LinearProgress/>}
                 <Box display="flex">
@@ -380,7 +418,8 @@ function PageCard(props: PageCardProps) {
                         }
                     }}
                 />
-                {page.description}
+                <br/>
+                <span className={classes.pageDesc}>{page.description}</span>
             </CardContent>
             <CardActions className={classes.cardActions}>
                 {displayStage &&

@@ -2,7 +2,7 @@ import { Button, createStyles, LinearProgress, Paper, Theme, Typography } from "
 import { makeStyles } from "@material-ui/core/styles";
 import { Form, Formik, FormikErrors } from "formik";
 import RetryButton from "../common/button/RetryButton";
-import SaveIcon from "@material-ui/icons/Save";
+import SendIcon from "@material-ui/icons/Send";
 import React from "react";
 import { PushNotification } from "./PushNotification";
 import useRequest from "../../hooks/useRequest";
@@ -106,7 +106,7 @@ export default function ({ notification, onSubmitted, cooldownExpires, setCooldo
                             variant="contained"
                             color="primary"
                             disabled={isSubmitting || !!cooldownExpires}
-                            startIcon={(<SaveIcon/>)}
+                            startIcon={(<SendIcon/>)}
                             onClick={submitForm}
                         >Send Notification</Button>
                         {cooldownExpires &&
