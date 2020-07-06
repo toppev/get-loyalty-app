@@ -176,6 +176,7 @@ async function getPageContext(businessId, user) {
             birthdayGreeting: user.isBirthday ? business.config.translations.birthdayGreeting : undefined,
             business: business.public,
             customerLevels,
+            currentLevel,
             products,
             campaigns,
             translations
