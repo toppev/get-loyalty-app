@@ -40,6 +40,8 @@ import StageSelector from "./StageSelector";
 import PreviewPage from "./PreviewPage";
 import IconSelector from "./editor/IconSelector";
 import URLSelectorDialog from "./URLSelectorDialog";
+import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
+import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -139,14 +141,34 @@ export default function () {
     const { error: listError, loading: listLoading, response, execute } = useRequest(listPages);
     const [pages, setPages] = useResponseState<Page[]>(response, [], res => res.data.map((it: any) => new Page(it)));
 
+    const sortedPages = [...pages].sort(((a, b) => {
+        return (a.pageIndex || 0) - (b.pageIndex || 0)
+    }))
+
     const otherRequests = useRequest();
     const error = listError || otherRequests.error;
     const loading = listLoading || otherRequests.loading;
 
+    const movePage = (page: Page, direction: "right" | "left") => {
+        const modifier = direction === "right" ? 1 : -1;
+        const other = sortedPages[sortedPages.indexOf(page) + modifier]
+        let newSlot = other.pageIndex
+        // FIXME
+        // If the order is messed (same index), add +1/-1 to newSlot
+        // It might skip 1 but whatever
+        if (newSlot === page.pageIndex) {
+            newSlot += modifier
+        }
+        other.pageIndex = page.pageIndex
+        page.pageIndex = newSlot
+        otherRequests.performRequest(() => updatePage(page, false))
+        otherRequests.performRequest(() => updatePage(other, false))
+    }
+
     return error ? (<RetryButton error={error}/>) : (
         <div>
             <div className={classes.cardsDiv}>
-                <Box display="flex">
+                <Box display="flex" flexWrap="wrap">
                     <PageCard
                         className={`${classes.card} ${classes.lowCard} ${classes.center} ${classes.templateSelectorCard}`}
                         page={new Page({ _id: '1', name: 'Create a new page' })}
@@ -214,7 +236,7 @@ export default function () {
                 <Divider className={classes.actionCardsDivider}/>
                 {loading && <LinearProgress/>}
                 <Box display="flex" flexWrap="wrap">
-                    {pages.filter((page: Page) => !page.isDiscarded()).map((page: Page) => (
+                    {sortedPages.filter((page: Page) => !page.isDiscarded()).map((page: Page) => (
                         <PageCard
                             key={page._id}
                             className={classes.pageCard}
@@ -223,6 +245,11 @@ export default function () {
                             image={`${BASE_URL}/business/${business._id}/page/${page._id}/thumbnail`}
                             actions={(
                                 <>
+                                    <IconButton
+                                        className="show-on-hover"
+                                        disabled={page === sortedPages[0]}
+                                        onClick={() => movePage(page, "left")}
+                                    ><KeyboardArrowLeftIcon/></IconButton>
                                     <Button
                                         disabled={pageOpen?._id === page._id}
                                         className={classes.actionButton}
@@ -248,6 +275,13 @@ export default function () {
                                             }
                                         }}
                                     >Delete</Button>
+                                    <IconButton
+                                        className="show-on-hover"
+                                        disabled={page === sortedPages[sortedPages.length - 1]}
+                                        onClick={() => movePage(page, "right")}
+                                    >
+                                        <KeyboardArrowRightIcon/>
+                                    </IconButton>
                                 </>
                             )}
                         />
@@ -367,7 +401,7 @@ function PageCard(props: PageCardProps) {
     const submitNameChange = () => {
         setEditing(false)
         const url = `${getBusinessUrl()}/page/${page._id}`;
-        post(url, { name: page.name })
+        post(url, { name: page.name }, true)
             .catch(err => {
                 // Show notification?
                 console.log(`Failed to rename page: ${err}`)
@@ -422,7 +456,7 @@ function PageCard(props: PageCardProps) {
                 <br/>
                 <span className={classes.pageDesc}>{page.description}</span>
             </CardContent>
-            <CardActions className={classes.cardActions}>
+            <CardActions className={`${classes.cardActions} hoverable`}>
                 {displayStage &&
                 <Typography variant="h6">
                     Stage: <span
