@@ -157,7 +157,7 @@ async function getPageContext(businessId, user) {
         let customerLevels = business.public.customerLevels
         const currentLevel = customerService.getCurrentLevel(customerLevels, points)
         customerLevels = customerLevels.map(lvl => {
-            if (lvl.name === currentLevel.name) {
+            if (currentLevel && lvl.name === currentLevel.name) {
                 lvl.active = true
             }
             if (lvl.requiredPoints > points) {
