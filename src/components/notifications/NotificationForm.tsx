@@ -95,8 +95,8 @@ export default function ({ notification, onSubmitted, cooldownExpires, setCooldo
                         className={classes.field}
                         name="link"
                         type="text"
-                        label="Link (optional)"
-                        placeholder="Your website url or link to anything else (e.g social media) or just empty :)"
+                        label="Notification link (optional)"
+                        placeholder="Your website or link to anything else (e.g social media)"
                     />
                     {loading && <LinearProgress/>}
                     {error && <RetryButton error={error}/>}

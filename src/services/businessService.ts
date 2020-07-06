@@ -1,30 +1,38 @@
-import { BUSINESS_ID, get, patch, post } from "../config/axios";
+import { BUSINESS_ID, get, multipartPost, patch, post } from "../config/axios";
 import { Business } from "../context/AppContext";
 
-async function createBusiness(params?: any) {
+function createBusiness(params?: any) {
     return post('/business/create', params);
 }
 
-async function getBusiness(businessId: string) {
+function getBusiness(businessId: string) {
     return get(`/business/${businessId}`);
 }
 
-async function updateBusiness(business: Business) {
+function updateBusiness(business: Business) {
     return patch(`/business/${BUSINESS_ID}`, business);
 }
 
-async function setBusinessRole(userId: string, role: string) {
+function setBusinessRole(userId: string, role: string) {
     return post(`/business/${BUSINESS_ID}/role`, { userId, role })
 }
 
-async function listBusinessCustomers(limit: number) {
-    return get(`/business${BUSINESS_ID}/customers?limit=${limit || 10}`)
+function getBusinessIcon() {
+    return get(`/business/${BUSINESS_ID}/icon`)
 }
+
+function setBusinessIcon(icon: any) {
+    const formData = new FormData()
+    formData.append('file', icon)
+    return multipartPost(`/business/${BUSINESS_ID}/icon`, formData)
+}
+
 
 export {
     getBusiness,
     createBusiness,
     updateBusiness,
     setBusinessRole,
-    listBusinessCustomers
+    getBusinessIcon,
+    setBusinessIcon,
 }

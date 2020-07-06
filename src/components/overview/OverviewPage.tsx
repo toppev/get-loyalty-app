@@ -25,6 +25,7 @@ import PrivacyLink from "../common/PrivacyLink";
 import { isEmail } from "../../util/Validate";
 import IdText from "../common/IdText";
 import CustomerLevelView from "./levels/CustomerLevelView";
+import IconUploadForm from "./IconUploadForm";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -165,6 +166,7 @@ export default function () {
                                         label="Website (if any)"
                                     />
                                 </Form>
+                                <IconUploadForm/>
                                 <IdText id={context.business._id}/>
                             </Paper>
                             <Paper className={classes.paper}>

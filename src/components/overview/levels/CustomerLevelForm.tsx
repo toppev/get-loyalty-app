@@ -53,6 +53,7 @@ export default function ({ initialLevel, onSubmit, onClose }: CustomerLevelProps
         if (value.requiredPoints === undefined) {
             errors.requiredPoints = 'Points must be specified'
         }
+        // TODO: check no equal requiredPoints exist (except if updating)
         return errors;
     }
 

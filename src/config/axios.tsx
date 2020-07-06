@@ -60,6 +60,18 @@ export async function post(path: string, data: Object, fullPath: boolean = false
     });
 }
 
+export async function multipartPost(path: string, data: Object, fullPath: boolean = false) {
+    return instance({
+        method: 'POST',
+        url: fullPath ? path : BASE_URL + path,
+        data: transformDataObjects(data),
+        headers: {
+            'Content-Type': 'multipart/form-data',
+            ...headers
+        }
+    });
+}
+
 export async function patch(path: string, data: Object, fullPath: boolean = false) {
     return instance({
         method: 'PATCH',
