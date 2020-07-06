@@ -145,8 +145,11 @@ const useStyles = makeStyles((theme: Theme) =>
             fontSize: '12px'
         },
         otherLinks: {
-            bottom: 0,
             position: 'relative',
+            [theme.breakpoints.up('sm')]: {
+                bottom: 15,
+                position: 'absolute',
+            },
         }
     }));
 
