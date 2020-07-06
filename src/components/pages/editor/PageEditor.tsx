@@ -74,15 +74,15 @@ export default function ({ page }: PageEditorProps) {
     return !notMobile && !forceMobileEditor ? (
         <div>
             <Typography variant="h6" align="center" color="error">
-                Unfortunately, the page editor may not work well on mobile devices.
+                Unfortunately, the page editor may not work on mobile devices.
             </Typography>
             <div className={classes.enableEditor}>
-                If you want to try it
+                If you want to try it anyway,
                 <Button
                     size="small"
                     className={classes.enableEditorBtn}
                     onClick={() => setForceMobileEditor(true)}
-                >click here</Button>
+                >tap here</Button>
             </div>
         </div>
     ) : (
@@ -92,7 +92,8 @@ export default function ({ page }: PageEditorProps) {
             </div>
             {error && <Alert className={classes.error} severity="error">{error}</Alert>}
 
-            {!!page.externalURL ? <p className={classes.notEditable}>Can not edit content of pages with external URL</p> :
+            {!!page.externalURL ?
+                <p className={classes.notEditable}>Can not edit content of pages with external URL</p> :
                 <GrapesPageEditor
                     page={page}
                     _id={page._id}

@@ -98,6 +98,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         pageDesc: {
             color: theme.palette.grey[700],
+            margin: '0px 5px'
         },
         center: {
             textAlign: 'center'
@@ -182,7 +183,7 @@ export default function () {
                         page={new Page({
                             _id: '2',
                             name: 'Use existing page',
-                            description: 'e.g social media site, form or existing homepage'
+                            description: 'Create a new page using an existing website. E.g social media site, form or homepage.'
                         })}
                         displayId={false}
                         displayStage={false}
@@ -212,7 +213,7 @@ export default function () {
                 </Box>
                 <Divider className={classes.actionCardsDivider}/>
                 {loading && <LinearProgress/>}
-                <Box display="flex">
+                <Box display="flex" flexWrap="wrap">
                     {pages.filter((page: Page) => !page.isDiscarded()).map((page: Page) => (
                         <PageCard
                             key={page._id}
