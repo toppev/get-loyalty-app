@@ -146,8 +146,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         otherLinks: {
             bottom: 0,
-            position: 'absolute',
-
+            position: 'relative',
         }
     }));
 
