@@ -201,6 +201,7 @@ export default function ({ initialCampaign, onSubmitted }: CampaignFormProps) {
                     </MuiPickersUtilsProvider>
 
                     <Typography variant="h6" className={classes.typography}>Campaign Type(s)</Typography>
+                    <p className={classes.tip}>Specify when this campaign is valid. In other words, select requirements for this campaign</p>
                     <RequirementSelector onChange={setRequirements}/>
 
                     <Typography variant="h6" className={classes.typography}>End Rewards</Typography>
