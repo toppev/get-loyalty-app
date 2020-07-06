@@ -123,7 +123,8 @@ async function canReceiveCampaignRewards(userId, businessId, campaign, answerQue
         throw Error('The campaign has already ended')
     }
     if (campaign.maxRewards) {
-        if (campaign.rewardedCount >= campaign.maxRewards.total) {
+        // negative (preferably -1) or undefined means unlimited rewards
+        if (campaign.maxRewards.total >= 0 && campaign.rewardedCount >= campaign.maxRewards.total) {
             throw new StatusError('The campaign has run out of rewards :(', 410)
         }
         const user = await userService.getById(userId);
@@ -131,11 +132,13 @@ async function canReceiveCampaignRewards(userId, businessId, campaign, answerQue
         if (!eligible) {
             throw new StatusError('You are not (currently) eligible for the reward.', 403)
         }
-        const customerData = await customerService.findCustomerData(user, businessId);
-        const allReceivedRewards = customerData ? customerData.rewards : [];
-        const receivedCount = allReceivedRewards.filter(reward => reward.campaign && reward.campaign.equals(campaign.id)).length;
-        if (receivedCount >= campaign.maxRewards.user) {
-            throw new StatusError('You have already received all rewards', 403)
+        if (campaign.maxRewards.user >= 0) {
+            const customerData = await customerService.findCustomerData(user, businessId);
+            const allReceivedRewards = customerData ? customerData.rewards : [];
+            const receivedCount = allReceivedRewards.filter(reward => reward.campaign && reward.campaign.equals(campaign.id)).length;
+            if (receivedCount >= campaign.maxRewards.user) {
+                throw new StatusError('You have already received all rewards', 403)
+            }
         }
     }
     return true

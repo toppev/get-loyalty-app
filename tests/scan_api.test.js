@@ -74,7 +74,8 @@ describe('Logged in user can', () => {
             name: 'Campaign #2',
             start: now,
             end: (now + 10000),
-            maxRewards: { total: 0 },
+            maxRewards: { total: 1 },
+            rewardedCount: 1,
             products: [product2],
         };
         await campaignService.create(business._id, campaign1)
