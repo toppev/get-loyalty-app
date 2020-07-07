@@ -11,7 +11,7 @@ import { AxiosResponse } from "axios";
 import { claimCoupon } from "./services/couponService";
 import { Helmet } from "react-helmet";
 import { AppContext, defaultAppContext } from './AppContext';
-import NotificationHandler from "./components/NotificationHandler";
+import NotificationHandler from "./components/notification/NotificationHandler";
 
 function App() {
 
