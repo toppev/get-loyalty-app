@@ -1,5 +1,5 @@
 import { deleteRequest, post } from "../config/axios";
-import { Notification } from "../components/PopupNotification";
+import { Notification } from "../components/notification/PopupNotification";
 import { useContext, useState } from "react";
 import { AppContext } from "../AppContext";
 

@@ -1,4 +1,4 @@
-import { useSubscribe } from "../services/messageService";
+import { useSubscribe } from "../../services/messageService";
 import PopupNotification from "./PopupNotification";
 import React from "react";
 
