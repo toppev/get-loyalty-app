@@ -30,6 +30,7 @@ function App() {
                 // TODO: Option to login on other responses?
                 const status = err?.response?.status;
                 if (status === 403 || status === 404) {
+                    // TODO: replace with iframe form
                     registerRequest()
                         .then(onLogin)
                         .catch(_err => setError('Could not register a new account. Something went wrong :('))

@@ -5,20 +5,18 @@ type LoginCredentials = {
     password?: string
 }
 
-function loginRequest({ email, password }: LoginCredentials = {}) {
-    return post('/user/login', { email, password })
-}
-
 function profileRequest() {
     return get('/user/profile')
 }
 
+/**
+ * @deprecated TODO: replace with ifram form
+ */
 function registerRequest({ email, password }: LoginCredentials = {}) {
     return post('/user/register', { email, password })
 }
 
 export {
     profileRequest,
-    loginRequest,
     registerRequest,
 }

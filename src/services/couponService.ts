@@ -1,7 +1,7 @@
-import { getBusinessUrl, post } from "../config/axios";
+import { getBusinessUrl, get } from "../config/axios";
 
 async function claimCoupon(coupon: string) {
-    return post(`${getBusinessUrl()}/coupon/${coupon}`, {})
+    return get(`${getBusinessUrl()}/coupon/${coupon}`)
 }
 
 export {
