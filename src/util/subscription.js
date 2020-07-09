@@ -1,4 +1,4 @@
-import { getBusinessUrl, onReady, post } from "../config/axios";
+import { BASE_URL, getURL, post } from "../config/axios";
 
 const convertedVapidKey = urlBase64ToUint8Array(process.env.REACT_APP_PUBLIC_VAPID_KEY)
 
@@ -36,7 +36,7 @@ export function subscribeUser() {
 }
 
 function sendSubscription(subscription) {
-    return onReady(() => post(`${getBusinessUrl()}/notifications/subscribe`, subscription))
+    return post(`${BASE_URL}/notifications/subscribe`, subscription)
 }
 
 // https://github.com/GoogleChromeLabs/web-push-codelab/issues/46#issuecomment-429273981

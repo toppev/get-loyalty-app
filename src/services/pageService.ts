@@ -1,15 +1,15 @@
-import { get, getBusinessUrl } from "../config/axios";
+import { get, BASE_URL } from "../config/axios";
 
 /**
  * Only returns public data of the published pages.
  * Does not contain the HTML
  */
 function getPages() {
-    return get(`${getBusinessUrl()}/page/pages`)
+    return get(`${BASE_URL}/page/pages`)
 }
 
 function getPageHtml(pageId: any) {
-    return get(`${getBusinessUrl()}/page/${pageId}/html`)
+    return get(`${BASE_URL}/page/${pageId}/html`)
 }
 
 export {

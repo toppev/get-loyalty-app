@@ -3,10 +3,10 @@ import './App.css';
 import { getPageHtml, getPages } from "./services/pageService";
 import Page, { ERROR_HTML } from "./model/Page";
 import PageView from "./components/PageView";
-import { profileRequest, registerRequest } from "./services/authenticationService";
+import { profileRequest, registerRequest } from "./services/userService";
 import { Redirect, Route, Switch } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import { businessId, getBusinessUrl, setBusinessId } from "./config/axios";
+import { BASE_URL } from "./config/axios";
 import { AxiosResponse } from "axios";
 import { claimCoupon } from "./services/couponService";
 import { Helmet } from "react-helmet";
@@ -30,7 +30,6 @@ function App() {
                 // TODO: Option to login on other responses?
                 const status = err?.response?.status;
                 if (status === 403 || status === 404) {
-                    // TODO: replace with iframe form. CORS won't allow this
                     registerRequest()
                         .then(onLogin)
                         .catch(_err => setError('Could not register a new account. Something went wrong :('))
@@ -44,14 +43,6 @@ function App() {
     const onLogin = (res: AxiosResponse) => {
         setContextState({ ...contextState, user: res.data })
         const query = new URLSearchParams(window.location.search)
-        const id = query.get('business') || query.get('businessID')
-        if (!id || id.length !== 24) {
-            if (!error && businessId.length !== 24) {
-                window.alert('Invalid businessID (' + businessId + ')')
-            }
-        } else {
-            setBusinessId(id)
-        }
         const couponCode = query.get('coupon') || query.get('code')
         const checkCoupon = async () => couponCode && claimCoupon(couponCode)
         checkCoupon()
@@ -100,7 +91,7 @@ function App() {
             <div className="App">
 
                 <Helmet>
-                    <link id="favicon" rel="icon" href={`${getBusinessUrl(true)}/icon`} type="image/x-icon"/>
+                    <link id="favicon" rel="icon" href={`${BASE_URL}/business/icon`} type="image/x-icon"/>
                 </Helmet>
 
                 <NotificationHandler onRefresh={refreshHtmlPages}/>
