@@ -34,10 +34,9 @@ async function getCustomerInfo(user) {
 /**
  * Update customerData object. Returns the new object.
  * @param {id} userId value of the user's `_id` to query by
- * @param {id} businessId value of business's `_id` to query by
  * @param {Object} updated the updates to perform. Values of this object are copied to current object
  */
-async function updateCustomer(userId, businessId, updated) {
+async function updateCustomer(userId, updated) {
     const user = await User.findById(userId);
     const data = Object.assign(user.customerData, updated);
     await user.save();
@@ -48,27 +47,20 @@ async function updateCustomer(userId, businessId, updated) {
 /**
  * Update customerData's "properties" object. Returns the new properties object.
  * @param {id} userId value of the user's `_id` to query by
- * @param {id} businessId value of business's `_id` to query by
  * @param {Object} updateProperties the updates to perform. Values of this object are copied to current properties.
  */
-async function updateCustomerProperties(userId, businessId, updateProperties) {
-    return await updateCustomer(userId, businessId, { properties: updateProperties })
+async function updateCustomerProperties(userId, updateProperties) {
+    return await updateCustomer(userId, { properties: updateProperties })
 }
 
 /**
  * Add a new purchase. The user's all purchases in the given business.
  * @param {ObjectId|string} userId value of the user's `_id` to query by
- * @param {ObjectId|string} businessId value of business's `_id` to query by
  * @param {object} purchase the new purchase
  */
-async function addPurchase(userId, businessId, purchase) {
+async function addPurchase(userId, purchase) {
     const user = await User.findById(userId);
-    let data = user.customerData;
-    if (!data) {
-        user.customerData.push({ business: businessId, purchases: [purchase] });
-    } else {
-        data.purchases.push(purchase);
-    }
+    user.customerData.purchases.push(purchase);
     await user.save();
     return user.customerData.purchases;
 }
@@ -129,12 +121,11 @@ async function getPurchases(id, business) {
 /**
  * Add a new reward
  * @param userParam the id of the user or the user object, user to receive the reward
- * @param businessId the business giving the reward
  * @param reward the reward to give
  * @param save whether to save the user. Defaults to true
  * @returns {Promise<[*]>} all customer rewards (including the new one)
  */
-async function addReward(userParam, businessId, reward, save) {
+async function addReward(userParam, reward, save) {
     // For some reason userParam.id is always truthy even if userParam is the id???
     const user = userParam.save ? userParam : await User.findById(userParam);
     let data = user.customerData;
@@ -157,10 +148,9 @@ async function useReward(user, customerData, reward) {
 /**
  * A method to replace all rewards.
  * @param userId the id of the user
- * @param businessId the id of the business
  * @param newRewards the new rewards to save
  */
-async function updateRewards(userId, businessId, newRewards) {
+async function updateRewards(userId, newRewards) {
     const user = await User.findById(userId);
     const customerData = user.customerData;
     customerData.rewards = newRewards;
@@ -171,10 +161,9 @@ async function updateRewards(userId, businessId, newRewards) {
 /**
  * Remove the reward (if given by the specified business) from the user's customer data
  * @param userId the user
- * @param businessId the business
  * @param rewardId the reward to remove
  */
-async function deleteReward(userId, businessId, rewardId) {
+async function deleteReward(userId, rewardId) {
     const user = await User.findById(userId);
     const customerData = user.customerData;
     const newRewards = customerData.rewards.filter(reward => reward.id.toString() !== rewardId);
@@ -198,7 +187,7 @@ async function addCampaignRewards(user, campaign) {
     if (campaign.endReward && campaign.endReward.length) {
         for (const reward of campaign.endReward) {
             reward.campaign = campaign.id;
-            await addReward(user, campaign.business, reward, false);
+            await addReward(user, reward, false);
         }
         campaign.rewardedCount++;
         await campaign.save();
@@ -210,20 +199,19 @@ function _listCustomers() {
     return User.find()
 }
 
-async function rewardAllCustomers(businessId, reward) {
+async function rewardAllCustomers(reward) {
     const customers = await _listCustomers();
-    await Promise.all(customers.map(it => addReward(it, businessId, reward)));
+    await Promise.all(customers.map(it => addReward(it, reward)));
     return { rewarded: customers.length }
 }
 
 /**
  * List customers of the business
- * @param businessId the id of the business
  * @param limit maximum number of customers to return, defaults to 100 first if "search" is not specified,
  * otherwise500. 0 for unlimited
  * @param search the string to search, if no limit is given, only the first 500 will be searched
  */
-async function searchCustomers(businessId, limit, search) {
+async function searchCustomers(limit, search) {
     // If searching, get first 500 customers and filter, otherwise return first 100
     // might fix later
     // FIXME: could be a lot better
@@ -231,7 +219,7 @@ async function searchCustomers(businessId, limit, search) {
     if (search && search.trim().length) {
         users = users.filter(u => JSON.stringify(u).toLowerCase().includes(search));
     }
-    return Promise.all(users.map(u => getCustomerInfo(u, businessId)));
+    return Promise.all(users.map(u => getCustomerInfo(u)));
 }
 
 /**
@@ -255,7 +243,7 @@ async function updateCustomerLevel(user, business) {
     if (currentLevel) {
         for (const reward of currentLevel.rewards) {
             if (!hasReceived(reward)) {
-                await addReward(user, business, reward, false)
+                await addReward(user, reward, false)
                 newRewards.push(reward)
             }
         }

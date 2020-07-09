@@ -4,12 +4,10 @@ const User = require('../src/models/user');
 const app = require('../app');
 const api = require('supertest')(app);
 
-
 const businessParam = { email: "customer.test.business@email.com", public: { address: 'this is an address' } };
 const userParams = { email: "customer.test@email.com", password: "password123" };
 
 let cookie;
-let business;
 let userId;
 
 beforeAll(async () => {
@@ -27,7 +25,7 @@ beforeAll(async () => {
         .post('/business/create')
         .send(businessParam)
         .set('Cookie', cookie);
-    business = await businessService.getBusiness(res2.body._id);
+    await businessService.getBusiness(res2.body._id);
 });
 
 describe('Logged in user with permissions can modify customer purchases', () => {
@@ -37,7 +35,7 @@ describe('Logged in user with permissions can modify customer purchases', () => 
     it('create purchase', async () => {
         const purchase = { categories: ['5e2708e560885bbf21fbb9de'] };
         const res = await api
-            .post(`/business/${business.id}/customer/${userId}/purchase`)
+            .post(`/customer/${userId}/purchase`)
             .set('Cookie', cookie)
             .send(purchase)
             .expect(200);
@@ -48,7 +46,7 @@ describe('Logged in user with permissions can modify customer purchases', () => 
     it('update purchase', async () => {
         const patchData = { categories: ['5e2756df4d931c1fe5b9013f'] };
         const res = await api
-            .patch(`/business/${business.id}/customer/${userId}/purchase/${purchaseId}`)
+            .patch(`/customer/${userId}/purchase/${purchaseId}`)
             .set('Cookie', cookie)
             .send(patchData)
             .expect(200);
@@ -57,7 +55,7 @@ describe('Logged in user with permissions can modify customer purchases', () => 
 
     it('delete purchase', async () => {
         await api
-            .delete(`/business/${business.id}/customer/${userId}/purchase/${purchaseId}`)
+            .delete(`/customer/${userId}/purchase/${purchaseId}`)
             .set('Cookie', cookie)
             .expect(200);
         const user = await User.findById(userId);
@@ -73,7 +71,7 @@ describe('Logged in user with permissions can modify customer rewards', () => {
 
     it('add reward', async () => {
         const res = await api
-            .post(`/business/${business.id}/customer/${userId}/reward`)
+            .post(`/customer/${userId}/reward`)
             .send(firstReward)
             .set('Cookie', cookie)
             .expect(200);
@@ -84,7 +82,7 @@ describe('Logged in user with permissions can modify customer rewards', () => {
 
     it('add second reward', async () => {
         const res = await api
-            .post(`/business/${business.id}/customer/${userId}/reward`)
+            .post(`/customer/${userId}/reward`)
             .send(secondReward)
             .set('Cookie', cookie)
             .expect(200);
@@ -97,7 +95,7 @@ describe('Logged in user with permissions can modify customer rewards', () => {
 
     it('delete first reward', async () => {
         const res = await api
-            .delete(`/business/${business.id}/customer/${userId}/reward/${firstReward._id}`)
+            .delete(`/customer/${userId}/reward/${firstReward._id}`)
             .set('Cookie', cookie)
             .expect(200);
         expect(res.body.rewards.length).toBe(1)
@@ -106,7 +104,7 @@ describe('Logged in user with permissions can modify customer rewards', () => {
 
     it('update rewards', async () => {
         const res = await api
-            .post(`/business/${business.id}/customer/${userId}/rewards`)
+            .post(`/customer/${userId}/rewards`)
             .send([firstReward])
             .set('Cookie', cookie)
             .expect(200);
@@ -120,7 +118,7 @@ describe('Logged in user with permissions can modify customer data', () => {
 
     it('get customer', async () => {
         const res = await api
-            .get(`/business/${business.id}/customer/${userId}`)
+            .get(`/customer/${userId}`)
             .set('Cookie', cookie)
             .expect(200);
         expect(res.body.customerData.id).toBe(userId.toString())
@@ -131,7 +129,7 @@ describe('Logged in user with permissions can modify customer data', () => {
             points: 100
         };
         const res = await api
-            .patch(`/business/${business.id}/customer/${userId}/properties`)
+            .patch(`/customer/${userId}/properties`)
             .send(data)
             .set('Cookie', cookie)
             .expect(200);

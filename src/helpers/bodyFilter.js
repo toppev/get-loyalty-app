@@ -50,7 +50,6 @@ const businessRoleValidator = (data) => {
 
 const productValidator = (product) => {
     delete product._id
-    delete product._id
 };
 
 const rewardValidator = (reward) => {
@@ -59,7 +58,6 @@ const rewardValidator = (reward) => {
 
 const campaignValidator = (campaign) => {
     delete campaign._id
-    delete campaign.business
 
 };
 
@@ -74,15 +72,12 @@ const customerPropertiesValidator = (customer) => {
 };
 
 const pushNotificationValidator = (notification) => {
-    delete notification.business
     delete notification.sent
     delete notification.receivers
 }
 
 const pageValidator = (page) => {
     delete page._id
-    delete page.business
-    delete page.template
 }
 
 module.exports = {

@@ -7,11 +7,9 @@ const businessService = require('../src/services/businessService');
 const app = require('../app');
 const api = require('supertest')(app);
 
-let business;
-
 beforeAll(async () => {
     await initDatabase('notification');
-    business = await new Business().save();
+    await new Business().save();
 });
 
 const notification = {
@@ -21,14 +19,13 @@ const notification = {
 }
 
 it('notification history', async () => {
-    await new PushNotification({ ...notification, business: business.id }).save();
+    await new PushNotification({ ...notification }).save();
     const notification2 = {
         title: 'Test 2',
         message: 'This is a test notification #2',
-        business: business.id
     }
     await new PushNotification(notification2).save();
-    const res = await notificationService.getPushNotificationHistory(business.id)
+    const res = await notificationService.getPushNotificationHistory()
     expect(res.length).toBe(2);
     expect(res[0].title).toBe(notification.title);
     expect(res[0].message).toBe(notification.message);
@@ -49,7 +46,7 @@ describe('user can', () => {
             .post('/user/login/local')
             .send(userParam)
             .expect(200);
-        await businessService.setUserRole(business.id, userId, 'business')
+        await businessService.setUserRole(userId, 'business')
         cookie = res.headers['set-cookie'];
 
         await PushNotification.collection.drop();
@@ -64,7 +61,7 @@ describe('user can', () => {
             endpoint: 'testendpoint'
         }
         await api
-            .post(`/business/${business.id}/notifications/subscribe`)
+            .post(`/notifications/subscribe`)
             .send(data)
             .set('Cookie', cookie)
             .expect(200)
@@ -76,7 +73,7 @@ describe('user can', () => {
 
     it('send notification', async () => {
         const res = await api
-            .post(`/business/${business.id}/notifications`)
+            .post(`/notifications`)
             .send(testNotification)
             .set('Cookie', cookie)
             .expect(200);
@@ -87,7 +84,7 @@ describe('user can', () => {
 
     it('not send notification (cooldown)', async () => {
         const res = await api
-            .post(`/business/${business.id}/notifications`)
+            .post(`/notifications`)
             .send(testNotification)
             .set('Cookie', cookie)
             .expect(400);
@@ -95,7 +92,7 @@ describe('user can', () => {
 
     it('get notifications', async () => {
         const res = await api
-            .get(`/business/${business.id}/notifications`)
+            .get(`/notifications`)
             .set('Cookie', cookie)
             .expect(200);
         expect(res.body.notifications[0].title).toBe(testNotification.title)

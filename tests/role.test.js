@@ -13,7 +13,7 @@ const params = { reqParams: {} };
 const otherParams = { reqParams: {} };
 
 beforeAll(async () => {
-    const url = 'mongodb://127.0.0.1/kantis-role-test'
+    const url = 'mongodb://127.0.0.1/loyalty-role-test'
     await mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
     await mongoose.connection.db.dropDatabase();
 
@@ -23,17 +23,15 @@ beforeAll(async () => {
 
 
 async function initParams(paramsObj) {
-    const businessId = (await new Business({}).save()).id;
-    paramsObj.reqParams.businessId = businessId;
-
+    await new Business({}).save();
     const userId = (await userService.create({})).id;
     paramsObj.userId = userId;
     paramsObj.reqParams.userId = paramsObj.userId;
 
-    paramsObj.reqParams.productId = (await productService.create(businessId, { name: 'Pizza' })).id;
-    paramsObj.reqParams.campaignId = (await campaignService.create(businessId, { name: 'Sick Campaign' })).id;
+    paramsObj.reqParams.productId = (await productService.create({ name: 'Pizza' })).id;
+    paramsObj.reqParams.campaignId = (await campaignService.create({ name: 'Sick Campaign' })).id;
 
-    const purchases = await customerService.addPurchase(userId, businessId, { categories: ['5e2721e1dab8355d82d53379'] });
+    const purchases = await customerService.addPurchase(userId, { categories: ['5e2721e1dab8355d82d53379'] });
     paramsObj.reqParams.purchaseId = purchases[0].id;
 }
 

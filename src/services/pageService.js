@@ -20,17 +20,16 @@ module.exports = {
     renderPageView
 };
 
-async function createPage(businessId, pageParam) {
-    const business = await Business.findById(businessId);
+async function createPage(pageParam) {
+    const business = await Business.findOne();
     const limit = business.plan.limits.pages.total;
     if (limit !== -1 && await PageData.countDocuments({
-        business: this.business,
+        template: false,
         stage: { $ne: 'discarded' }
     }) >= limit) {
         throw new StatusError('Plan limit reached', 402)
     }
     const newPage = new PageData(pageParam);
-    newPage.business = businessId;
     return await newPage.save();
 }
 
@@ -57,20 +56,19 @@ async function loadPage(id, gjsOnly) {
 
 /**
  * Find the given business's pages. The returned pages do not include the "gjs" data.
- * @param {any} businessId the id of the business
  */
-async function getBusinessPages(businessId) {
-    const pages = await PageData.find({ business: businessId }).select('-gjs');
+async function getBusinessPages() {
+    const pages = await PageData.find({ template: false }).select('-gjs');
     return pages;
 }
 
 /**
- * Return only the ids of the published pages. First should be the home page
+ * Return only the ids of the published pages. First should be the home page.
  */
-async function getPublicPage(businessId) {
+async function getPublicPage() {
     const pages = await PageData.find({
-        business: businessId,
-        stage: 'published'
+        stage: 'published',
+        template: false,
     }).sort('pageIndex').select('_id icon pathname');
     return pages;
 }
@@ -87,7 +85,7 @@ async function uploadPage(pageId, { html, css }) {
     // TODO: queue screenshot or something?
     const page = await PageData.findById(pageId);
     if (page) {
-        createScreenshot(page.business, pageId)
+        createScreenshot(pageId)
             .then(() => {
                 console.log(`Created or updated page thumbnail of ${pageId}`)
             })
@@ -107,8 +105,8 @@ async function validateHandlebars(html) {
     return true;
 }
 
-async function createScreenshot(businessId, pageId) {
-    const pagePath = `/business/${businessId}/page/${pageId}/html`;
+async function createScreenshot(pageId) {
+    const pagePath = `/page/${pageId}/html`;
     const fileName = `ss_${pageId}`;
     const path = uploader.toPath(`${fileName}.jpg`);
     try {
@@ -130,7 +128,7 @@ async function getThumbnail(pageId) {
     }
     const page = await PageData.findById(pageId);
     if (page) {
-        return await createScreenshot(page.business, pageId);
+        return await createScreenshot(pageId);
     }
 }
 
@@ -194,7 +192,7 @@ async function getPageContext(user) {
     }
 }
 
-async function renderPageView(pageId, businessId, user) {
+async function renderPageView(pageId, user) {
     const pageHtml = await getPageContent(pageId);
     const context = await getPageContext(user);
     // IDEA: we could precompile when the page is saved, send the precompiled + data to browser

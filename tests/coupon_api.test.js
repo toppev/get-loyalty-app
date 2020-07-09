@@ -1,7 +1,6 @@
 const { initDatabase, closeDatabase } = require('./testUtils');
 const businessService = require('../src/services/businessService');
 const campaignService = require('../src/services/campaignService');
-const customerService = require('../src/services/customerService');
 const userService = require('../src/services/userService');
 const User = require('../src/models/user');
 const app = require('../app');
@@ -29,14 +28,14 @@ beforeAll(async () => {
     business = await businessService.createBusiness({}, userId)
     endReward = { name: "Test Reward", itemDiscount: "20% OFF" }
     const campaignParam = { name: "Test Campaign", couponCode: couponCode, endReward: [endReward] }
-    await campaignService.create(business.id, campaignParam);
+    await campaignService.create(campaignParam);
 });
 
 describe('Logged in user can', () => {
 
     it('claim coupon rewards', async () => {
         const res = await api
-            .post(`/business/${business.id}/coupon/${couponCode.toLowerCase()}`) // Make sure lowercase works
+            .post(`/coupon/${couponCode.toLowerCase()}`) // Make sure lowercase works
             .set('Cookie', cookie)
             .expect(200);
         expect(res.body.rewards.length).toBe(1); // Enough good
@@ -44,7 +43,7 @@ describe('Logged in user can', () => {
 
     it('not reclaim coupon rewards', async () => {
         await api
-            .post(`/business/${business.id}/coupon/${couponCode.toUpperCase()}`) // Make sure uppercase works
+            .post(`/coupon/${couponCode.toUpperCase()}`) // Make sure uppercase works
             .set('Cookie', cookie)
             .expect(403);
         const user = await userService.getById(userId)

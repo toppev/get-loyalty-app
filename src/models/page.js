@@ -16,11 +16,6 @@ const PageDataSchema = new Schema({
     description: {
         type: String
     },
-    business: {
-        type: mongoose.Types.ObjectId,
-        ref: 'Business',
-        index: true
-    },
     // We don't delete pages currently
     // Instead just make them invisible
     stage: {
@@ -29,7 +24,8 @@ const PageDataSchema = new Schema({
         default: 'unpublished'
     },
     template: {
-        type: Boolean
+        type: Boolean,
+        default: false
     },
     // the html icon of this page
     icon: {
@@ -59,7 +55,7 @@ const PageDataSchema = new Schema({
 PageDataSchema.pre('save', async function () {
     // Lazy loading
     let pagesCount;
-    const getPagesCount = async () => pagesCount === undefined ? pagesCount = await PageData.countDocuments({ business: this.business }) : pagesCount
+    const getPagesCount = async () => pagesCount === undefined ? pagesCount = await PageData.countDocuments({ template: false }) : pagesCount
 
     if (!this.pathname || this.pathname === UNNAMED_PAGE) {
         this.pathname = `page${await getPagesCount()}`;
