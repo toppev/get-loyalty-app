@@ -1,30 +1,16 @@
 import React from "react";
-import Page from "../model/Page";
-import { getPageHtmlSource } from "../services/pageService";
+import Page, { LOADING_HTML } from "../model/Page";
 
 interface PageViewProps {
     page: Page
-    /**
-     * Change value of this prop to reload the iframe
-     */
-    refreshKey?: any
 }
 
 export default function (props: PageViewProps) {
-    const { page, refreshKey } = props
 
-    // TODO: smoother transition?
+    const { page } = props
+    const html = page.html || LOADING_HTML
 
     return (
-        <div className="page-holder">
-            <iframe
-                key={refreshKey}
-                height="100%"
-                width="100%"
-                frameBorder="0"
-                title={page.pathname}
-                src={getPageHtmlSource(page)}
-            />
-        </div>
+        <div className="page-view" dangerouslySetInnerHTML={{ __html: html }}/>
     )
 }

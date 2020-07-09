@@ -1,5 +1,4 @@
-import { BASE_URL, get, getBusinessUrl } from "../config/axios";
-import Page from "../model/Page";
+import { get, getBusinessUrl } from "../config/axios";
 
 /**
  * Only returns public data of the published pages.
@@ -9,16 +8,11 @@ function getPages() {
     return get(`${getBusinessUrl()}/page/pages`)
 }
 
-function getPageHtmlSource(page: Page) {
-    if (page.externalURL) {
-        return page.externalURL
-    }
-    const pagesURL = process.env.NODE_ENV !== "production" ?
-        `${BASE_URL}${getBusinessUrl()}/page` : 'https://pages.getloyalty.app'
-    return `${pagesURL}/${page._id}/html`
+function getPageHtml(pageId: any) {
+    return get(`${getBusinessUrl()}/page/${pageId}/html`)
 }
 
 export {
     getPages,
-    getPageHtmlSource
+    getPageHtml
 }

@@ -7,7 +7,10 @@ const instance = axios.create({
 })
 
 // Used in requests. Easier if it's stored here instead of state
-export let businessId = 'undefined'
+export let businessId = process.env.REACT_APP_BUSINESS_ID || ''
+if(businessId.length !== 24) {
+    console.log(`Invalid businessID: ${businessId}. Specify the "REACT_APP_BUSINESS_ID" variable in the .env file.`)
+}
 const QUEUED: (() => any)[] = []
 
 /**
@@ -25,7 +28,7 @@ function setBusinessId(id: string) {
 }
 
 /**
- * Returns "/business/:id"
+ * Returns BASE_URL/business/:id
  * For example,
  * /business/5ed26d9d9a3bf3a7eb7dd587
  * @param full whether to append BASE_URL as a prefix

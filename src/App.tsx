@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
-import { getPageHtmlSource, getPages } from "./services/pageService";
-import Page from "./model/Page";
+import { getPageHtml, getPages } from "./services/pageService";
+import Page, { ERROR_HTML } from "./model/Page";
 import PageView from "./components/PageView";
 import { profileRequest, registerRequest } from "./services/authenticationService";
 import { Redirect, Route, Switch } from "react-router-dom";
@@ -19,8 +19,8 @@ function App() {
 
     const [error, setError] = useState<any>()
     const [pages, setPages] = useState<Page[]>([])
-    // Use setPageRefreshKey with a new value to refresh
-    const [pageRefreshKey, setPageRefreshKey] = useState(0)
+
+    const updatePage = (page: Page) => setPages(prev => [...prev.filter(p => p._id !== page._id), page])
 
     // Authentication
     useEffect(() => {
@@ -30,12 +30,12 @@ function App() {
                 // TODO: Option to login on other responses?
                 const status = err?.response?.status;
                 if (status === 403 || status === 404) {
-                    // TODO: replace with iframe form
+                    // TODO: replace with iframe form. CORS won't allow this
                     registerRequest()
                         .then(onLogin)
                         .catch(_err => setError('Could not register a new account. Something went wrong :('))
                 } else {
-                    setError('Something went wrong :(')
+                    window.alert(`Something went wrong :(\nError: ${err?.response.body || err.toString()}`)
                 }
             })
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -43,11 +43,11 @@ function App() {
 
     const onLogin = (res: AxiosResponse) => {
         setContextState({ ...contextState, user: res.data })
-        const query = new URLSearchParams(window.parent.location.search)
+        const query = new URLSearchParams(window.location.search)
         const id = query.get('business') || query.get('businessID')
         if (!id || id.length !== 24) {
             if (!error && businessId.length !== 24) {
-                setError('Invalid business')
+                window.alert('Invalid businessID (' + businessId + ')')
             }
         } else {
             setBusinessId(id)
@@ -55,20 +55,44 @@ function App() {
         const couponCode = query.get('coupon') || query.get('code')
         const checkCoupon = async () => couponCode && claimCoupon(couponCode)
         checkCoupon()
-            .then(() => loadPages())
-            .catch(err => setError(err))
+            .then(loadPages)
+            .catch(err => setError(err?.response.body?.message || err.toString))
     }
 
+    // Load pages
     const loadPages = () => {
         getPages()
-            .then(res => {
-                const newPages = res.data
-                setPages(newPages)
-            })
+            .then(res => refreshHtmlPages(res.data))
             .catch(err => {
                 console.log(err)
                 setError('Failed to load pages')
             })
+    }
+
+    const refreshHtmlPages = (refreshPages = pages) => {
+        if (refreshPages.length) {
+            const fetchRest = (excludeId?: string) => refreshPages.forEach(it => it._id !== excludeId && fetchHtml(it))
+            // Fetch the current page first for better performance
+            const path = window.location.pathname.substring(1) // e.g "/home" -> "home"
+            const current = refreshPages.find(page => page.pathname === path)
+            if (current) {
+                fetchHtml(current).then(() => fetchRest(current._id))
+            } else {
+                fetchRest()
+            }
+        }
+    }
+
+    const fetchHtml = async (page: Page) => {
+        try {
+            const res = await getPageHtml(page._id)
+            page.html = res.data
+        } catch (err) {
+            console.log(err)
+            page.html = ERROR_HTML
+        } finally {
+            updatePage(page)
+        }
     }
 
     return (
@@ -77,15 +101,14 @@ function App() {
 
                 <Helmet>
                     <link id="favicon" rel="icon" href={`${getBusinessUrl(true)}/icon`} type="image/x-icon"/>
-                    {pages.map(page => <link key={page._id} rel="prefetch" href={getPageHtmlSource(page)}/>)}
                 </Helmet>
 
-                <NotificationHandler onRefresh={setPageRefreshKey}/>
+                <NotificationHandler onRefresh={refreshHtmlPages}/>
                 {error && <p className="ErrorMessage">Error: {error.response?.message || error.toString()}</p>}
                 <Switch>
                     {pages.map(page => (
                         <Route exact path={`/${page.pathname}`} key={page._id}>
-                            <PageView refreshKey={pageRefreshKey} page={page}/>
+                            <PageView page={page}/>
                         </Route>
                     ))}
                     {pages.length > 0 &&
@@ -97,4 +120,4 @@ function App() {
     )
 }
 
-export default App
+export default App;
