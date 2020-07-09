@@ -147,12 +147,22 @@ async function getPageContent(pageId) {
 async function getPageContext(businessId, user) {
     const business = await Business.findById(businessId).populate().lean();
     if (business) {
-        // Add all placeholders here
+        // All page placeholders
         const userInfo = await customerService.getCustomerInfo(user, businessId)
         const customerData = userInfo.customerData;
-        const { products, campaigns, config } = business;
-        const { translations } = config;
+        const { products, config } = business;
 
+        const campaigns = business.campaigns.map(campaign => {
+            // Add currentStamps and stampsNeeded lists so we can actually display stamp icons or something (easily)
+            campaign.currentStamps = campaign.getCurrentStamps(customerData);
+
+            const stampsNeeded = campaign.currentStamps - campaign.totalStampsNeeded;
+            campaign.stampsNeeded = Array.from({ length: stampsNeeded }, () => ({}));
+
+            return campaign;
+        });
+
+        const { translations } = config;
         const points = customerData.properties.points;
         let customerLevels = business.public.customerLevels
         const currentLevel = customerService.getCurrentLevel(customerLevels, points)
