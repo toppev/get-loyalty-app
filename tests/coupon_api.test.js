@@ -48,8 +48,7 @@ describe('Logged in user can', () => {
             .set('Cookie', cookie)
             .expect(403);
         const user = await userService.getById(userId)
-        const data = await customerService.findCustomerData(user, business.id)
-        const rewards = data.rewards;
+        const rewards = user.customerData.rewards;
         expect(rewards.length).toBe(1)
     });
 

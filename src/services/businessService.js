@@ -2,6 +2,7 @@ const Business = require('../models/business');
 const User = require('../models/user');
 const uploader = require('../helpers/uploader');
 const fs = require('fs');
+const StatusError = require('../helpers/statusError');
 
 module.exports = {
     getOwnBusiness,
@@ -17,10 +18,11 @@ module.exports = {
 /**
  * Get the business the given user owns
  * @param user the user object (with customerData etc)
+ *
+ * @deprecated returns first business found, for legacy stuff.
  */
 function getOwnBusiness(user) {
-    const customerData = user.customerData.find(cd => cd.role === 'business');
-    return customerData ? customerData.business : null;
+    return Business.findOne().id
 }
 
 /**
@@ -29,6 +31,9 @@ function getOwnBusiness(user) {
  * @param {any} userId the owner's _id field. This user will be given 'business' rank
  */
 async function createBusiness(businessParam, userId) {
+    if(await Business.countDocuments() > 0) {
+        throw new StatusError('Business already exists', 403)
+    }
     const business = new Business(businessParam);
     await business.save();
     await setUserRole(business.id, userId, 'business');
@@ -67,17 +72,10 @@ async function setUserRole(id, userId, role) {
     if (!user) {
         throw new Error(`User ${userId} was not found`);
     }
-    const data = user.customerData;
-    // FIXME replacing == with === will break
-    const index = data.findIndex(_item => _item.business == id || _item.business.equals(id));
-    if (index > -1) {
-        data[index].role = role;
-    } else {
-        data.push({ business: id, role: role });
-    }
+    user.role = role;
     await user.save();
-    const newData = data.find(_item => _item.business == id || _item.business.equals(id));
-    return { role: newData.role, business: newData.business };
+    // For legacy stuff return role and business separately too
+    return { role: user.role, business: id, customerData: user.customerData };
 }
 
 /**

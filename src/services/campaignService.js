@@ -1,7 +1,6 @@
 const Campaign = require('../models/campaign');
 const Business = require('../models/business');
 const StatusError = require('../helpers/statusError');
-const customerService = require('./customerService');
 const userService = require('./userService');
 const campaignTypes = require('@toppev/loyalty-campaigns');
 
@@ -133,8 +132,8 @@ async function canReceiveCampaignRewards(userId, businessId, campaign, answerQue
             throw new StatusError('You are not (currently) eligible for the reward.', 403)
         }
         if (campaign.maxRewards.user >= 0) {
-            const customerData = await customerService.findCustomerData(user, businessId);
-            const allReceivedRewards = customerData ? customerData.rewards : [];
+            const customerData = user.customerData;
+            const allReceivedRewards = customerData.rewards;
             const receivedCount = allReceivedRewards.filter(reward => reward.campaign && reward.campaign.equals(campaign.id)).length;
             if (receivedCount >= campaign.maxRewards.user) {
                 throw new StatusError('You have already received all rewards', 403)
@@ -152,16 +151,15 @@ async function canReceiveCampaignRewards(userId, businessId, campaign, answerQue
  * @param answerQuestion callback to answer whether the specified requirement question got a truthy answer. The callback gets the type as an argument.
  */
 async function isEligible(user, campaign, answerQuestion) {
-    const { requirements, business } = campaign;
+    const { requirements } = campaign;
     if (requirements.length === 0) {
         return true;
     }
-    const customerData = await customerService.findCustomerData(user, business.id);
     return !requirements.some(req => {
         // Return true if the user is not eligible
         const campaignType = campaignTypes[req.type];
         if (campaignType && campaignType.requirement) {
-            if (!campaignType.requirement({ values: req.values, user, customerData })) {
+            if (!campaignType.requirement({ values: req.values, user, customerData: user.customerData })) {
                 return true;
             }
         }

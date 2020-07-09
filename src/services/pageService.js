@@ -144,11 +144,11 @@ async function getPageContent(pageId) {
     return await fs.promises.readFile(path, 'utf8');
 }
 
-async function getPageContext(businessId, user) {
-    const business = await Business.findById(businessId).populate().lean();
+async function getPageContext(user) {
+    const business = await Business.findOne().populate('campaigns products').lean();
     if (business) {
         // All page placeholders
-        const userInfo = await customerService.getCustomerInfo(user, businessId)
+        const userInfo = await customerService.getCustomerInfo(user)
         const customerData = userInfo.customerData;
         const { products, config } = business;
 
@@ -196,7 +196,7 @@ async function getPageContext(businessId, user) {
 
 async function renderPageView(pageId, businessId, user) {
     const pageHtml = await getPageContent(pageId);
-    const context = await getPageContext(businessId, user);
+    const context = await getPageContext(user);
     // IDEA: we could precompile when the page is saved, send the precompiled + data to browser
     // browser can compile with handlebars.runtime library
     const template = handlebars.compile(pageHtml);

@@ -79,40 +79,6 @@ describe('business', () => {
         return expect(role.can('business', '*', params)).resolves.toBeFalsy();
     });
 
-    it('should not should have permission to user:*', () => {
-        expect.assertions(1);
-        return expect(role.can('business', '*', params)).resolves.toBeFalsy();
-    });
-
-    // Modifying other business stuff
-    it('should not should have permission to campaign:update other', () => {
-        const fakeNews = JSON.parse(JSON.stringify(params));
-        fakeNews.reqParams.campaignId = otherParams.reqParams.campaignId;
-        expect.assertions(1);
-        return expect(role.can('business', 'campaign:create', fakeNews)).resolves.toBeFalsy();
-    });
-
-    it('should not should have permission to product:* other', () => {
-        const fakeNews = JSON.parse(JSON.stringify(params));
-        fakeNews.reqParams.productId = otherParams.reqParams.productId;
-        expect.assertions(1);
-        return expect(role.can('business', 'product:*', fakeNews)).resolves.toBeFalsy();
-    });
-
-    // Because role is always taken from the user's role in that business (specified in url params)
-    // we can just let the user modify purchases as only the user's "customerData"
-    // that matches the businessId url param is modified (and user has permission from that business)
-    // For products etc the 
-    //
-    // hence checking if role has permission would return true always (only for purchases)
-    /*
-    it('should not have permission to purchase:create other', async () => {
-        const fakeNews = JSON.parse(JSON.stringify(params));
-        fakeNews.reqParams.purchaseId = otherParams.reqParams.purchaseId;
-        expect.assertions(1);
-        return expect(role.can('business', 'purchase:create', fakeNews)).resolves.toBeFalsy();
-    });
-    */
 });
 
 // USER

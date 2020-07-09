@@ -61,7 +61,7 @@ describe('Logged in user with permissions can modify customer purchases', () => 
             .set('Cookie', cookie)
             .expect(200);
         const user = await User.findById(userId);
-        const data = await user.customerDataByBusiness(business.id);
+        const data = await user.customerData;
         expect(data.purchases.length).toBe(0);
     });
 });
@@ -123,7 +123,7 @@ describe('Logged in user with permissions can modify customer data', () => {
             .get(`/business/${business.id}/customer/${userId}`)
             .set('Cookie', cookie)
             .expect(200);
-        expect(res.body.customerData.business).toBe(business.id)
+        expect(res.body.customerData.id).toBe(userId.toString())
     });
 
     it('update customer points (properties)', async () => {

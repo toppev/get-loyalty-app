@@ -32,7 +32,6 @@ function validate(filter, bypassPermission = "validation:bypass") {
 
 const userValidator = (user) => {
     delete user._id
-    delete user.superRole
     delete user.lastVisit
     delete user.authentication
     delete user.customerData

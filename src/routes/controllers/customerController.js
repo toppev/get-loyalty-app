@@ -70,7 +70,7 @@ function revokeReward(req, res, next) {
 // Other stuff
 function getCustomerData(req, res, next) {
     const { businessId, userId } = req.params;
-    customerService.findCustomerData(userId, businessId)
+    customerService.getCustomerInfo(userId, businessId)
         .then(data => res.json({ customerData: data }))
         .catch(err => next(err));
 }

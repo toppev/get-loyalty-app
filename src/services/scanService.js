@@ -56,7 +56,7 @@ async function validateRewardId(rewardId, customerData) {
  */
 async function getScan(scanStr, businessId) {
     const { user, userId, rewardId } = await parseScanString(scanStr);
-    const customerData = await customerService.findCustomerData(user, businessId);
+    const customerData = user.customerData;
     const otherData = { customerData };
     const questions = [];
     const reward = await validateRewardId(rewardId, customerData);
@@ -128,7 +128,7 @@ function addQuestions(questions, categories, products, requirements) {
 
 async function useScan(scanStr, data, businessId) {
     const { user, userId, rewardId } = await parseScanString(scanStr);
-    const customerData = await customerService.findCustomerData(user, businessId);
+    const customerData = user.customerData;
     const reward = await validateRewardId(rewardId, customerData);
     const business = await businessService.getBusiness(businessId);
     const translations = business.config.translations;
