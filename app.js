@@ -43,14 +43,15 @@ app.use(parser.urlencoded({
 app.use(parser.json({
     limit: limit,
 }));
-// FIXME: hacky, find a better solution.
-//  Good enough for testing.
-const topLevelDomain = (process.env.PUBLIC_URL || 'http://localhost:3001').replace(/^(loyaltyapi\.)/, "");
-const testOrigins = ['http://localhost:3000', 'http://localhost:3002']
+
+const frontendOrigin = process.env.FRONTEND_ORIGIN || process.env.PUBLIC_URL;
+const origins = [frontendOrigin, 'https://panel.getloyalty.app', 'http://localhost:3002'];
+console.log(`Allowed origins: ${origins}`);
+
 app.use(cors(function (req, callback) {
     const origin = req.header('Origin')
     let options;
-    if (origin && (origin.endsWith(topLevelDomain) || testOrigins.includes(origin))) {
+    if (origin && origins.includes(origin)) {
         options = {
             origin: true,
             credentials: true,
@@ -58,7 +59,7 @@ app.use(cors(function (req, callback) {
     } else {
         options = { origin: false }
     }
-    callback(null, options)
+    callback(null, options);
 }));
 
 require('./src/config/passport');
