@@ -2,6 +2,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 
+// TODO: make configurable by user
 const BASE_URL = "http://10.0.2.2:3001";
 
 class SessionService {
@@ -20,12 +21,7 @@ class SessionService {
     });
   }
 
-  getBusinessUrl() => '$BASE_URL/business/${values['businessId']}';
-
-  setBusiness(String businessId) {
-    values['businessId'] = businessId;
-    _saveValues();
-  }
+  getURL() => BASE_URL;
 
   Future<Response> get(String url) async {
     http.Response response = await http.get(url, headers: headers);
@@ -90,7 +86,6 @@ class SessionService {
   }
 
   /// Generate the cookie header from #values map
-  // FIXME: don't include businessId in cookie headers
   String _generateCookieHeader() {
     String cookie = "";
     for (var key in values.keys) {

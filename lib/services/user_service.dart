@@ -47,7 +47,6 @@ class UserService {
       var body = json.decode(response.body);
       var business = body['businessOwner'];
       if (business != null) {
-        sessionService.setBusiness(business);
         return body;
       }
       throw 'No businesses found';

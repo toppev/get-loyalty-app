@@ -61,7 +61,7 @@ class ScanService {
   ScanService(this.sessionService);
 
   Future<GetScan> getScan(String scan) async {
-    var url = '${sessionService.getBusinessUrl()}/scan/$scan';
+    var url = '${sessionService.getURL()}/scan/$scan';
     print('#getScan called. Sending request to $url');
     final response = await sessionService.get(url);
     if (response.statusCode == 200) {
@@ -73,7 +73,7 @@ class ScanService {
   }
 
   Future<UseScan> useScan(String scan, List<Question> answers) async {
-    var url = '${sessionService.getBusinessUrl()}/scan/$scan';
+    var url = '${sessionService.getURL()}/scan/$scan';
     print('#useScan called. Sending request to $url');
     final response = await sessionService.post(url, json.encode({answers}));
     if (response.statusCode == 200) {
