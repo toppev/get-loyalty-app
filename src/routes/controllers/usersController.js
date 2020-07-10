@@ -20,7 +20,6 @@ router.get('/profile', getCurrent);
 router.get('/logout', logout);
 // With permissions
 router.get('/all', permit('user:list'), getAll);
-// Patch other if perms?
 router.patch('/:userId', permit('user:update'), userValidator, update);
 router.delete('/:userId', permit('user:delete'), deleteUser);
 router.get('/:userId', permit('user:get'), getById);
@@ -29,10 +28,12 @@ module.exports = router;
 
 
 function login(req, res, next) {
-    res.json({
-        ...req.user.toJSON(),
-        businessOwner: businessService.getOwnBusiness(req.user),
-    });
+    businessService.getOwnBusiness(req.user)
+        .then((businessId) => res.json({
+            ...req.user.toJSON(),
+            businessOwner: businessId,
+        }))
+        .catch(err => next(err));
 }
 
 /**
@@ -85,10 +86,12 @@ function getCurrent(req, res, next) {
             if (user) {
                 userService.markLastVisit(req.user)
                     .catch(err => console.log("Failed to update 'lastVisit' in #getCurrent", err))
-                res.json({
-                    ...user.toJSON(),
-                    businessOwner: businessService.getOwnBusiness(user),
-                })
+                businessService.getOwnBusiness(user)
+                    .then((businessId) => res.json({
+                        ...user.toJSON(),
+                        businessOwner: businessId,
+                    }))
+                    .catch(err => next(err));
             } else {
                 res.sendStatus(404)
             }

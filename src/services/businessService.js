@@ -22,8 +22,11 @@ module.exports = {
  * @return returns id of the first business found (only 1 business)
  * @deprecated Mainly for legacy stuff only.
  */
-function getOwnBusiness(user) {
-    return Business.findOne().id
+async function getOwnBusiness(user) {
+    if (user.role === 'business') {
+        return (await Business.findOne()).id
+    }
+    return undefined
 }
 
 /**

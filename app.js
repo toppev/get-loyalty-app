@@ -44,22 +44,19 @@ app.use(parser.json({
     limit: limit,
 }));
 
-const corsOptions = {
-    'http://localhost:3000': {
-        credentials: true
-    },
-    'http://localhost:3002': {
-        credentials: true,
-    },
-    'https://pwa.getloyalty.app': {
-        credentials: true,
-        methods: ['GET', 'HEAD']
-    },
-}
+const topLevelDomain = process.env.PUBLIC_URL.replace(/^(loyaltyapi\.)/, "");
+const testOrigins = ['http://localhost:3000', 'http://localhost:3002']
 app.use(cors(function (req, callback) {
-    let options = corsOptions[req.header('Origin')]
-    if (!options) options = { origin: false }
-    else options = { origin: true, ...options }
+    const origin = req.header('Origin')
+    let options;
+    if (origin && (origin.endsWith(topLevelDomain) || testOrigins.includes(origin))) {
+        options = {
+            origin: true,
+            credentials: true,
+        }
+    } else {
+        options = { origin: false }
+    }
     callback(null, options)
 }));
 
