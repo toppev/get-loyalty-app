@@ -43,8 +43,9 @@ app.use(parser.urlencoded({
 app.use(parser.json({
     limit: limit,
 }));
-
-const topLevelDomain = process.env.PUBLIC_URL.replace(/^(loyaltyapi\.)/, "");
+// FIXME: hacky, find a better solution.
+//  Good enough for testing.
+const topLevelDomain = (process.env.PUBLIC_URL || 'http://localhost:3001').replace(/^(loyaltyapi\.)/, "");
 const testOrigins = ['http://localhost:3000', 'http://localhost:3002']
 app.use(cors(function (req, callback) {
     const origin = req.header('Origin')
