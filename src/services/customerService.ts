@@ -1,9 +1,9 @@
-import { BUSINESS_ID, get, patch, post, remove } from "../config/axios";
+import { get, patch, post, remove } from "../config/axios";
 import Reward from "../components/rewards/Reward";
 import Customer from "../components/customers/Customer";
 
 function listCustomers(search?: string) {
-    let subUrl = `/business/${BUSINESS_ID}/customers`;
+    let subUrl = `/business/customers`;
     if (search) {
         subUrl += `?search=${search}`;
     }
@@ -11,33 +11,27 @@ function listCustomers(search?: string) {
 }
 
 function loadCustomer(customerId: string) {
-    const subUrl = `/business/${BUSINESS_ID}/customer`;
-    return get(`${subUrl}/${customerId}`)
+    return get(`/customer/${customerId}`)
 }
 
 function updateCustomerProperties(customer: Customer) {
-    const subUrl = `/business/${BUSINESS_ID}/customer`;
-    return patch(`${subUrl}/${customer.id}/properties`, customer.customerData.properties);
+    return patch(`/customer/${customer.id}/properties`, customer.customerData.properties);
 }
 
 function revokeCustomerReward(customer: Customer, reward: Reward) {
-    const subUrl = `/business/${BUSINESS_ID}/customer`;
-    return remove(`${subUrl}/${customer.id}/reward/${reward.id}`);
+    return remove(`/customer/${customer.id}/reward/${reward.id}`);
 }
 
 function updateCustomerReward(customer: Customer, updatedRewards: Reward[]) {
-    const subUrl = `/business/${BUSINESS_ID}/customer`;
-    return post(`${subUrl}/${customer.id}/rewards`, updatedRewards);
+    return post(`/customer/${customer.id}/rewards`, updatedRewards);
 }
 
 function addCustomerReward(customer: Customer, reward: Reward) {
-    const subUrl = `/business/${BUSINESS_ID}/customer`;
-    return post(`${subUrl}/${customer.id}/reward`, reward);
+    return post(`/customer/${customer.id}/reward`, reward);
 }
 
 function rewardAllCustomers(reward: Reward) {
-    const subUrl = `/business/${BUSINESS_ID}/reward/all`;
-    return post(subUrl, reward);
+    return post(`/business/reward/all`, reward);
 }
 
 export {

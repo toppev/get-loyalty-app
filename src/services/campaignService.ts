@@ -1,30 +1,25 @@
-import { BUSINESS_ID, get, patch, post, remove } from "../config/axios";
+import { get, patch, post, remove } from "../config/axios";
 import { Campaign } from "../components/campaigns/Campaign";
 
 
 function listCampaigns() {
-    const subUrl = `/business/${BUSINESS_ID}/campaign`
-    return get(`${subUrl}/all`);
+    return get(`/campaign/all`);
 }
 
 function createCampaign(campaign: Campaign) {
-    const subUrl = `/business/${BUSINESS_ID}/campaign`
-    return post(`${subUrl}`, campaign);
+    return post(`/campaign`, campaign);
 }
 
 function updateCampaign(campaign: Campaign) {
-    const subUrl = `/business/${BUSINESS_ID}/campaign/${campaign?.id}`
-    return patch(`${subUrl}`, campaign);
+    return patch(`/campaign/${campaign?.id}`, campaign);
 }
 
 function deleteCampaign(campaign: Campaign) {
-    const subUrl = `/business/${BUSINESS_ID}/campaign/${campaign?.id}`
-    return remove(`${subUrl}`)
+    return remove(`/campaign/${campaign?.id}`)
 }
 
 function loadCampaign(campaignId: string) {
-    const subUrl = `/business/${BUSINESS_ID}/campaign/{campaignId}`;
-    return get(`${subUrl}`);
+    return get(`/campaign/${campaignId}`);
 }
 
 

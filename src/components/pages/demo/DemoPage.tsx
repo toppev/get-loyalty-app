@@ -48,6 +48,7 @@ export default function () {
 
     const classes = useStyles();
 
+    // TODO: FIXME: find a solution for demo (page preview) page
     const src = `${APP_URL}/?business=${BUSINESS_ID}`;
 
     return (

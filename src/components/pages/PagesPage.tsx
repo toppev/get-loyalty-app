@@ -26,7 +26,7 @@ import {
 import EditIcon from '@material-ui/icons/Edit';
 import WebIcon from '@material-ui/icons/Web';
 import React, { useContext, useState } from 'react';
-import { BASE_URL, getBusinessUrl, post } from '../../config/axios';
+import { BASE_URL, post } from '../../config/axios';
 import AppContext from '../../context/AppContext';
 import CloseButton from '../common/button/CloseButton';
 import IdText from '../common/IdText';
@@ -400,7 +400,7 @@ function PageCard(props: PageCardProps) {
 
     const submitNameChange = () => {
         setEditing(false)
-        const url = `${getBusinessUrl()}/page/${page._id}`;
+        const url = `${BASE_URL}/page/${page._id}`;
         post(url, { name: page.name }, true)
             .catch(err => {
                 // Show notification?

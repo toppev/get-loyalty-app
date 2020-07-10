@@ -14,19 +14,6 @@ export const instance = axios.create({
 // Used in requests. Easier if it's stored here instead of state
 export let BUSINESS_ID: string;
 
-export function setBusinessId(id: string) {
-    BUSINESS_ID = id;
-}
-
-/**
- * Returns BASE_URL/business/:id
- * For example,
- * http://localhost:3000/business/5ed26d9d9a3bf3a7eb7dd587
- */
-export function getBusinessUrl() {
-    return `${BASE_URL}/business/${BUSINESS_ID}`;
-}
-
 const headers = {}
 
 export async function get(path: string, fullPath: boolean = false) {

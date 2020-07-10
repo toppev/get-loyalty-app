@@ -8,7 +8,6 @@ import Header from './components/Header';
 import { AccountNotificationValues } from './components/account/AccountNotifications';
 import LoginDialog from "./components/authentication/LoginDialog";
 import { onLoginOrAccountCreate, profileRequest } from "./services/authenticationService";
-import { setBusinessId } from "./config/axios";
 
 // Lazy Pages
 const OverviewPage = lazy(() => import('./components/overview/OverviewPage'));
@@ -36,7 +35,6 @@ export default function () {
     }
 
     context.setBusiness = business => {
-        setBusinessId(business._id); // Update the id used in (axios) requests
         setAppContext({ ...appContext, business });
         setShowContent(true);
         setLoginDialog(false);

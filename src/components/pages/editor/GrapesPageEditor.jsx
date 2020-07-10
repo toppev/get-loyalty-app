@@ -5,7 +5,7 @@ import grapesjsTouch from 'grapesjs-touch';
 import grapesjsTuiImageEditor from 'grapesjs-tui-image-editor';
 import 'grapesjs/dist/css/grapes.min.css';
 import React, { useEffect } from "react";
-import { getBusinessUrl } from "../../../config/axios";
+import { BASE_URL } from "../../../config/axios";
 import { addPlaceholderBlock, registerListener } from "./blocks/placeholderBlock";
 import { addCampaignsBlock } from "./blocks/campaignBlock";
 import { addUserRewardsBlock } from "./blocks/userRewardsBlock";
@@ -24,7 +24,7 @@ function propsAreEqual(prev, next) {
 
 function GrapesPageEditor(props) {
 
-    const url = getBusinessUrl() + "/page";
+    const url = `${BASE_URL}/page`;
     const placeholderContext = usePlaceholderContext()
 
     useEffect(() => {
