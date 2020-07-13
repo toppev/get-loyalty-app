@@ -1,8 +1,10 @@
 const router = require('express').Router();
 const userService = require('../../services/userService');
 const businessService = require('../../services/businessService');
+
 const permit = require('../../middlewares/permitMiddleware');
 const authenticator = require('../../middlewares/authenticator');
+const { verifyCAPTCHA } = require('../../middlewares/captcha');
 
 const validation = require('../../helpers/bodyFilter');
 const userValidator = validation.validate(validation.userValidator);
@@ -11,10 +13,10 @@ const userValidator = validation.validate(validation.userValidator);
 router.get('/resetpassword/:token', resetPassword);
 router.post('/forgotpassword', forgotPassword);
 // For convenience
-router.post('/login', authenticator, login);
-router.post('/login/:loginService', authenticator, login);
+router.post('/login', authenticator, verifyCAPTCHA, login);
+router.post('/login/:loginService', authenticator, verifyCAPTCHA, login);
 // In the same request they can send data (e.g email) therefore we validate the data
-router.post('/register', userValidator, register);
+router.post('/register', userValidator, verifyCAPTCHA, register);
 // Use the jwt
 router.get('/profile', getCurrent);
 router.get('/logout', logout);
