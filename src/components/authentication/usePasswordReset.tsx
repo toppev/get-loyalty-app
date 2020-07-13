@@ -1,16 +1,21 @@
 import { useQuery } from "../../hooks/useQuery";
-import { useContext, useEffect, useState } from "react";
-import AppContext from "../../context/AppContext";
-import { get } from "../../config/axios";
+import { useEffect } from "react";
+import { get, setAPI_URL } from "../../config/axios";
 import { AxiosResponse } from "axios";
+import { profileRequest } from "../../services/authenticationService";
 
 
 export default function (callback?: (res: AxiosResponse) => any, onError?: (err: any) => any) {
 
     const resetCode = useQuery().get('passwordReset');
+    // To easily "login" if we know the API address
+    const API_ADDRESS = useQuery().get('api_address');
 
     useEffect(() => {
-        if (resetCode) {
+        if (API_ADDRESS) {
+            setAPI_URL(API_ADDRESS)
+            profileRequest().then(callback)
+        } else if (resetCode) {
             get(`/resetpassword/${resetCode}`)
                 .then(res => {
                     if (callback) {
@@ -24,6 +29,6 @@ export default function (callback?: (res: AxiosResponse) => any, onError?: (err:
                     }
                 })
         }
-    }, [resetCode])
+    }, [resetCode, API_ADDRESS])
 
 }

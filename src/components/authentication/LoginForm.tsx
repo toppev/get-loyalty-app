@@ -9,17 +9,19 @@ import {
     Typography,
 } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import { Formik, FormikErrors } from 'formik';
+import { Formik, FormikErrors, FormikHelpers } from 'formik';
 import { TextField } from 'formik-material-ui';
 import React, { useContext, useState } from 'react';
 
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import AddIcon from '@material-ui/icons/Add';
 import PasswordResetRequestDialog from "./PasswordResetRequestDialog";
 import AppContext from "../../context/AppContext";
-import { loginRequest, onLoginOrAccountCreate } from '../../services/authenticationService';
+import { loginRequest, onLoginOrAccountCreate, registerRequest } from '../../services/authenticationService';
 import { isEmail } from "../../util/Validate";
 import usePasswordReset from "./usePasswordReset";
-import { AxiosResponse } from "axios";
+import { getOrCreateServer, waitForServer } from "../../services/serverService";
+import { AxiosResponse } from 'axios';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -33,9 +35,12 @@ const useStyles = makeStyles((theme: Theme) =>
             margin: theme.spacing(1),
             backgroundColor: theme.palette.secondary.main,
         },
+        title: {
+            marginBottom: '7px',
+        },
         form: {
             width: '100%', // Fix IE 11 issue.
-            marginTop: theme.spacing(1),
+            margin: '7px 0px',
         },
         field: {
             width: '100%',
@@ -45,7 +50,7 @@ const useStyles = makeStyles((theme: Theme) =>
             textAlign: 'center',
         },
         submitButton: {
-            margin: theme.spacing(3, 0, 2),
+            margin: '15px 10px'
         },
     }));
 
@@ -55,32 +60,38 @@ interface FormValues {
 }
 
 interface LoginFormProps {
-    headerErrorMessage?: string
-    onLogin?: () => any
 }
 
-export default function LoginForm({ headerErrorMessage, onLogin }: LoginFormProps) {
+const initialValues = { email: "", password: "" }
+
+export default function LoginForm({}: LoginFormProps) {
 
     const classes = useStyles();
     const context = useContext(AppContext);
 
-    const initialValues = { email: "", password: "" }
     const [passwordResetOpen, setPasswordResetOpen] = useState(false);
-    const [email, setEmail] = useState(initialValues.email);
 
-    const _login = (res: AxiosResponse) => {
-        onLoginOrAccountCreate(context, res);
-        if (onLogin) {
-            onLogin();
+    const [email, setEmail] = useState(initialValues.email);
+    // Whether we are logging or creating a new account
+    // Not really clean solution but does the job
+    const [creatingAccount, setCreatingAccount] = useState(false);
+    const [message, setMessage] = useState('');
+
+    const onSuccess = (res: AxiosResponse<any>) => {
+        try {
+            onLoginOrAccountCreate(context, res);
+        } catch (e) {
+            console.log(e)
+            setMessage(`Oops. Something went wrong. ${e}`)
         }
     }
 
     // if passwordReset is in the url (search params) this will try to reset the password (will automatically login)
-    usePasswordReset(_login) // TODO: use the error callback?
+    usePasswordReset(onSuccess) // TODO: use the error callback?
 
-    const onFormSubmit = (values: typeof initialValues, { setSubmitting, setErrors }: any) => {
+    const loginAccount = (values: FormValues, { setSubmitting, setErrors }: any) => {
         loginRequest(values)
-            .then(_login)
+            .then(onSuccess)
             .catch(err => {
                 if (err.response) {
                     const { status, data } = err.response
@@ -88,7 +99,43 @@ export default function LoginForm({ headerErrorMessage, onLogin }: LoginFormProp
                 }
                 setErrors({ password: `An error occurred. Please try again. ${err}` })
             })
-            .finally(() => setSubmitting(false))
+            .finally(() => {
+                setMessage('')
+                setSubmitting(false)
+            });
+    }
+
+    const createAccount = (values: typeof initialValues, { setSubmitting, setErrors }: any) => {
+        registerRequest()
+            .then(onSuccess)
+            .catch(err => {
+                console.log("Error creating an account: " + err);
+                setErrors({ password: `${err}. Please try again.` });
+            })
+            .finally(() => {
+                setMessage('')
+                setSubmitting(false)
+            });
+    }
+
+    const onFormSubmit = (values: FormValues, actions: FormikHelpers<FormValues>) => {
+        getOrCreateServer(values.email, creatingAccount)
+            .then(() => {
+                setMessage(creatingAccount ? "Creating a new server..." : "Waiting for the server...")
+            })
+            .catch((e) => {
+                actions.setSubmitting(false)
+                setMessage(e?.response?.data?.message || e?.response?.toString() || e.toString())
+            })
+
+        waitForServer(() => {
+            setMessage("Logging in...")
+            if (creatingAccount) {
+                createAccount(values, actions)
+            } else {
+                loginAccount(values, actions)
+            }
+        })
     }
 
     const validate = (values: FormValues) => {
@@ -115,8 +162,8 @@ export default function LoginForm({ headerErrorMessage, onLogin }: LoginFormProp
                 <Avatar className={classes.avatar}>
                     <LockOutlinedIcon/>
                 </Avatar>
-                <Typography component="h1" variant="h5">Login</Typography>
-                <Typography variant="h4" color="secondary">{headerErrorMessage}</Typography>
+                <Typography className={classes.title} variant="h6" color="primary">Login or create an
+                    account</Typography>
                 <Formik
                     initialValues={initialValues}
                     onSubmit={onFormSubmit}
@@ -139,7 +186,10 @@ export default function LoginForm({ headerErrorMessage, onLogin }: LoginFormProp
                                         type="password"
                                         placeholder="Password"
                                     />
+
+                                    <Typography variant="h6" align="center">{message}</Typography>
                                     {isSubmitting && <LinearProgress/>}
+
                                     <br/>
                                     <div className={classes.submitDiv}>
                                         <Button
@@ -148,8 +198,22 @@ export default function LoginForm({ headerErrorMessage, onLogin }: LoginFormProp
                                             color="primary"
                                             disabled={isSubmitting}
                                             startIcon={<NavigateNextIcon/>}
-                                            onClick={submitForm}
+                                            onClick={() => {
+                                                setCreatingAccount(false)
+                                                submitForm()
+                                            }}
                                         >Login</Button>
+                                        <Button
+                                            className={classes.submitButton}
+                                            variant="outlined"
+                                            color="primary"
+                                            disabled={isSubmitting}
+                                            startIcon={<AddIcon/>}
+                                            onClick={() => {
+                                                setCreatingAccount(true)
+                                                submitForm()
+                                            }}
+                                        >Register</Button>
                                     </div>
                                 </form>
                                 <Button

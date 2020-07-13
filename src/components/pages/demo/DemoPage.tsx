@@ -3,7 +3,7 @@ import LinkIcon from "@material-ui/icons/Link";
 import QRCode from "qrcode.react";
 import React from "react";
 import CopyToClipboard from '../../common/CopyToClipboarad';
-import { APP_URL, BUSINESS_ID } from "../../../config/axios";
+import { API_URL } from "../../../config/axios";
 import PreviewIframe from "../../common/PreviewIframe";
 
 
@@ -48,8 +48,8 @@ export default function () {
 
     const classes = useStyles();
 
-    // TODO: FIXME: find a solution for demo (page preview) page
-    const src = `${APP_URL}/?business=${BUSINESS_ID}`;
+    // TODO: fix if self hosted
+    const src = `${API_URL}`.replace('/api', '');
 
     return (
         <Box display="flex" flexWrap="wrap" flexDirection="row" alignItems="center" className={classes.boxDesktop}>

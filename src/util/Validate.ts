@@ -19,8 +19,15 @@ function isDomain(str: string) {
     return re.test(str);
 }
 
+function isURL(str: string) {
+    // enough good for now
+    const re = /\S+\.\S+/;
+    return re.test(str);
+}
+
 export {
     isEmail,
     isAlphanumeric,
-    isDomain
+    isDomain,
+    isURL
 }

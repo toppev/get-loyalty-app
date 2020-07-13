@@ -1,9 +1,10 @@
 import axios from "axios";
 
-
-export const SERVER_API_URL = 'http://localhost:3001';
 // export const SERVER_API_URL = 'https://api.getloyalty.app/server';
-export let API_URL = '';
+export const SERVER_API_URL = 'http://localhost:8080/server';
+
+// export let API_URL = 'http://localhost:3001';
+export let API_URL = 'invalid_url_should_not_be_used';
 
 export function setAPI_URL(url: string) {
     API_URL = url

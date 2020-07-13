@@ -1,6 +1,7 @@
 import React from "react";
 import Category from "../components/categories/Category";
 import Reward from "../components/rewards/Reward";
+import { ServerSettings } from "../components/settings/SettingsPage";
 
 export interface AppContextInterface {
     business: Business
@@ -14,6 +15,7 @@ export interface User {
     _id: any
     email: string
     hasPassword: boolean
+    role: string
 }
 
 export interface Business {
@@ -55,6 +57,9 @@ export interface CustomerLevel {
     color?: string
 }
 
+/**
+ * @deprecated not used
+ */
 export interface OpeningHour {
     dayOfWeek: number
     hours: string
@@ -93,7 +98,8 @@ export const defaultAppContext: AppContextInterface = {
     user: {
         email: 'test@example.com',
         hasPassword: false,
-        _id: 'testid1234'
+        _id: 'testid1234',
+        role: 'user'
     },
     loggedIn: false,
 }

@@ -167,7 +167,8 @@ interface CustomerRowProps {
 function CustomerRow(props: CustomerRowProps) {
 
     const { customer } = props;
-    const { rewards, role, properties } = customer.customerData;
+    const { role } = customer;
+    const { rewards, properties } = customer.customerData;
 
     const classes = useStyles();
 

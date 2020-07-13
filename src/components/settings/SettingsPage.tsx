@@ -1,18 +1,30 @@
-import { Box, createStyles, Paper, Theme, Typography, useMediaQuery, useTheme } from "@material-ui/core";
-import React, { useContext, useState } from "react";
+import {
+    Box,
+    Button,
+    createStyles,
+    Dialog,
+    DialogContent,
+    LinearProgress,
+    Paper,
+    Theme,
+    Typography,
+    useMediaQuery,
+    useTheme
+} from "@material-ui/core";
+import React, { useContext, useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Form, Formik, FormikErrors } from "formik";
-import SaveChangesSnackbar from "../common/SaveChangesSnackbar";
 import AppContext, { Business } from "../../context/AppContext";
 import _ from "lodash";
 import { TextField } from "formik-material-ui";
-import HelpIcon from '@material-ui/icons/Help';
-import Tooltip from '@material-ui/core/Tooltip';
-import { isDomain } from "../../util/Validate";
 import { updateBusiness } from "../../services/businessService";
 import { Alert } from "@material-ui/lab";
-import { APP_URL } from "../../config/axios";
+import { API_URL } from "../../config/axios";
 import useRequest from "../../hooks/useRequest";
+import SaveChangesSnackbar from "../common/SaveChangesSnackbar";
+import { getOrCreateServer, updateServer, waitForServer } from "../../services/serverService";
+import RetryButton from "../common/button/RetryButton";
+import { isURL } from "../../util/Validate";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -22,7 +34,8 @@ const useStyles = makeStyles((theme: Theme) =>
             margin: '15px'
         },
         sectionTypography: {
-            color: theme.palette.grey[800]
+            color: theme.palette.grey[800],
+            marginBottom: '10px',
         },
         description: {
             textAlign: 'center',
@@ -53,6 +66,9 @@ const useStyles = makeStyles((theme: Theme) =>
             listStyle: "none",
             padding: 0
         },
+        updateButton: {
+            marginTop: '5px'
+        }
     }));
 
 export default function () {
@@ -88,33 +104,33 @@ export default function () {
                 className={classes.typography}
             >Your loyalty app pages</Typography>
             {error.length > 0 && <Alert severity="error">{error}</Alert>}
-            <Formik
-                initialValues={business}
-                validateOnBlur
-                validate={validateAndSnackbar}
-                onSubmit={(updatedBusiness, actions) => {
-                    console.log('sending')
-                    actions.setSubmitting(true)
+            <Box display="flex" flexDirection={bigScreen ? "row" : "column"}>
+                <Paper className={classes.paper}>
+                    <Typography className={classes.sectionTypography} variant="h6" align="center">
+                        Translations & Names
+                    </Typography>
+                    <p className={classes.description}
+                    >You can translate messages and other things here.</p>
+                    <Formik
+                        initialValues={business}
+                        validateOnBlur
+                        validate={validateAndSnackbar}
+                        onSubmit={(updatedBusiness, actions) => {
+                            console.log('sending')
+                            actions.setSubmitting(true)
 
-                    request.performRequest(
-                        () => updateBusiness(updatedBusiness),
-                        (res) => {
-                            setSaved(true);
-                            context.setBusiness(res.data);
-                            actions.setSubmitting(false);
-                        },
-                        () => actions.setSubmitting(false)
-                    );
-                }}
-            >
-                {({ submitForm, isSubmitting }) => (
-                    <Box display="flex" flexDirection={bigScreen ? "row" : "column"}>
-                        <Paper className={classes.paper}>
-                            <Typography className={classes.sectionTypography} variant="h6" align="center">
-                                Translations & Names
-                            </Typography>
-                            <p className={classes.description}
-                            >You can translate messages and other things here.</p>
+                            request.performRequest(
+                                () => updateBusiness(updatedBusiness),
+                                (res) => {
+                                    setSaved(true);
+                                    context.setBusiness(res.data);
+                                    actions.setSubmitting(false);
+                                },
+                                () => actions.setSubmitting(false)
+                            );
+                        }}
+                    >
+                        {({ submitForm, isSubmitting }) => (
                             <Form>
                                 <div className={classes.fieldDiv}>
                                     {Object.keys(translations).map(k => {
@@ -141,44 +157,120 @@ export default function () {
                                         }
                                     )}
                                 </div>
-                            </Form>
-                        </Paper>
-
-                        <Paper className={classes.paper}>
-                            <Typography className={classes.sectionTypography} variant="h6" align="center">
-                                Other
-                            </Typography>
-                            <Form>
-                                <TextField
-                                    className={classes.field}
-                                    name="todo.todo"
-                                    type="text"
-                                    label="TODO: add something here"
+                                <SaveChangesSnackbar
+                                    open={!saved}
+                                    buttonDisabled={isSubmitting}
+                                    onSave={submitForm}
                                 />
-                                <Tooltip
-                                    enterDelay={200}
-                                    leaveDelay={300}
-                                    title={
-                                        <React.Fragment>
-                                            <Typography>{`Your domain`}</Typography>
-                                            Redirect your domain (or a subdomain) to "{APP_URL}" and enter your domain
-                                            here
-                                        </React.Fragment>
-                                    }
-                                >
-                                    <HelpIcon className={classes.helpIcon}/>
-                                </Tooltip>
                             </Form>
-                        </Paper>
 
-                        <SaveChangesSnackbar
-                            open={!saved}
-                            buttonDisabled={isSubmitting}
-                            onSave={submitForm}
-                        />
-                    </Box>
+                        )}
+                    </Formik>
+                </Paper>
+
+                <Paper className={classes.paper}>
+                    <ServerSettingsForm/>
+                </Paper>
+            </Box>
+        </div>
+    )
+}
+
+export type ServerSettings = { appAddress?: string, customApiAddress?: string }
+
+function ServerSettingsForm() {
+    const classes = useStyles();
+    const context = useContext(AppContext)
+
+    const updateRequest = useRequest();
+
+    const serverInfo = useRequest(() => getOrCreateServer(context.user.email, false))
+
+    const [restarting, setRestarting] = useState(false);
+
+    const validate = (settings: ServerSettings) => {
+        const errors: FormikErrors<ServerSettings> = {};
+        if (settings.appAddress && !isURL(settings.appAddress)) {
+            errors.appAddress = 'Invalid URL'
+        }
+        /*
+        if (settings.customApiAddress && !isURL(settings.customApiAddress)) {
+            errors.customApiAddress = 'Invalid URL'
+        }
+        */
+        return errors;
+    }
+
+    useEffect(() => {
+        if (restarting) {
+            waitForServer(() => setRestarting(false))
+        }
+    }, [restarting]);
+
+    const loading = serverInfo.loading || updateRequest.loading
+    const error = serverInfo.error || updateRequest.error
+
+    return (
+        <div>
+            <Typography className={classes.sectionTypography} variant="h6" align="center">Other</Typography>
+            {loading && <LinearProgress/>}
+            {error && <RetryButton error={error}/>}
+            <Dialog open={restarting}>
+                <DialogContent>
+                    <Typography variant="h5" color="secondary">Your app is restarting...</Typography>
+                    <p>This may take up to a few minutes.</p>
+                    <LinearProgress/>
+                </DialogContent>
+            </Dialog>
+
+            {!serverInfo.loading &&
+            <Formik
+                initialValues={serverInfo?.response?.data}
+                validateOnBlur
+                validate={validate}
+                onSubmit={(values, actions) => {
+                    if (window.confirm('This will restart the server and you will not be able to anything for a moment.')) {
+                        actions.setSubmitting(true)
+                        const appAddress = values?.appAddress?.trim()
+                        if (appAddress && !appAddress.startsWith("https://") && !appAddress.startsWith("http://")) {
+                            values.appAddress = `https://${values.appAddress}`
+                        }
+                        setRestarting(true)
+                        updateRequest.performRequest(
+                            () => updateServer(values),
+                            (res) => {
+                                actions.setSubmitting(false);
+                            },
+                            () => actions.setSubmitting(false)
+                        );
+                    }
+                }}
+            >
+                {({ submitForm, isSubmitting }) => (
+                    <Paper className={classes.paper}>
+                        <Form>
+                            Create a new A record to <b>"{API_URL.replace("https://", "")}"</b> and enter an address for
+                            the loyalty app.
+                            <TextField
+                                className={classes.field}
+                                placeholder="example.com/app or app.example.com"
+                                name="appAddress"
+                                type="text"
+                                label="Loyalty App Address"
+                            />
+                            <div>
+                                <Button
+                                    className={classes.updateButton}
+                                    disabled={isSubmitting}
+                                    variant="contained"
+                                    onClick={() => submitForm()}
+                                >Update</Button>
+                            </div>
+                        </Form>
+                    </Paper>
                 )}
             </Formik>
+            }
         </div>
     )
 }
