@@ -27,8 +27,8 @@ async function getCustomerInfo(user) {
     if (!user.customerData) { // Does not exists, the given param is the user id
         user = await User.findById(user);
     }
-    const { _id, id, email, customerData, lastVisit, birthday, authentication } = user;
-    return { _id, id, customerData, email, lastVisit, birthday, authentication: { service: authentication.service } }
+    const { _id, id, email, customerData, lastVisit, birthday, authentication, role } = user;
+    return { _id, id, customerData, email, role, lastVisit, birthday, authentication: { service: authentication.service } }
 }
 
 /**

@@ -73,7 +73,7 @@ function resetPassword(req, res, next) {
                 if (err) {
                     return next(err);
                 } else {
-                    res.json({ success: true })
+                    res.json({ ...user, success: true })
                 }
             });
         })

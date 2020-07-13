@@ -39,8 +39,8 @@ router.use('/coupon', requireLogin, coupon);
 router.use('/scan', requireLogin, scan)
 router.use('/notifications', requireLogin, notifications)
 
-router.get('/', (req, res) => {
-    res.status(200).json({ message: 'Working!' });
+router.get('/ping', (req, res) => {
+    res.status(200).json({ message: 'Success!' });
 });
 
 module.exports = router;
