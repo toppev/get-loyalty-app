@@ -1,25 +1,25 @@
 import axios from "axios";
 
 
-export const BASE_URL = 'http://localhost:3001';
-// Where the PWA is hosted
-export const APP_URL = 'http://localhost:3002';
-//export const APP_URL = 'https://pwa.getloyalty.app';
+export const SERVER_API_URL = 'http://localhost:3001';
+// export const SERVER_API_URL = 'https://api.getloyalty.app/server';
+export let API_URL = '';
+
+export function setAPI_URL(url: string) {
+    API_URL = url
+}
 
 export const instance = axios.create({
-    baseURL: BASE_URL,
+    baseURL: API_URL,
     withCredentials: true,
 });
-
-// Used in requests. Easier if it's stored here instead of state
-export let BUSINESS_ID: string;
 
 const headers = {}
 
 export async function get(path: string, fullPath: boolean = false) {
     return instance({
         method: 'GET',
-        url: fullPath ? path : BASE_URL + path,
+        url: fullPath ? path : API_URL + path,
         headers: headers
     });
 }
@@ -30,7 +30,7 @@ export async function get(path: string, fullPath: boolean = false) {
 export async function remove(path: string, fullPath: boolean = false) {
     return instance({
         method: 'DELETE',
-        url: fullPath ? path : BASE_URL + path,
+        url: fullPath ? path : API_URL + path,
         headers: headers
     });
 }
@@ -38,7 +38,7 @@ export async function remove(path: string, fullPath: boolean = false) {
 export async function post(path: string, data: Object, fullPath: boolean = false) {
     return instance({
         method: 'POST',
-        url: fullPath ? path : BASE_URL + path,
+        url: fullPath ? path : API_URL + path,
         data: transformDataObjects(data),
         headers: {
             'Content-Type': 'application/json',
@@ -50,7 +50,7 @@ export async function post(path: string, data: Object, fullPath: boolean = false
 export async function multipartPost(path: string, data: Object, fullPath: boolean = false) {
     return instance({
         method: 'POST',
-        url: fullPath ? path : BASE_URL + path,
+        url: fullPath ? path : API_URL + path,
         data: transformDataObjects(data),
         headers: {
             'Content-Type': 'multipart/form-data',
@@ -62,7 +62,7 @@ export async function multipartPost(path: string, data: Object, fullPath: boolea
 export async function patch(path: string, data: Object, fullPath: boolean = false) {
     return instance({
         method: 'PATCH',
-        url: fullPath ? path : BASE_URL + path,
+        url: fullPath ? path : API_URL + path,
         data: transformDataObjects(data),
         headers: {
             'Content-Type': 'application/json',
@@ -76,7 +76,7 @@ export async function uploadFile(path: string, file: File, fullPath: boolean = f
     formData.append('file', file)
     return instance({
         method: 'POST',
-        url: fullPath ? path : BASE_URL + path,
+        url: fullPath ? path : API_URL + path,
         data: formData,
         headers: {
             'Content-Type': 'multipart/form-data',

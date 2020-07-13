@@ -2,7 +2,7 @@ import { createStyles, Dialog, DialogContent, makeStyles, Theme } from "@materia
 import React, { useContext } from "react";
 import AppContext from "../../context/AppContext";
 import CloseButton from "../common/button/CloseButton";
-import { BASE_URL } from "../../config/axios";
+import { API_URL } from "../../config/axios";
 import { Page } from "./Page";
 import PreviewIframe from "../common/PreviewIframe";
 
@@ -32,7 +32,7 @@ export default function PreviewPage({ page, onClose, actions, open = true }: Pre
         <Dialog onClose={onClose} open={open} maxWidth={false}>
             <CloseButton onClick={onClose}/>
             <DialogContent className={classes.previewDialogContent}>
-                <PreviewIframe src={`${BASE_URL}/business/${appContext.business._id}/page/${page._id}/html`}/>
+                <PreviewIframe src={`${API_URL}/business/${appContext.business._id}/page/${page._id}/html`}/>
                 {actions}
             </DialogContent>
         </Dialog>

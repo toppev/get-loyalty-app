@@ -1,5 +1,5 @@
 import { PushNotification } from "../components/notifications/PushNotification";
-import { BUSINESS_ID, get, post } from "../config/axios";
+import { get, post } from "../config/axios";
 
 async function sendPushNotification(data: PushNotification) {
     return post(`/notifications`, data);

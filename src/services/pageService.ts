@@ -1,4 +1,4 @@
-import { BUSINESS_ID, get, post } from "../config/axios";
+import { get, post } from "../config/axios";
 import { Page } from "../components/pages/Page";
 
 function listPages() {

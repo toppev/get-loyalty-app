@@ -1,4 +1,4 @@
-import { BUSINESS_ID, get, patch, post, remove } from "../config/axios";
+import { get, patch, post, remove } from "../config/axios";
 import Product from "../components/products/Product";
 
 

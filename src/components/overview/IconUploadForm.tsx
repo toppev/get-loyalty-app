@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { setBusinessIcon } from '../../services/businessService';
 import { Button, createStyles, makeStyles, Theme } from "@material-ui/core";
-import { BASE_URL } from "../../config/axios";
+import { API_URL } from "../../config/axios";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -29,7 +29,7 @@ export default function () {
         <div>
             <div className={classes.selectDiv}>
                 <p className={classes.text}>Select Icon</p>
-                <img src={icon ? URL.createObjectURL(icon) : `${BASE_URL}/business/icon`} alt="(no icon)"/>
+                <img src={icon ? URL.createObjectURL(icon) : `${API_URL}/business/icon`} alt="(no icon)"/>
             </div>
             <form
                 onSubmit={e => e.preventDefault()}>
