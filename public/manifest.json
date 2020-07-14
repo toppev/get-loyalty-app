@@ -1,6 +1,6 @@
 {
-  "short_name": "Loyalty App",
-  "name": "Loyalty App Sample",
+  "short_name": "%NAME%",
+  "name": "%NAME%",
   "icons": [
     {
       "src": "http://localhost:3001/business/icon",

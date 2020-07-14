@@ -1,6 +1,6 @@
 {
-  "short_name": "Loyalty App",
-  "name": "Loyalty App Sample",
+  "short_name": "%NAME%",
+  "name": "%NAME%",
   "icons": [
     {
       "src": "%REACT_APP_API_URL%/business/icon",
