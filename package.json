@@ -24,7 +24,7 @@
   },
   "scripts": {
     "start": "PORT=3002 react-scripts start",
-    "build": "react-scripts build react-scripts build && cra-append-sw ./public/custom-sw.js",
+    "build": "node ./scripts/createManifest.js && react-scripts build react-scripts build && cra-append-sw ./public/custom-sw.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -44,6 +44,7 @@
     ]
   },
   "devDependencies": {
+    "dotenv": "^8.2.0",
     "eslint-plugin-react-hooks": "^4.0.4"
   }
 }
