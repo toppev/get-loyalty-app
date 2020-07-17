@@ -1,9 +1,33 @@
 import { post } from "../config/axios";
 
+/**
+ * Asks the user to enable push notifications as (and if) specified in the settings.
+ * Either after a timeout or on a specific page.
+ */
+export function startSubscribeTask() {
+    let settingValue = process.env.REACT_APP_ASK_NOTIFICATIONS
+    const time = parseInt(settingValue[0], 10);
+    if (!Number.isNaN(time)) {
+        setTimeout(subscribeUser, time * 1000)
+    } else {
+        if (settingValue === 'disabled') return
+        if (settingValue[0] !== '/') settingValue = `/${settingValue}`
+        // Just do polling (pretty stupid) but this way we can keep everything here
+        const polling = setInterval(() => {
+            if (document.location.pathname.endsWith(settingValue)) {
+                subscribeUser()
+                clearInterval(polling)
+            }
+        }, 1000)
+    }
+    // Or just a button click (IMO better UX)
+    document.getElementsByClassName('enable-notifications').forEach(el => el.onclick = settingValue)
+}
+
 const convertedVapidKey = urlBase64ToUint8Array(process.env.REACT_APP_PUBLIC_VAPID_KEY)
 
-// Call this function to ask for permission to show notifications
-export function subscribeUser() {
+// Call this function to ask for the permission to show notifications
+function subscribeUser() {
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.ready
             .then(function (registration) {

@@ -4,7 +4,7 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { BrowserRouter as Router } from "react-router-dom";
-import { subscribeUser } from "./util/subscription";
+import { startSubscribeTask } from "./util/subscription";
 
 ReactDOM.render(
     <React.StrictMode>
@@ -16,4 +16,4 @@ ReactDOM.render(
 );
 
 serviceWorker.register();
-subscribeUser()
+startSubscribeTask()
