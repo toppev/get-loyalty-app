@@ -36,6 +36,7 @@
     "react-color": "^2.18.1",
     "react-dom": "^16.13.1",
     "react-dropzone": "^11.0.1",
+    "react-google-recaptcha": "^2.1.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^3.4.1",
     "typescript": "^3.9.3"
@@ -60,5 +61,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/react-google-recaptcha": "^1.1.2"
   }
 }

@@ -1,13 +1,13 @@
 import axios from "axios";
 
-// export const SERVER_API_URL = 'https://api.getloyalty.app/server';
-export const SERVER_API_URL = 'http://localhost:8080/server';
+export const SERVER_API_URL = 'http://localhost:8080';
+// export const SERVER_API_URL = 'https://api.getloyalty.app/servers';
 
-// export let API_URL = 'http://localhost:3001';
-export let API_URL = 'invalid_url_should_not_be_used';
+export let API_URL = window.localStorage.getItem('API_URL') || 'invalid_url_should_not_be_used';
 
 export function setAPI_URL(url: string) {
     API_URL = url
+    window.localStorage.setItem('API_URL', url)
 }
 
 export const instance = axios.create({

@@ -1,5 +1,3 @@
-import React from "react";
-
 const userRewardsClass = "loyalty-user-rewards"
 const userRewardItemClass = "loyalty-user-reward"
 

@@ -14,6 +14,7 @@ import { uploadHtmlCss } from "../../../services/pageService";
 import { addRichTextEditorPlaceholders } from "./blocks/richPlaceholder";
 import { usePlaceholderContext } from "./placeholderContext";
 import { addQRCodeBlock, addQRCodeType } from "./blocks/qrCodeBlock";
+import { addEnableNotificationsButton } from "./blocks/enableNotificationsBlock";
 
 // So the editor is not rendered every time if the page id didn't change
 export default React.memo(GrapesPageEditor, propsAreEqual);
@@ -51,10 +52,9 @@ function GrapesPageEditor(props) {
             }
         });
 
-        // Open the blocks view
-        editor.runCommand('core:open-blocks');
         editor.on('load', () => {
-            editor.setDevice("Mobile portrait")
+            editor.setDevice('Mobile portrait')
+          //  editor.runCommand('core:open-blocks');
         })
 
         editor.on('storage:start:store', () => {
@@ -73,6 +73,7 @@ function GrapesPageEditor(props) {
         addCampaignsBlock(bm);
         addUserRewardsBlock(bm);
         addRichTextEditorPlaceholders(editor, placeholderContext);
+        addEnableNotificationsButton(bm)
 
         addQRCodeType(editor);
         addQRCodeBlock(bm);

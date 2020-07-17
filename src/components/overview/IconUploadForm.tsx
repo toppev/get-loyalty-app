@@ -21,7 +21,7 @@ export default function () {
 
     const [icon, setIcon] = useState<File | undefined>();
 
-    const [infoText, setInfoText] = useState('(.ico files only)');
+    const [infoText, setInfoText] = useState('.ico files only. Recommended sizes: 512x512 192x192 64x64 32x32 16x16');
 
     const classes = useStyles();
 

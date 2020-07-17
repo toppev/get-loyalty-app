@@ -6,18 +6,20 @@ import { AxiosResponse } from "axios";
 type LoginCredentials = {
     email?: string,
     password?: string,
+    /** Captcha token */
+    token: string
 }
 
-function loginRequest({ email, password }: LoginCredentials = {}) {
-    return post('/user/login', { email, password });
+function loginRequest(data: LoginCredentials) {
+    return post('/user/login', data);
 }
 
 function profileRequest() {
     return get('/user/profile');
 }
 
-function registerRequest({ email, password }: LoginCredentials = {}) {
-    return post('/user/register', { email, password });
+function registerRequest(data: LoginCredentials) {
+    return post('/user/register', data);
 }
 
 /**

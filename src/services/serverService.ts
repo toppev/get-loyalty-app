@@ -5,7 +5,13 @@ import { ServerSettings } from "../components/settings/SettingsPage";
  * Also updates the API_URL
  */
 async function getOrCreateServer(email: string, create: boolean) {
-    const res = await post(`${SERVER_API_URL}/get_or_create/?create=${create}`, { email: email }, true)
+    const res = await post(`${SERVER_API_URL}/server/get_or_create/?create=${create}`, { email: email }, true)
+    const deleted = res.data.serverDeleted
+    if (deleted) {
+        throw new Error(typeof deleted == "string" ?
+            deleted : 'Seems like your data was deleted. Perhaps your plan expired?' +
+            'Please be in contact if you would like to restore and upgrade your plan.')
+    }
     setAPI_URL(res.data.publicAddress)
     return { created: res.status === 201, ...res };
 }
@@ -23,16 +29,21 @@ function waitForServer(callback: () => any) {
         }, 1000)
     }
 
-    sendRequest()
+    setTimeout(sendRequest, 10 * 1000)
 
 }
 
 function updateServer(data: ServerSettings) {
-    return post(SERVER_API_URL + '/update', data, true)
+    return post(`${SERVER_API_URL}/server/update`, data, true)
+}
+
+function updateServerOwner(data: { email: string, updated: { email: string } }) {
+    return post(`${SERVER_API_URL}/user/update`, data, true)
 }
 
 export {
     getOrCreateServer,
     waitForServer,
-    updateServer
+    updateServer,
+    updateServerOwner
 }

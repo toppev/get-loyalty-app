@@ -4,8 +4,12 @@ import {
     createStyles,
     Dialog,
     DialogContent,
+    FormHelperText,
+    Input,
     LinearProgress,
+    MenuItem,
     Paper,
+    Select,
     Theme,
     Typography,
     useMediaQuery,
@@ -25,6 +29,9 @@ import SaveChangesSnackbar from "../common/SaveChangesSnackbar";
 import { getOrCreateServer, updateServer, waitForServer } from "../../services/serverService";
 import RetryButton from "../common/button/RetryButton";
 import { isURL } from "../../util/Validate";
+import { listPages } from "../../services/pageService";
+import useResponseState from "../../hooks/useResponseState";
+import { Page } from "../pages/Page";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -176,15 +183,41 @@ export default function () {
     )
 }
 
-export type ServerSettings = { appAddress?: string, customApiAddress?: string }
+export type ServerSettings = {
+    appAddress?: string,
+    customApiAddress?: string,
+    website: {
+        title?: string
+        description?: string
+        keywords?: string
+        askNotifications: string
+    }
+}
+
+interface NotificationValues {
+    [key: string]: { name: string }
+}
+
+const askNotificationOptions: NotificationValues = {
+    "disabled": { name: "Only the button" },
+    "10": { name: "After 10 seconds" },
+    "20": { name: "After 20 seconds" },
+    "30": { name: "After 30 seconds" },
+    "45": { name: "After 45 seconds" },
+    "60": { name: "After 60 seconds" },
+}
 
 function ServerSettingsForm() {
     const classes = useStyles();
     const context = useContext(AppContext)
 
     const updateRequest = useRequest();
-
-    const serverInfo = useRequest(() => getOrCreateServer(context.user.email, false))
+    // Select components don't want to work well with formik :(
+    const [askNotifications, setAskNotifications] = useState<string>('disabled');
+    const serverInfo = useRequest(
+        () => getOrCreateServer(context.user.email, false),
+        {},
+        (res) => setAskNotifications(res.data?.website?.askNotifications))
 
     const [restarting, setRestarting] = useState(false);
 
@@ -193,11 +226,6 @@ function ServerSettingsForm() {
         if (settings.appAddress && !isURL(settings.appAddress)) {
             errors.appAddress = 'Invalid URL'
         }
-        /*
-        if (settings.customApiAddress && !isURL(settings.customApiAddress)) {
-            errors.customApiAddress = 'Invalid URL'
-        }
-        */
         return errors;
     }
 
@@ -209,6 +237,10 @@ function ServerSettingsForm() {
 
     const loading = serverInfo.loading || updateRequest.loading
     const error = serverInfo.error || updateRequest.error
+
+    const pageRequest = useRequest(listPages)
+    // If used for anything else it is recommended to use a custom parser to map the pages to real page instances
+    const [pages] = useResponseState<Page[]>(pageRequest.response, []);
 
     return (
         <div>
@@ -235,6 +267,7 @@ function ServerSettingsForm() {
                         if (appAddress && !appAddress.startsWith("https://") && !appAddress.startsWith("http://")) {
                             values.appAddress = `https://${values.appAddress}`
                         }
+                        values.website.askNotifications = askNotifications
                         setRestarting(true)
                         updateRequest.performRequest(
                             () => updateServer(values),
@@ -253,11 +286,59 @@ function ServerSettingsForm() {
                             the loyalty app.
                             <TextField
                                 className={classes.field}
-                                placeholder="example.com/app or app.example.com"
+                                placeholder="e.g example.com/app or app.example.com"
                                 name="appAddress"
                                 type="text"
                                 label="Loyalty App Address"
                             />
+                            <TextField
+                                className={classes.field}
+                                placeholder={`e.g your business name`}
+                                name="website.title"
+                                type="text"
+                                label="App Title"
+                            />
+                            <TextField
+                                className={classes.field}
+                                name="website.description"
+                                placeholder="Short description of the app/site"
+                                type="text"
+                                label="App Description"
+                            />
+                            <TextField
+                                className={classes.field}
+                                name="website.keywords"
+                                placeholder="Comma separated keywords"
+                                type="text"
+                                label="App Keywords"
+                            />
+                            <FormHelperText
+                                style={{ marginTop: '10px' }}
+                            >Select when the user is asked to enable push notifications</FormHelperText>
+                            <Select
+                                className={classes.field}
+                                type="text"
+                                defaultValue="disabled"
+                                value={askNotifications}
+                                onChange={(e) => setAskNotifications(e.target.value as string)}
+                                input={<Input/>}
+                                inputProps={{
+                                    name: 'askNotifications',
+                                    id: 'ask-notifications-select',
+                                }}
+                            >
+                                {Object.entries(askNotificationOptions).map(([k, v]) => (
+                                    <MenuItem key={k} value={k}>
+                                        {v.name}
+                                    </MenuItem>
+                                ))}
+                                {pages.map(page => (
+                                    <MenuItem key={page._id} value={page.pathname}>
+                                        {`On "/${page.pathname}" page`}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+
                             <div>
                                 <Button
                                     className={classes.updateButton}

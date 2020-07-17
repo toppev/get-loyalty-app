@@ -60,11 +60,12 @@ interface FormValues {
 }
 
 interface LoginFormProps {
+    getCaptchaToken: () => string
 }
 
 const initialValues = { email: "", password: "" }
 
-export default function LoginForm({}: LoginFormProps) {
+export default function LoginForm({ getCaptchaToken }: LoginFormProps) {
 
     const classes = useStyles();
     const context = useContext(AppContext);
@@ -90,12 +91,12 @@ export default function LoginForm({}: LoginFormProps) {
     usePasswordReset(onSuccess) // TODO: use the error callback?
 
     const loginAccount = (values: FormValues, { setSubmitting, setErrors }: any) => {
-        loginRequest(values)
+        loginRequest({ ...values, token: getCaptchaToken() })
             .then(onSuccess)
             .catch(err => {
                 if (err.response) {
                     const { status, data } = err.response
-                    setErrors({ password: `An error occurred. ${data.message || `Status code: ${status}`}` })
+                    setErrors({ password: `An error occurred. ${data?.message || `Status code: ${status}`}` })
                 }
                 setErrors({ password: `An error occurred. Please try again. ${err}` })
             })
@@ -106,7 +107,7 @@ export default function LoginForm({}: LoginFormProps) {
     }
 
     const createAccount = (values: typeof initialValues, { setSubmitting, setErrors }: any) => {
-        registerRequest()
+        registerRequest({ token: getCaptchaToken() })
             .then(onSuccess)
             .catch(err => {
                 console.log("Error creating an account: " + err);
@@ -215,6 +216,7 @@ export default function LoginForm({}: LoginFormProps) {
                                             }}
                                         >Register</Button>
                                     </div>
+
                                 </form>
                                 <Button
                                     disabled={isSubmitting}

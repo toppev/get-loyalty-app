@@ -19,6 +19,9 @@ import React, { useContext, useState } from "react";
 import AppContext, { User } from "../../context/AppContext";
 import { isEmail } from "../../util/Validate";
 import { updateUser } from "../../services/userService";
+import useRequest from "../../hooks/useRequest";
+import RetryButton from "../common/button/RetryButton";
+import { updateServerOwner } from "../../services/serverService";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -69,19 +72,6 @@ export default function () {
     )
 }
 
-function handleUpdate(userId: string, value: any, setSubmitting: (state: boolean) => any, setError: (err: string) => any, callback?: () => any) {
-    setSubmitting(true)
-    setError("");
-    updateUser(userId, value)
-        .then(callback)
-        .catch(err => {
-            setError(`${err?.response?.data?.message || err?.response?.data || err.toString()}`);
-        })
-        .finally(() => {
-            setSubmitting(false);
-        });
-}
-
 interface EmailFormProps {
     user: User
 }
@@ -90,7 +80,6 @@ function EmailForm({ user }: EmailFormProps) {
 
     const classes = useStyles();
 
-    const [error, setError] = useState("");
     const [canSubmit, setCanSubmit] = useState(false);
 
     const context = useContext(AppContext);
@@ -108,16 +97,24 @@ function EmailForm({ user }: EmailFormProps) {
 
     const initials: EmailValues = { email: user.email };
 
+    const { error, performRequest } = useRequest()
+
     return (
         <Formik
             initialValues={initials}
             validateOnBlur
             validate={validate}
             onSubmit={(value, actions) => {
-                handleUpdate(user._id, value, actions.setSubmitting, setError,
-                    () => context.setUser({
+                actions.setSubmitting(true)
+                performRequest(async () => {
+                    await updateServerOwner({ email: context.user.email, updated: { email: value.email } })
+                    await updateUser(user._id, value)
+                }, () => {
+                    actions.setSubmitting(false)
+                    context.setUser({
                         ...user, ...value
-                    }))
+                    })
+                })
             }}
         >
             {({ submitForm, isSubmitting, handleChange }) => (
@@ -132,7 +129,7 @@ function EmailForm({ user }: EmailFormProps) {
                         />
                         <div className={classes.progressErrorDiv}>
                             {isSubmitting && <LinearProgress/>}
-                            {error && <Typography align="center" color="error">{error}</Typography>}
+                            {error && <RetryButton error={error}/>}
                         </div>
                         <Button
                             disabled={isSubmitting || !canSubmit}
@@ -174,54 +171,63 @@ function ResetPassword({ user, title, highlight }: ResetPasswordProps) {
     }
 
     const [canSubmit, setCanSubmit] = useState(false);
-    const [error, setError] = useState("");
 
     const classes = useStyles();
     const context = useContext(AppContext);
+
+    const { error, performRequest } = useRequest()
 
     return (
 
         <Formik
             initialValues={{ password: "", repeatPassword: "" }}
             validate={validate}
-            onSubmit={(value, actions) => {
-                handleUpdate(user._id, { password: value.password }, actions.setSubmitting, setError, () => {
-                    context.setUser({ ...user, hasPassword: true })
-                })
+            onSubmit={(values, actions) => {
+                const password = { password: values.password }
+                performRequest(
+                    () => updateUser(user._id, password),
+                    () => {
+                        actions.setSubmitting(false)
+                        context.setUser({
+                            ...user, ...password
+                        })
+                    })
             }}
         >
-            {({ submitForm, isSubmitting, handleChange }) => (
-                <Paper className={highlight ? clsx(classes.paper, classes.highlight) : classes.paper}>
-                    <Typography
-                        variant="h6"
-                        align="center">
-                        {title}
-                    </Typography>
-                    <Form>
-                        <TextField
-                            className={classes.field}
-                            name="password"
-                            type="password"
-                            label="New Password"
-                        />
-                        <TextField
-                            className={classes.field}
-                            name="repeatPassword"
-                            type="password"
-                            label="Repeat Password"
-                        />
-                        <Button
-                            className={classes.passwordBtn}
-                            disabled={isSubmitting || !canSubmit}
-                            onClick={submitForm}
-                            startIcon={(<LockIcon/>)}
-                            variant="contained"
-                        >{title}</Button>
-                    </Form>
-                    {error && <Typography align="center" color="error">{error}</Typography>}
-                    {isSubmitting && <LinearProgress/>}
-                </Paper>
-            )}
+            {({ submitForm, isSubmitting, handleChange }) => {
+                return (
+                    <Paper className={highlight ? clsx(classes.paper, classes.highlight) : classes.paper}>
+                        <Typography
+                            variant="h6"
+                            align="center">
+                            {title}
+                        </Typography>
+                        <Form>
+                            <TextField
+                                className={classes.field}
+                                name="password"
+                                type="password"
+                                label="New Password"
+                            />
+                            <TextField
+                                className={classes.field}
+                                name="repeatPassword"
+                                type="password"
+                                label="Repeat Password"
+                            />
+                            <Button
+                                className={classes.passwordBtn}
+                                disabled={isSubmitting || !canSubmit}
+                                onClick={submitForm}
+                                startIcon={(<LockIcon/>)}
+                                variant="contained"
+                            >{title}</Button>
+                        </Form>
+                        {error && <RetryButton error={error}/>}
+                        {isSubmitting && <LinearProgress/>}
+                    </Paper>
+                );
+            }}
         </Formik>
     )
 
