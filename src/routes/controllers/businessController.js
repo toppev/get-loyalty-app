@@ -62,7 +62,7 @@ function getIcon(req, res, next) {
 }
 
 function uploadIcon(req, res, next) {
-    const fileSizeLimit = 16;
+    const fileSizeLimit = 32; // KB
     const busboy = new Busboy({ headers: req.headers, limits: { fileSize: (1024 * fileSizeLimit) } });
     busboy.on('file', function (fieldName, file, filename, encoding, mimetype) {
         // TODO: validate type etc?

@@ -12,7 +12,6 @@ const userValidator = validation.validate(validation.userValidator);
 // Not logged in, no perms
 router.get('/resetpassword/:token', resetPassword);
 router.post('/forgotpassword', forgotPassword);
-// For convenience
 router.post('/login', authenticator, verifyCAPTCHA, login);
 router.post('/login/:loginService', authenticator, verifyCAPTCHA, login);
 // In the same request they can send data (e.g email) therefore we validate the data
