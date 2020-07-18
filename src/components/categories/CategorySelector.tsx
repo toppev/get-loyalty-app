@@ -15,6 +15,8 @@ export default function (props: Props) {
     const [categories, setCategories] = useState<Category[]>(props.initialCategories);
     const [allCategories, setAllCategories] = useState<Category[]>([]);
 
+    console.log(props.initialCategories)
+
     useEffect(() => {
         props.onCategoriesUpdate(categories);
     }, [categories, props])
@@ -28,17 +30,17 @@ export default function (props: Props) {
     }, []);
 
     return (
-        // FIXME: does not render new values properly and is complaining of changing defaultValue because 1 editor is used for all products
-        // renderOption crashes and getOptionLabel only renders default values correctly
+        // If this shows incorrectly it's because initialCategories are strings and not array of categories (Category)
+        // See if the request returns category IDs
         <Autocomplete
-            defaultValue={props.initialCategories}
-            options={allCategories}
+            defaultValue={props.initialCategories.map(it => it.name)}
+            options={allCategories.map(it => it.name)}
             autoSelect
             multiple
             freeSolo
-            getOptionLabel={c => c.name}
 
             onChange={(event, values: any[]) => {
+                console.log(values);
                 const newValues = values.map(value => {
                     return typeof value === 'string' ? new Category({ id: `${Math.random()}`, name: value }) : value;
                 })
