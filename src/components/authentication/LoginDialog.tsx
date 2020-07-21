@@ -26,7 +26,7 @@ export default function LoginDialog({ open }: LoginDialogProps) {
                 <ReCAPTCHA
                     ref={recaptchaRef}
                     size="invisible"
-                    sitekey={process.env.CAPTCHA_SITE_KEY!!}
+                    sitekey={process.env.REACT_APP_CAPTCHA_SITE_KEY!!}
                 />
             </DialogContent>
         </Dialog>
