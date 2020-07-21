@@ -24,9 +24,11 @@ const FeedbackPage = lazy(() => import('./components/feedback/FeedbackPage'));
 
 export default function () {
 
+    const validAPI = API_URL.startsWith('http') // Whether we know the API url (e.g from local storage)
+
     const [navDrawerOpen, setNavDrawerOpen] = useState(false);
     const [notifications, setNotifications] = useState<AccountNotificationValues>({});
-    const [loginDialog, setLoginDialog] = useState(!API_URL.startsWith('http'));
+    const [loginDialog, setLoginDialog] = useState(!validAPI);
     // Don't close dialog before everything has loaded so it won't try loading invalid stuff (undefined business id etc)
     const [showContent, setShowContent] = useState(false);
 
@@ -54,17 +56,18 @@ export default function () {
 
     useEffect(() => {
         // Login -> fetch business or create one
-
-        profileRequest()
-            .then(res => onLoginOrAccountCreate(context, res))
-            .catch(err => {
-                if (err.response) {
-                    console.log(err);
-                    setLoginDialog(true);
-                } else {
-                    window.confirm('Something went wrong...\nPerhaps our servers are down :(\nPlease try refreshing the page or logging in')
-                }
-            });
+        if (validAPI) {
+            profileRequest()
+                .then(res => onLoginOrAccountCreate(context, res))
+                .catch(err => {
+                    if (err.response) {
+                        console.log(err);
+                        setLoginDialog(true);
+                    } else {
+                        window.confirm('Something went wrong...\nPerhaps our servers are down :(\nPlease try refreshing the page or logging in')
+                    }
+                });
+        }
     }, [])
 
     const handleDrawerToggle = () => setNavDrawerOpen(!navDrawerOpen);
