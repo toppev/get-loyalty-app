@@ -57,6 +57,8 @@ export default function (props: ProductFormProps) {
     const { error, loading, performRequest } = useRequest();
     const editing = !!props.initialProduct;
 
+    console.log(product)
+
     return (
         <div className={classes.paper}>
             <Typography component="h1" variant="h5">Product</Typography>

@@ -146,10 +146,6 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         otherLinks: {
             position: 'relative',
-            [theme.breakpoints.up('sm')]: {
-                bottom: 15,
-                position: 'absolute',
-            },
         }
     }));
 

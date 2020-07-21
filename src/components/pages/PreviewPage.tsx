@@ -32,7 +32,7 @@ export default function PreviewPage({ page, onClose, actions, open = true }: Pre
         <Dialog onClose={onClose} open={open} maxWidth={false}>
             <CloseButton onClick={onClose}/>
             <DialogContent className={classes.previewDialogContent}>
-                <PreviewIframe src={`${API_URL}/business/${appContext.business._id}/page/${page._id}/html`}/>
+                <PreviewIframe src={`${API_URL}/page/${page._id}/html`}/>
                 {actions}
             </DialogContent>
         </Dialog>

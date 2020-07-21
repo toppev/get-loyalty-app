@@ -48,6 +48,9 @@ const useStyles = makeStyles((theme: Theme) =>
             marginRight: '15px'
         },
         importBtn: {},
+        noRewards: {
+            color: theme.palette.grey[600]
+        }
     }));
 
 interface RewardSelectorProps {
@@ -73,6 +76,8 @@ export default function (props: RewardSelectorProps) {
 
     const searchFilter = (reward: Reward) => search.length ? JSON.stringify(reward).toLowerCase().includes(search) : true;
 
+    const filteredRewards = rewards.filter(searchFilter)
+
     return (
         <Dialog open={props.open} fullWidth onClose={props.onClose}>
             <CloseButton onClick={props.onClose}/>
@@ -94,19 +99,21 @@ export default function (props: RewardSelectorProps) {
                             onClick={() => setFormOpen(true)}
                         >New Reward</Button>
                     </ListItem>
-                    {rewards.filter(searchFilter)
-                        .map((item, index) =>
-                            <RewardItem
-                                actions={(
-                                    <SelectRewardButton
-                                        reward={item}
-                                        startEditing={reward => setEditingReward(reward)}
-                                    />
-                                )}
-                                key={index}
-                                reward={item}
-                            />
-                        )}
+                    {filteredRewards.map((item, index) =>
+                        <RewardItem
+                            actions={(
+                                <SelectRewardButton
+                                    reward={item}
+                                    startEditing={reward => setEditingReward(reward)}
+                                />
+                            )}
+                            key={index}
+                            reward={item}
+                        />
+                    )}
+
+                    {filteredRewards.length == 0 && <p className={classes.noRewards}>No rewards found</p>}
+
                     <RewardFormDialog
                         open={formOpen || !!editingReward}
                         initialReward={editingReward}

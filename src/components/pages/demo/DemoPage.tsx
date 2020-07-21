@@ -48,7 +48,8 @@ export default function () {
 
     const classes = useStyles();
 
-    // TODO: fix if self hosted
+    // FIXME: should we iframe the self hosted page or??
+    // Probably good enough for now
     const src = `${API_URL}`.replace('/api', '');
 
     return (

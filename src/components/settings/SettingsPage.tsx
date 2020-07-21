@@ -49,8 +49,8 @@ const useStyles = makeStyles((theme: Theme) =>
             color: theme.palette.grey[600]
         },
         paper: {
-            padding: '25px',
-            margin: '20px',
+            padding: '20px',
+            margin: '12px',
             flex: '1 1 0px'
         },
         fieldDiv: {
@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme: Theme) =>
             marginBottom: '20px'
         },
         field: {
-            width: '85%',
+            width: '90%',
             margin: '8px 0px'
         },
         helpIcon: {
@@ -75,6 +75,9 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         updateButton: {
             marginTop: '5px'
+        },
+        info: {
+            margin: '15px 7px'
         }
     }));
 
@@ -199,7 +202,7 @@ interface NotificationValues {
 }
 
 const askNotificationOptions: NotificationValues = {
-    "disabled": { name: "Only the button" },
+    "disabled": { name: "Only the button(s)" },
     "10": { name: "After 10 seconds" },
     "20": { name: "After 20 seconds" },
     "30": { name: "After 30 seconds" },
@@ -282,8 +285,10 @@ function ServerSettingsForm() {
                 {({ submitForm, isSubmitting }) => (
                     <Paper className={classes.paper}>
                         <Form>
-                            Create a new A record to <b>"{API_URL.replace("https://", "")}"</b> and enter an address for
-                            the loyalty app.
+                            <p className={classes.info}>
+                                Create a new A record to <b>"{API_URL.replace("https://", "")}"</b>
+                                and enter an address for your loyalty app.
+                            </p>
                             <TextField
                                 className={classes.field}
                                 placeholder="e.g example.com/app or app.example.com"

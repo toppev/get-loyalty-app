@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Box, createStyles, Theme, useMediaQuery, useTheme } from "@material-ui/core";
+import { Box, createStyles, Theme, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import NotificationForm from "./NotificationForm";
 import { PushNotification } from "./PushNotification";
@@ -21,6 +21,14 @@ const useStyles = makeStyles((theme: Theme) =>
                 },
             }
         },
+        info: {
+            color: 'lightgrey',
+            marginLeft: '25px'
+        },
+        typography: {
+            color: theme.palette.grey[400],
+            marginLeft: '25px'
+        }
     }));
 
 export default function () {
@@ -32,6 +40,7 @@ export default function () {
     const [newNotifications, setNewNotifications] = useState<PushNotification[]>([]);
 
     const { loading, error, response } = useRequest(listNotificationHistory);
+
     const [history, setHistory] = useResponseState<PushNotification[]>(response, [], res => {
         const expires = res.data.cooldownExpires;
         setCooldownExpires(expires ? new Date(expires) : undefined)
@@ -50,6 +59,10 @@ export default function () {
 
     return (
         <div>
+            <Typography
+                variant="h6"
+                className={classes.typography}
+            >Send a notification to your customers about your latest deals!*</Typography>
             <Box display="flex" flexWrap="wrap"
                  className={classes.box}>
                 <NotificationForm
@@ -65,6 +78,8 @@ export default function () {
                     newNotifications={newNotifications}
                 />
             </Box>
+            <p className={classes.info}>*Push notifications are not (yet) supported on Safari (iOS).</p>
+            <p style={{fontSize: '11px', color: 'grey', marginLeft: '25px'}}>We limit how often you can send push notifications.</p>
         </div>
     )
 

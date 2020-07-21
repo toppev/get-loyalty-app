@@ -22,6 +22,10 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         contentDiv: {
             margin: '10px'
+        },
+        noCampaigns: {
+            color: theme.palette.grey[400],
+            margin: '20px'
         }
     }));
 
@@ -49,6 +53,9 @@ export default function () {
             />
             {loading || otherRequests.loading && <LinearProgress/>}
             <Grid className={classes.container} spacing={4} container direction="row" alignItems="flex-start">
+
+                {campaigns.length == 0 && <p className={classes.noCampaigns}>You don't have any campaigns. Create one by clicking the button above.</p>}
+
                 {campaigns.map(campaign => (
                     <Grid item xs={12} md={6} lg={3} key={campaign.id}>
                         <CampaignPaper

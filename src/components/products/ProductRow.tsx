@@ -54,6 +54,8 @@ export default function (props: ProductRowProps) {
 
     const classes = useStyles();
 
+    const {product} = props
+
     return (
         <div className={classes.rowDiv}>
 
@@ -67,16 +69,16 @@ export default function (props: ProductRowProps) {
                     <FastfoodIcon className={classes.icon}/>
                 </Grid>
                 <Grid item xs={2} sm={2}>
-                    <b>{props.product.name}</b>
+                    <b>{product.name}</b>
                 </Grid>
                 <Grid item sm={3} className={classes.itemDesc}>
-                    {props.product.description}
+                    {product.description}
                 </Grid>
                 <Grid item xs={1} sm={1}>
-                    {props.product.price}
+                    {product.price}
                 </Grid>
                 <Grid item xs={2} sm={2} className={classes.categories}>
-                    {props.product.categories.map(c => c.name).join(", ")}
+                    {product.categories.map(c => c.name).join(", ")}
                 </Grid>
                 <Grid item xs={2} sm={2}>
                     {props.CustomActions || <EditDeleteActions {...props} />}

@@ -5,6 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import SVGIcons from "./SVGIcons";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
+import PageIcon from "../PageIcon";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -28,11 +29,6 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         info: {
             color: theme.palette.info.light
-        },
-        iconPreview: {
-            '& *': {
-                height: '60px'
-            }
         },
         previewDiv: {
             textAlign: 'center'
@@ -104,8 +100,9 @@ export default function (props: IconSelectorProps) {
                             />
                             <div>
                                     <Paper className={classes.previewPaper}>
-                                        <p className={`${classes.iconPreview} ${classes.icon}`}
-                                           dangerouslySetInnerHTML={{ __html: html }}/>
+                                        <div className={classes.icon}>
+                                            <PageIcon icon={html}/>
+                                        </div>
                                     </Paper>
                                 <Button
                                     size="small"
@@ -138,7 +135,9 @@ function SeletableIcon({ icon, onSelect }: SelectableIconProps) {
 
     return (
         <div className={classes.iconDiv}>
-            <p className={`${classes.iconPreview} ${classes.icon}`} dangerouslySetInnerHTML={{ __html: icon }}/>
+            <div className={classes.icon}>
+                <PageIcon icon={icon}/>
+            </div>
             <Button
                 className={classes.selectButton}
                 variant="contained"

@@ -54,7 +54,7 @@ export default function () {
                             setInfoText('Icon set!')
                         })
                     }}
-                >Upload Icon</Button> : <p>{infoText}</p>
+                >Upload Icon</Button> : <p style={{ fontSize: '12px' }}>{infoText}</p>
             }
         </div>
     )

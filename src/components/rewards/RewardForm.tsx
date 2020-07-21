@@ -147,12 +147,14 @@ export default function (props: RewardFormProps) {
                     {isSubmitting && <LinearProgress/>}
                     <br/>
                     <div className={classes.submitDiv}>
-                        <Button className={classes.submitButton}
-                                variant="contained"
-                                color="primary"
-                                disabled={isSubmitting}
-                                startIcon={(<SaveIcon/>)}
-                                onClick={submitForm}>Save</Button>
+                        <Button
+                            className={classes.submitButton}
+                            variant="contained"
+                            color="primary"
+                            disabled={isSubmitting}
+                            startIcon={(<SaveIcon/>)}
+                            onClick={submitForm}
+                        >Save</Button>
                     </div>
 
                     <IdText id={reward.id}/>

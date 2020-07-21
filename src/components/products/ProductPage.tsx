@@ -1,4 +1,4 @@
-import { Box, createStyles, makeStyles, Theme } from '@material-ui/core';
+import { Box, createStyles, LinearProgress, makeStyles, Theme } from '@material-ui/core';
 import React, { useState } from 'react';
 import RetryButton from '../common/button/RetryButton';
 import ImportProducts from './importer/ImportProducts';
@@ -32,6 +32,9 @@ const useStyles = makeStyles((theme: Theme) =>
             fontSize: '14px',
             color: theme.palette.grey[300],
             marginBottom: '40px'
+        },
+        noProducts: {
+            color: theme.palette.grey[600],
         }
     }));
 
@@ -50,6 +53,8 @@ export default function () {
     const error = errorListing || otherRequest.error;
     const loading = listing || otherRequest.loading;
 
+    const filteredProducts = products.filter(searchFilter)
+
     return (
         <div>
             {error ? (
@@ -57,7 +62,7 @@ export default function () {
             ) : (<div className={classes.paper}>
 
                 <div className={classes.info}>
-                    <p>You can create or import existing products from a .csv file here.</p>
+                    <p>Create or import existing products from a .csv file here.</p>
                     <Tip>
                         You don't have to create all products.
                         You can create generic products, for example "Pizza", "Vegan burgers" or "Men's haircut".
@@ -80,18 +85,24 @@ export default function () {
                     name={"product_search"}
                     placeholder={"Search products..."}
                 />
+
+                {loading && <LinearProgress/>}
+
                 <ul className={classes.productList}>
-                    {products
-                        .filter(searchFilter)
-                        .map((item, index) => (
-                            <ProductRow
-                                key={index}
-                                product={item}
-                                startEditing={product => setEditingProduct(product)}
-                                onDelete={() => setProducts(products.filter(p => p.id !== item.id))}
-                            />
-                        ))}
+                    {filteredProducts.map((item, index) => (
+                        <ProductRow
+                            key={index}
+                            product={item}
+                            startEditing={product => setEditingProduct(product)}
+                            onDelete={() => setProducts(products.filter(p => p.id !== item.id))}
+                        />
+                    ))}
                 </ul>
+
+                <p className={classes.noProducts}>{filteredProducts.length == 0 && (products.length == 0
+                    ? "You don't have any products"
+                    : "No products found")}</p>
+
 
                 <ProductFormDialog
                     open={formOpen || !!editingProduct}

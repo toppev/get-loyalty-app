@@ -5,7 +5,6 @@ import {
     Card,
     CardActions,
     CardContent,
-    CardMedia,
     CardProps,
     createStyles,
     Dialog,
@@ -42,22 +41,22 @@ import IconSelector from "./editor/IconSelector";
 import URLSelectorDialog from "./URLSelectorDialog";
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
+import PageIcon from "./PageIcon";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         cardsDiv: {},
         card: {
             margin: '15px',
-            width: '350px',
-            height: '200px',
-        },
-        lowCard: {
-            height: '180px',
+            width: '368px',
+            minHeight: '200px',
         },
         actionCardsDivider: {
             backgroundColor: theme.palette.grey[800]
         },
-        cardMedia: {},
+        cardMedia: {
+            height: '10%'
+        },
         cardActions: {
             display: 'block',
             textAlign: 'center',
@@ -70,14 +69,15 @@ const useStyles = makeStyles((theme: Theme) =>
             margin: '10px'
         },
         templateSelectorCard: {
-            borderTop: 'solid 6px orange'
+            borderTop: 'solid 6px orange',
         },
         pageName: {
             fontSize: '22px',
             color: 'darkgray'
         },
         editPageNameBtn: {},
-        pageNameField: {},
+        pageNameField: {
+        },
         unpublished: {
             color: theme.palette.grey[500],
         },
@@ -123,6 +123,25 @@ const useStyles = makeStyles((theme: Theme) =>
             left: 0,
             right: 0,
             textAlign: 'center',
+        },
+        cardContentDiv: {
+            position: 'relative'
+        },
+        cardContent: {
+            position: 'relative',
+            zIndex: 2
+        },
+        backgroundImage: {
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover',
+            '-webkit-mask-image': 'linear-gradient(to bottom, black 50%, transparent 100%)',
+            maskImage: 'linear-gradient(to bottom, black 50%, transparent 100%)',
+            position: 'absolute' as const,
+            left: 0,
+            top: 0,
+            width: '100%',
+            height: '100%',
+            opacity: 0.6,
         }
     }));
 
@@ -170,7 +189,7 @@ export default function () {
             <div className={classes.cardsDiv}>
                 <Box display="flex" flexWrap="wrap">
                     <PageCard
-                        className={`${classes.card} ${classes.lowCard} ${classes.center} ${classes.templateSelectorCard}`}
+                        className={`${classes.card} ${classes.center} ${classes.templateSelectorCard}`}
                         page={new Page({ _id: '1', name: 'Create a new page' })}
                         displayId={false}
                         displayStage={false}
@@ -201,7 +220,7 @@ export default function () {
                     />
 
                     <PageCard
-                        className={`${classes.card} ${classes.lowCard} ${classes.center} ${classes.templateSelectorCard}`}
+                        className={`${classes.card} ${classes.center} ${classes.templateSelectorCard}`}
                         page={new Page({
                             _id: '2',
                             name: 'Use existing page',
@@ -242,7 +261,7 @@ export default function () {
                             className={classes.pageCard}
                             editableName
                             page={page}
-                            image={`${API_URL}/business/${business._id}/page/${page._id}/thumbnail`}
+                            image={`${API_URL}/page/${page._id}/thumbnail`}
                             actions={(
                                 <>
                                     <IconButton
@@ -316,7 +335,7 @@ export default function () {
                     <Paper className={classes.card}>
                         <div className={`${classes.settingDiv} ${classes.center}`}>
                             <Typography className={classes.iconTitle} variant="h6">Icon</Typography>
-                            <p dangerouslySetInnerHTML={{ __html: pageOpen.icon }}/>
+                            <PageIcon icon={pageOpen.icon}/>
                             <IconSelector
                                 initialIcon={pageOpen.icon}
                                 onSubmit={(icon) => {
@@ -408,54 +427,60 @@ function PageCard(props: PageCardProps) {
             })
     }
 
+    const backgroundImageCss = image ? {
+        backgroundImage: `url(${image})`,
+    } : {}
+
     return (
         <Card className={classes.card} {...otherProps}>
-            {image && <CardMedia className={classes.cardMedia} image={image}/>}
-            <CardContent>
-                <TextField
-                    disabled={!editing}
-                    className={classes.pageNameField}
-                    defaultValue={page.name}
-                    margin="dense"
-                    name="name"
-                    type="text"
-                    inputProps={{ min: 0, style: { textAlign: 'center', color: '#292929' } }}
-                    InputProps={{
-                        className: classes.pageName,
-                        disableUnderline: !editing,
-                        endAdornment: editableName ? (
-                            <Tooltip
-                                enterDelay={750}
-                                leaveDelay={100}
-                                title={
-                                    <React.Fragment>
-                                        <Typography>{`Rename`}</Typography>
-                                        This name is used in the url.
-                                        Good names are simple. For example, "home", "products" or "campaigns"
-                                    </React.Fragment>
-                                }
-                            >
-                                <div>
-                                    <IconButton className={classes.editPageNameBtn}
-                                                onClick={() => editing ? submitNameChange() : setEditing(true)}>
-                                        <EditIcon/>
-                                    </IconButton>
-                                </div>
-                            </Tooltip>
-                        ) : null,
-                    }}
-                    onChange={(e) => page.name = e.target.value}
-                    onBlur={() => submitNameChange()}
-                    onKeyPress={(ev) => {
-                        if (ev.key === 'Enter') {
-                            ev.preventDefault();
-                            submitNameChange();
-                        }
-                    }}
-                />
-                <br/>
-                <span className={classes.pageDesc}>{page.description}</span>
-            </CardContent>
+            <div className={classes.cardContentDiv}>
+                <div className={classes.backgroundImage} style={backgroundImageCss}/>
+                <CardContent className={classes.cardContent}>
+                    <TextField
+                        disabled={!editing}
+                        className={classes.pageNameField}
+                        defaultValue={page.name}
+                        margin="dense"
+                        name="name"
+                        type="text"
+                        inputProps={{ min: 0, style: { textAlign: 'center', color: '#292929' } }}
+                        InputProps={{
+                            className: classes.pageName,
+                            disableUnderline: !editing,
+                            endAdornment: editableName ? (
+                                <Tooltip
+                                    enterDelay={750}
+                                    leaveDelay={100}
+                                    title={
+                                        <React.Fragment>
+                                            <Typography>{`Rename`}</Typography>
+                                            This name is used in the url.
+                                            Good names are simple. For example, "home", "products" or "campaigns"
+                                        </React.Fragment>
+                                    }
+                                >
+                                    <div>
+                                        <IconButton className={classes.editPageNameBtn}
+                                                    onClick={() => editing ? submitNameChange() : setEditing(true)}>
+                                            <EditIcon/>
+                                        </IconButton>
+                                    </div>
+                                </Tooltip>
+                            ) : null,
+                        }}
+                        onChange={(e) => page.name = e.target.value}
+                        onBlur={() => submitNameChange()}
+                        onKeyPress={(ev) => {
+                            if (ev.key === 'Enter') {
+                                ev.preventDefault();
+                                submitNameChange();
+                            }
+                        }}
+                    />
+                    <br/>
+                    <span className={classes.pageDesc}>{page.description}</span>
+                </CardContent>
+            </div>
             <CardActions className={`${classes.cardActions} hoverable`}>
                 {displayStage &&
                 <Typography variant="h6">
@@ -515,7 +540,7 @@ function TemplateSelectorDialog({ open, onClose, onSelect }: TemplateSelectorDia
                                         <PageCard
                                             displayStage={false}
                                             page={page}
-                                            image={`${API_URL}/business/${appContext.business._id}/page/${page._id}/thumbnail`}
+                                            image={`${API_URL}/page/${page._id}/thumbnail`}
                                             actions={TemplateActions(page)}
                                         />
                                     </Grid>

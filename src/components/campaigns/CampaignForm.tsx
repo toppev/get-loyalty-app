@@ -178,7 +178,7 @@ export default function ({ initialCampaign, onSubmitted }: CampaignFormProps) {
                         <FormControlLabel value="true" control={<Radio/>} checked={isDates}
                                           label="Temporary campaign (ends automatically)"/>
                         <FormControlLabel value="false" control={<Radio/>} checked={!isDates}
-                                          label="Continuous (no specified end date)"/>
+                                          label="Continuous (no end date)"/>
                     </RadioGroup>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <KeyboardDatePicker
