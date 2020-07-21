@@ -8,6 +8,7 @@ import Header from './components/Header';
 import { AccountNotificationValues } from './components/account/AccountNotifications';
 import LoginDialog from "./components/authentication/LoginDialog";
 import { onLoginOrAccountCreate, profileRequest } from "./services/authenticationService";
+import { API_URL } from "./config/axios";
 
 // Lazy Pages
 const OverviewPage = lazy(() => import('./components/overview/OverviewPage'));
@@ -25,7 +26,7 @@ export default function () {
 
     const [navDrawerOpen, setNavDrawerOpen] = useState(false);
     const [notifications, setNotifications] = useState<AccountNotificationValues>({});
-    const [loginDialog, setLoginDialog] = useState(false);
+    const [loginDialog, setLoginDialog] = useState(!API_URL.startsWith('http'));
     // Don't close dialog before everything has loaded so it won't try loading invalid stuff (undefined business id etc)
     const [showContent, setShowContent] = useState(false);
 
@@ -53,6 +54,7 @@ export default function () {
 
     useEffect(() => {
         // Login -> fetch business or create one
+
         profileRequest()
             .then(res => onLoginOrAccountCreate(context, res))
             .catch(err => {
