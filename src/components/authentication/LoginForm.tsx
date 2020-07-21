@@ -126,7 +126,11 @@ export default function LoginForm({ getCaptchaToken }: LoginFormProps) {
             })
             .catch((e) => {
                 actions.setSubmitting(false)
-                setMessage(e?.response?.data?.message || e?.response?.toString() || e.toString())
+                if (e.response?.status === 404) {
+                    setMessage('No servers available. Please try again later.')
+                } else {
+                    setMessage(e?.response?.data?.message || e.toString())
+                }
             })
 
         waitForServer(() => {

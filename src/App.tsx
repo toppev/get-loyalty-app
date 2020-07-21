@@ -24,7 +24,8 @@ const FeedbackPage = lazy(() => import('./components/feedback/FeedbackPage'));
 
 export default function () {
 
-    const validAPI = API_URL.startsWith('http') // Whether we know the API url (e.g from local storage)
+    // Whether we know the API url (e.g from local storage)
+    const validAPI = !API_URL.includes('invalid_url')
 
     const [navDrawerOpen, setNavDrawerOpen] = useState(false);
     const [notifications, setNotifications] = useState<AccountNotificationValues>({});

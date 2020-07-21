@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const SERVER_API_URL = 'https://api.getloyalty.app/servers';
 
-export let API_URL = window.localStorage.getItem('API_URL') || 'invalid_url_should_not_be_used';
+export let API_URL = window.localStorage.getItem('API_URL') || 'https://invalid_url_should_not_be_used.adadawda';
 
 export function setAPI_URL(url: string) {
     API_URL = url
