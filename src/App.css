@@ -35,9 +35,4 @@
   margin: auto;
   display: block;
 }
-
-.page-holder {
-  bottom: 58px;
-  width: 100%;
-  height: calc(100vh - 58px);
-}
+.page-view {}

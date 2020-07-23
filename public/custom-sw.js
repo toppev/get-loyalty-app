@@ -10,10 +10,11 @@ self.addEventListener('push', event => {
 
 self.addEventListener('notificationclick', function (event) {
     event.notification.close()
-    const link = event.notification?.data?.link;
-    if (link) {
-        event.waitUntil(
-            clients.openWindow(link)
-        );
+    if(event.notification.data && event.notification.data.link) {
+        if (link) {
+            event.waitUntil(
+                clients.openWindow(event.notification.data.link)
+            );
+        }
     }
 })

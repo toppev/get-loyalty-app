@@ -3,7 +3,7 @@
   "name": "%NAME%",
   "icons": [
     {
-      "src": "http://localhost:3001/business/icon",
+      "src": "%REACT_APP_API_URL%/business/icon",
       "sizes": "512x512 192x192 64x64 32x32 16x16",
       "type": "image/x-icon"
     }
