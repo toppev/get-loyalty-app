@@ -1,8 +1,10 @@
 const router = require('express').Router();
 const userService = require('../../services/userService');
 const businessService = require('../../services/businessService');
+
 const permit = require('../../middlewares/permitMiddleware');
 const authenticator = require('../../middlewares/authenticator');
+const { verifyCAPTCHA } = require('../../middlewares/captcha');
 
 const validation = require('../../helpers/bodyFilter');
 const userValidator = validation.validate(validation.userValidator);
@@ -10,17 +12,15 @@ const userValidator = validation.validate(validation.userValidator);
 // Not logged in, no perms
 router.get('/resetpassword/:token', resetPassword);
 router.post('/forgotpassword', forgotPassword);
-// For convenience
-router.post('/login', authenticator, login);
-router.post('/login/:loginService', authenticator, login);
+router.post('/login', authenticator, verifyCAPTCHA, login);
+router.post('/login/:loginService', authenticator, verifyCAPTCHA, login);
 // In the same request they can send data (e.g email) therefore we validate the data
-router.post('/register', userValidator, register);
+router.post('/register', userValidator, verifyCAPTCHA, register);
 // Use the jwt
 router.get('/profile', getCurrent);
 router.get('/logout', logout);
 // With permissions
 router.get('/all', permit('user:list'), getAll);
-// Patch other if perms?
 router.patch('/:userId', permit('user:update'), userValidator, update);
 router.delete('/:userId', permit('user:delete'), deleteUser);
 router.get('/:userId', permit('user:get'), getById);
@@ -29,10 +29,12 @@ module.exports = router;
 
 
 function login(req, res, next) {
-    res.json({
-        ...req.user.toJSON(),
-        businessOwner: businessService.getOwnBusiness(req.user),
-    });
+    businessService.getOwnBusiness(req.user)
+        .then((businessId) => res.json({
+            ...req.user.toJSON(),
+            businessOwner: businessId,
+        }))
+        .catch(err => next(err));
 }
 
 /**
@@ -72,7 +74,7 @@ function resetPassword(req, res, next) {
                 if (err) {
                     return next(err);
                 } else {
-                    res.json({ success: true })
+                    res.json({ ...user, success: true })
                 }
             });
         })
@@ -85,10 +87,12 @@ function getCurrent(req, res, next) {
             if (user) {
                 userService.markLastVisit(req.user)
                     .catch(err => console.log("Failed to update 'lastVisit' in #getCurrent", err))
-                res.json({
-                    ...user.toJSON(),
-                    businessOwner: businessService.getOwnBusiness(user),
-                })
+                businessService.getOwnBusiness(user)
+                    .then((businessId) => res.json({
+                        ...user.toJSON(),
+                        businessOwner: businessId,
+                    }))
+                    .catch(err => next(err));
             } else {
                 res.sendStatus(404)
             }

@@ -3,12 +3,6 @@ const { Schema } = mongoose;
 const validator = require('validator');
 
 const productSchema = new Schema({
-    business: {
-        type: mongoose.Types.ObjectId,
-        ref: 'Business',
-        required: true,
-        index: true
-    },
     name: {
         type: String,
         required: true

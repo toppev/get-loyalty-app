@@ -1,4 +1,4 @@
-const router = require('express').Router({ mergeParams: true });
+const router = require('express').Router();
 const productService = require('../../services/productService')
 const permit = require('../../middlewares/permitMiddleware');
 
@@ -14,8 +14,7 @@ router.get('/:productId', permit('product:get'), getById);
 module.exports = router;
 
 function addProduct(req, res, next) {
-    const businessId = req.params.businessId;
-    productService.create(businessId, req.body)
+    productService.create(req.body)
         .then(product => res.json(product))
         .catch(err => next(err));
 }
@@ -42,9 +41,8 @@ function getById(req, res, next) {
 }
 
 function getAll(req, res, next) {
-    const businessId = req.params.businessId;
     const { populate } = req.query;
-    productService.getAllById(businessId, populate !== undefined ? populate : true)
+    productService.getAllById(populate !== undefined ? populate : true)
         .then(products => res.json(products))
         .catch(err => next(err));
 }

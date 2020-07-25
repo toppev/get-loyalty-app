@@ -44,23 +44,22 @@ app.use(parser.json({
     limit: limit,
 }));
 
-const corsOptions = {
-    'http://localhost:3000': {
-        credentials: true
-    },
-    'http://localhost:3002': {
-        credentials: true,
-    },
-    'https://pwa.getloyalty.app': {
-        credentials: true,
-        methods: ['GET', 'HEAD']
-    },
-}
+const frontendOrigin = process.env.FRONTEND_ORIGIN || process.env.PUBLIC_URL;
+const origins = [frontendOrigin, 'https://panel.getloyalty.app', 'http://localhost:3002'];
+console.log(`Allowed origins: ${origins}`);
+
 app.use(cors(function (req, callback) {
-    let options = corsOptions[req.header('Origin')]
-    if (!options) options = { origin: false }
-    else options = { origin: true, ...options }
-    callback(null, options)
+    const origin = req.header('Origin')
+    let options;
+    if (origin && origins.includes(origin)) {
+        options = {
+            origin: true,
+            credentials: true,
+        }
+    } else {
+        options = { origin: false }
+    }
+    callback(null, options);
 }));
 
 require('./src/config/passport');

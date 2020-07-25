@@ -15,7 +15,6 @@ beforeAll(async () => {
 describe('Logged in user with permissions can', () => {
 
     let cookie;
-    let businessId;
     let campaignId;
 
     beforeAll(async () => {
@@ -27,13 +26,13 @@ describe('Logged in user with permissions can', () => {
             .expect(200);
         // Setting the cookie
         cookie = res.headers['set-cookie'];
-        businessId = (await businessService.createBusiness(businessParams, userId)).id;
+        await businessService.createBusiness(businessParams, userId)
     });
 
     it('create campaign', async () => {
         const campaignParam = { name: "Test Campaign" }
         const res = await api
-            .post(`/business/${businessId}/campaign`)
+            .post(`/campaign`)
             .set('Cookie', cookie)
             .send(campaignParam)
             .expect(200);
@@ -44,7 +43,7 @@ describe('Logged in user with permissions can', () => {
     it('update campaign', async () => {
         const newData = { name: "Test Campaign2" }
         const res = await api
-            .patch(`/business/${businessId}/campaign/${campaignId}`)
+            .patch(`/campaign/${campaignId}`)
             .set('Cookie', cookie)
             .send(newData)
             .expect(200);
@@ -54,7 +53,7 @@ describe('Logged in user with permissions can', () => {
 
     it('get campaign', async () => {
         const res = await api
-            .get(`/business/${businessId}/campaign/${campaignId}`)
+            .get(`/campaign/${campaignId}`)
             .set('Cookie', cookie)
             .expect(200);
         expect(res.body._id).toBe(campaignId);
@@ -62,7 +61,7 @@ describe('Logged in user with permissions can', () => {
 
     it('get all', async () => {
         const res = await api
-            .get(`/business/${businessId}/campaign/all`)
+            .get(`/campaign/all`)
             .set('Cookie', cookie)
             .expect(200);
         expect(res.body[0]._id).toBe(campaignId);
@@ -71,7 +70,7 @@ describe('Logged in user with permissions can', () => {
 
     it('delete campaign', async () => {
         await api
-            .delete(`/business/${businessId}/campaign/${campaignId}`)
+            .delete(`/campaign/${campaignId}`)
             .set('Cookie', cookie)
             .expect(200);
     });

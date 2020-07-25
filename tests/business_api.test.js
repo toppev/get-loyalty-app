@@ -1,21 +1,17 @@
 const fs = require('fs');
 const businessService = require('../src/services/businessService');
 const campaignService = require('../src/services/campaignService');
-const Business = require('../src/models/business');
 const User = require('../src/models/user');
 const app = require('../app');
 const api = require('supertest')(app);
 const { initDatabase, closeDatabase, deleteUploadsDirectory } = require('./testUtils');
 
-const otherBusiness = { email: "example@email.com", public: { address: 'this is an address' } };
-let otherBusinessId;
 const userParams = { email: "example@email.com", password: "password123" };
 let userId;
 const testReward = { name: 'Test reward #123151', itemDiscount: 'free' }
 
 beforeAll(async () => {
     await initDatabase('business');
-    otherBusinessId = (await new Business(otherBusiness).save())._id;
 });
 
 describe('Logged in user can', () => {
@@ -35,31 +31,37 @@ describe('Logged in user can', () => {
     });
 
     it('create business', async () => {
-        const secondBusinessParam = { email: 'example2@email.com' }
+        const businessParam = { email: 'example2@email.com' }
         const res = await api
             .post('/business/create')
-            .send(secondBusinessParam)
+            .send(businessParam)
             .set('Cookie', cookie)
             .expect(200);
         business = await businessService.getBusiness(res.body._id);
-        expect(business.email).toBe(secondBusinessParam.email);
+        expect(business.email).toBe(businessParam.email);
         const user = await User.findById(userId);
-        const index = user.customerData.findIndex(_item => _item.business.equals(res.body._id));
-        expect(user.customerData[index].role).toBe('business');
+        expect(user.role).toBe('business');
     });
 
     it('get business public information', async () => {
+        const tempUserCredentials = { email: "example1231@email.com", password: "password123" };
+        await new User(tempUserCredentials).save();
         const res = await api
-            .get(`/business/${otherBusinessId}/public`)
-            .set('Cookie', cookie)
+            .post('/user/login/local')
+            .send(tempUserCredentials);
+        // Setting the cookie
+        let tempCookie = res.headers['set-cookie'];
+        const publicReq = await api
+            .get(`/business/public`)
+            .set('Cookie', tempCookie)
             .expect(200);
-        expect(res.body.email).toBeUndefined();
-        expect(res.body.public.address).toBe(otherBusiness.public.address);
+        expect(publicReq.body.email).toBeUndefined();
+        expect(publicReq.body.public.address).toBe(business.public.address);
     });
 
     it('get business self', async () => {
         const res = await api
-            .get(`/business/${business.id}`)
+            .get(`/business`)
             .set('Cookie', cookie)
             .expect(200);
         expect(res.body.email).toBe(business.email);
@@ -68,7 +70,7 @@ describe('Logged in user can', () => {
     it('patch business self', async () => {
         const newEmail = "example2@email.com"
         const res = await api
-            .patch(`/business/${business.id}`)
+            .patch(`/business`)
             .set('Cookie', cookie)
             .send({ email: newEmail })
             .expect(200);
@@ -77,7 +79,7 @@ describe('Logged in user can', () => {
 
     it('post business user role change', async () => {
         const res = await api
-            .post(`/business/${business.id}/role`)
+            .post(`/business/role`)
             .set('Cookie', cookie)
             .send({ userId: userId, role: 'business' })
             .expect(200);
@@ -85,46 +87,13 @@ describe('Logged in user can', () => {
         expect(res.body.business).toBe(business.id);
     });
 
-    it('post business user role change to admin', async () => {
-        const res = await api
-            .post(`/business/${business.id}/role`)
-            .set('Cookie', cookie)
-            .send({ userId: userId, role: 'admin' })
-            .expect(400);
-    });
-
-    // Should not have permission to edit other businesses
-    it('get business other', async () => {
-        await api
-            .get(`/business/${otherBusinessId}`)
-            .set('Cookie', cookie)
-            .expect(403);
-    });
-
-    it('patch business other', async () => {
-        const newEmail = "example2@email.com"
-        await api
-            .patch(`/business/${otherBusinessId}`)
-            .set('Cookie', cookie)
-            .send({ email: newEmail })
-            .expect(403);
-    });
-
-    it('post business user role change other', async () => {
-        await api
-            .post(`/business/${otherBusinessId}/role`)
-            .set('Cookie', cookie)
-            .send({ userId: userId, role: 'business' })
-            .expect(403);
-    });
-
     it('list rewards', async () => {
-        await campaignService.create(business.id, {
+        await campaignService.create({
             name: 'dasdawdasd',
             endReward: [{ name: 'free stuff', itemDiscount: 'free' }]
         });
         const res = await api
-            .get(`/business/${business.id}/reward/list`)
+            .get(`/business/reward/list`)
             .set('Cookie', cookie)
             .expect(200)
         expect(res.body.length).toBe(1);
@@ -133,22 +102,22 @@ describe('Logged in user can', () => {
 
     it('reward all', async () => {
         const res = await api
-            .post(`/business/${business.id}/reward/all`)
+            .post(`/business/reward/all`)
             .send(testReward)
             .set('Cookie', cookie)
             .expect(200)
-        expect(res.body.rewarded).toBe(1)
+        expect(res.body.rewarded).toBe(2)
         const rewardedUser = await User.findById(userId)
-        expect(rewardedUser.customerData[0].rewards[0].name).toEqual(testReward.name)
+        expect(rewardedUser.customerData.rewards[0].name).toEqual(testReward.name)
     })
 
 
     it('get customers', async () => {
         const res = await api
-            .get(`/business/${business.id}/customers`)
+            .get(`/business/customers`)
             .set('Cookie', cookie)
             .expect(200)
-        expect(res.body.customers.length).toBe(1);
+        expect(res.body.customers.length).toBe(2);
         expect(res.body.customers[0].email).toBe(userParams.email);
         expect(res.body.customers[0].customerData.rewards.length).toBe(1);
         expect(res.body.customers[0].customerData.rewards[0].name).toBe(testReward.name);
@@ -156,7 +125,7 @@ describe('Logged in user can', () => {
 
     it('upload icon', async () => {
         await api
-            .post(`/business/${business.id}/icon`)
+            .post(`/business/icon`)
             .type('multipart/form-data')
             .attach('file', 'testresources/favicon.ico')
             .set('Cookie', cookie)
@@ -165,7 +134,7 @@ describe('Logged in user can', () => {
 
     it('get icon', async () => {
         const res = await api
-            .get(`/business/${business.id}/icon`)
+            .get(`/business/icon`)
             .set('Cookie', cookie)
             .expect(200)
 

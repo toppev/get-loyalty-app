@@ -159,8 +159,12 @@ const businessSchema = new Schema({
         }]
     }
 }, {
+    // Max collection size is 5MB and only one document is allowed
+    capped: true,
+    size: 5242880,
+    max: 1,
     toJSON: { virtuals: true },
-    toObject: { virtuals: true }
+    toObject: { virtuals: true },
 });
 
 businessSchema.virtual("campaigns", {

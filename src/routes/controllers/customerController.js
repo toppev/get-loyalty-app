@@ -23,8 +23,8 @@ module.exports = router;
 
 // PURCHASES
 function newPurchase(req, res, next) {
-    const { businessId, userId } = req.params;
-    customerService.addPurchase(userId, businessId, req.body)
+    const { userId } = req.params;
+    customerService.addPurchase(userId, req.body)
         .then(purchases => res.json({ purchases: purchases }))
         .catch(err => next(err));
 }
@@ -45,8 +45,8 @@ function deletePurchase(req, res, next) {
 
 // Rewards
 function giveReward(req, res, next) {
-    const { businessId, userId } = req.params;
-    customerService.addReward(userId, businessId, req.body)
+    const { userId } = req.params;
+    customerService.addReward(userId, req.body)
         .then(data => res.json({ rewards: data }))
         .catch(err => next(err));
 }
@@ -54,30 +54,30 @@ function giveReward(req, res, next) {
 // Might use later
 // Should this also return basic information of the user
 function updateRewards(req, res, next) {
-    const { businessId, userId } = req.params;
-    customerService.updateRewards(userId, businessId, req.body)
+    const { userId } = req.params;
+    customerService.updateRewards(userId, req.body)
         .then(data => res.json({ rewards: data }))
         .catch(err => next(err));
 }
 
 function revokeReward(req, res, next) {
-    const { rewardId, businessId, userId } = req.params;
-    customerService.deleteReward(userId, businessId, rewardId)
+    const { rewardId, userId } = req.params;
+    customerService.deleteReward(userId, rewardId)
         .then(data => res.json({ rewards: data }))
         .catch(err => next(err));
 }
 
 // Other stuff
 function getCustomerData(req, res, next) {
-    const { businessId, userId } = req.params;
-    customerService.findCustomerData(userId, businessId)
+    const { userId } = req.params;
+    customerService.getCustomerInfo(userId)
         .then(data => res.json({ customerData: data }))
         .catch(err => next(err));
 }
 
 function updateCustomerProperties(req, res, next) {
     const userId = req.params.userId;
-    customerService.updateCustomerProperties(userId, req.params.businessId, req.body)
+    customerService.updateCustomerProperties(userId, req.body)
         .then(properties => res.json(properties))
         .catch(err => next(err));
 }

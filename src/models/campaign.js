@@ -21,11 +21,6 @@ const requirementSchema = new Schema({
 });
 
 const campaignSchema = new Schema({
-    business: {
-        type: mongoose.Types.ObjectId,
-        ref: 'Business',
-        index: true
-    },
     start: {
         type: Date,
         default: Date.now
@@ -86,6 +81,19 @@ campaignSchema.pre('save', async function (next) {
         this.couponCode = this.couponCode.toLowerCase()
     }
     next();
+});
+
+campaignSchema.methods.getCurrentStamps = function (customerData) {
+    const req = this.requirements.some(it => it.type === 'stamps')
+    if (!req) return []
+    const duringCampaign = (date) => date > this.start && (!this.end || date < this.end)
+    return customerData.purchases.filter(purchase => duringCampaign(purchase.createdAt))
+};
+
+campaignSchema.virtual("totalStampsNeeded").get(function () {
+    const req = this.requirements.some(it => it.type === 'stamps')
+    if (!req) return 0
+    return parseInt(req.values[0], 10)
 });
 
 module.exports = mongoose.model('Campaign', campaignSchema);

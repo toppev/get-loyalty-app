@@ -2,6 +2,7 @@ const Business = require('../models/business');
 const User = require('../models/user');
 const uploader = require('../helpers/uploader');
 const fs = require('fs');
+const StatusError = require('../helpers/statusError');
 
 module.exports = {
     getOwnBusiness,
@@ -15,12 +16,17 @@ module.exports = {
 };
 
 /**
- * Get the business the given user owns
+ * Get the business the given user owns.
+ *
  * @param user the user object (with customerData etc)
+ * @return returns id of the first business found (only 1 business)
+ * @deprecated Mainly for legacy stuff only.
  */
-function getOwnBusiness(user) {
-    const customerData = user.customerData.find(cd => cd.role === 'business');
-    return customerData ? customerData.business : null;
+async function getOwnBusiness(user) {
+    if (user.role === 'business') {
+        return (await Business.findOne()).id
+    }
+    return undefined
 }
 
 /**
@@ -29,27 +35,28 @@ function getOwnBusiness(user) {
  * @param {any} userId the owner's _id field. This user will be given 'business' rank
  */
 async function createBusiness(businessParam, userId) {
+    if (await Business.countDocuments() > 0) {
+        throw new StatusError('Business already exists', 403)
+    }
     const business = new Business(businessParam);
     await business.save();
-    await setUserRole(business.id, userId, 'business');
+    await setUserRole(userId, 'business');
     return business;
 }
 
 /**
  * Find a business by its id
- * @param {any} id the business's _id field
  */
-async function getBusiness(id) {
-    return await Business.findById(id);
+async function getBusiness() {
+    return Business.findOne();
 }
 
 /**
  * Update an business. Does not replace the business, instead only updates the given fields.
- * @param {any} id the business's _id field
  * @param {Object} updateParam the object whose fields will be copied to business.
  */
-async function update(id, updateParam) {
-    const business = await Business.findById(id);
+async function update(updateParam) {
+    const business = await Business.findOne();
     Object.assign(business, updateParam);
     return await business.save();
 }
@@ -58,42 +65,33 @@ async function update(id, updateParam) {
  * Set the user's role in this business. Updates customerData of the user and returns an object with role and business's id:
  * @example {role: 'user', business: '5e38360f3afaeaff8581e78a'}
  *
- * @param {any} id the business's _id field
  * @param {any} userId the user's _id field
  * @param {string} role the role as a string
  */
-async function setUserRole(id, userId, role) {
+async function setUserRole(userId, role) {
     const user = await User.findById(userId);
     if (!user) {
         throw new Error(`User ${userId} was not found`);
     }
-    const data = user.customerData;
-    // FIXME replacing == with === will break
-    const index = data.findIndex(_item => _item.business == id || _item.business.equals(id));
-    if (index > -1) {
-        data[index].role = role;
-    } else {
-        data.push({ business: id, role: role });
-    }
+    user.role = role;
     await user.save();
-    const newData = data.find(_item => _item.business == id || _item.business.equals(id));
-    return { role: newData.role, business: newData.business };
+    // For legacy stuff return role and business separately too
+    return { role: user.role, business: (await Business.findOne()).id, customerData: user.customerData };
 }
 
 /**
  * Get the public available information, anything in the business's ´public´ field
- * @param {any} id the business's _id field
  */
-async function getPublicInformation(id) {
-    return await Business.findById(id).select('public');
+async function getPublicInformation() {
+    return await Business.findOne().select('public');
 }
 
-async function getIcon(businessId) {
-    const file = uploader.toPath(`icon_${businessId}.ico`)
+async function getIcon() {
+    const file = uploader.toPath(`icon.ico`)
     return fs.existsSync(file) ? file : undefined;
 }
 
-async function uploadIcon(businessId, icon) {
-    const path = await uploader.upload(`icon_${businessId}.ico`, icon)
+async function uploadIcon(icon) {
+    const path = await uploader.upload(`icon.ico`, icon)
     return { path }
 }

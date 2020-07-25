@@ -1,4 +1,4 @@
-const router = require('express').Router({ mergeParams: true });
+const router = require('express').Router();
 const categoryService = require('../../services/categoryService')
 
 // Doesn't really need validation at the moment, categoryService#create makes sure it's not official category

@@ -12,10 +12,9 @@ module.exports = {
 
 /**
  * Get all products created by this business
- * @param {any} businessId the business's _id field
  */
-async function getAllById(businessId, populate) {
-    const res = Product.find({ business: businessId });
+async function getAllById(populate) {
+    const res = Product.find();
     if (populate) {
         res.populate();
     }
@@ -32,16 +31,14 @@ async function getById(productId) {
 
 /**
  * Create a new product. The business is automatically assigned to the product.
- * @param {*} businessId the business's _id field
  * @param {*} product the product to save
  */
-async function create(businessId, product) {
-    const business = await Business.findById(businessId);
+async function create(product) {
+    const business = await Business.findOne();
     const limit = business.plan.limits.products.total;
-    if (limit !== -1 && await Product.countDocuments({ business: businessId }) >= limit) {
+    if (limit !== -1 && await Product.countDocuments() >= limit) {
         throw new StatusError('Plan limit reached', 402)
     }
-    product.business = businessId;
     return Product.create(product);
 }
 

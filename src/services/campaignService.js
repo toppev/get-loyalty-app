@@ -1,12 +1,11 @@
 const Campaign = require('../models/campaign');
 const Business = require('../models/business');
 const StatusError = require('../helpers/statusError');
-const customerService = require('./customerService');
 const userService = require('./userService');
 const campaignTypes = require('@toppev/loyalty-campaigns');
 
 module.exports = {
-    getAllByBusinessId,
+    getAllCampaigns,
     getOnGoingCampaigns,
     getById,
     create,
@@ -20,11 +19,10 @@ module.exports = {
 
 /**
  * Get all campaigns created by the given business
- * @param {any} businessId the business's _id field
  * @param populate whether to populate products and categories (etc)
  */
-async function getAllByBusinessId(businessId, populate) {
-    const res = Campaign.find({ business: businessId });
+async function getAllCampaigns(populate) {
+    const res = Campaign.find({});
     if (populate) {
         res.populate('products categories');
     }
@@ -34,13 +32,13 @@ async function getAllByBusinessId(businessId, populate) {
 /**
  * Get all campaign rewards from the business's campaigns
  */
-async function getAllRewards(businessId) {
-    const rewards = await Campaign.find({ business: businessId }).select('endReward');
+async function getAllRewards() {
+    const rewards = await Campaign.find({}).select('endReward');
     return [].concat(...rewards.map(it => it.endReward));
 }
 
-async function getOnGoingCampaigns(businessId, populate) {
-    const all = await getAllByBusinessId(businessId, populate);
+async function getOnGoingCampaigns(populate) {
+    const all = await getAllCampaigns(populate);
     return all.filter(isActive);
 }
 
@@ -59,16 +57,14 @@ async function getById(campaignId) {
 
 /**
  * Create a new campaign. The business is automatically assigned to the campaign.
- * @param {any} businessId the business's _id field
  * @param {Object} campaign the campaign to create
  */
-async function create(businessId, campaign) {
-    const business = await Business.findById(businessId);
+async function create(campaign) {
+    const business = await Business.findOne();
     const limit = business.plan.limits.campaigns.total;
-    if (limit !== -1 && await Campaign.countDocuments({ business: businessId }) >= limit) {
+    if (limit !== -1 && await Campaign.countDocuments({}) >= limit) {
         throw new StatusError('Plan limit reached', 402)
     }
-    campaign.business = businessId;
     return Campaign.create(campaign);
 }
 
@@ -78,11 +74,9 @@ async function create(businessId, campaign) {
  * @param {Object} updatedCampaign the object with the values to update
  */
 async function update(campaignId, updatedCampaign) {
-    const campaign = await Campaign.findById(campaignId);
-    const businessId = campaign.business;
-    const business = await Business.findById(businessId);
+    const business = await Business.findOne();
     const limit = business.plan.limits.campaigns.active;
-    if (limit !== -1 && isActive(updatedCampaign) && (await getOnGoingCampaigns(businessId)).length >= limit - 1) {
+    if (limit !== -1 && isActive(updatedCampaign) && (await getOnGoingCampaigns()).length >= limit - 1) {
         throw new StatusError('Plan limit reached', 402)
     }
     // Update and return the new document
@@ -97,10 +91,10 @@ async function deleteCampaign(campaignId) {
     return await Campaign.findByIdAndDelete(campaignId)
 }
 
-async function byCouponCode(businessId, couponCode) {
-    const campaigns = await Campaign.find({ business: businessId, couponCode: couponCode.toLowerCase() });
+async function byCouponCode(couponCode) {
+    const campaigns = await Campaign.find({ couponCode: couponCode.toLowerCase() });
     if (campaigns.length > 1) {
-        console.warn(`Business ${businessId} has multiple campaigns with the code ${couponCode}`)
+        console.warn(`Business has multiple campaigns with the code ${couponCode}`)
     }
     return campaigns[0];
 }
@@ -110,11 +104,10 @@ async function byCouponCode(businessId, couponCode) {
  * Validate that the campaign is active, requirements are met and max rewards haven't been reached.
  *
  * @param userId id of the user
- * @param businessId id of the business
  * @param campaign the campaign object
  * @param answerQuestion see #isEligible
  */
-async function canReceiveCampaignRewards(userId, businessId, campaign, answerQuestion) {
+async function canReceiveCampaignRewards(userId, campaign, answerQuestion) {
     const now = Date.now();
     if (campaign.start > now) {
         throw Error('The campaign has not started yet')
@@ -133,8 +126,8 @@ async function canReceiveCampaignRewards(userId, businessId, campaign, answerQue
             throw new StatusError('You are not (currently) eligible for the reward.', 403)
         }
         if (campaign.maxRewards.user >= 0) {
-            const customerData = await customerService.findCustomerData(user, businessId);
-            const allReceivedRewards = customerData ? customerData.rewards : [];
+            const customerData = user.customerData;
+            const allReceivedRewards = customerData.rewards;
             const receivedCount = allReceivedRewards.filter(reward => reward.campaign && reward.campaign.equals(campaign.id)).length;
             if (receivedCount >= campaign.maxRewards.user) {
                 throw new StatusError('You have already received all rewards', 403)
@@ -152,16 +145,15 @@ async function canReceiveCampaignRewards(userId, businessId, campaign, answerQue
  * @param answerQuestion callback to answer whether the specified requirement question got a truthy answer. The callback gets the type as an argument.
  */
 async function isEligible(user, campaign, answerQuestion) {
-    const { requirements, business } = campaign;
+    const { requirements } = campaign;
     if (requirements.length === 0) {
         return true;
     }
-    const customerData = await customerService.findCustomerData(user, business.id);
     return !requirements.some(req => {
         // Return true if the user is not eligible
         const campaignType = campaignTypes[req.type];
         if (campaignType && campaignType.requirement) {
-            if (!campaignType.requirement({ values: req.values, user, customerData })) {
+            if (!campaignType.requirement({ values: req.values, user, customerData: user.customerData })) {
                 return true;
             }
         }

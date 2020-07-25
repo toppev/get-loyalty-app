@@ -1,7 +1,7 @@
 /** Controller for QR code scans */
 const POLLING_IDENTIFIERS = require('../../services/pollingService').IDENTIFIERS;
 
-const router = require('express').Router({ mergeParams: true });
+const router = require('express').Router();
 const permit = require('../../middlewares/permitMiddleware');
 const scanService = require('../../services/scanService');
 const pollingService = require('../../services/pollingService');
@@ -18,8 +18,8 @@ router.post('/:scan', permit('scan:use'), useScan);
 module.exports = router;
 
 function getScan(req, res, next) {
-    const { businessId, scan } = req.params;
-    scanService.getScan(scan, businessId)
+    const { scan } = req.params;
+    scanService.getScan(scan)
         .then(data => res.json(data))
         .catch(err => {
             next(err);
@@ -29,8 +29,8 @@ function getScan(req, res, next) {
 }
 
 function useScan(req, res, next) {
-    const { businessId, scan } = req.params;
-    scanService.useScan(scan, req.body, businessId)
+    const { scan } = req.params;
+    scanService.useScan(scan, req.body)
         .then(data => res.json(data))
         .catch(err => next(err));
 }
