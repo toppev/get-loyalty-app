@@ -114,7 +114,9 @@ async function createScreenshot(businessId, pageId) {
     try {
         await pageScreenshot.takeScreenshot(pagePath, path);
     } catch (err) {
-        console.log(`Failed to create a screenshot ${err.message}`);
+        if (err) {
+            console.log(`Failed to create a screenshot ${err.message || err}`);
+        }
     }
     return path;
 }

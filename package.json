@@ -27,20 +27,20 @@
     "jsdom": "^16.2.2",
     "jsonwebtoken": "^8.5.1",
     "juice": "^6.0.0",
-    "mongoose": "^5.9.16",
+    "mongoose": "^5.9.25",
     "morgan": "^1.10.0",
-    "nodemailer": "^6.4.6",
+    "nodemailer": "^6.4.10",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
     "request": "^2.88.2",
     "validator": "^13.0.0",
     "web-push": "^3.4.4",
-    "winston": "^3.2.1"
+    "winston": "^3.3.3"
   },
   "devDependencies": {
     "eslint": "^6.8.0",
-    "eslint-plugin-jest": "^23.13.2",
-    "jest": "^26.0.1",
+    "eslint-plugin-jest": "^23.18.0",
+    "jest": "^26.1.0",
     "nodemon": "^2.0.4",
     "supertest": "^4.0.2"
   }
