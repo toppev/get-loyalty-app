@@ -19,7 +19,6 @@ beforeAll(async () => {
 describe('Logged in user with permissions can', () => {
 
     let cookie;
-    let businessId;
 
     beforeAll(async () => {
         // Login
@@ -30,12 +29,12 @@ describe('Logged in user with permissions can', () => {
             .expect(200);
         // Setting the cookie
         cookie = res.headers['set-cookie'];
-        businessId = (await businessService.createBusiness(businessParams, userId)).id;
+        await businessService.createBusiness(businessParams, userId);
     });
 
     it('save page', async () => {
         const res = await api
-            .post(`/business/${businessId}/page`)
+            .post(`/page`)
             .set('Cookie', cookie)
             .send(testPageData)
             .expect(200);
@@ -47,7 +46,7 @@ describe('Logged in user with permissions can', () => {
 
     it('update page', async () => {
         const res = await api
-            .post(`/business/${businessId}/page/${testPageData.id}`)
+            .post(`/page/${testPageData.id}`)
             .set('Cookie', cookie)
             .send(updatedPageData)
             .expect(200);
@@ -55,7 +54,7 @@ describe('Logged in user with permissions can', () => {
 
     it('get page', async () => {
         const res = await api
-            .get(`/business/${businessId}/page/${testPageData.id}`)
+            .get(`/page/${testPageData.id}`)
             .set('Cookie', cookie)
             .expect(200);
         expect(res.body.gjs).toStrictEqual(updatedPageData.gjs);
@@ -64,7 +63,7 @@ describe('Logged in user with permissions can', () => {
 
     it('update page gjs only', async () => {
         const res = await api
-            .post(`/business/${businessId}/page/${testPageData.id}/?gjsOnly=true`)
+            .post(`/page/${testPageData.id}/?gjsOnly=true`)
             .set('Cookie', cookie)
             .send(updatedPageData2.gjs)
             .expect(200);
@@ -72,7 +71,7 @@ describe('Logged in user with permissions can', () => {
 
     it('get page gjs only', async () => {
         const res = await api
-            .get(`/business/${businessId}/page/${testPageData.id}/?gjsOnly=true`)
+            .get(`/page/${testPageData.id}/?gjsOnly=true`)
             .set('Cookie', cookie)
             .expect(200);
         expect(res.body).toStrictEqual(updatedPageData2.gjs);
@@ -80,7 +79,7 @@ describe('Logged in user with permissions can', () => {
 
     it('list pages', async () => {
         const res = await api
-            .get(`/business/${businessId}/page/list`)
+            .get(`/page/list`)
             .set('Cookie', cookie)
             .expect(200);
         expect(res.body[0].gjs).toBeFalsy();
@@ -89,7 +88,7 @@ describe('Logged in user with permissions can', () => {
 
     it('upload page html', async () => {
         const res = await api
-            .post(`/business/${businessId}/page/${testPageData.id}/upload`)
+            .post(`/page/${testPageData.id}/upload`)
             .set('Cookie', cookie)
             .send({ html: '<p>test</p>' })
             .expect(200);
@@ -97,7 +96,7 @@ describe('Logged in user with permissions can', () => {
 
     it('get page html', async () => {
         const res = await api
-            .get(`/business/${businessId}/page/${testPageData.id}/html`)
+            .get(`/page/${testPageData.id}/html`)
             .set('Cookie', cookie)
             .expect(200);
         expect(res.text).toBe('<p>test</p>');
@@ -119,7 +118,7 @@ describe('Logged in user with permissions can', () => {
 
     it('replace page html', async () => {
         const res = await api
-            .post(`/business/${businessId}/page/${testPageData.id}/upload`)
+            .post(`/page/${testPageData.id}/upload`)
             .set('Cookie', cookie)
             .send({ html: htmlPage, css: pageCss })
             .expect(200);
@@ -136,7 +135,7 @@ describe('Logged in user with permissions can', () => {
 
     it('get page html with placeholder', async () => {
         const res = await api
-            .get(`/business/${businessId}/page/${testPageData.id}/html`)
+            .get(`/page/${testPageData.id}/html`)
             .set('Cookie', cookie)
             .expect(200);
         expect(res.text).toBe(expectedPage);

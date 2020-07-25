@@ -30,19 +30,17 @@ router.use('/user', requireLogin.unless({
 
 router.use('/business', requireLogin, business);
 router.use('/category', category)
-// So we can easily validate permissions with one middleware (using businessId param)
-// and admin panel will be easy to implement
-router.use('/business/:businessId/campaign', requireLogin, campaigns);
-router.use('/business/:businessId/product', requireLogin, products);
-router.use('/business/:businessId/page', requireLogin, page);
-router.use('/business/:businessId/customer/:userId', requireLogin, customer);
+router.use('/campaign', requireLogin, campaigns);
+router.use('/product', requireLogin, products);
+router.use('/page', requireLogin, page);
+router.use('/customer/:userId', requireLogin, customer);
 // Coupon codes
-router.use('/business/:businessId/coupon', requireLogin, coupon);
-router.use('/business/:businessId/scan', requireLogin, scan)
-router.use('/business/:businessId/notifications', requireLogin, notifications)
+router.use('/coupon', requireLogin, coupon);
+router.use('/scan', requireLogin, scan)
+router.use('/notifications', requireLogin, notifications)
 
-router.get('/', (req, res) => {
-    res.status(200).json({ message: 'Working!' });
+router.get('/ping', (req, res) => {
+    res.status(200).json({ message: 'Success!' });
 });
 
 module.exports = router;

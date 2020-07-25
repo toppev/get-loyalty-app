@@ -54,9 +54,9 @@ async function validateRewardId(rewardId, customerData) {
 /**
  * Get data from the scan
  */
-async function getScan(scanStr, businessId) {
+async function getScan(scanStr) {
     const { user, userId, rewardId } = await parseScanString(scanStr);
-    const customerData = await customerService.findCustomerData(user, businessId);
+    const customerData = user.customerData;
     const otherData = { customerData };
     const questions = [];
     const reward = await validateRewardId(rewardId, customerData);
@@ -66,10 +66,10 @@ async function getScan(scanStr, businessId) {
         questions.push({ id: 'success', question: `Use reward "${reward.name}"?`, options: ['Yes', 'No'] });
         otherData.reward = reward;
     } else {
-        const currentCampaigns = await campaignService.getOnGoingCampaigns(businessId, true);
+        const currentCampaigns = await campaignService.getOnGoingCampaigns(true);
         // Campaigns the user can (possibly) receive. I.e has not received and the campaign limits haven't been reached
         const campaigns = await asyncFilter(currentCampaigns, campaign => {
-            return campaignService.canReceiveCampaignRewards(userId, businessId, campaign, () => true).catch(err => {
+            return campaignService.canReceiveCampaignRewards(userId, campaign, () => true).catch(err => {
                 if (err.name !== 'StatusError') {
                     throw err;
                 }
@@ -89,7 +89,7 @@ async function getScan(scanStr, businessId) {
         addQuestions(questions, categories, products, requirements);
         questions.push({ question: 'Confirm', options: ['Yes', 'No'] });
     }
-    const business = await businessService.getBusiness(businessId);
+    const business = await businessService.getBusiness();
     pollingService.sendToUser(userId, {
         message: business.config.translations.qrScanned.singular,
         refresh: false,
@@ -126,11 +126,11 @@ function addQuestions(questions, categories, products, requirements) {
     }
 }
 
-async function useScan(scanStr, data, businessId) {
+async function useScan(scanStr, data) {
     const { user, userId, rewardId } = await parseScanString(scanStr);
-    const customerData = await customerService.findCustomerData(user, businessId);
+    const customerData = user.customerData;
     const reward = await validateRewardId(rewardId, customerData);
-    const business = await businessService.getBusiness(businessId);
+    const business = await businessService.getBusiness();
     const translations = business.config.translations;
 
     let responseMessage;
@@ -157,17 +157,17 @@ async function useScan(scanStr, data, businessId) {
         return answer && answer.toLowerCase() === 'yes';
     }
 
-    await customerService.addPurchase(userId, businessId, { products, categories })
+    await customerService.addPurchase(userId, { products, categories })
 
     let newRewards = [];
-    const campaigns = await campaignService.getOnGoingCampaigns(businessId, true)
+    const campaigns = await campaignService.getOnGoingCampaigns(true)
     for (const campaign of campaigns) {
         let eligible;
         // May throw (status)errors, catch them so it won't affect the response status
         try {
             eligible = await campaignService.isEligible(user, campaign, isTruthyAnswer)
             if (eligible) {
-                if (await campaignService.canReceiveCampaignRewards(userId, businessId, campaign, isTruthyAnswer)) {
+                if (await campaignService.canReceiveCampaignRewards(userId, campaign, isTruthyAnswer)) {
                     const rewards = await customerService.addCampaignRewards(user, campaign);
                     newRewards.push(...rewards);
                 }

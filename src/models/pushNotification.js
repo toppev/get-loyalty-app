@@ -2,12 +2,6 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const notificationSchema = new Schema({
-    business: {
-        type: mongoose.Types.ObjectId,
-        ref: 'Business',
-        required: true,
-        index: true
-    },
     title: {
         type: String,
         required: true

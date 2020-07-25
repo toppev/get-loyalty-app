@@ -54,7 +54,7 @@ describe('Not logged in user should', () => {
         const res = await api
             .get('/user/resetPassword/' + token)
             .expect(200);
-        expect(res.body).toEqual({ success: true });
+        expect(res.body.success).toEqual(true);
     });
 
     it('login (local)', async () => {

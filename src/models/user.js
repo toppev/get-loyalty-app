@@ -34,12 +34,11 @@ const userSchema = new Schema({
     password: {
         type: String,
     },
-    // Super user role
-    // e.g site admin
-    // Has permission to modify everything
-    superRole: {
+    role: {
         type: String,
-        enum: [null, 'admin']
+        // enum: Object.keys(role.roles),
+        enum: ['user', 'business'],
+        default: 'user'
     },
     lastVisit: {
         type: Date,
@@ -57,21 +56,7 @@ const userSchema = new Schema({
             type: Object,
         }
     },
-    customerData: [{
-        // no _id field
-        _id: false,
-        // identify by business
-        business: {
-            type: Schema.Types.ObjectId,
-            ref: 'Business'
-        },
-        role: {
-            type: String,
-            // only user or business
-            // enum: Object.keys(role.roles),
-            enum: ['user', 'business'],
-            default: 'user'
-        },
+    customerData: {
         purchases: [purchaseSchema],
         rewards: [rewardSchema],
         usedRewards: [{
@@ -96,10 +81,14 @@ const userSchema = new Schema({
                 default: 0
             }
         }
-    }],
+    }
 }, {
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true }
+    toJSON: {
+        virtuals: true
+    },
+    toObject: {
+        virtuals: true
+    }
 });
 
 userSchema.virtual("hasPassword").get(function () {
@@ -110,26 +99,13 @@ purchaseSchema.methods.populateProducts = function () {
     return this.populate('Product');
 };
 
-userSchema.methods.customerDataByBusiness = async function (business) {
-    const id = business.id || business;
-    return this.customerData.find(data => data.business.equals(id));
-};
-
 /**
  * Check whether user can perform the specified operation.
  */
 userSchema.methods.hasPermission = async function (operation, params) {
     // If superRole is set use it otherwise defaults to 'user'
-    let userRole = this.superRole || 'user';
-    const businessId = params.reqParams.businessId;
-    // and check if they have a greater role in the given business
-    if (userRole == 'user' && businessId) {
-        const data = await this.customerDataByBusiness(businessId);
-        if (data && data.role) {
-            userRole = data.role;
-        }
-    }
-    const result = await role.can(userRole, operation, { businessId, ...params })
+    let userRole = this.role || 'user';
+    const result = await role.can(userRole, operation, params)
         .catch(err => {
             throw err;
         });

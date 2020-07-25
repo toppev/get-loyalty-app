@@ -21,7 +21,7 @@ function validate(filter, bypassPermission = "validation:bypass") {
             reqParams: req.params
         })).then(result => {
             if (result) {
-                next();
+                next()
             } else {
                 filter(req.body)
                 next()
@@ -32,58 +32,42 @@ function validate(filter, bypassPermission = "validation:bypass") {
 
 const userValidator = (user) => {
     delete user._id
-    delete user.superRole
     delete user.lastVisit
     delete user.authentication
     delete user.customerData
-};
+}
 
 const businessValidator = (business) => {
-    delete business._id
     delete business.plan
-};
+}
 
 const businessRoleValidator = (data) => {
     if (data.role !== "user" && data.role !== "business") {
         throw new StatusError(`Forbidden role: "${data.role}"`, 400)
     }
-};
+}
 
 const productValidator = (product) => {
-    delete product._id
-    delete product._id
-};
+}
 
 const rewardValidator = (reward) => {
-    delete reward._id
-};
+}
 
 const campaignValidator = (campaign) => {
-    delete campaign._id
-    delete campaign.business
-
-};
+}
 
 const purchaseValidator = (purchase) => {
-    delete purchase._id
-    // Nothing for now
-};
+}
 
 const customerPropertiesValidator = (customer) => {
-    delete customer._id
-    // Nothing for now
-};
+}
 
 const pushNotificationValidator = (notification) => {
-    delete notification.business
     delete notification.sent
     delete notification.receivers
 }
 
 const pageValidator = (page) => {
-    delete page._id
-    delete page.business
-    delete page.template
 }
 
 module.exports = {
@@ -98,4 +82,4 @@ module.exports = {
     rewardValidator,
     pushNotificationValidator,
     pageValidator
-};
+}

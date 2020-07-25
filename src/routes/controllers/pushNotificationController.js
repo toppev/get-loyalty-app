@@ -12,22 +12,19 @@ router.post('/', permit('notification:send'), notificationValidator, sendNotific
 module.exports = router;
 
 function getNotifications(req, res, next) {
-    const { businessId } = req.params;
-    pushNotificationService.getPushNotificationInfo(businessId)
+    pushNotificationService.getPushNotificationInfo()
         .then(result => res.json(result))
         .catch(err => next(err))
 }
 
 function sendNotifications(req, res, next) {
-    const { businessId } = req.params;
-    pushNotificationService.sendPushNotification(businessId, req.body)
+    pushNotificationService.sendPushNotification(req.body)
         .then(data => res.json({ success: true, ...data }))
         .catch(err => next(err))
 }
 
 function subscribe(req, res, next) {
-    const { businessId } = req.params;
-    pushNotificationService.addSubscription(req.user.id, businessId, req.body)
+    pushNotificationService.addSubscription(req.user.id, req.body)
         .then(() => res.json({ success: true }))
         .catch(err => next(err))
 }

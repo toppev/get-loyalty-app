@@ -13,8 +13,7 @@ router.get('/all', permit('campaign:list'), getAll);
 router.get('/:campaignId', permit('campaign:get'), getById);
 
 function addCampaign(req, res, next) {
-    const businessId = req.params.businessId;
-    campaignService.create(businessId, req.body)
+    campaignService.create(req.body)
         .then(campaign => res.json(campaign))
         .catch(err => next(err));
 }
@@ -41,9 +40,8 @@ function getById(req, res, next) {
 }
 
 function getAll(req, res, next) {
-    const businessId = req.params.businessId;
     const { populate } = req.query;
-    campaignService.getAllByBusinessId(businessId, populate !== undefined ? populate : true)
+    campaignService.getAllCampaigns( populate !== undefined ? populate : true)
         .then(campaigns => res.json(campaigns))
         .catch(err => next(err));
 }

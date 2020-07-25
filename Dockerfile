@@ -1,4 +1,8 @@
 # Production Dockerfile
+#
+# Example usage:
+# docker build . -t loyalty_backend
+# docker run loyalty_backend
 FROM node:12.16-alpine
 
 WORKDIR /usr/src/app

@@ -21,11 +21,6 @@ const requirementSchema = new Schema({
 });
 
 const campaignSchema = new Schema({
-    business: {
-        type: mongoose.Types.ObjectId,
-        ref: 'Business',
-        index: true
-    },
     start: {
         type: Date,
         default: Date.now

@@ -1,18 +1,15 @@
 const User = require('../models/user');
-const StatusError = require('../helpers/statusError');
 
 module.exports = {
     addPurchase,
     updatePurchase,
     deletePurchase,
     getPurchases,
-    businessFromPurchase,
     updateCustomer,
     updateCustomerProperties,
     addReward,
     deleteReward,
     addCampaignRewards,
-    findCustomerData,
     getCustomerInfo,
     updateRewards,
     useReward,
@@ -23,45 +20,25 @@ module.exports = {
 };
 
 /**
- * Find the user's customerData for the given business
- * @param {object|id} the user object or the id of the user
- * @param {id} businessId value of business's `_id` to query by
- */
-async function findCustomerData(user, businessId) {
-    if (!user.customerData) { // Does not exists so it's the user id
-        user = await User.findById(user);
-    }
-    if (!user) {
-        throw new StatusError(`Customer data of ${user._id} was not found`, 404)
-    }
-    const data = user.customerData.find(_item => _item.business.equals(businessId));
-    return data;
-}
-
-/**
  * Get customerData AND other data that is available (e.g email, birthday)
  * @param user the user or the id of the user
- * @param businessId the id of the business
  */
-async function getCustomerInfo(user, businessId) {
+async function getCustomerInfo(user) {
     if (!user.customerData) { // Does not exists, the given param is the user id
         user = await User.findById(user);
     }
-    const customerData = await findCustomerData(user, businessId);
-    const { _id, id, email, lastVisit, birthday, authentication } = user;
-    return { _id, id, customerData, email, lastVisit, birthday, authentication: { service: authentication.service } }
+    const { _id, id, email, customerData, lastVisit, birthday, authentication, role } = user;
+    return { _id, id, customerData, email, role, lastVisit, birthday, authentication: { service: authentication.service } }
 }
 
 /**
  * Update customerData object. Returns the new object.
  * @param {id} userId value of the user's `_id` to query by
- * @param {id} businessId value of business's `_id` to query by
  * @param {Object} updated the updates to perform. Values of this object are copied to current object
  */
-async function updateCustomer(userId, businessId, updated) {
+async function updateCustomer(userId, updated) {
     const user = await User.findById(userId);
-    const obj = await findCustomerData(user, businessId);
-    const data = Object.assign(obj, updated);
+    const data = Object.assign(user.customerData, updated);
     await user.save();
     return data;
 }
@@ -70,66 +47,22 @@ async function updateCustomer(userId, businessId, updated) {
 /**
  * Update customerData's "properties" object. Returns the new properties object.
  * @param {id} userId value of the user's `_id` to query by
- * @param {id} businessId value of business's `_id` to query by
  * @param {Object} updateProperties the updates to perform. Values of this object are copied to current properties.
  */
-async function updateCustomerProperties(userId, businessId, updateProperties) {
-    return await updateCustomer(userId, businessId, { properties: updateProperties })
+async function updateCustomerProperties(userId, updateProperties) {
+    return await updateCustomer(userId, { properties: updateProperties })
 }
 
 /**
  * Add a new purchase. The user's all purchases in the given business.
  * @param {ObjectId|string} userId value of the user's `_id` to query by
- * @param {ObjectId|string} businessId value of business's `_id` to query by
  * @param {object} purchase the new purchase
  */
-async function addPurchase(userId, businessId, purchase) {
+async function addPurchase(userId, purchase) {
     const user = await User.findById(userId);
-    let data = await findCustomerData(user, businessId);
-    if (!data) {
-        user.customerData.push({ business: businessId, purchases: [purchase] });
-    } else {
-        data.purchases.push(purchase);
-    }
+    user.customerData.purchases.push(purchase);
     await user.save();
-    // return only this business's data
-    const newData = await findCustomerData(user, businessId);
-    return newData.purchases;
-}
-
-/**
- * Find the user of the given purchase
- * @param {any} purchaseId value of purchase's `_id` to query by
- */
-async function userByPurchaseId(purchaseId) {
-    const result = await User.findOne({ "customerData.purchases._id": purchaseId });
-    return result;
-}
-
-/**
- * Find the business of the given purchase
- * @param {id} purchaseId value of purchase's `_id` to query by
- */
-async function businessFromPurchase(purchaseId) {
-    const user = await userByPurchaseId(purchaseId);
-    if (!user) {
-        return null;
-    }
-    return findCustomerDataFromPurchase(user, purchaseId).business;
-}
-
-/**
- * Finds one element from customerData that contains the given purchaseId
- * @param {object} user the user who owns the purchase
- * @param {id} purchaseId value of purchase's `_id` to query by
- */
-async function findCustomerDataFromPurchase(user, purchaseId) {
-    for (let i in user.customerData) {
-        const data = user.customerData[i];
-        if (data.purchases && data.purchases.findIndex(_p => _p._id.equals(purchaseId)) > -1) {
-            return data;
-        }
-    }
+    return user.customerData.purchases;
 }
 
 /**
@@ -145,7 +78,7 @@ async function updatePurchase(userId, purchaseId, purchase) {
     if (!user) {
         throw Error('User not found');
     }
-    const customerData = await findCustomerDataFromPurchase(user, purchaseId);
+    const customerData = user.customerData;
     const newPurchases = customerData.purchases.map(obj => obj._id.equals(purchaseId) ? Object.assign(obj, purchase) : obj);
     if (newPurchases.length !== customerData.purchases.length) {
         user.customerData.purchases = newPurchases;
@@ -166,7 +99,7 @@ async function deletePurchase(userId, purchaseId) {
     if (!user) {
         throw Error('User not found');
     }
-    const customerData = await findCustomerDataFromPurchase(user, purchaseId);
+    const customerData = user.customerData;
     const newPurchases = customerData.purchases.filter(purchase => purchase.id.toString() !== purchaseId);
     if (newPurchases.length !== customerData.purchases.length) {
         customerData.purchases = newPurchases;
@@ -182,26 +115,20 @@ async function deletePurchase(userId, purchaseId) {
  */
 async function getPurchases(id, business) {
     const user = await User.findById(id);
-    return user.customerDataByBusiness(business).purchases;
+    return user.customerData.purchases;
 }
 
 /**
  * Add a new reward
  * @param userParam the id of the user or the user object, user to receive the reward
- * @param businessId the business giving the reward
  * @param reward the reward to give
  * @param save whether to save the user. Defaults to true
  * @returns {Promise<[*]>} all customer rewards (including the new one)
  */
-async function addReward(userParam, businessId, reward, save) {
+async function addReward(userParam, reward, save) {
     // For some reason userParam.id is always truthy even if userParam is the id???
     const user = userParam.save ? userParam : await User.findById(userParam);
-    let data = await findCustomerData(user, businessId);
-
-    if (!data) {
-        // create customer data for this business
-        user.customerData.push(data = { business: businessId, rewards: [], properties: { points: 0 } });
-    }
+    let data = user.customerData;
     if (reward.customerPoints) {
         data.properties.points += reward.customerPoints
     }
@@ -221,12 +148,11 @@ async function useReward(user, customerData, reward) {
 /**
  * A method to replace all rewards.
  * @param userId the id of the user
- * @param businessId the id of the business
  * @param newRewards the new rewards to save
  */
-async function updateRewards(userId, businessId, newRewards) {
+async function updateRewards(userId, newRewards) {
     const user = await User.findById(userId);
-    const customerData = await findCustomerData(user, businessId);
+    const customerData = user.customerData;
     customerData.rewards = newRewards;
     await user.save();
     return newRewards;
@@ -235,12 +161,11 @@ async function updateRewards(userId, businessId, newRewards) {
 /**
  * Remove the reward (if given by the specified business) from the user's customer data
  * @param userId the user
- * @param businessId the business
  * @param rewardId the reward to remove
  */
-async function deleteReward(userId, businessId, rewardId) {
+async function deleteReward(userId, rewardId) {
     const user = await User.findById(userId);
-    const customerData = await findCustomerData(user, businessId);
+    const customerData = user.customerData;
     const newRewards = customerData.rewards.filter(reward => reward.id.toString() !== rewardId);
     if (newRewards.length !== customerData.rewards.length) {
         customerData.rewards = newRewards;
@@ -262,7 +187,7 @@ async function addCampaignRewards(user, campaign) {
     if (campaign.endReward && campaign.endReward.length) {
         for (const reward of campaign.endReward) {
             reward.campaign = campaign.id;
-            await addReward(user, campaign.business, reward, false);
+            await addReward(user, reward, false);
         }
         campaign.rewardedCount++;
         await campaign.save();
@@ -270,32 +195,31 @@ async function addCampaignRewards(user, campaign) {
     return campaign.endReward
 }
 
-function _listCustomers(businessId) {
-    return User.find({ "customerData.business": businessId })
+function _listCustomers() {
+    return User.find()
 }
 
-async function rewardAllCustomers(businessId, reward) {
-    const customers = await _listCustomers(businessId);
-    await Promise.all(customers.map(it => addReward(it, businessId, reward)));
+async function rewardAllCustomers(reward) {
+    const customers = await _listCustomers();
+    await Promise.all(customers.map(it => addReward(it, reward)));
     return { rewarded: customers.length }
 }
 
 /**
  * List customers of the business
- * @param businessId the id of the business
  * @param limit maximum number of customers to return, defaults to 100 first if "search" is not specified,
  * otherwise500. 0 for unlimited
  * @param search the string to search, if no limit is given, only the first 500 will be searched
  */
-async function searchCustomers(businessId, limit, search) {
+async function searchCustomers(limit, search) {
     // If searching, get first 500 customers and filter, otherwise return first 100
     // might fix later
     // FIXME: could be a lot better
-    let users = await _listCustomers(businessId).limit(limit !== undefined ? limit : search ? 500 : 100);
+    let users = await _listCustomers().limit(limit !== undefined ? limit : search ? 500 : 100);
     if (search && search.trim().length) {
         users = users.filter(u => JSON.stringify(u).toLowerCase().includes(search));
     }
-    return Promise.all(users.map(u => getCustomerInfo(u, businessId)));
+    return Promise.all(users.map(u => getCustomerInfo(u)));
 }
 
 /**
@@ -306,7 +230,7 @@ async function searchCustomers(businessId, limit, search) {
  * @return {currentLevel, points, newRewards} currentLevel may be undefined
  */
 async function updateCustomerLevel(user, business) {
-    const customerData = await findCustomerData(user, business.id)
+    const customerData = user.customerData;
     const points = customerData.properties.points
     const levels = business.public.customerLevels
     const currentLevel = getCurrentLevel(levels, points)
@@ -319,7 +243,7 @@ async function updateCustomerLevel(user, business) {
     if (currentLevel) {
         for (const reward of currentLevel.rewards) {
             if (!hasReceived(reward)) {
-                await addReward(user, business, reward, false)
+                await addReward(user, reward, false)
                 newRewards.push(reward)
             }
         }

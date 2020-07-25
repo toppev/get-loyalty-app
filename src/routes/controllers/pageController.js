@@ -28,7 +28,7 @@ router.post('/', permit('page:create'), pageValidator, createPage);
 module.exports = router;
 
 function createPage(req, res, next) {
-    pageService.createPage(req.params.businessId, req.body)
+    pageService.createPage(req.body)
         .then((data) => res.json(data))
         .catch(err => next(err));
 }
@@ -51,13 +51,13 @@ function loadPage(req, res, next) {
 }
 
 function listPages(req, res, next) {
-    pageService.getBusinessPages(req.params.businessId)
+    pageService.getBusinessPages()
         .then(data => data ? res.json(data) : res.sendStatus(404))
         .catch(err => next(err));
 }
 
 function listPublicPages(req, res, next) {
-    pageService.getPublicPage(req.params.businessId)
+    pageService.getPublicPage()
         .then(data => res.json(data))
         .catch(err => next(err));
 }
@@ -84,9 +84,9 @@ function getThumbnail(req, res, next) {
 
 async function getHtml(req, res, next) {
     try {
-        const { pageId, businessId } = req.params;
+        const { pageId } = req.params;
         const user = req.user;
-        const html = await pageService.renderPageView(pageId, businessId, user);
+        const html = await pageService.renderPageView(pageId, user);
         res.send(html);
         next();
     } catch (error) {

@@ -9,18 +9,18 @@ const businessValidator = validation.validate(validation.businessValidator);
 
 // Get the business who owns the current site
 router.post('/create', businessValidator, createBusiness);
-router.get('/:businessId/public', getPublicInformation);
+router.get('/public', getPublicInformation);
 
-router.get('/:businessId/icon', getIcon);
-router.post('/:businessId/icon', permit('business:update'), uploadIcon);
+router.get('/icon', getIcon);
+router.post('/icon', permit('business:update'), uploadIcon);
 
-router.get('/:businessId', permit('business:get'), getBusiness);
-router.patch('/:businessId', permit('business:update'), businessValidator, updateBusiness);
-router.post('/:businessId/role', permit('business:role'), validation.validate(validation.businessRoleValidator), setUserRole);
+router.get('/', permit('business:get'), getBusiness);
+router.patch('/', permit('business:update'), businessValidator, updateBusiness);
+router.post('/role', permit('business:role'), validation.validate(validation.businessRoleValidator), setUserRole);
 
-router.get('/:businessId/customers', permit('customer:list'), listCustomers);
-router.get('/:businessId/reward/list', permit('reward:list'), listRewards);
-router.post('/:businessId/reward/all', permit('reward:customers'), rewardCustomers);
+router.get('/customers', permit('customer:list'), listCustomers);
+router.get('/reward/list', permit('reward:list'), listRewards);
+router.post('/reward/all', permit('reward:customers'), rewardCustomers);
 
 module.exports = router;
 
@@ -31,44 +31,38 @@ function createBusiness(req, res, next) {
 }
 
 function getBusiness(req, res, next) {
-    const id = req.params.businessId;
-    businessService.getBusiness(id)
+    businessService.getBusiness()
         .then(business => business ? res.json(business) : res.status(404).json({ message: 'business not found' }))
         .catch(err => next(err));
 }
 
 function updateBusiness(req, res, next) {
-    const id = req.params.businessId
-    businessService.update(id, req.body)
+    businessService.update(req.body)
         .then(business => res.json(business))
         .catch(err => next(err));
 }
 
 function setUserRole(req, res, next) {
-    const id = req.params.businessId;
     const { userId, role } = req.body;
-    businessService.setUserRole(id, userId, role)
+    businessService.setUserRole(userId, role)
         .then(data => res.json(data))
         .catch(err => next(err));
 }
 
 function getPublicInformation(req, res, next) {
-    const id = req.params.businessId;
-    businessService.getPublicInformation(id)
+    businessService.getPublicInformation()
         .then(data => res.json(data))
         .catch(err => next(err));
 }
 
 function getIcon(req, res, next) {
-    const { businessId } = req.params;
-    businessService.getIcon(businessId)
+    businessService.getIcon()
         .then(file => file ? res.sendFile(file) : res.sendStatus(404))
         .catch(err => next(err));
 }
 
 function uploadIcon(req, res, next) {
-    const { businessId } = req.params;
-    const fileSizeLimit = 16;
+    const fileSizeLimit = 32; // KB
     const busboy = new Busboy({ headers: req.headers, limits: { fileSize: (1024 * fileSizeLimit) } });
     busboy.on('file', function (fieldName, file, filename, encoding, mimetype) {
         // TODO: validate type etc?
@@ -76,7 +70,7 @@ function uploadIcon(req, res, next) {
             res.status(400).json({ message: `Max file size: ${fileSizeLimit}KB` });
         });
         file.on('data', function (data) {
-            businessService.uploadIcon(businessId, data)
+            businessService.uploadIcon(data)
                 .then(() => res.json({ success: true }))
                 .catch(err => next(err));
         });
@@ -85,24 +79,21 @@ function uploadIcon(req, res, next) {
 }
 
 function listCustomers(req, res, next) {
-    const { businessId } = req.params;
     const limit = req.query.limit || 50;
     const searchStr = req.query.search;
-    customerService.searchCustomers(businessId, limit, searchStr)
+    customerService.searchCustomers(limit, searchStr)
         .then(data => res.json({ customers: data }))
         .catch(err => next(err));
 }
 
 function listRewards(req, res, next) {
-    const { businessId } = req.params;
-    campaignService.getAllRewards(businessId)
+    campaignService.getAllRewards()
         .then(rewards => res.json(rewards))
         .catch(err => next(err))
 }
 
 function rewardCustomers(req, res, next) {
-    const { businessId } = req.params;
-    customerService.rewardAllCustomers(businessId, req.body)
+    customerService.rewardAllCustomers(req.body)
         .then(data => res.json(data))
         .catch(err => next(err))
 }

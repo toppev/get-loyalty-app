@@ -11,9 +11,9 @@ module.exports = {
     getPushNotificationInfo
 }
 
-async function addSubscription(userId, businessId, data) {
+async function addSubscription(userId, data) {
     const { endpoint, keys } = data;
-    await customerService.updateCustomer(userId, businessId, {
+    await customerService.updateCustomer(userId, {
         pushNotifications: {
             endpoint: endpoint,
             auth: keys.auth,
@@ -25,26 +25,25 @@ async function addSubscription(userId, businessId, data) {
 /**
  * Get notification history, when the cooldown expires and possibly more information
  */
-async function getPushNotificationInfo(businessId) {
-    const business = await Business.findById(businessId);
-    const notifications = await getPushNotificationHistory(business);
-    const cooldownExpires = await getCooldownExpiration(business, notifications);
+async function getPushNotificationInfo() {
+    const notifications = await getPushNotificationHistory();
+    const cooldownExpires = await getCooldownExpiration(notifications);
     return {
         notifications,
         cooldownExpires
     }
 }
 
-async function getPushNotificationHistory(businessId) {
-    return await PushNotification.find({ business: businessId });
+async function getPushNotificationHistory() {
+    return await PushNotification.find({});
 }
 
 /**
  * Returns date when the cooldown expires or undefined if not on cooldown
- * @param business the business
  * @param notifications the notifications, "sent" field is required for sorting
  */
-async function getCooldownExpiration(business, notifications) {
+async function getCooldownExpiration(notifications) {
+    const business = await Business.findOne();
     const cooldownMs = business.plan.limits.pushNotifications.cooldownMinutes * 60 * 1000;
     if (!notifications.length || cooldownMs <= 0) {
         return
@@ -57,29 +56,29 @@ async function getCooldownExpiration(business, notifications) {
     }
 }
 
-async function sendPushNotification(businessId, notificationParam) {
-    const business = await Business.findById(businessId);
+async function sendPushNotification(notificationParam) {
+    const business = await Business.findOne();
     const limit = business.plan.limits.pushNotifications.total;
-    const notifications = await getPushNotificationHistory(businessId)
+    const notifications = await getPushNotificationHistory()
     if (limit !== -1 && notifications >= limit) {
         throw new StatusError('Plan limit reached', 402)
     }
-    const expires = await getCooldownExpiration(business, notifications);
+    const expires = await getCooldownExpiration(notifications);
     if (expires) {
         throw new StatusError(`You're still on cooldown. You can send next push notification ${expires.toUTCString()}`, 400);
     }
-    let users = await customerService.searchCustomers(businessId, 0)
+    let users = await customerService.searchCustomers( 0)
     users = users.filter(u => {
         const pn = u.customerData.pushNotifications
         return pn && pn.endpoint // good enough
     })
     const { title, message: body, link } = notificationParam;
     // TODO: placeholders?
-    const iconURL = `${process.env.PUBLIC_URL}/business/${businessId}/icon`
+    const iconURL = `${process.env.PUBLIC_URL}/business/icon`
     const payloadString = JSON.stringify({
         title: title,
         body: body,
-        tag: `loyalty-${businessId}`,
+        tag: `loyalty-${business.id}`,
         icon: iconURL,
         badge: iconURL,
         data: {
@@ -89,9 +88,8 @@ async function sendPushNotification(businessId, notificationParam) {
     // FIXME: might not want to await sendNotifications as it may take some time and instead return before it
     const result = await webpushService.sendNotification(users.map(u => u.customerData.pushNotifications), payloadString);
     const newNotification = new PushNotification({ ...notificationParam, receivers: users.length });
-    newNotification.business = businessId;
     await newNotification.save();
-    const newCooldown = await getCooldownExpiration(business, [newNotification]);
+    const newCooldown = await getCooldownExpiration([newNotification]);
     return {
         cooldownExpires: newCooldown,
         result: result,
