@@ -18,10 +18,10 @@ import AddIcon from '@material-ui/icons/Add';
 import PasswordResetRequestDialog from "./PasswordResetRequestDialog";
 import AppContext from "../../context/AppContext";
 import { loginRequest, onLoginOrAccountCreate, registerRequest } from '../../services/authenticationService';
-import { isEmail } from "../../util/Validate";
 import usePasswordReset from "./usePasswordReset";
 import { getOrCreateServer, waitForServer } from "../../services/serverService";
 import { AxiosResponse } from 'axios';
+import { isEmail } from "../../util/Validate";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -52,6 +52,13 @@ const useStyles = makeStyles((theme: Theme) =>
         submitButton: {
             margin: '15px 10px'
         },
+        forgotPasswordDiv: {
+            width: '100%',
+            textAlign: 'end'
+        },
+        forgotPasswordButton: {
+            left: '38px'
+        }
     }));
 
 interface FormValues {
@@ -60,7 +67,7 @@ interface FormValues {
 }
 
 interface LoginFormProps {
-    getCaptchaToken: () => string
+    getCaptchaToken: () => Promise<string>
 }
 
 const initialValues = { email: "", password: "" }
@@ -90,8 +97,8 @@ export default function LoginForm({ getCaptchaToken }: LoginFormProps) {
     // if passwordReset is in the url (search params) this will try to reset the password (will automatically login)
     usePasswordReset(onSuccess) // TODO: use the error callback?
 
-    const loginAccount = (values: FormValues, { setSubmitting, setErrors }: any) => {
-        loginRequest({ ...values, token: getCaptchaToken() })
+    const loginAccount = async (values: FormValues, { setSubmitting, setErrors }: any) => {
+        loginRequest({ ...values, token: await getCaptchaToken() })
             .then(onSuccess)
             .catch(err => {
                 if (err.response) {
@@ -106,8 +113,8 @@ export default function LoginForm({ getCaptchaToken }: LoginFormProps) {
             });
     }
 
-    const createAccount = (values: typeof initialValues, { setSubmitting, setErrors }: any) => {
-        registerRequest({ token: getCaptchaToken() })
+    const createAccount = async (values: typeof initialValues, { setSubmitting, setErrors }: any) => {
+        registerRequest({ token: await getCaptchaToken() })
             .then(onSuccess)
             .catch(err => {
                 console.log("Error creating an account: " + err);
@@ -123,6 +130,14 @@ export default function LoginForm({ getCaptchaToken }: LoginFormProps) {
         getOrCreateServer(values.email, creatingAccount)
             .then(() => {
                 setMessage(creatingAccount ? "Creating a new server..." : "Waiting for the server...")
+                waitForServer(() => {
+                    setMessage("Logging in...")
+                    if (creatingAccount) {
+                        createAccount(values, actions).then()
+                    } else {
+                        loginAccount(values, actions).then()
+                    }
+                })
             })
             .catch((e) => {
                 actions.setSubmitting(false)
@@ -132,15 +147,6 @@ export default function LoginForm({ getCaptchaToken }: LoginFormProps) {
                     setMessage(e?.response?.data?.message || e.toString())
                 }
             })
-
-        waitForServer(() => {
-            setMessage("Logging in...")
-            if (creatingAccount) {
-                createAccount(values, actions)
-            } else {
-                loginAccount(values, actions)
-            }
-        })
     }
 
     const validate = (values: FormValues) => {
@@ -167,8 +173,8 @@ export default function LoginForm({ getCaptchaToken }: LoginFormProps) {
                 <Avatar className={classes.avatar}>
                     <LockOutlinedIcon/>
                 </Avatar>
-                <Typography className={classes.title} variant="h6" color="primary">Login or create an
-                    account</Typography>
+                <Typography className={classes.title} align="center" variant="h6" color="primary"
+                >Login or create an account</Typography>
                 <Formik
                     initialValues={initialValues}
                     onSubmit={onFormSubmit}
@@ -180,16 +186,22 @@ export default function LoginForm({ getCaptchaToken }: LoginFormProps) {
                             <>
                                 <form className={classes.form} onSubmit={handleSubmit}>
                                     <TextField
+                                        autoFocus
                                         className={classes.field}
                                         name="email"
                                         type="email"
+                                        autoComplete="email"
+                                        label="Email address"
                                         placeholder="example@email.com"
+                                        required
                                     />
                                     <TextField
                                         className={classes.field}
                                         name="password"
                                         type="password"
-                                        placeholder="Password"
+                                        label="Password"
+                                        autoComplete="password"
+                                        required
                                     />
 
                                     <Typography variant="h6" align="center">{message}</Typography>
@@ -222,10 +234,16 @@ export default function LoginForm({ getCaptchaToken }: LoginFormProps) {
                                     </div>
 
                                 </form>
-                                <Button
-                                    disabled={isSubmitting}
-                                    onClick={() => setPasswordResetOpen(true)}
-                                >Forgot password?</Button>
+                                <div
+                                    className={classes.forgotPasswordDiv}>
+                                    <Button
+                                        className={classes.forgotPasswordButton}
+                                        color="primary"
+                                        size="small"
+                                        disabled={isSubmitting}
+                                        onClick={() => setPasswordResetOpen(true)}
+                                    >Forgot password?</Button>
+                                </div>
                             </>
                         )
                     }}

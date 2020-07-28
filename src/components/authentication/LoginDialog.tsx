@@ -12,9 +12,9 @@ export default function LoginDialog({ open }: LoginDialogProps) {
 
     const recaptchaRef: React.RefObject<ReCAPTCHA> = React.createRef();
 
-    const getCaptchaToken = (): string => {
+    const getCaptchaToken = async (): Promise<string> => {
         // @ts-ignore
-        return recaptchaRef.current?.execute()
+        return recaptchaRef.current.executeAsync()
     }
 
     return open ? (
