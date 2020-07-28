@@ -208,12 +208,14 @@ function ResetPassword({ user, title, highlight }: ResetPasswordProps) {
                                 name="password"
                                 type="password"
                                 label="New Password"
+                                required
                             />
                             <TextField
                                 className={classes.field}
                                 name="repeatPassword"
                                 type="password"
                                 label="Repeat Password"
+                                required
                             />
                             <Button
                                 className={classes.passwordBtn}
