@@ -11,7 +11,7 @@ import {
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { Formik, FormikErrors, FormikHelpers } from 'formik';
 import { TextField } from 'formik-material-ui';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import AddIcon from '@material-ui/icons/Add';
@@ -78,15 +78,12 @@ export default function LoginForm({}: LoginFormProps) {
     const classes = useStyles();
     const context = useContext(AppContext);
 
-    const recaptchaRef: React.RefObject<ReCAPTCHA> = React.createRef();
+    const recaptchaRef = useRef(null);
 
-    const getCaptchaToken = async (): Promise<string> => {
-        // @ts-ignore
-        return recaptchaRef.current.executeAsync()
-    }
+    // @ts-ignore
+    const getCaptchaToken = (): Promise<string> => recaptchaRef.current.executeAsync()
 
     const [passwordResetOpen, setPasswordResetOpen] = useState(false);
-
     const [email, setEmail] = useState(initialValues.email);
     // Whether we are logging or creating a new account
     // Not really clean solution but does the job
@@ -135,12 +132,12 @@ export default function LoginForm({}: LoginFormProps) {
     }
 
     const onFormSubmit = (values: FormValues, actions: FormikHelpers<FormValues>) => {
-        getOrCreateServer(values.email, creatingAccount)
-            .then(() => {
-                setMessage(creatingAccount ? "Creating a new server..." : "Waiting for the server...")
-                waitForServer(() => {
-                    setMessage("Verifying...")
-                    getCaptchaToken().then(token => {
+        setMessage("Verifying...")
+        getCaptchaToken().then(token => {
+            getOrCreateServer(values.email, creatingAccount)
+                .then(() => {
+                    setMessage(creatingAccount ? "Creating a new server..." : "Waiting for the server...")
+                    waitForServer(() => {
                         setMessage("Logging in...")
                         values.token = token
                         if (creatingAccount) {
@@ -150,15 +147,15 @@ export default function LoginForm({}: LoginFormProps) {
                         }
                     })
                 })
-            })
-            .catch((e) => {
-                actions.setSubmitting(false)
-                if (e.response?.status === 404) {
-                    setMessage('No servers available. Please try again later.')
-                } else {
-                    setMessage(e?.response?.data?.message || e.toString())
-                }
-            })
+                .catch((e) => {
+                    actions.setSubmitting(false)
+                    if (e.response?.status === 404) {
+                        setMessage('No servers available. Please try again later.')
+                    } else {
+                        setMessage(e?.response?.data?.message || e.toString())
+                    }
+                })
+        })
     }
 
     const validate = (values: FormValues) => {

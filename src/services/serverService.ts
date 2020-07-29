@@ -29,7 +29,7 @@ function waitForServer(callback: () => any) {
         }, 1000)
     }
 
-    setTimeout(sendRequest, 10 * 1000)
+    setTimeout(sendRequest, 200)
 
 }
 
