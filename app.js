@@ -67,10 +67,9 @@ app.use(require('./src/config/sessionConfig'));
 app.use(passport.initialize());
 app.use(passport.session());
 if (!isTesting) {
-    // CSRF middlewares
     app.use(csurf());
     app.use(function (req, res, next) {
-        res.cookie('XSRF-TOKEN', req.csrfToken());
+        res.cookie('XSRF-TOKEN', req.csrfToken(), { domain: 'getloyalty.app' });
         next()
     });
     app.use(function (err, req, res, next) {
