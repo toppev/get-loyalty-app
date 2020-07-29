@@ -10,7 +10,7 @@ function verifyCAPTCHA(req, res, next) {
     const url = `https://www.google.com/recaptcha/api/siteverify?secret=${secret}&response=${token}`;
 
     request.post({ url }, function (error, response, body) {
-        if (body.success) {
+        if (JSON.parse(body).success === true) {
             next()
         } else {
             throw new StatusError('Invalid CAPTCHA token', 400)
