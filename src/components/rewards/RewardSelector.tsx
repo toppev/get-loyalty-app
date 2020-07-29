@@ -112,7 +112,7 @@ export default function (props: RewardSelectorProps) {
                         />
                     )}
 
-                    {filteredRewards.length == 0 && <p className={classes.noRewards}>No rewards found</p>}
+                    {filteredRewards.length === 0 && <p className={classes.noRewards}>No rewards found</p>}
 
                     <RewardFormDialog
                         open={formOpen || !!editingReward}

@@ -22,6 +22,7 @@ import usePasswordReset from "./usePasswordReset";
 import { getOrCreateServer, waitForServer } from "../../services/serverService";
 import { AxiosResponse } from 'axios';
 import { isEmail } from "../../util/Validate";
+import ReCAPTCHA from 'react-google-recaptcha';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -64,18 +65,25 @@ const useStyles = makeStyles((theme: Theme) =>
 interface FormValues {
     email: string,
     password: string
+    token: string
 }
 
 interface LoginFormProps {
-    getCaptchaToken: () => Promise<string>
 }
 
-const initialValues = { email: "", password: "" }
+const initialValues: FormValues = { email: "", password: "", token: "" }
 
-export default function LoginForm({ getCaptchaToken }: LoginFormProps) {
+export default function LoginForm({}: LoginFormProps) {
 
     const classes = useStyles();
     const context = useContext(AppContext);
+
+    const recaptchaRef: React.RefObject<ReCAPTCHA> = React.createRef();
+
+    const getCaptchaToken = async (): Promise<string> => {
+        // @ts-ignore
+        return recaptchaRef.current.executeAsync()
+    }
 
     const [passwordResetOpen, setPasswordResetOpen] = useState(false);
 
@@ -98,7 +106,7 @@ export default function LoginForm({ getCaptchaToken }: LoginFormProps) {
     usePasswordReset(onSuccess) // TODO: use the error callback?
 
     const loginAccount = async (values: FormValues, { setSubmitting, setErrors }: any) => {
-        loginRequest({ ...values, token: await getCaptchaToken() })
+        loginRequest(values)
             .then(onSuccess)
             .catch(err => {
                 if (err.response) {
@@ -113,8 +121,8 @@ export default function LoginForm({ getCaptchaToken }: LoginFormProps) {
             });
     }
 
-    const createAccount = async (values: typeof initialValues, { setSubmitting, setErrors }: any) => {
-        registerRequest({ token: await getCaptchaToken() })
+    const createAccount = async (values: FormValues, { setSubmitting, setErrors }: any) => {
+        registerRequest(values)
             .then(onSuccess)
             .catch(err => {
                 console.log("Error creating an account: " + err);
@@ -131,12 +139,16 @@ export default function LoginForm({ getCaptchaToken }: LoginFormProps) {
             .then(() => {
                 setMessage(creatingAccount ? "Creating a new server..." : "Waiting for the server...")
                 waitForServer(() => {
-                    setMessage("Logging in...")
-                    if (creatingAccount) {
-                        createAccount(values, actions).then()
-                    } else {
-                        loginAccount(values, actions).then()
-                    }
+                    setMessage("Verifying...")
+                    getCaptchaToken().then(token => {
+                        setMessage("Logging in...")
+                        values.token = token
+                        if (creatingAccount) {
+                            createAccount(values, actions).then()
+                        } else {
+                            loginAccount(values, actions).then()
+                        }
+                    })
                 })
             })
             .catch((e) => {
@@ -233,6 +245,11 @@ export default function LoginForm({ getCaptchaToken }: LoginFormProps) {
                                         >Register</Button>
                                     </div>
 
+                                    <ReCAPTCHA
+                                        ref={recaptchaRef}
+                                        size="invisible"
+                                        sitekey={process.env.REACT_APP_CAPTCHA_SITE_KEY!!}
+                                    />
                                 </form>
                                 <div
                                     className={classes.forgotPasswordDiv}>
