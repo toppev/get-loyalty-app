@@ -6,7 +6,7 @@ import { post } from "../config/axios";
  */
 export function startSubscribeTask() {
     let settingValue = process.env.REACT_APP_ASK_NOTIFICATIONS
-    const time = parseInt(settingValue[0], 10);
+    const time = parseInt(settingValue, 10);
     if (!Number.isNaN(time)) {
         setTimeout(subscribeUser, time * 1000)
     } else {
