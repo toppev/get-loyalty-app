@@ -1,14 +1,19 @@
-import { deleteRequest, post } from "../config/axios";
 import { Notification } from "../components/notification/PopupNotification";
 import { useContext, useState } from "react";
 import { AppContext } from "../AppContext";
 
 function subscribeMessage(userId: string, identifier: string) {
-    return post(`${process.env.REACT_APP_POLLING_API_URL}/${identifier}_${userId}`, {}, true)
+    return fetch(`${process.env.REACT_APP_POLLING_API_URL}/${identifier}_${userId}`, {
+        "body": "{}",
+        "method": "POST",
+    });
 }
 
 function unsubscribeMessage(userId: string, identifier: string) {
-    return deleteRequest(`${process.env.REACT_APP_POLLING_API_URL}/${identifier}_${userId}`, true)
+    return fetch(`${process.env.REACT_APP_POLLING_API_URL}/${identifier}_${userId}`, {
+        "body": "{}",
+        "method": "DELETE",
+    });
 }
 
 // Don't use state because this works better
@@ -22,25 +27,24 @@ function useSubscribe(identifiers: string[]) {
     const subscribeRecursively = (id: string) => {
         if (!subscribedTo.includes(id)) {
             subscribedTo.push(id)
-            subscribeMessage(user.id, id)
-                .then(res => {
-                    if (res.data.message) {
-                        const data = res.data
+            subscribeMessage(user.id, id).then(res => {
+                const { status } = res;
+                // Resubscribe on timeout
+                if (status === 408 || status === 504) {
+                    resub(id)
+                } else {
+                    console.log('An error occurred while subscribing to messages. Not trying anymore.')
+                }
+                res.json().then(data => {
+                    if (data.message) {
                         if (data.id) data.id = Math.random()
                         setNotification(data)
                     } else {
-                        console.log('Failed to parse a notification from the response.', res.data)
+                        console.log('Failed to parse a notification from the response.', data)
                     }
                     resub(id)
                 })
-                .catch(err => {
-                    // Resubscribe if timed out
-                    if (err?.response?.status === 408) {
-                        resub(id)
-                    } else {
-                        console.log('An error occurred while subscribing to messages. Not trying anymore.')
-                    }
-                })
+            })
         }
     }
 
