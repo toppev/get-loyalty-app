@@ -5,12 +5,15 @@ import { post } from "../config/axios";
  * Either after a timeout or on a specific page.
  */
 export function startSubscribeTask() {
+    // Click a button to enable notifications (IMO better UX)
+    document.getElementsByClassName('enable-notifications').forEach(el => el.onclick = subscribeUser)
+    // Timers/pages
     let settingValue = process.env.REACT_APP_ASK_NOTIFICATIONS
     const time = parseInt(settingValue, 10);
     if (!Number.isNaN(time)) {
         setTimeout(subscribeUser, time * 1000)
     } else {
-        if (settingValue === 'disabled') return
+        if (!settingValue || settingValue === 'disabled') return
         if (settingValue[0] !== '/') settingValue = `/${settingValue}`
         // Just do polling (pretty stupid) but this way we can keep everything here
         const polling = setInterval(() => {
@@ -20,8 +23,6 @@ export function startSubscribeTask() {
             }
         }, 1000)
     }
-    // Or just a button click (IMO better UX)
-    document.getElementsByClassName('enable-notifications').forEach(el => el.onclick = settingValue)
 }
 
 const convertedVapidKey = urlBase64ToUint8Array(process.env.REACT_APP_PUBLIC_VAPID_KEY)
