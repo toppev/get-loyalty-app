@@ -183,13 +183,12 @@ function ResetPassword({ user, title, highlight }: ResetPasswordProps) {
             initialValues={{ password: "", repeatPassword: "" }}
             validate={validate}
             onSubmit={(values, actions) => {
-                const password = { password: values.password }
                 performRequest(
-                    () => updateUser(user._id, password),
+                    () => updateUser(user._id, { password: values.password }),
                     () => {
                         actions.setSubmitting(false)
                         context.setUser({
-                            ...user, ...password
+                            ...user, hasPassword: true
                         })
                     })
             }}

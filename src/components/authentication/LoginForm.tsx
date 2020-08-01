@@ -59,6 +59,10 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         forgotPasswordButton: {
             left: '38px'
+        },
+        message: {
+            fontSize: '14px',
+            color: theme.palette.grey[600]
         }
     }));
 
@@ -134,9 +138,9 @@ export default function LoginForm({}: LoginFormProps) {
     const onFormSubmit = (values: FormValues, actions: FormikHelpers<FormValues>) => {
         setMessage("Verifying...")
         getCaptchaToken().then(token => {
+            setMessage("Connecting...")
             getOrCreateServer(values.email, creatingAccount)
                 .then(() => {
-                    setMessage(creatingAccount ? "Creating a new server..." : "Waiting for the server...")
                     waitForServer(() => {
                         setMessage("Logging in...")
                         values.token = token
@@ -152,7 +156,7 @@ export default function LoginForm({}: LoginFormProps) {
                     if (e.response?.status === 404) {
                         setMessage('No servers available. Please try again later.')
                     } else {
-                        setMessage(e?.response?.data?.message || e.toString())
+                        setMessage(e?.response?.data?.message || `Error code: ${e?.response?.status}` || e.toString())
                     }
                 })
         })
@@ -213,7 +217,8 @@ export default function LoginForm({}: LoginFormProps) {
                                         required
                                     />
 
-                                    <Typography variant="h6" align="center">{message}</Typography>
+                                    <Typography variant="h6" align="center"
+                                                className={classes.message}>{message}</Typography>
                                     {isSubmitting && <LinearProgress/>}
 
                                     <br/>
