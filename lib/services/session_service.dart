@@ -2,8 +2,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 
-// TODO: make configurable by user
-const BASE_URL = "http://10.0.2.2:3001";
+const SERVER_API_URL = "https://api.getloyalty.app/server";
+const BACKEND_KEY = "backend_url";
+var backendUrl = ""; // http://10.0.2.2:3001 for localhost:3001
 
 class SessionService {
   final storage = new FlutterSecureStorage();
@@ -15,20 +16,20 @@ class SessionService {
   Map<String, String> headers = {'content-type': 'application/json'};
 
   SessionService() {
-    storage.readAll().then((value) {
-      values = value;
+    storage.readAll().then((stored) {
+      values = stored;
+      backendUrl = values[BACKEND_KEY];
+      values.remove(BACKEND_KEY);
       headers['cookie'] = _generateCookieHeader();
     });
   }
-
-  getURL() => BASE_URL;
 
   Future<Response> get(String url) async {
     http.Response response = await http.get(url, headers: headers);
     print('headers $headers');
     if (response.statusCode < 200 || response.statusCode >= 300) {
-      print(
-          'Request to $url returned status code ${response.statusCode}, response body: ${response.body}');
+      print('Request to $url failed with status code ${response.statusCode}, '
+          'response body: ${response.body}');
     }
     _updateCookie(response);
     return response;
@@ -37,18 +38,23 @@ class SessionService {
   Future<Response> post(String url, dynamic data) async {
     http.Response response = await http.post(url, body: data, headers: headers);
     if (response.statusCode < 200 || response.statusCode >= 300) {
-      print(
-          'Request to $url returned status code ${response.statusCode}, response body: ${response.body}');
+      print('Request to $url failed with status code ${response.statusCode}, '
+          'response body: ${response.body}');
     }
     _updateCookie(response);
     return response;
   }
 
-  _saveValues() {
+  _saveValues() async {
     values.forEach((key, value) async {
       await storage.write(key: key, value: value);
     });
+    print('Saved $values in client storage');
+    await storage.write(key: BACKEND_KEY, value: backendUrl);
+    print('Saved backendUrl ($backendUrl) in client storage ($BACKEND_KEY)');
   }
+
+  // Stolen from https://stackoverflow.com/a/53991733
 
   /// Updates the cookies, stores them and generates a new 'cookie' header in
   void _updateCookie(http.Response response) {

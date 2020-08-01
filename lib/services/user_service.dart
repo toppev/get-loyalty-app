@@ -24,16 +24,27 @@ class UserService {
   /// Login using the credentials.
   /// Returns the profile or throws an error
   Future<dynamic> login(UserCredentials credentials) async {
-    final url = '$BASE_URL/user/login';
+    await _getServer(credentials.email);
+    final url = '$backendUrl/user/login';
     print('#login() called. Sending request to $url');
     final response = await sessionService.post(url, json.encode(credentials));
     return _handleUserResponse(response);
   }
 
+  _getServer(String email) async {
+    print('#getServer() called. Getting the backend URL from $SERVER_API_URL');
+    final res = await sessionService.post(
+        "$SERVER_API_URL/get_or_create/?create=false",
+        json.encode({'email': email}));
+    var body = json.decode(res.body);
+    backendUrl = body['publicAddress'];
+    print('backendUrl set to $backendUrl');
+  }
+
   /// Tries to fetch the current user.
   /// Returns the profile or null
   Future<bool> profile() async {
-    final url = '$BASE_URL/user/profile';
+    final url = '$backendUrl/user/profile';
     print('#profile() called. Sending request to $url');
     final response = await sessionService.get(url);
     if (response.statusCode == 200) {
