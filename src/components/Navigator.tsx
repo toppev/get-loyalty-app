@@ -181,7 +181,7 @@ export default function Navigator(props: NavigatorProps) {
                             primary: classes.itemPrimary,
                         }}
                     >
-                        <Link color="inherit" href={`https://panel.${DOMAIN_HOME_PAGE}`}>Management Panel</Link>
+                        <Link color="inherit" href={`https://panel.${DOMAIN_HOME_PAGE}`}>Control Panel</Link>
                     </ListItemText>
                 </ListItem>
                 {categories.map(({ id, children }) => (
