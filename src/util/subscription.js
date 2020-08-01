@@ -6,7 +6,7 @@ import { post } from "../config/axios";
  */
 export function startSubscribeTask() {
     // Click a button to enable notifications (IMO better UX)
-    document.getElementsByClassName('enable-notifications').forEach(el => el.onclick = subscribeUser)
+    [...document.getElementsByClassName('enable-notifications')].forEach(el => el.onclick = subscribeUser)
     // Timers/pages
     let settingValue = process.env.REACT_APP_ASK_NOTIFICATIONS
     const time = parseInt(settingValue, 10);
