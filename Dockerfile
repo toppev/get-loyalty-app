@@ -1,7 +1,7 @@
 # Production Dockerfile
 #
 # Example usage:
-# docker build . -t loyalty_backend
+# docker build . -t loyalty_backend --build-arg NPM_TOKEN=ajd12ydliauwdt
 # docker run loyalty_backend
 FROM node:12.16-alpine
 

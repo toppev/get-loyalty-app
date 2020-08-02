@@ -13,7 +13,7 @@ function verifyCAPTCHA(req, res, next) {
         if (JSON.parse(body).success === true) {
             next()
         } else {
-            throw new StatusError('Invalid CAPTCHA token', 400)
+            next(error || new StatusError('Invalid CAPTCHA token', 400))
         }
     })
 
