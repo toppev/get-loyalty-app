@@ -8,7 +8,7 @@ import Header from './components/Header';
 import { AccountNotificationValues } from './components/account/AccountNotifications';
 import LoginDialog from "./components/authentication/LoginDialog";
 import { onLoginOrAccountCreate, profileRequest } from "./services/authenticationService";
-import { API_URL } from "./config/axios";
+import { backendURL } from "./config/axios";
 
 // Lazy Pages
 const OverviewPage = lazy(() => import('./components/overview/OverviewPage'));
@@ -25,7 +25,7 @@ const FeedbackPage = lazy(() => import('./components/feedback/FeedbackPage'));
 export default function () {
 
     // Whether we know the API url (e.g from local storage)
-    const validAPI = !API_URL.includes('invalid_url')
+    const validAPI = !backendURL.includes('invalid_url')
 
     const [navDrawerOpen, setNavDrawerOpen] = useState(false);
     const [notifications, setNotifications] = useState<AccountNotificationValues>({});
@@ -35,11 +35,11 @@ export default function () {
 
     const context = defaultAppContext;
     context.setUser = user => {
-        setAppContext({ ...appContext, user });
+        setAppContext(prev => ({ ...prev, user }));
     }
 
     context.setBusiness = business => {
-        setAppContext({ ...appContext, business });
+        setAppContext(prev => ({ ...prev, business }));
         setShowContent(true);
         setLoginDialog(false);
     }

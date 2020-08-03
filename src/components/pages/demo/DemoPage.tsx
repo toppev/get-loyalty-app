@@ -3,7 +3,7 @@ import LinkIcon from "@material-ui/icons/Link";
 import QRCode from "qrcode.react";
 import React from "react";
 import CopyToClipboard from '../../common/CopyToClipboarad';
-import { API_URL } from "../../../config/axios";
+import { backendURL } from "../../../config/axios";
 import PreviewIframe from "../../common/PreviewIframe";
 
 
@@ -50,7 +50,7 @@ export default function () {
 
     // FIXME: should we iframe the self hosted page or??
     // Probably good enough for now
-    const src = `${API_URL}`.replace('/api', '');
+    const src = `${backendURL}`.replace('/api', '');
 
     return (
         <Box display="flex" flexWrap="wrap" flexDirection="row" alignItems="center" className={classes.boxDesktop}>

@@ -1,6 +1,6 @@
 import { useQuery } from "../../hooks/useQuery";
 import { useEffect } from "react";
-import { get, setAPI_URL } from "../../config/axios";
+import { get, setBackendUrl } from "../../config/axios";
 import { AxiosResponse } from "axios";
 import { profileRequest } from "../../services/authenticationService";
 
@@ -13,7 +13,7 @@ export default function (callback?: (res: AxiosResponse) => any, onError?: (err:
 
     useEffect(() => {
         if (API_ADDRESS) {
-            setAPI_URL(API_ADDRESS)
+            setBackendUrl(API_ADDRESS)
             profileRequest().then(callback)
         } else if (resetCode) {
             get(`/resetpassword/${resetCode}`)

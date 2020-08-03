@@ -23,7 +23,7 @@ import _ from "lodash";
 import { TextField } from "formik-material-ui";
 import { updateBusiness } from "../../services/businessService";
 import { Alert } from "@material-ui/lab";
-import { API_URL } from "../../config/axios";
+import { backendURL } from "../../config/axios";
 import useRequest from "../../hooks/useRequest";
 import SaveChangesSnackbar from "../common/SaveChangesSnackbar";
 import { getOrCreateServer, updateServer, waitForServer } from "../../services/serverService";
@@ -286,7 +286,7 @@ function ServerSettingsForm() {
                     <Paper className={classes.paper}>
                         <Form>
                             <p className={classes.info}>
-                                Create a new A record to <b>"{API_URL.replace("https://", "")}"</b>
+                                Create a new DNS A record to <b>"{backendURL.replace("https://", "").replace(/\/.*$/, '')}"</b>
                                 and enter an address for your loyalty app.
                             </p>
                             <TextField

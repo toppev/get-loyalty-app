@@ -1,8 +1,8 @@
-import { get, post, SERVER_API_URL, setAPI_URL } from "../config/axios";
+import { get, post, SERVER_API_URL, setBackendUrl } from "../config/axios";
 import { ServerSettings } from "../components/settings/SettingsPage";
 
 /**
- * Also updates the API_URL
+ * Also updates the backendUrl
  */
 async function getOrCreateServer(email: string, create: boolean) {
     const res = await post(`${SERVER_API_URL}/server/get_or_create/?create=${create}`, { email: email }, true)
@@ -12,7 +12,7 @@ async function getOrCreateServer(email: string, create: boolean) {
             deleted : 'Seems like your data was deleted. Perhaps your plan expired?' +
             'Please be in contact if you would like to restore and upgrade your plan.')
     }
-    setAPI_URL(res.data.publicAddress)
+    setBackendUrl(res.data.publicAddress)
     return { created: res.status === 201, ...res };
 }
 

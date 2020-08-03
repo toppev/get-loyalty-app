@@ -25,7 +25,7 @@ import {
 import EditIcon from '@material-ui/icons/Edit';
 import WebIcon from '@material-ui/icons/Web';
 import React, { useContext, useState } from 'react';
-import { API_URL, post } from '../../config/axios';
+import { backendURL, post } from '../../config/axios';
 import AppContext from '../../context/AppContext';
 import CloseButton from '../common/button/CloseButton';
 import IdText from '../common/IdText';
@@ -261,7 +261,7 @@ export default function () {
                             className={classes.pageCard}
                             editableName
                             page={page}
-                            image={`${API_URL}/page/${page._id}/thumbnail`}
+                            image={`${backendURL}/page/${page._id}/thumbnail`}
                             actions={(
                                 <>
                                     <IconButton
@@ -419,7 +419,7 @@ function PageCard(props: PageCardProps) {
 
     const submitNameChange = () => {
         setEditing(false)
-        const url = `${API_URL}/page/${page._id}`;
+        const url = `${backendURL}/page/${page._id}`;
         post(url, { name: page.name }, true)
             .catch(err => {
                 // Show notification?
@@ -540,7 +540,7 @@ function TemplateSelectorDialog({ open, onClose, onSelect }: TemplateSelectorDia
                                         <PageCard
                                             displayStage={false}
                                             page={page}
-                                            image={`${API_URL}/page/${page._id}/thumbnail`}
+                                            image={`${backendURL}/page/${page._id}/thumbnail`}
                                             actions={TemplateActions(page)}
                                         />
                                     </Grid>

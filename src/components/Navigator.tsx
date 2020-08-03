@@ -181,7 +181,8 @@ export default function Navigator(props: NavigatorProps) {
                             primary: classes.itemPrimary,
                         }}
                     >
-                        <Link color="inherit" href={`https://panel.${DOMAIN_HOME_PAGE}`}>Control Panel</Link>
+                        <Link color="inherit" style={{ color: '#8fc4da' }} href={`https://panel.${DOMAIN_HOME_PAGE}`}
+                        >Control Panel</Link>
                     </ListItemText>
                 </ListItem>
                 {categories.map(({ id, children }) => (
@@ -215,6 +216,7 @@ export default function Navigator(props: NavigatorProps) {
                                     button
                                     component={component}
                                     className={classes.item}
+                                    style={{paddingRight: '6px'}}
                                     {...otherProps}
                                 >
                                     <ListItemIcon className={classes.itemIcon}>
@@ -222,7 +224,7 @@ export default function Navigator(props: NavigatorProps) {
                                                color="secondary">{icon}</Badge>
                                     </ListItemIcon>
                                     <ListItemText classes={{ primary: classes.itemPrimary }}>{childId}</ListItemText>
-                                    {external && <OpenInNewIcon fontSize="small"/>}
+                                    {external && <OpenInNewIcon fontSize="small" style={{ fontSize: '14px', marginLeft: '8px' }}/>}
                                 </ListItem>
                             )
                         })}

@@ -1,4 +1,4 @@
-import { get, post } from "../config/axios";
+import { API_URL, get, post } from "../config/axios";
 import { Page } from "../components/pages/Page";
 
 function listPages() {
@@ -29,8 +29,7 @@ function uploadHtmlCss(page: Page, html: any, css: any) {
 }
 
 function listTemplates() {
-    const subUrl = `/page`;
-    return get(`${subUrl}/templates`);
+    return get(`${API_URL}/page/templates`, true);
 }
 
 

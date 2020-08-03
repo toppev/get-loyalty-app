@@ -5,7 +5,7 @@ import grapesjsTouch from 'grapesjs-touch';
 import grapesjsTuiImageEditor from 'grapesjs-tui-image-editor';
 import 'grapesjs/dist/css/grapes.min.css';
 import React, { useEffect } from "react";
-import { API_URL } from "../../../config/axios";
+import { backendUrl } from "../../../config/axios";
 import { addPlaceholderBlock, registerListener } from "./blocks/placeholderBlock";
 import { addCampaignsBlock } from "./blocks/campaignBlock";
 import { addUserRewardsBlock } from "./blocks/userRewardsBlock";
@@ -25,7 +25,7 @@ function propsAreEqual(prev, next) {
 
 function GrapesPageEditor(props) {
 
-    const url = `${API_URL}/page`;
+    const url = `${backendUrl}/page`;
     const placeholderContext = usePlaceholderContext()
 
     useEffect(() => {
@@ -54,7 +54,7 @@ function GrapesPageEditor(props) {
 
         editor.on('load', () => {
             editor.setDevice('Mobile portrait')
-          //  editor.runCommand('core:open-blocks');
+            //  editor.runCommand('core:open-blocks');
         })
 
         editor.on('storage:start:store', () => {
