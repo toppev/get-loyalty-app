@@ -32,7 +32,7 @@ router.use('/business', requireLogin, business);
 router.use('/category', category)
 router.use('/campaign', requireLogin, campaigns);
 router.use('/product', requireLogin, products);
-router.use('/page', requireLogin, page);
+router.use('/page', requireLogin.unless({path: ['/page/templates']}), page);
 router.use('/customer/:userId', requireLogin, customer);
 // Coupon codes
 router.use('/coupon', requireLogin, coupon);

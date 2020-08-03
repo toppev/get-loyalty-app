@@ -30,7 +30,7 @@ async function createPage(pageParam) {
         throw new StatusError('Plan limit reached', 402)
     }
     const newPage = new PageData(pageParam);
-    return await newPage.save();
+    return newPage.save();
 }
 
 async function savePage(id, pageData, gjsOnly) {
@@ -42,7 +42,7 @@ async function savePage(id, pageData, gjsOnly) {
     } else {
         Object.assign(oldPage, pageData);
     }
-    return await oldPage.save();
+    return oldPage.save();
 }
 
 async function loadPage(id, gjsOnly) {
