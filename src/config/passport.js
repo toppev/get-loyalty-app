@@ -27,7 +27,7 @@ passport.use(new LocalStrategy({
                         return next(null, false, { message: `Max login attempts reached. Please try again in ${cooldownMinutes} minutes.` });
                     }
                 }
-                if (user.comparePassword(password)) {
+                if (await user.comparePassword(password)) {
                     if (user.authentication.failStreak > 0) {
                         user.authentication.failStreak = 0
                         await user.save()

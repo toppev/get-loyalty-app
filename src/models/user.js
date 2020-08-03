@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 const campaigns = require('@toppev/loyalty-campaigns');
 
 const rewardSchema = require('./reward');
@@ -132,8 +132,8 @@ userSchema.pre('save', async function (next) {
     next();
 });
 
-userSchema.methods.comparePassword = function (password) {
-    return password && bcrypt.compareSync(password, this.password);
+userSchema.methods.comparePassword = async function (password) {
+    return password && await bcrypt.compare(password, this.password);
 };
 
 userSchema.methods.isBirthday = function () {
