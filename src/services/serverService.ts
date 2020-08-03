@@ -4,8 +4,8 @@ import { ServerSettings } from "../components/settings/SettingsPage";
 /**
  * Also updates the backendUrl
  */
-async function getOrCreateServer(email: string, create: boolean) {
-    const res = await post(`${SERVER_API_URL}/server/get_or_create/?create=${create}`, { email: email }, true)
+async function getOrCreateServer(data: { email: string, token: string }, create: boolean) {
+    const res = await post(`${SERVER_API_URL}/server/get_or_create/?create=${create}`, data, true)
     const deleted = res.data.serverDeleted
     if (deleted) {
         throw new Error(typeof deleted == "string" ?

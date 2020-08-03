@@ -107,6 +107,7 @@ export default function LoginForm({}: LoginFormProps) {
     usePasswordReset(onSuccess) // TODO: use the error callback?
 
     const loginAccount = async (values: FormValues, { setSubmitting, setErrors }: any) => {
+        setMessage("Logging in...")
         loginRequest(values)
             .then(onSuccess)
             .catch(err => {
@@ -123,6 +124,7 @@ export default function LoginForm({}: LoginFormProps) {
     }
 
     const createAccount = async (values: FormValues, { setSubmitting, setErrors }: any) => {
+        setMessage("Creating account...")
         registerRequest(values)
             .then(onSuccess)
             .catch(err => {
@@ -139,10 +141,10 @@ export default function LoginForm({}: LoginFormProps) {
         setMessage("Verifying...")
         getCaptchaToken().then(token => {
             setMessage("Connecting...")
-            getOrCreateServer(values.email, creatingAccount)
+            const { email } = values
+            getOrCreateServer({ email, token }, creatingAccount)
                 .then(() => {
                     waitForServer(() => {
-                        setMessage("Logging in...")
                         values.token = token
                         if (creatingAccount) {
                             createAccount(values, actions).then()
