@@ -76,8 +76,7 @@ const useStyles = makeStyles((theme: Theme) =>
             color: 'darkgray'
         },
         editPageNameBtn: {},
-        pageNameField: {
-        },
+        pageNameField: {},
         unpublished: {
             color: theme.palette.grey[500],
         },
@@ -509,6 +508,12 @@ function TemplateSelectorDialog({ open, onClose, onSelect }: TemplateSelectorDia
     const { error, loading, response } = useRequest(listTemplates, { performInitially: true });
     const [templates, setTemplates] = useResponseState<Page[]>(response, [], res => res.data.map((d: any) => new Page(d)))
 
+    const blankPage = new Page({
+        id: 'blank_page',
+        name: 'Blank Page',
+        description: 'Start from scratch with a blank page.'
+    })
+
     const TemplateActions = (page: Page) => (
         <>
             <Button
@@ -535,7 +540,7 @@ function TemplateSelectorDialog({ open, onClose, onSelect }: TemplateSelectorDia
                         <CloseButton onClick={onClose}/>
                         <DialogContent>
                             <Grid container direction="row" alignItems="center">
-                                {templates.filter(page => !page.isDiscarded()).map((page: Page) => (
+                                {[...templates, blankPage].filter(page => !page.isDiscarded()).map((page: Page) => (
                                     <Grid item xs={12} sm={6} key={page._id}>
                                         <PageCard
                                             displayStage={false}
