@@ -54,6 +54,12 @@ const userSchema = new Schema({
         },
         profile: {
             type: Object,
+        },
+        lastAttempt: {
+            type: Date
+        },
+        failStreak: {
+            type: Number
         }
     },
     customerData: {
