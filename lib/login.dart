@@ -98,7 +98,11 @@ class _LoginPageState extends State<LoginPage> {
                     try {
                       await userService.login(
                           UserCredentials(_email.trim(), _password.trim()));
-                      Navigator.of(context).push(MaterialPageRoute(
+                      setState(() {
+                        _email = "";
+                        _password = "";
+                      });
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
                           builder: (context) => ScannerPage()));
                     } catch (e) {
                       showError(context,
@@ -126,8 +130,8 @@ class _LoginPageState extends State<LoginPage> {
     var userService = Provider.of<UserService>(context);
     userService.profile().then((success) {
       if (success != null && success != false) {
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => ScannerPage()));
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => ScannerPage()));
       }
     }).catchError((e) => print(e));
   }

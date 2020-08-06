@@ -7,6 +7,8 @@ import 'services/scan_service.dart';
 import 'services/session_service.dart';
 import 'services/user_service.dart';
 
+const APP_TITLE = 'GetLoyalty.App - Scanner App';
+
 void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,7 +29,7 @@ void main() async {
         ],
         child: MaterialApp(
             home: LoginPage(
-          title: 'GetLoyalty.App - Scanner App',
+          title: APP_TITLE,
         ))),
   );
 }

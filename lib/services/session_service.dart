@@ -6,6 +6,8 @@ const SERVER_API_URL = "https://api.getloyalty.app/servers";
 const BACKEND_KEY = "backend_url";
 var backendUrl = ""; // http://10.0.2.2:3001 for localhost:3001
 
+const Map<String, String> defaultHeaders = {'content-type': 'application/json'};
+
 class SessionService {
   final storage = new FlutterSecureStorage();
 
@@ -13,7 +15,7 @@ class SessionService {
   Map<String, String> values;
 
   // Generated headers, not stored
-  Map<String, String> headers = {'content-type': 'application/json'};
+  Map<String, String> headers = {...defaultHeaders};
 
   SessionService() {
     storage.readAll().then((stored) {

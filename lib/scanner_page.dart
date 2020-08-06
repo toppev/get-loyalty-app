@@ -6,6 +6,7 @@ import 'error_dialog.dart';
 import 'question_dialog.dart';
 import 'scanner.dart';
 import 'services/scan_service.dart';
+import 'menu.dart';
 
 const PAUSED = "Start Scanning";
 const SCANNING = "Stop Scanning";
@@ -26,6 +27,10 @@ class _ScannerPageState extends State<ScannerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: new AppBar(
+        title: new Text('Scanner'),
+        actions: <Widget>[MenuWidget()],
+      ),
       body: Column(
         children: <Widget>[
           Expanded(
