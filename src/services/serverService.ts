@@ -26,10 +26,10 @@ function waitForServer(callback: () => any) {
             get('/ping')
                 .then(callback)
                 .catch(() => setTimeout(sendRequest, 2000))
-        }, 1000)
+        }, 500)
     }
 
-    setTimeout(sendRequest, 200)
+    sendRequest()
 
 }
 

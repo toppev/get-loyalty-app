@@ -532,33 +532,30 @@ function TemplateSelectorDialog({ open, onClose, onSelect }: TemplateSelectorDia
     return (
         <Dialog open={open} onClose={onClose} fullWidth maxWidth="md" className={classes.templateDialog}>
             <div className={classes.templateList}>
-                {error ? (
-                    <RetryButton error={error}/>
-                ) : (
-                    <>
-                        {loading && <LinearProgress/>}
-                        <CloseButton onClick={onClose}/>
-                        <DialogContent>
-                            <Grid container direction="row" alignItems="center">
-                                {[...templates, blankPage].filter(page => !page.isDiscarded()).map((page: Page) => (
-                                    <Grid item xs={12} sm={6} key={page._id}>
-                                        <PageCard
-                                            displayStage={false}
-                                            page={page}
-                                            image={`${backendURL}/page/${page._id}/thumbnail`}
-                                            actions={TemplateActions(page)}
-                                        />
-                                    </Grid>
-                                ))}
-                            </Grid>
-                        </DialogContent>
-                        <PreviewPage
-                            page={previewPage}
-                            onClose={() => setPreviewPage(undefined)}
-                            actions={(<SelectTemplateButton onClick={() => onSelect(previewPage!!)}/>)}
-                        />
-                    </>
-                )}
+                <>
+                    {loading && <LinearProgress/>}
+                    <CloseButton onClick={onClose}/>
+                    <DialogContent>
+                        <Grid container direction="row" alignItems="center">
+                            {[...templates, blankPage].filter(page => !page.isDiscarded()).map((page: Page) => (
+                                <Grid item xs={12} sm={6} key={page._id}>
+                                    <PageCard
+                                        displayStage={false}
+                                        page={page}
+                                        image={`${backendURL}/page/${page._id}/thumbnail`}
+                                        actions={TemplateActions(page)}
+                                    />
+                                </Grid>
+                            ))}
+                            {error && <RetryButton error={error}/>}
+                        </Grid>
+                    </DialogContent>
+                    <PreviewPage
+                        page={previewPage}
+                        onClose={() => setPreviewPage(undefined)}
+                        actions={(<SelectTemplateButton onClick={() => onSelect(previewPage!!)}/>)}
+                    />
+                </>
             </div>
         </Dialog>
     )
