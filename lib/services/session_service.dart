@@ -6,7 +6,9 @@ const SERVER_API_URL = "https://api.getloyalty.app/servers";
 const BACKEND_KEY = "backend_url";
 var backendUrl = ""; // http://10.0.2.2:3001 for localhost:3001
 
-const Map<String, String> defaultHeaders = {'content-type': 'application/json'};
+const Map<String, String> _defaultHeaders = {
+  'content-type': 'application/json'
+};
 
 class SessionService {
   final storage = new FlutterSecureStorage();
@@ -15,7 +17,7 @@ class SessionService {
   Map<String, String> values;
 
   // Generated headers, not stored
-  Map<String, String> headers = {...defaultHeaders};
+  Map<String, String> headers = {};
 
   SessionService() {
     storage.readAll().then((stored) {
@@ -33,8 +35,10 @@ class SessionService {
     headers['cookie'] = _generateCookieHeader();
   }
 
+  _getHeaders() => {..._defaultHeaders, ...headers};
+
   Future<Response> get(String url) async {
-    http.Response response = await http.get(url, headers: headers);
+    http.Response response = await http.get(url, headers: _getHeaders());
     if (response.statusCode < 200 || response.statusCode >= 300) {
       print('Request to $url failed with status code ${response.statusCode}, '
           'response body: ${response.body}');
@@ -44,7 +48,8 @@ class SessionService {
   }
 
   Future<Response> post(String url, dynamic data) async {
-    http.Response response = await http.post(url, body: data, headers: headers);
+    http.Response response =
+        await http.post(url, body: data, headers: _getHeaders());
     if (response.statusCode < 200 || response.statusCode >= 300) {
       print('Request to $url failed with status code ${response.statusCode}, '
           'response body: ${response.body}');

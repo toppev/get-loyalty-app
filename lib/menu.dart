@@ -21,7 +21,7 @@ class MenuWidget extends StatelessWidget {
       if (choice == MenuActions.Logout) {
         print('Logging out');
         sessionService.storage.deleteAll();
-        sessionService.headers = {...defaultHeaders};
+        sessionService.headers.clear();
         sessionService.values.clear();
         Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (context) => LoginPage(
