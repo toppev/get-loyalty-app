@@ -5,7 +5,6 @@ import grapesjsTouch from 'grapesjs-touch';
 import grapesjsTuiImageEditor from 'grapesjs-tui-image-editor';
 import 'grapesjs/dist/css/grapes.min.css';
 import React, { useEffect } from "react";
-import { backendUrl } from "../../../config/axios";
 import { addPlaceholderBlock, registerListener } from "./blocks/placeholderBlock";
 import { addCampaignsBlock } from "./blocks/campaignBlock";
 import { addUserRewardsBlock } from "./blocks/userRewardsBlock";
@@ -15,6 +14,7 @@ import { addRichTextEditorPlaceholders } from "./blocks/richPlaceholder";
 import { usePlaceholderContext } from "./placeholderContext";
 import { addQRCodeBlock, addQRCodeType } from "./blocks/qrCodeBlock";
 import { addEnableNotificationsButton } from "./blocks/enableNotificationsBlock";
+import { backendURL } from "../../../config/axios";
 
 // So the editor is not rendered every time if the page id didn't change
 export default React.memo(GrapesPageEditor, propsAreEqual);
@@ -25,7 +25,7 @@ function propsAreEqual(prev, next) {
 
 function GrapesPageEditor(props) {
 
-    const url = `${backendUrl}/page`;
+    const url = `${backendURL}/page`;
     const placeholderContext = usePlaceholderContext()
 
     useEffect(() => {
