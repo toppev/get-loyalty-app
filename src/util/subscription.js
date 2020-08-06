@@ -41,14 +41,13 @@ function subscribeUser() {
                         if (subscription !== null) {
                             console.log('Existing subscription found')
                             // Not sure if we should send the existing subscription?
-                            sendSubscription(subscription)
+                            sendSubscription(subscription).then(() => console.log('Subscription updated'))
                         } else {
                             registration.pushManager.subscribe({
                                 applicationServerKey: convertedVapidKey,
                                 userVisibleOnly: true,
                             }).then(function (newSubscription) {
-                                console.log('Subscription added')
-                                sendSubscription(newSubscription)
+                                sendSubscription(newSubscription).then(() => console.log('Subscription added'))
                             }).catch(function (e) {
                                 console.error('An error occurred during the subscription process', Notification.permission, e)
                             })
