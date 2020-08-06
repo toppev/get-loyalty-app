@@ -1,12 +1,24 @@
 import { post } from "../config/axios";
 
+
+/** Class that triggers push notification prompt when clicked */
+const enableNotificationsClass = 'enable-notifications'
+
+/** Class that will be hidden when push notifications are enabled */
+const hideNotificationClass = enableNotificationsClass
+
 /**
  * Asks the user to enable push notifications as (and if) specified in the settings.
  * Either after a timeout or on a specific page.
  */
 export function startSubscribeTask() {
+    hideNotificationClasses();
     // Click a button to enable notifications (IMO better UX)
-    [...document.getElementsByClassName('enable-notifications')].forEach(el => el.onclick = subscribeUser)
+    window.onclick = (e) => {
+        if (e.target.className.split(' ').includes(enableNotificationsClass)) {
+            subscribeUser()
+        }
+    }
     // Timers/pages
     let settingValue = process.env.REACT_APP_ASK_NOTIFICATIONS
     const time = parseInt(settingValue, 10);
@@ -23,40 +35,71 @@ export function startSubscribeTask() {
             }
         }, 1000)
     }
+
 }
 
 const convertedVapidKey = urlBase64ToUint8Array(process.env.REACT_APP_PUBLIC_VAPID_KEY)
 
 // Call this function to ask for the permission to show notifications
 function subscribeUser() {
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.ready
-            .then(function (registration) {
+    getPushManager().then(pushManager => {
+        pushManager.getSubscription()
+            .then((subscription) => {
+                if (subscription !== null) {
+                    console.log('Existing subscription found')
+                    hideNotificationClasses()
+                    // Not sure if we should send the existing subscription?
+                    sendSubscription(subscription).then(() => console.log('Subscription updated'))
+                } else {
+                    pushManager.subscribe({
+                        applicationServerKey: convertedVapidKey,
+                        userVisibleOnly: true,
+                    }).then((newSubscription) => {
+                        sendSubscription(newSubscription).then(() => {
+                            console.log('Subscription added')
+                            hideNotificationClasses()
+                        })
+                    }).catch((e) => {
+                        console.error('An error occurred during the subscription process', Notification.permission, e)
+                    })
+                }
+            })
+    })
+}
+
+/**
+ * Hides notification classes if a subscription for push notifications exists
+ */
+function hideNotificationClasses() {
+    getPushManager().then((pm) => {
+        pm.getSubscription().then(sub => {
+            if (sub) {
+                const style = document.createElement('style')
+                // language=CSS
+                style.textContent = `
+                  .${hideNotificationClass} {
+                    display: none;
+                  }
+                `
+                document.head.append(style);
+            }
+        })
+    })
+}
+
+function getPushManager() {
+    return new Promise((resolve, reject) => {
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.ready.then((registration) => {
                 if (!registration.pushManager) {
                     console.log('Push manager unavailable.')
-                    return
+                    reject()
+                } else {
+                    resolve(registration.pushManager)
                 }
-                registration.pushManager.getSubscription()
-                    .then(function (subscription) {
-                        if (subscription !== null) {
-                            console.log('Existing subscription found')
-                            // Not sure if we should send the existing subscription?
-                            sendSubscription(subscription).then(() => console.log('Subscription updated'))
-                        } else {
-                            registration.pushManager.subscribe({
-                                applicationServerKey: convertedVapidKey,
-                                userVisibleOnly: true,
-                            }).then(function (newSubscription) {
-                                sendSubscription(newSubscription).then(() => console.log('Subscription added'))
-                            }).catch(function (e) {
-                                console.error('An error occurred during the subscription process', Notification.permission, e)
-                            })
-                        }
-                    })
-            }).catch(function (e) {
-            console.error('An error occurred during Service Worker registration.', e)
-        })
-    }
+            })
+        }
+    })
 }
 
 function sendSubscription(subscription) {
