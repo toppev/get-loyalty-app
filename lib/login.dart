@@ -19,6 +19,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordFilter = new TextEditingController();
   String _email = "";
   String _password = "";
+  bool buttonDisabled = false;
 
   _LoginPageState() {
     _emailFilter.addListener(_emailListen);
@@ -88,21 +89,26 @@ class _LoginPageState extends State<LoginPage> {
       child: new Column(
         children: <Widget>[
           new RaisedButton(
-            child: new Text('Login'),
+            child: new Text(buttonDisabled ? 'Logging in...' : 'Login'),
             color: Colors.greenAccent,
-            onPressed: () {
-              userService
-                  .login(UserCredentials(_email.trim(), _password.trim()))
-                  .then((_user) {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => ScannerPage()));
-              }).catchError((e) {
-                showError(context,
-                    message:
-                        'Could not login. Check credentials and network connection',
-                    error: e.toString());
-              });
-            },
+            onPressed: buttonDisabled
+                ? null
+                : () async {
+                    setState(() => buttonDisabled = true);
+                    try {
+                      await userService.login(
+                          UserCredentials(_email.trim(), _password.trim()));
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => ScannerPage()));
+                    } catch (e) {
+                      showError(context,
+                          message:
+                              'Failed to login. Check credentials and network connection',
+                          error: e.toString());
+                    } finally {
+                      setState(() => buttonDisabled = false);
+                    }
+                  },
           ),
         ],
       ),
