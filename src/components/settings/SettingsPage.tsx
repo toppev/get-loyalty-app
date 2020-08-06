@@ -218,7 +218,7 @@ function ServerSettingsForm() {
     // Select components don't want to work well with formik :(
     const [askNotifications, setAskNotifications] = useState<string>('disabled');
     const serverInfo = useRequest(
-        () => getOrCreateServer(context.user.email, false),
+        () => getOrCreateServer({ email: context.user.email }, false),
         {},
         (res) => setAskNotifications(res.data?.website?.askNotifications))
 
@@ -286,7 +286,8 @@ function ServerSettingsForm() {
                     <Paper className={classes.paper}>
                         <Form>
                             <p className={classes.info}>
-                                Create a new DNS A record to <b>"{backendURL.replace("https://", "").replace(/\/.*$/, '')}"</b>
+                                Create a new DNS A record
+                                to <b>"{backendURL.replace("https://", "").replace(/\/.*$/, '')}"</b>
                                 and enter an address for your loyalty app.
                             </p>
                             <TextField
