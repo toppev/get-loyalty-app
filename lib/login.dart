@@ -125,7 +125,7 @@ class _LoginPageState extends State<LoginPage> {
   void attemptAutoLogin() {
     var userService = Provider.of<UserService>(context);
     userService.profile().then((success) {
-      if (success != null) {
+      if (success != null && success != false) {
         Navigator.of(context)
             .push(MaterialPageRoute(builder: (context) => ScannerPage()));
       }

@@ -46,14 +46,11 @@ class UserService {
 
   /// Tries to fetch the current user.
   /// Returns the profile or null
-  Future<bool> profile() async {
+  Future<dynamic> profile() async {
     final url = '$backendUrl/user/profile';
     print('#profile() called. Sending request to $url');
     final response = await sessionService.get(url);
-    if (response.statusCode == 200) {
-      return _handleUserResponse(response);
-    }
-    return null;
+    return _handleUserResponse(response);
   }
 
   _handleUserResponse(Response response) {
@@ -63,7 +60,7 @@ class UserService {
       if (business != null) {
         return body;
       }
-      throw 'No businesses found';
+      throw 'No businesses found. Is it wrong account?';
     } else {
       var body = json.decode(response.body);
       throw ('${body['message'] != null ? body['message'] : "HTTP status code: ${response.statusCode}.Body: $body"}');

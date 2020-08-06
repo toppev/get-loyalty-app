@@ -7,11 +7,17 @@ import 'services/scan_service.dart';
 import 'services/session_service.dart';
 import 'services/user_service.dart';
 
-void main() {
+void main() async {
+
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final sessionService = SessionService();
+  await sessionService.init();
+
   runApp(
     MultiProvider(
         providers: [
-          Provider(create: (context) => SessionService()),
+          Provider(create: (context) => sessionService),
           Provider(
               create: (context) => UserService(
                   Provider.of<SessionService>(context, listen: false))),

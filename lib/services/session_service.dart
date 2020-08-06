@@ -24,9 +24,15 @@ class SessionService {
     });
   }
 
+  init() async {
+    values = await storage.readAll();
+    backendUrl = values[BACKEND_KEY];
+    values.remove(BACKEND_KEY);
+    headers['cookie'] = _generateCookieHeader();
+  }
+
   Future<Response> get(String url) async {
     http.Response response = await http.get(url, headers: headers);
-    print('headers $headers');
     if (response.statusCode < 200 || response.statusCode >= 300) {
       print('Request to $url failed with status code ${response.statusCode}, '
           'response body: ${response.body}');
@@ -49,9 +55,9 @@ class SessionService {
     values.forEach((key, value) async {
       await storage.write(key: key, value: value);
     });
-    print('Saved $values in client storage');
+    print('Saved ${values.keys} in client storage');
     await storage.write(key: BACKEND_KEY, value: backendUrl);
-    print('Saved backendUrl ($backendUrl) in client storage ($BACKEND_KEY)');
+    print('Saved $BACKEND_KEY ($backendUrl) in client storage');
   }
 
   // Stolen from https://stackoverflow.com/a/53991733
@@ -62,10 +68,8 @@ class SessionService {
     if (allSetCookie != null) {
       var setCookies = allSetCookie.split(',');
       for (var setCookie in setCookies) {
-        var cookies = setCookie.split(';');
-        for (var cookie in cookies) {
-          _setCookie(cookie);
-        }
+        // Ignore path, expires and domain (for now)
+        _setCookie(setCookie.split(';')[0]);
       }
       _saveValues();
       headers['cookie'] = _generateCookieHeader();
@@ -80,7 +84,13 @@ class SessionService {
   /// Store a cookie in #values map
   void _setCookie(String rawCookie) {
     if (rawCookie.length > 0) {
-      var keyValue = rawCookie.split('=');
+      // Split at first '='
+      var sepIndex = rawCookie.indexOf('=');
+      if (sepIndex == -1) return;
+      var keyValue = [
+        rawCookie.substring(0, sepIndex),
+        rawCookie.substring(sepIndex + 1)
+      ];
       if (keyValue.length == 2) {
         var key = keyValue[0].trim();
         var value = keyValue[1];
