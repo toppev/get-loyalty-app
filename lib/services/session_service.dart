@@ -2,7 +2,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 
-const SERVER_API_URL = "https://api.getloyalty.app/server";
+const SERVER_API_URL = "https://api.getloyalty.app/servers";
 const BACKEND_KEY = "backend_url";
 var backendUrl = ""; // http://10.0.2.2:3001 for localhost:3001
 
