@@ -49,10 +49,10 @@ function isActive({ end, start }) {
 
 /**
  * Get a campaign by its id
- * @param {any} campaignId the campaign's _id field
+ * @param campaignId the campaign's _id field
  */
 async function getById(campaignId) {
-    return Campaign.findById(campaignId);
+    return Campaign.findById(campaignId).populate('categories');
 }
 
 /**
@@ -70,7 +70,7 @@ async function create(campaign) {
 
 /**
  * Update an existing campaign. Returns the updated product
- * @param {any} campaignId the campaign's _id value
+ * @param {ObjectId|string} campaignId the campaign's _id value
  * @param {Object} updatedCampaign the object with the values to update
  */
 async function update(campaignId, updatedCampaign) {
@@ -85,7 +85,7 @@ async function update(campaignId, updatedCampaign) {
 
 /**
  * Delete an existing campaign from the database
- * @param {any} campaignId the campaign's _id value
+ * @param {ObjectId|string} campaignId the campaign's _id value
  */
 async function deleteCampaign(campaignId) {
     return await Campaign.findByIdAndDelete(campaignId)
@@ -142,7 +142,11 @@ async function canReceiveCampaignRewards(userId, campaign, answerQuestion) {
  * For example, the user has enough purchases or the purchase was a specific product (see answerQuestion param).
  * Ignores campaign dates etc. Only checks the requirements.
  *
- * @param answerQuestion callback to answer whether the specified requirement question got a truthy answer. The callback gets the type as an argument.
+ * @param {User} user the user
+ * @param {Campaign} campaign the campaign
+ * @param {Function(string)<boolean>} answerQuestion callback to answer whether the specified requirement question
+ * got a truthy
+ * answer. The callback gets the type as an argument.
  */
 async function isEligible(user, campaign, answerQuestion) {
     const { requirements } = campaign;

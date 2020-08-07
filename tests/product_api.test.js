@@ -1,5 +1,6 @@
 const { initDatabase, closeDatabase } = require('./testUtils');
 const businessService = require('../src/services/businessService');
+const categoryService = require('../src/services/categoryService');
 const User = require('../src/models/user');
 const app = require('../app');
 const api = require('supertest')(app);
@@ -29,7 +30,8 @@ describe('Logged in user with permissions can', () => {
     });
 
     it('create product', async () => {
-        const productData = { name: "Test Product" }
+        const testCategory = await categoryService.create({ name: 'test category' })
+        const productData = { name: "Test Product", categories: [testCategory] }
         const res = await api
             .post(`/product`)
             .set('Cookie', cookie)
@@ -56,6 +58,7 @@ describe('Logged in user with permissions can', () => {
             .set('Cookie', cookie)
             .expect(200);
         expect(res.body._id).toBe(productId);
+        expect(res.body.categories[0].name).toBe('test category');
     });
 
     it('get all', async () => {
@@ -64,6 +67,7 @@ describe('Logged in user with permissions can', () => {
             .set('Cookie', cookie)
             .expect(200);
         expect(res.body[0]._id).toBe(productId);
+        expect(res.body[0].categories[0].name).toBe('test category');
     });
 
 

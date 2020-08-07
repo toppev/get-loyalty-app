@@ -58,7 +58,7 @@ async function getBusiness() {
 async function update(updateParam) {
     const business = await Business.findOne();
     Object.assign(business, updateParam);
-    return await business.save();
+    return business.save();
 }
 
 /**
@@ -83,7 +83,7 @@ async function setUserRole(userId, role) {
  * Get the public available information, anything in the business's ´public´ field
  */
 async function getPublicInformation() {
-    return await Business.findOne().select('public');
+    return Business.findOne().select('public');
 }
 
 async function getIcon() {

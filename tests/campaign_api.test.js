@@ -1,5 +1,6 @@
 const { initDatabase, closeDatabase } = require('./testUtils');
 const businessService = require('../src/services/businessService');
+const categoryService = require('../src/services/categoryService');
 const User = require('../src/models/user');
 const app = require('../app');
 const api = require('supertest')(app);
@@ -30,7 +31,8 @@ describe('Logged in user with permissions can', () => {
     });
 
     it('create campaign', async () => {
-        const campaignParam = { name: "Test Campaign" }
+        const testCategory = await categoryService.create({ name: 'test category' })
+        const campaignParam = { name: "Test Campaign", categories: [testCategory] }
         const res = await api
             .post(`/campaign`)
             .set('Cookie', cookie)
@@ -48,7 +50,6 @@ describe('Logged in user with permissions can', () => {
             .send(newData)
             .expect(200);
         expect(res.body.name).toBe(newData.name);
-
     });
 
     it('get campaign', async () => {
@@ -57,6 +58,7 @@ describe('Logged in user with permissions can', () => {
             .set('Cookie', cookie)
             .expect(200);
         expect(res.body._id).toBe(campaignId);
+        expect(res.body.categories[0].name).toBe('test category');
     });
 
     it('get all', async () => {
@@ -65,6 +67,7 @@ describe('Logged in user with permissions can', () => {
             .set('Cookie', cookie)
             .expect(200);
         expect(res.body[0]._id).toBe(campaignId);
+        expect(res.body[0].categories[0].name).toBe('test category');
     });
 
 

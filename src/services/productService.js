@@ -3,7 +3,7 @@ const Business = require('../models/business');
 const StatusError = require('../helpers/statusError');
 
 module.exports = {
-    getAllById,
+    getAllProducts: getAll,
     getById,
     create,
     update,
@@ -13,10 +13,10 @@ module.exports = {
 /**
  * Get all products created by this business
  */
-async function getAllById(populate) {
+async function getAll(populate) {
     const res = Product.find();
     if (populate) {
-        res.populate();
+        res.populate('categories');
     }
     return await res;
 }
@@ -26,7 +26,7 @@ async function getAllById(populate) {
  * @param {any} productId the product's _id field
  */
 async function getById(productId) {
-    return await Product.findById(productId);
+    return Product.findById(productId).populate('categories');
 }
 
 /**

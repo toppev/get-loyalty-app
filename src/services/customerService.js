@@ -28,7 +28,16 @@ async function getCustomerInfo(user) {
         user = await User.findById(user);
     }
     const { _id, id, email, customerData, lastVisit, birthday, authentication, role } = user;
-    return { _id, id, customerData, email, role, lastVisit, birthday, authentication: { service: authentication.service } }
+    return {
+        _id,
+        id,
+        customerData,
+        email,
+        role,
+        lastVisit,
+        birthday,
+        authentication: { service: authentication.service }
+    }
 }
 
 /**
