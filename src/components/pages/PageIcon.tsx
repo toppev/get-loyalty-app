@@ -6,7 +6,7 @@ const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         iconPreview: {
             '& *': {
-                height: '60px'
+                height: '40px'
             }
         },
     }));

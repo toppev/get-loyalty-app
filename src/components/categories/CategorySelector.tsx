@@ -15,8 +15,6 @@ export default function (props: Props) {
     const [categories, setCategories] = useState<Category[]>(props.initialCategories);
     const [allCategories, setAllCategories] = useState<Category[]>([]);
 
-    console.log(props.initialCategories)
-
     useEffect(() => {
         props.onCategoriesUpdate(categories);
     }, [categories, props])
