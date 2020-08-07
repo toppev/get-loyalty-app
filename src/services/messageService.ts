@@ -35,15 +35,18 @@ function useSubscribe(identifiers: string[]) {
                 } else {
                     console.log(`An error occurred while subscribing to messages. Not trying anymore. Status: ${status}`)
                 }
-                res.json().then(data => {
-                    if (data.message) {
-                        if (data.id) data.id = Math.random()
-                        setNotification(data)
-                    } else {
-                        console.log('Failed to parse a notification from the response.', data)
-                    }
-                    resub(id)
-                })
+                const contentType = res.headers.get("content-type")
+                resub(id)
+                if (contentType?.indexOf("application/json") !== -1) {
+                    res.json().then(data => {
+                        if (data.message) {
+                            if (data.id) data.id = Math.random()
+                            setNotification(data)
+                        } else {
+                            console.log('Failed to parse a notification from the response.', data)
+                        }
+                    })
+                }
             })
         }
     }
