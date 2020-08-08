@@ -7,6 +7,8 @@ const Business = require("../models/business");
 const handlebars = require("handlebars");
 const StatusError = require('../helpers/statusError');
 const customerService = require('./customerService');
+const campaignService = require('./campaignService');
+const productService = require('./productService');
 
 module.exports = {
     createPage,
@@ -150,9 +152,10 @@ async function getPageContext(user) {
         // All page placeholders
         const userInfo = await customerService.getCustomerInfo(user)
         const customerData = userInfo.customerData;
-        const { products, config } = business;
-
-        const campaigns = business.campaigns.map(campaign => {
+        const { config } = business;
+        const products = await productService.getAllProducts(true);
+        let campaigns = await campaignService.getAllCampaigns(true);
+        campaigns = campaigns.map(campaign => {
             // Add currentStamps and stampsNeeded lists so we can actually display stamp icons or something (easily)
             campaign.currentStamps = campaign.getCurrentStamps(customerData);
 

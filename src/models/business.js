@@ -167,17 +167,5 @@ const businessSchema = new Schema({
     toObject: { virtuals: true },
 });
 
-businessSchema.virtual("campaigns", {
-    ref: "Campaign",
-    localField: "_id",
-    foreignField: "business",
-});
-
-businessSchema.virtual("products", {
-    ref: "Product",
-    localField: "_id",
-    foreignField: "business",
-});
-
 const Business = mongoose.model('Business', businessSchema);
 module.exports = Business;
