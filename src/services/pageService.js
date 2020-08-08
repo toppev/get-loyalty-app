@@ -147,19 +147,28 @@ async function getPageContent(pageId) {
 }
 
 async function getPageContext(user) {
-    const business = await Business.findOne().populate('campaigns products').lean();
+    const business = await Business.findOne().lean();
     if (business) {
         // All page placeholders
-        const userInfo = await customerService.getCustomerInfo(user)
+        const userInfo = await customerService.getCustomerInfo(user);
         const customerData = userInfo.customerData;
         const { config } = business;
-        const products = await productService.getAllProducts(true);
+        const products = (await productService.getAllProducts(true)).map(it => it.toObject());
         let campaigns = await campaignService.getAllCampaigns(true);
-        campaigns = campaigns.map(campaign => {
+        campaigns = campaigns.map(rawCampaign => {
+            const campaign = rawCampaign.toObject();
             // Add currentStamps and stampsNeeded lists so we can actually display stamp icons or something (easily)
-            campaign.currentStamps = campaign.getCurrentStamps(customerData);
+            campaign.currentStamps = rawCampaign.getCurrentStamps(customerData);
 
-            const stampsNeeded = campaign.currentStamps - campaign.totalStampsNeeded;
+            const dateOpts = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
+            if (campaign.start) {
+                campaign.start = campaign.start.toLocaleDateString(undefined, dateOpts)
+            }
+            if (campaign.end) {
+                campaign.end = campaign.end.toLocaleDateString(undefined, dateOpts)
+            }
+
+            const stampsNeeded = campaign.currentStamps.length - campaign.totalStampsNeeded;
             campaign.stampsNeeded = Array.from({ length: stampsNeeded }, () => ({}));
 
             return campaign;

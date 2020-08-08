@@ -107,7 +107,7 @@ async function markLastVisit(user) {
  */
 async function create(userParam) {
     const user = new User(userParam);
-    return await user.save();
+    return user.save();
 }
 
 /**
@@ -118,7 +118,7 @@ async function create(userParam) {
 async function update(id, updateParam) {
     const user = await User.findById(id);
     Object.assign(user, updateParam);
-    return await user.save();
+    return user.save();
 }
 
 /**
