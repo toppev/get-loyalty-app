@@ -79,8 +79,9 @@ async function update(campaignId, updatedCampaign) {
     if (limit !== -1 && isActive(updatedCampaign) && (await getOnGoingCampaigns()).length >= limit - 1) {
         throw new StatusError('Plan limit reached', 402)
     }
-    // Update and return the new document
-    return await Campaign.findByIdAndUpdate(campaignId, updatedCampaign, { new: true });
+    const campaign = await getById(campaignId);
+    Object.assign(campaign, updatedCampaign);
+    return campaign.save();
 }
 
 /**

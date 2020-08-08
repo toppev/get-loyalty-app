@@ -48,8 +48,9 @@ async function create(product) {
  * @param {Object} updatedProduct an object with the values to update
  */
 async function update(productId, updatedProduct) {
-    const product = await Product.findByIdAndUpdate(productId, updatedProduct, { new: true });
-    return product;
+    const product = await getById(productId);
+    Object.assign(product, updatedProduct);
+    return product.save();
 }
 
 /**
