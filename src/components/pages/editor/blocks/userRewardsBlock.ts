@@ -17,12 +17,15 @@ function addUserRewardsBlock(blockManager: any) {
                     <p>{{requirement}}</p>
                     <p>{{customerPoints}} {{translation.points.plural}}</p>
                     {{#each products}}
-                    <span>{{name}}</span>
+                        <span>{{name}}</span>
+                    {{/each}}
                     {{#unless @last}},{{/unless}}
                     {{#each categories}}
-                    <span>{{name}}</span>
-                    {{#unless @last}},{{/unless}}
+                        <span>{{name}}</span>
+                        {{#unless @last}},{{/unless}}
+                    {{/each}}
                 </div>
+                {{/each}}
             </div>
             `
         ),

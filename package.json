@@ -41,7 +41,9 @@
     "react-google-recaptcha": "^2.1.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^3.4.1",
-    "typescript": "^3.9.3"
+    "typescript": "^3.9.3",
+    "@types/dompurify": "^2.0.2",
+    "@types/react-google-recaptcha": "*"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -63,9 +65,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "@types/dompurify": "^2.0.2",
-    "@types/react-google-recaptcha": "^1.1.2"
   }
 }

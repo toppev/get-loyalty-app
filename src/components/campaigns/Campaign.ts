@@ -38,7 +38,13 @@ class Campaign {
         const res = {
             ...this,
             categories: this.categories.map(i => i.id),
-            products: this.products.map(i => i.id)
+            products: this.products.map(i => i.id),
+            requirements: this.requirements.map(req => {
+                if (!req.question) {
+                    delete req.question
+                }
+                return req;
+            })
         };
         delete res.id;
         return res;

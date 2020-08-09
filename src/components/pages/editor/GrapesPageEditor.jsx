@@ -47,7 +47,7 @@ function GrapesPageEditor(props) {
                 urlStore: `${url}/${props.page._id || ""}/?gjsOnly=true`,
                 urlLoad: `${url}/${props.page._id}/?gjsOnly=true`,
                 headers: {
-                    'x-xsrf-token': Cookie.get('XSRF-TOKEN')
+                    'X-XSRF-TOKEN': Cookie.get('XSRF-TOKEN')
                 }
             }
         });
@@ -79,7 +79,6 @@ function GrapesPageEditor(props) {
         addQRCodeBlock(bm);
 
         const saveIfNeeded = () => {
-            console.log(editor.getDirtyCount());
             if (editor.getDirtyCount()) {
                 editor.store()
             }

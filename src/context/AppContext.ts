@@ -1,7 +1,6 @@
 import React from "react";
 import Category from "../components/categories/Category";
 import Reward from "../components/rewards/Reward";
-import { ServerSettings } from "../components/settings/SettingsPage";
 
 export interface AppContextInterface {
     business: Business
@@ -97,7 +96,7 @@ export const defaultAppContext: AppContextInterface = {
     },
     user: {
         email: 'test@example.com',
-        hasPassword: false,
+        hasPassword: true,
         _id: 'testid1234',
         role: 'user'
     },

@@ -15,7 +15,7 @@ function addCampaignsBlock(blockManager: any) {
         label: `Campaigns`,
         content: (`
             <div class="${campaignsClass}">
-                <h2>Campaigns</h2>
+                <h2>Campaigns</h2>cam
                 {{#each campaigns}}
                 <div class="${campaignItemClass}">
                     <h3>{{name}}</h3>
@@ -26,22 +26,26 @@ function addCampaignsBlock(blockManager: any) {
                         {{campaign.currentStamps}}/{{campaign.totalStampsNeeded}}
                         <div style="font-size: 24px">
                             {{#each campaign.currentStamps}}
-                            ${POINTS_ICON}
+                                ${POINTS_ICON}
+                            {{/each}}
                             {{#each campaign.stampsNeeded}}
-                            ${POINTS_NEEDED_ICON}                  
+                                ${POINTS_NEEDED_ICON}
+                            {{/each}}                  
                         </div>
                     </div>
                     <div class="${campaignRewardsClass}">
                         {{#each campaign.rewards}}
-                        <div class="${campaignRewardClass}">
-                            <p>{{name}}</p>
-                            <p>{{description}}</p>
-                            <p>{{itemDiscount}}</p>
-                            <p>{{requirement}}</p>
-                            <p>{{customerPoints}} {{translation.points.plural}}</p>
-                        </div>
+                            <div class="${campaignRewardClass}">
+                                <p>{{name}}</p>
+                                <p>{{description}}</p>
+                                <p>{{itemDiscount}}</p>
+                                <p>{{requirement}}</p>
+                                <p>{{customerPoints}} {{translation.points.plural}}</p>
+                            </div>
+                        {{/each}}
                     </div>
                 </div>
+                {{/each}}
             </div>
             `
         ),
