@@ -52,10 +52,25 @@ function GrapesPageEditor(props) {
             }
         });
 
+        const mobileZoom = 150
         editor.on('load', () => {
             editor.setDevice('Mobile portrait')
+            editor.Canvas.setZoom(mobileZoom)
             //  editor.runCommand('core:open-blocks');
         })
+
+        // There's no event for device change (AFAIK)
+        // Workaround: Check every 0,5 seconds
+        const deviceCheckInterval = setInterval(() => {
+            const isZoom = editor.Canvas.getZoom === mobileZoom
+            if (editor.getDevice() === 'Mobile portrait') {
+                if (!isZoom) {
+                    editor.Canvas.setZoom(mobileZoom)
+                }
+            } else if (isZoom) {
+                editor.Canvas.setZoom(100)
+            }
+        }, 500)
 
         editor.on('storage:start:store', () => {
             uploadHtmlCss(props.page, editor.getHtml(), editor.getCss())
@@ -84,6 +99,7 @@ function GrapesPageEditor(props) {
             if (editor.getDirtyCount()) {
                 editor.store()
             }
+            clearInterval(deviceCheckInterval)
         }
 
         /* Currently disabled because editor#getDirtyCount does not reset for some reason
