@@ -47,7 +47,7 @@ export function RequirementEditor(props: RequirementEditorProps) {
                             key={`val_${index}`}
                             className={classes.textField}
                             name={name}
-                            value={defaultValue}
+                            defaultValue={defaultValue}
                             type={fieldType}
                             label={`${name} (${type})`}
                             multiline // so the placeholder shows correctly

@@ -84,15 +84,11 @@ export default function ({ initialCampaign, onSubmitted }: CampaignFormProps) {
     const [endRewards, setEndRewards] = useState<Reward[]>(campaign.endReward);
     const [requirements, setRequirements] = useState<Requirement[]>([]);
 
-    const [isDates, setIsDates] = useState(false);
-    const [startDate, setStartDate] = useState<Date | undefined>();
-    const [endDate, setEndDate] = useState<Date | undefined>();
+    const [isDates, setIsDates] = useState<boolean>(!!campaign.start || !!campaign.end);
+    const [startDate, setStartDate] = useState<Date | undefined>(campaign.start);
+    const [endDate, setEndDate] = useState<Date | undefined>(campaign.end);
 
     const { error, loading, response, performRequest } = useRequest();
-
-    const [rewardSelectorOpen, setRewardSelectorOpen] = useState(false);
-    // The reward being edited currently (if any)
-    const [editReward, setEditReward] = useState<Reward | undefined>();
 
     const [productSelectorOpen, setProductSelectorOpen] = useState(false);
 
@@ -201,8 +197,9 @@ export default function ({ initialCampaign, onSubmitted }: CampaignFormProps) {
                     </MuiPickersUtilsProvider>
 
                     <Typography variant="h6" className={classes.typography}>Campaign Type(s)</Typography>
-                    <p className={classes.tip}>Specify when this campaign is valid. In other words, select requirements for this campaign</p>
-                    <RequirementSelector onChange={setRequirements}/>
+                    <p className={classes.tip}>Specify when this campaign is valid. In other words, select requirements
+                        for this campaign</p>
+                    <RequirementSelector initialRequirements={requirements} onChange={setRequirements}/>
 
                     <Typography variant="h6" className={classes.typography}>End Rewards</Typography>
 
@@ -244,7 +241,7 @@ export default function ({ initialCampaign, onSubmitted }: CampaignFormProps) {
                             className={classes.submitButton}
                             variant="contained"
                             color="primary"
-                            disabled={isSubmitting}
+                            disabled={loading}
                             startIcon={(<SaveIcon/>)}
                             onClick={submitForm}
                         >Save</Button>

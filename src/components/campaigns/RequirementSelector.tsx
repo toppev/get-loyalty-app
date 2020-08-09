@@ -18,6 +18,7 @@ const useStyles = makeStyles((theme: Theme) =>
     }));
 
 interface RequirementSelectorProps {
+    initialRequirements: Requirement[] | undefined
     onChange: (values: Requirement[]) => any
 }
 
@@ -25,7 +26,7 @@ export default function (props: RequirementSelectorProps) {
 
     const classes = useStyles();
 
-    const [requirements, setRequirements] = useState<Requirement[]>([]);
+    const [requirements, setRequirements] = useState<Requirement[]>(props.initialRequirements || []);
     const [open, setOpen] = useState(false);
 
     useEffect(() => props.onChange(requirements), [props, requirements])

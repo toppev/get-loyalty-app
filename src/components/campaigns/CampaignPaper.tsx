@@ -90,7 +90,7 @@ export default function (props: CampaignPaperProps) {
                 {campaign.name}
             </Typography>
             <p className={classes.description}>{campaign.description}</p>
-            <Divider/>
+            <Divider style={{ marginBottom: '6px' }}/>
             {campaign.requirements.length !== 0 && (
                 <>
                     <b>Campaign
@@ -99,7 +99,7 @@ export default function (props: CampaignPaperProps) {
                         {campaign.requirements.map(req => (
                             <li key={req.type}>
                                 <b>{req.type}</b>
-                                <p>Question: <i>{req.question}</i></p>
+                                {req.question && <p>Question: <i>{req.question}</i></p>}
                                 {req.values.length !== 0 &&
                                 <p>{plural("Value", req.values)}: {req.values.join(', ')}</p>}
                             </li>
