@@ -61,7 +61,9 @@ function GrapesPageEditor(props) {
             uploadHtmlCss(props.page, editor.getHtml(), editor.getCss())
                 .then(() => props.setError())
                 .catch(err => {
-                    props.setError(err?.response?.message || `Oops... Something went wrong. ${`Status code: ${err?.response?.status}` || err}`, editor.store)
+                    props.setError(err?.response?.message || `Oops... Something went wrong. 
+                    ${`Status code: ${err?.response?.status}` || err}. 
+                    This may be caused by invalid placeholders.`, editor.store)
                 });
         });
 
