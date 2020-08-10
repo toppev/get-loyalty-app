@@ -15,6 +15,7 @@ import { usePlaceholderContext } from "./placeholderContext";
 import { addQRCodeBlock, addQRCodeType } from "./blocks/qrCodeBlock";
 import { addEnableNotificationsButton } from "./blocks/enableNotificationsBlock";
 import { backendURL } from "../../../config/axios";
+import { addProductsBlock } from "./blocks/productsBlock";
 
 // So the editor is not rendered every time if the page id didn't change
 export default React.memo(GrapesPageEditor, propsAreEqual);
@@ -74,6 +75,7 @@ function GrapesPageEditor(props) {
 
         addCampaignsBlock(bm);
         addUserRewardsBlock(bm);
+        addProductsBlock(bm);
         addRichTextEditorPlaceholders(editor, placeholderContext);
         addEnableNotificationsButton(bm)
 
