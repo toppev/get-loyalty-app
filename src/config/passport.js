@@ -36,7 +36,11 @@ passport.use(new LocalStrategy({
                 }
                 // Save failed attempt
                 user.authentication.lastAttempt = Date.now()
-                user.authentication.failStreak++
+                if (!user.authentication.failStreak) {
+                    user.authentication.failStreak = 1
+                } else {
+                    user.authentication.failStreak++
+                }
                 await user.save()
             }
             return next(null, false, { message: 'Incorrect email or password.' });
