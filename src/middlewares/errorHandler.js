@@ -1,10 +1,9 @@
 const logger = require('../config/logger');
 
 function errorHandler(err, req, res, _next) {
-    logger.error(`${err.status || 500} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
+    logger.error(`${err.status || 500} - ${err} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
     const status = err.status || 400;
     if (process.env.NODE_ENV !== 'production') {
-        console.log(err);
         return res.status(status).json({
             message: err.toString()
         })
@@ -27,7 +26,7 @@ function errorHandler(err, req, res, _next) {
         });
     }
     return res.status(err.status || 500).json({
-        message: err.message
+        message: 'An error occurred.'
     });
 }
 
