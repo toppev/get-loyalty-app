@@ -17,12 +17,18 @@ module.exports = {
  * @param {boolean} fullUrl whether the path is full url or BASE_URL prefix should be used
  */
 async function takeScreenshot(path, fileName, fullUrl = false) {
-    if (process.env.NODE_ENV === 'test') {
-        return;
-    }
-    request.get(SERVICE_URL, {
-        json: { url: fullUrl ? path : BASE_URL + path }
-    }, (err, _res, _body) => {
-        console.log(`Failed to request a screenshot ${err}`)
-    }).pipe(fs.createWriteStream(fileName));
+    return new Promise((resolve, reject) => {
+        if (process.env.NODE_ENV === 'test') {
+            return;
+        }
+        const stream = request.get(SERVICE_URL, {
+            json: { url: fullUrl ? path : BASE_URL + path }
+        }, (err, _res, _body) => {
+            if (err) {
+                reject(err)
+            }
+        }).pipe(fs.createWriteStream(fileName));
+        stream.on('error', reject);
+        stream.on('finish', () => resolve(fileName));
+    })
 }
