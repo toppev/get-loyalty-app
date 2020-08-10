@@ -33,4 +33,6 @@ function addQRCodeBlock(blockManager: any) {
 export {
     addQRCodeType,
     addQRCodeBlock,
+    loyaltyQRCode,
+    DATA_IDENTIFIER,
 }
