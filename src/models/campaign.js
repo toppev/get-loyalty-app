@@ -15,7 +15,8 @@ const requirementSchema = new Schema({
     question: {
         type: String,
         default: function () {
-            return campaignTypes[this.type].question;
+            let campaignType = campaignTypes[this.type];
+            return campaignType ? campaignType.question : null;
         }
     }
 });
@@ -92,7 +93,7 @@ campaignSchema.methods.getCurrentStamps = function (customerData) {
 
 campaignSchema.virtual("totalStampsNeeded").get(function () {
     const req = this.requirements.some(it => it.type === 'stamps')
-    if (!req) return 0
+    if (!req || !req.values || !req.values.length) return 0
     return parseInt(req.values[0], 10)
 });
 
