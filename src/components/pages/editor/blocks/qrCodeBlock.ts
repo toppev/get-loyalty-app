@@ -19,6 +19,14 @@ function addQRCodeType(editor: any) {
                 }],
             },
         },
+        view: {
+            onRender({ el }: any) {
+                const img = document.createElement('img');
+                img.src = './images/qrPlaceholder.png';
+                img.alt = 'QR Code Placeholder'
+                el.appendChild(img);
+            },
+        }
     });
 }
 
