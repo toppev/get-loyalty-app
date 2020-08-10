@@ -203,10 +203,9 @@ interface NotificationValues {
 
 const askNotificationOptions: NotificationValues = {
     "disabled": { name: "Only the button(s)" },
-    "10": { name: "After 10 seconds" },
+    "1": { name: "Immediately" },
     "20": { name: "After 20 seconds" },
-    "30": { name: "After 30 seconds" },
-    "45": { name: "After 45 seconds" },
+    "45": { name: "After 40 seconds" },
     "60": { name: "After 60 seconds" },
 }
 
@@ -286,13 +285,13 @@ function ServerSettingsForm() {
                     <Paper className={classes.paper}>
                         <Form>
                             <p className={classes.info}>
-                                Create a new DNS A record
+                                Create a new DNS <b>A record</b>
                                 to <b>"{backendURL.replace("https://", "").replace(/\/.*$/, '')}"</b>
-                                and enter an address for your loyalty app.
+                                and enter an address for your loyalty app below.
                             </p>
                             <TextField
                                 className={classes.field}
-                                placeholder="e.g example.com/app or app.example.com"
+                                placeholder="e.g yourdomain.com/app or app.yourdomain.com"
                                 name="appAddress"
                                 type="text"
                                 label="Loyalty App Address"

@@ -41,7 +41,7 @@ export default function ({ onSelect }: PlaceholderSelectorProps) {
                     For example, <i>{"{{ customer.birthday }}"}</i> is replaced with the customers birthday when they
                     visit the site.
                 </p>
-                <p>You also just type the placeholder.</p>
+                <p>You can also just type the placeholder.</p>
             </div>
             {Object.entries(placeholders).map(([key, value]) => (
                 <div key={key}>

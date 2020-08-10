@@ -95,7 +95,7 @@ const placeholders: Placeholders = {
             },
             color: {
                 name: 'Level color',
-                description: 'The hex color of this level. (Use in styling/css)'
+                description: 'The hex color of this level. (Use in styling/CSS)'
             }
         }
     }
