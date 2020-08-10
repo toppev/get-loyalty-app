@@ -25,6 +25,8 @@ function propsAreEqual(prev, next) {
     return prev.page._id === next.page._id;
 }
 
+let XSRF_TOKEN = ""
+
 function GrapesPageEditor(props) {
 
     const url = `${backendURL}/page`;
@@ -49,10 +51,14 @@ function GrapesPageEditor(props) {
                 urlStore: `${url}/${props.page._id || ""}/?gjsOnly=true`,
                 urlLoad: `${url}/${props.page._id}/?gjsOnly=true`,
                 headers: {
-                    'X-XSRF-TOKEN': Cookie.get('XSRF-TOKEN')
+                    'X-XSRF-TOKEN': XSRF_TOKEN
                 }
             }
         });
+
+        editor.on('storage:start:store', () => {
+            XSRF_TOKEN = Cookie.get('XSRF-TOKEN')
+        })
 
         editor.on('load', () => {
             editor.setDevice('Mobile portrait')
