@@ -9,6 +9,7 @@ const StatusError = require('../helpers/statusError');
 const customerService = require('./customerService');
 const campaignService = require('./campaignService');
 const productService = require('./productService');
+const scanService = require('./scanService');
 
 module.exports = {
     createPage,
@@ -151,6 +152,13 @@ async function getPageContext(user) {
     if (business) {
         // All page placeholders
         const userInfo = await customerService.getCustomerInfo(user);
+        userInfo.rewards = (userInfo.rewards || []).map(reward => {
+            return {
+                scanCode: scanService.toScanCode(user, reward),
+                ...reward,
+            }
+        })
+
         const customerData = userInfo.customerData;
         const { config } = business;
         const products = (await productService.getAllProducts(true)).map(it => it.toObject());

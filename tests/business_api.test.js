@@ -37,7 +37,7 @@ describe('Logged in user can', () => {
             .send(businessParam)
             .set('Cookie', cookie)
             .expect(200);
-        business = await businessService.getBusiness(res.body._id);
+        business = await businessService.getBusiness();
         expect(business.email).toBe(businessParam.email);
         const user = await User.findById(userId);
         expect(user.role).toBe('business');

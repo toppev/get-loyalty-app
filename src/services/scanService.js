@@ -1,9 +1,9 @@
 const userService = require('./userService');
 const StatusError = require('../helpers/statusError');
+const Business = require('../models/business');
 const customerService = require('./customerService');
 const campaignService = require('./campaignService');
 const pollingService = require('./pollingService');
-const businessService = require('./businessService');
 const format = require('../helpers/stringUtils').format;
 const { asyncFilter } = require('../helpers/asyncFilter');
 
@@ -33,6 +33,18 @@ async function parseScanString(scanStr) {
     }
     const rewardId = split[1];
     return { user, userId, rewardId }
+}
+
+/**
+ *
+ * @param user the user object or ID of the user. (Required)
+ * @param reward the reward or its ID or null/undefined
+ * @return string
+ */
+function toScanCode(user, reward) {
+    const userId = user.id || user;
+    const rewardId = reward.id || reward;
+    return rewardId ? `${userId}:${rewardId}` : userId
 }
 
 /**
@@ -89,7 +101,7 @@ async function getScan(scanStr) {
         addQuestions(questions, categories, products, requirements);
         questions.push({ question: 'Confirm', options: ['Yes', 'No'] });
     }
-    const business = await businessService.getBusiness();
+    const business = await Business.findOne();
     pollingService.sendToUser(userId, {
         message: business.config.translations.qrScanned.singular,
         refresh: false,
@@ -130,7 +142,7 @@ async function useScan(scanStr, data) {
     const { user, userId, rewardId } = await parseScanString(scanStr);
     const customerData = user.customerData;
     const reward = await validateRewardId(rewardId, customerData);
-    const business = await businessService.getBusiness();
+    const business = await Business.findOne();
     const translations = business.config.translations;
 
     let responseMessage;
@@ -217,4 +229,5 @@ function _sendRewardsMessage(userId, business, newRewards) {
 module.exports = {
     getScan,
     useScan,
+    toScanCode
 }

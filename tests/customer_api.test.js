@@ -25,7 +25,7 @@ beforeAll(async () => {
         .post('/business/create')
         .send(businessParam)
         .set('Cookie', cookie);
-    await businessService.getBusiness(res2.body._id);
+    await businessService.getBusiness();
 });
 
 describe('Logged in user with permissions can modify customer purchases', () => {
