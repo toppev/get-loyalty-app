@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import CloseButton from "../../common/button/CloseButton";
-import { Button, Collapse, createStyles, Dialog, Grid, Paper, TextField, Theme } from "@material-ui/core";
+import { Button, Collapse, createStyles, Dialog, Divider, Grid, Paper, TextField, Theme } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import SVGIcons from "./SVGIcons";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
@@ -17,9 +17,14 @@ const useStyles = makeStyles((theme: Theme) =>
             margin: '7px',
             textAlign: 'center'
         },
+        iconsGrid: {
+            maxHeight: '500px',
+            overflow: 'hidden'
+        },
         customHtmlDiv: {
             textAlign: 'center',
-            margin: '10px 0px'
+            margin: '10px 0px',
+            padding: '6px'
         },
         htmlField: {
             width: '85%',
@@ -67,7 +72,7 @@ export default function (props: IconSelectorProps) {
             >Select Icon</Button>
             <Dialog open={open} fullWidth onClose={() => setOpen(false)}>
                 <CloseButton onClick={() => setOpen(false)}/>
-                <Grid container>
+                <Grid container className={classes.iconsGrid}>
                     {icons.map((icon, i) => (
                         <Grid item xs={4} key={i}>
                             <SeletableIcon icon={icon} onSelect={() => {
@@ -77,7 +82,7 @@ export default function (props: IconSelectorProps) {
                         </Grid>
                     ))}
                 </Grid>
-
+                <Divider/>
                 <div>
                     <div className={classes.customHtmlDiv}>
                         <Button
@@ -99,11 +104,11 @@ export default function (props: IconSelectorProps) {
                                 onChange={(e) => setHtml(e.target.value)}
                             />
                             <div>
-                                    <Paper className={classes.previewPaper}>
-                                        <div className={classes.icon}>
-                                            <PageIcon icon={html}/>
-                                        </div>
-                                    </Paper>
+                                <Paper className={classes.previewPaper}>
+                                    <div className={classes.icon}>
+                                        <PageIcon icon={html}/>
+                                    </div>
+                                </Paper>
                                 <Button
                                     size="small"
                                     className={classes.saveButton}
