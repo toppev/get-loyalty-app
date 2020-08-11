@@ -24,6 +24,7 @@ passport.use(new LocalStrategy({
                     const cooldownLeft = (1000 * 60 * 30) - (lastAttempt ? Date.now() - lastAttempt.getTime() : 0)
                     const cooldownMinutes = cooldownLeft / 60000
                     if (cooldownMinutes > 0) {
+                        console.log(`${email} has reached max login attempts (${user.authentication.failStreak}).`)
                         return next(null, false, { message: `Max login attempts reached. Please try again in ${cooldownMinutes} minutes.` });
                     }
                 }

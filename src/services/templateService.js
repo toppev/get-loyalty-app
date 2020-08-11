@@ -5,13 +5,13 @@ const uploader = require('../helpers/uploader');
 const PAGE_API_URL = 'https://api.getloyalty.app/page';
 
 /** IDs of the template pages that will be saved initially */
-const TEMPLATE_IDS = ['asd']
+const TEMPLATE_IDS = []
 
 async function loadDefaultTemplates() {
     if (!TEMPLATE_IDS.length) return;
     try {
         let templates = await getTemplates();
-        if(!Array.isArray(templates)) templates = []
+        if (!Array.isArray(templates)) templates = []
 
         await Promise.all(templates.map(template => {
             if (TEMPLATE_IDS.includes(template.id)) {
