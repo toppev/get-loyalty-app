@@ -1,3 +1,5 @@
+import { DATA_IDENTIFIER, loyaltyQRCode } from "./qrCodeBlock";
+
 const userRewardsClass = "loyalty-user-rewards"
 const userRewardItemClass = "loyalty-user-reward"
 
@@ -12,6 +14,9 @@ function addUserRewardsBlock(blockManager: any) {
                 {{#each user.rewards}}
                 <div class="${userRewardItemClass}">
                     <p>{{name}}</p>
+                    
+                    <img data-gjs-type="${loyaltyQRCode}" ${DATA_IDENTIFIER}="{{scanCode}}"/>
+                    
                     <p>{{description}}</p>
                     <p>{{itemDiscount}}</p>
                     <p>{{requirement}}</p>
