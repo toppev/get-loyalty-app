@@ -502,10 +502,12 @@ interface TemplateSelectorDialogProps {
 function TemplateSelectorDialog({ open, onClose, onSelect }: TemplateSelectorDialogProps) {
 
     const classes = useStyles();
-    const appContext = useContext(AppContext);
 
     const [previewPage, setPreviewPage] = useState<Page | undefined>();
-    const { error, loading, response } = useRequest(listTemplates, { performInitially: true });
+    const { error, loading, response } = useRequest(listTemplates, {
+        performInitially: true,
+        errorMessage: 'Failed to load template pages'
+    });
     const [templates, setTemplates] = useResponseState<Page[]>(response, [], res => res.data.map((d: any) => new Page(d)))
 
     const blankPage = new Page({

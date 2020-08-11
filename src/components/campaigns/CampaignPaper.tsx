@@ -108,10 +108,11 @@ export default function (props: CampaignPaperProps) {
                 </>)
             }
             <br/>
-            <p>Start: {start?.toDateString()} <span className={classes.detail}>{toStartStr}</span></p>
             <p>
-                End: {end?.toDateString() || <i>not specified</i>}
-                <span className={classes.detail}>{toEndStr}</span>
+                Start: {start?.toDateString()} <span className={classes.detail}>{toStartStr}</span>
+            </p>
+            <p>
+                End: {end?.toDateString() || <i>not specified</i>} <span className={classes.detail}>{toEndStr}</span>
             </p>
             <br/>
             <p>

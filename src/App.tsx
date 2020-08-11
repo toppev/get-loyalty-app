@@ -83,7 +83,7 @@ export default function () {
             paddingRight: notMobile && navDrawerOpen ? paddingLeftDrawerOpen : 0
         },
         bodyDiv: {
-            margin: '65px 20px 20px 15px',
+            margin: '65px 20px 20px 0px',
             paddingLeft: notMobile ? paddingLeftDrawerOpen + 15 : 0,
         },
         content: {},

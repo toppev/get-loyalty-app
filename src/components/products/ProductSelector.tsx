@@ -74,24 +74,21 @@ export default function ({ open, text, onClickClose, onSubmit, limitNotification
                     <DialogContentText id="alert-dialog-description">{text}</DialogContentText>
                 </div>
                 <div>
-                    <Button
-                        className={classes.selectBtn}
-                        variant="outlined"
-                        onClick={() => setSelectedProducts(products)}
-                    >Select All</Button>
                     {selectedProducts.length > 0 &&
                     <Button
                         className={classes.selectBtn}
                         variant="outlined"
                         onClick={() => setSelectedProducts([])}
                     >Deselect All</Button>}
+                    
                     <div className={classes.info}>
                         {products.length > 0 &&
                         <p>You don't need to select all products. Instead, leave it empty and all products are
                             assumed!</p>}
                         {loading && <LinearProgress/>}
                         {!loading && products.length === 0 &&
-                        <p>You don't have any products. You can add a few products on <a href={'/products'}>this</a> page</p>}
+                        <p>You don't have any products. You can add a few products on <a
+                            href={'/products'}>this</a> page</p>}
                     </div>
                     <ul>
                         {products

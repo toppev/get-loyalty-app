@@ -178,7 +178,6 @@ export default function ({ initialCampaign, onSubmitted }: CampaignFormProps) {
                     </RadioGroup>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <KeyboardDatePicker
-                            disablePast
                             margin="normal"
                             label="Campaign start date (dd/MM/yyyy)"
                             format="dd/MM/yyyy"
@@ -187,7 +186,7 @@ export default function ({ initialCampaign, onSubmitted }: CampaignFormProps) {
                         />
                         <KeyboardDatePicker
                             disabled={!isDates}
-                            disablePast
+                            disablePast={!campaign.end}
                             margin="normal"
                             label="Campaign end date (dd/MM/yyyy)"
                             format="dd/MM/yyyy"

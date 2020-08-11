@@ -16,7 +16,8 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         secondTypography: {
             color: theme.palette.grey[500],
-            fontSize: '14px'
+            fontSize: '14px',
+            maxWidth: '600px'
         },
         editLink: {
             color: theme.palette.info.light,
@@ -26,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         item: {
             padding: '10px',
-            margin: '0px 20px'
+            margin: '0px 15px'
         },
         qrCodeStuff: {},
         linkItem: {
@@ -63,9 +64,9 @@ export default function () {
                         Scan the QR code or share the link to try on other devices
                     </Typography>
                     <Typography className={classes.secondTypography} variant="h6">
-                        This is what you would see as a customer. Only published sites will display. Some features (for
-                        example, enabling push notifications) do not work in this embedded demo. Open the link on your
-                        phone for better experience.
+                        This is what you would see as a customer. Only published sites will be displayed. Some features
+                        (for example, enabling push notifications) do not work in this embedded demo. Open the link on
+                        your phone for better experience.
                     </Typography>
                     <p className={classes.editLink}>
                         Edit pages <Link href='/pages' underline='always' color='inherit'>here</Link>

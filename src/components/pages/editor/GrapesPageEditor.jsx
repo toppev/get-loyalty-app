@@ -10,7 +10,7 @@ import { addCampaignsBlock } from "./blocks/campaignBlock";
 import { addUserRewardsBlock } from "./blocks/userRewardsBlock";
 import Cookie from "js-cookie";
 import { uploadHtmlCss } from "../../../services/pageService";
-import { addRichTextEditorPlaceholders } from "./blocks/richPlaceholder";
+import { addRichTextEditorPlaceholders } from "./richPlaceholder";
 import { usePlaceholderContext } from "./placeholderContext";
 import { addQRCodeBlock, addQRCodeType } from "./blocks/qrCodeBlock";
 import { addEnableNotificationsButton } from "./blocks/enableNotificationsBlock";
