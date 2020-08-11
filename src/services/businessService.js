@@ -3,6 +3,7 @@ const User = require('../models/user');
 const uploader = require('../helpers/uploader');
 const fs = require('fs');
 const StatusError = require('../helpers/statusError');
+const templateService = require('./templateService');
 
 module.exports = {
     getOwnBusiness,
@@ -41,6 +42,7 @@ async function createBusiness(businessParam, userId) {
     const business = new Business(businessParam);
     await business.save();
     await setUserRole(userId, 'business');
+    templateService.loadDefaultTemplates().then()
     return business;
 }
 
