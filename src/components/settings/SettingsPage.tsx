@@ -15,7 +15,7 @@ import {
     useMediaQuery,
     useTheme
 } from "@material-ui/core";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Form, Formik, FormikErrors } from "formik";
 import AppContext, { Business } from "../../context/AppContext";
@@ -26,12 +26,13 @@ import { Alert } from "@material-ui/lab";
 import { backendURL } from "../../config/axios";
 import useRequest from "../../hooks/useRequest";
 import SaveChangesSnackbar from "../common/SaveChangesSnackbar";
-import { getOrCreateServer, updateServer, waitForServer } from "../../services/serverService";
+import { getOrCreateServer, updateServer } from "../../services/serverService";
 import RetryButton from "../common/button/RetryButton";
 import { isURL } from "../../util/Validate";
 import { listPages } from "../../services/pageService";
 import useResponseState from "../../hooks/useResponseState";
 import { Page } from "../pages/Page";
+import CloseButton from "../common/button/CloseButton";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -221,7 +222,7 @@ function ServerSettingsForm() {
         {},
         (res) => setAskNotifications(res.data?.website?.askNotifications))
 
-    const [restarting, setRestarting] = useState(false);
+    const [popupOpen, setPopupOpen] = useState(false);
 
     const validate = (settings: ServerSettings) => {
         const errors: FormikErrors<ServerSettings> = {};
@@ -230,12 +231,6 @@ function ServerSettingsForm() {
         }
         return errors;
     }
-
-    useEffect(() => {
-        if (restarting) {
-            waitForServer(() => setRestarting(false))
-        }
-    }, [restarting]);
 
     const loading = serverInfo.loading || updateRequest.loading
     const error = serverInfo.error || updateRequest.error
@@ -249,11 +244,11 @@ function ServerSettingsForm() {
             <Typography className={classes.sectionTypography} variant="h6" align="center">Other</Typography>
             {loading && <LinearProgress/>}
             {error && <RetryButton error={error}/>}
-            <Dialog open={restarting}>
+            <Dialog open={popupOpen}>
                 <DialogContent>
+                    <CloseButton onClick={() => setPopupOpen(false)}/>
                     <Typography variant="h5" color="secondary">Your app is restarting...</Typography>
                     <p>This may take up to a few minutes.</p>
-                    <LinearProgress/>
                 </DialogContent>
             </Dialog>
 
@@ -270,7 +265,7 @@ function ServerSettingsForm() {
                             values.appAddress = `https://${values.appAddress}`
                         }
                         values.website.askNotifications = askNotifications
-                        setRestarting(true)
+                        setPopupOpen(true)
                         updateRequest.performRequest(
                             () => updateServer(values),
                             (res) => {
@@ -285,8 +280,8 @@ function ServerSettingsForm() {
                     <Paper className={classes.paper}>
                         <Form>
                             <p className={classes.info}>
-                                Create a new DNS <b>A record</b>
-                                to <b>"{backendURL.replace("https://", "").replace(/\/.*$/, '')}"</b>
+                                Create a new DNS <b>A record </b>
+                                to <b>"{backendURL.replace("https://", "").replace(/\/.*$/, '')}" </b>
                                 and enter an address for your loyalty app below.
                             </p>
                             <TextField

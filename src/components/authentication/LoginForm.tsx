@@ -84,8 +84,12 @@ export default function LoginForm({}: LoginFormProps) {
 
     const recaptchaRef = useRef(null);
 
-    // @ts-ignore
-    const getCaptchaToken = (): Promise<string> => recaptchaRef.current.executeAsync()
+    const getCaptchaToken = (): Promise<string> => {
+        // @ts-ignore
+        recaptchaRef.current.reset()
+        // @ts-ignore
+        return recaptchaRef.current.executeAsync()
+    }
 
     const [passwordResetOpen, setPasswordResetOpen] = useState(false);
     const [email, setEmail] = useState(initialValues.email);
