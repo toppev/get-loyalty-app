@@ -64,8 +64,9 @@ const useStyles = makeStyles((theme: Theme) =>
             left: '38px'
         },
         message: {
+            marginTop: '5px',
             fontSize: '14px',
-            color: theme.palette.grey[600]
+            color: theme.palette.grey[700]
         },
     }));
 
@@ -160,7 +161,11 @@ export default function LoginForm({}: LoginFormProps) {
                 .catch((e) => {
                     actions.setSubmitting(false)
                     if (e.response?.status === 404) {
-                        setMessage('No servers available. Please try again later.')
+                        if (creatingAccount) {
+                            setMessage('No servers available. Please try again later.')
+                        } else {
+                            setMessage('Account not found. Did you mean to register?')
+                        }
                     } else {
                         setMessage(e?.response?.data?.message || `Error code: ${e?.response?.status}` || e.toString())
                     }
@@ -250,6 +255,7 @@ export default function LoginForm({}: LoginFormProps) {
                                     <br/>
                                     <div className={classes.submitDiv}>
                                         <Button
+                                            type="submit"
                                             className={classes.submitButton}
                                             variant={values.acceptAll ? "outlined" : "contained"}
                                             color="primary"
