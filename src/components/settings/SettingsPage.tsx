@@ -313,6 +313,7 @@ function ServerSettingsForm() {
                                 name="website.title"
                                 type="text"
                                 label="App Title"
+                                multiline
                             />
                             <TextField
                                 className={classes.field}
@@ -320,6 +321,7 @@ function ServerSettingsForm() {
                                 placeholder="Short description of the app/site"
                                 type="text"
                                 label="App Description"
+                                multiline
                             />
                             <TextField
                                 className={classes.field}
@@ -327,6 +329,7 @@ function ServerSettingsForm() {
                                 placeholder="Comma separated keywords"
                                 type="text"
                                 label="App Keywords"
+                                multiline
                             />
                             <FormHelperText
                                 style={{ marginTop: '10px' }}
