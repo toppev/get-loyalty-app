@@ -2,10 +2,6 @@ import { useCallback, useEffect, useState } from "react";
 import RequestError from "../util/requestError";
 import { AxiosResponse } from "axios";
 
-// IF TRUE THERE WONT BE ERRORS
-// FOR TESTING ONLY
-const NO_ERROR = false;
-
 type Request = () => Promise<any>
 type Callback = (response: AxiosResponse) => any
 type OnError = (err: any) => any
@@ -14,7 +10,7 @@ type RequestWithCallback = {
     request?: Request
     callback?: Callback
     onError?: OnError
-};
+}
 
 /**
  * Hook to easily perform axios request with possibility to retry on error
@@ -73,7 +69,7 @@ export default function useRequest(
                 .catch((err: any) => {
                     console.log(err);
                     setError({
-                        message: opts.errorMessage,
+                        message: opts.errorMessage || parseError(err),
                         error: err,
                         retry: () => execute(),
                         clearError: () => setError(undefined)
@@ -97,10 +93,18 @@ export default function useRequest(
 
     return {
         loading,
-        error: NO_ERROR ? undefined : error,
+        error: error,
         response,
         execute,
         performRequest
     }
 
+}
+
+function parseError(err: any) {
+    const data = err?.response?.data
+    if (Array.isArray(data?.message)) {
+        return data?.message.join()
+    }
+    return data?.message
 }
