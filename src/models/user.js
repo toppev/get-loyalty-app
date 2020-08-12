@@ -62,6 +62,20 @@ const userSchema = new Schema({
             type: Number
         }
     },
+    termsAccepted: {
+        type: Date,
+        validate: {
+            validator: (value) => !this.termsAccepted || value > this.termsAccepted,
+            message: 'termsAccepted date can not be before the old value',
+        },
+    },
+    privacyPolicyAccepted: {
+        type: Date,
+        validate: {
+            validator: (value) => !this.privacyPolicyAccepted || value > this.privacyPolicyAccepted,
+            message: 'privacyPolicyAccepted date can not be before the old value',
+        },
+    },
     customerData: {
         purchases: [purchaseSchema],
         rewards: [rewardSchema],

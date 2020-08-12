@@ -16,7 +16,7 @@ beforeAll(async () => {
 describe('Not logged in user should', () => {
 
     it('register without password', async () => {
-        const secondUserParams = { email: 'example2@email.com' };
+        const secondUserParams = { email: 'example2@email.com', acceptAll: true };
         const res = await api
             .post('/user/register')
             .send(secondUserParams)
@@ -27,7 +27,7 @@ describe('Not logged in user should', () => {
     });
 
     it('register with password', async () => {
-        const testUserParams = { email: 'example3@email.com', password: "asdasdasd" };
+        const testUserParams = { email: 'example3@email.com', password: "asdasdasd", acceptAll: true };
         const res = await api
             .post('/user/register')
             .send(testUserParams)
@@ -106,7 +106,7 @@ describe('Logged in user should', () => {
         const res = await api
             .patch('/user/' + userId)
             .set('Cookie', cookie)
-            .send({ email: email })
+            .send({ email: email, acceptAll: true })
             .expect(200);
         expect(res.body.email).toEqual(email);
         // And was saved in database
