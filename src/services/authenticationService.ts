@@ -7,7 +7,9 @@ type LoginCredentials = {
     email?: string,
     password?: string,
     /** Captcha token */
-    token: string
+    token?: string
+    /** Accept ToS/privacy policy etc (for registration) */
+    acceptAll?: boolean
 }
 
 function loginRequest(data: LoginCredentials) {

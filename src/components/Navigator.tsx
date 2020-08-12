@@ -28,6 +28,9 @@ import { AccountNotificationValues } from './account/AccountNotifications';
 
 const drawerWidth = 240;
 export const DOMAIN_HOME_PAGE = "GetLoyalty.App"
+export const privacyLink = `https://${DOMAIN_HOME_PAGE}/privacy`;
+export const termsLink = `https://${DOMAIN_HOME_PAGE}/terms`;
+
 
 const categories = [
     {
@@ -61,11 +64,11 @@ const categories = [
 const otherLinks = [
     {
         id: 'Privacy',
-        to: `https://${DOMAIN_HOME_PAGE}/privacy`
+        to: privacyLink
     },
     {
         id: 'Terms of Service',
-        to: `https://${DOMAIN_HOME_PAGE}/terms`
+        to: termsLink
     },
 ]
 

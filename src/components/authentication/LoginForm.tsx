@@ -3,14 +3,16 @@ import {
     Button,
     Container,
     createStyles,
+    FormControlLabel,
     LinearProgress,
+    Link,
     makeStyles,
     Theme,
     Typography,
 } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { Formik, FormikErrors, FormikHelpers } from 'formik';
-import { TextField } from 'formik-material-ui';
+import { Checkbox, TextField } from 'formik-material-ui';
 import React, { useContext, useRef, useState } from 'react';
 
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
@@ -23,6 +25,7 @@ import { getOrCreateServer, waitForServer } from "../../services/serverService";
 import { AxiosResponse } from 'axios';
 import { isEmail } from "../../util/Validate";
 import ReCAPTCHA from 'react-google-recaptcha';
+import { privacyLink, termsLink } from "../Navigator";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -63,19 +66,20 @@ const useStyles = makeStyles((theme: Theme) =>
         message: {
             fontSize: '14px',
             color: theme.palette.grey[600]
-        }
+        },
     }));
 
 interface FormValues {
     email: string,
     password: string
     token: string
+    acceptAll: boolean
 }
 
 interface LoginFormProps {
 }
 
-const initialValues: FormValues = { email: "", password: "", token: "" }
+const initialValues: FormValues = { email: "", password: "", token: "", acceptAll: false }
 
 export default function LoginForm({}: LoginFormProps) {
 
@@ -115,11 +119,7 @@ export default function LoginForm({}: LoginFormProps) {
         loginRequest(values)
             .then(onSuccess)
             .catch(err => {
-                if (err.response) {
-                    const { status, data } = err.response
-                    setErrors({ password: `An error occurred. ${data?.message || `Status code: ${status}`}` })
-                }
-                setErrors({ password: `An error occurred. Please try again. ${err}` })
+                setErrors({ password: `${err}` })
             })
             .finally(() => {
                 setMessage('')
@@ -200,7 +200,7 @@ export default function LoginForm({}: LoginFormProps) {
                     validate={validate}
                 >
                     {props => {
-                        const { isSubmitting, submitForm, handleSubmit } = props;
+                        const { isSubmitting, submitForm, handleSubmit, values } = props;
                         return (
                             <>
                                 <form className={classes.form} onSubmit={handleSubmit}>
@@ -223,6 +223,26 @@ export default function LoginForm({}: LoginFormProps) {
                                         required
                                     />
 
+                                    <div style={{ textAlign: 'center' }}>
+                                        <FormControlLabel
+                                            control={<Checkbox name="acceptAll" size="small"/>}
+                                            label={<p style={{ fontSize: '12px' }}>
+                                                Accept
+                                                <Link
+                                                    href={privacyLink}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                > terms of service </Link>
+                                                and
+                                                <Link
+                                                    href={termsLink}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                > privacy policy</Link>.
+                                            </p>}
+                                        />
+                                    </div>
+
                                     <Typography variant="h6" align="center"
                                                 className={classes.message}>{message}</Typography>
                                     {isSubmitting && <LinearProgress/>}
@@ -231,7 +251,7 @@ export default function LoginForm({}: LoginFormProps) {
                                     <div className={classes.submitDiv}>
                                         <Button
                                             className={classes.submitButton}
-                                            variant="contained"
+                                            variant={values.acceptAll ? "outlined" : "contained"}
                                             color="primary"
                                             disabled={isSubmitting}
                                             startIcon={<NavigateNextIcon/>}
@@ -242,9 +262,9 @@ export default function LoginForm({}: LoginFormProps) {
                                         >Login</Button>
                                         <Button
                                             className={classes.submitButton}
-                                            variant="outlined"
+                                            variant="contained"
                                             color="primary"
-                                            disabled={isSubmitting}
+                                            disabled={isSubmitting || !values.acceptAll}
                                             startIcon={<AddIcon/>}
                                             onClick={() => {
                                                 setCreatingAccount(true)
