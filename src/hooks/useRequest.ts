@@ -88,6 +88,7 @@ export default function useRequest(
     }, [execute])
 
     const performRequest = useCallback((request: Request, callback?: Callback, onError?: OnError) => {
+        setError(undefined)
         setRequestContext({ request, callback, onError })
     }, [])
 
