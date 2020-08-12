@@ -246,7 +246,7 @@ function ServerSettingsForm() {
             </Typography>
             {loading && <LinearProgress/>}
             {error && <RetryButton error={error}/>}
-            <Dialog open={popupOpen}>
+            <Dialog open={popupOpen} fullWidth>
                 <DialogContent>
                     <CloseButton onClick={() => setPopupOpen(false)}/>
                     <Typography variant="h5" color="secondary">Your app is restarting...</Typography>
@@ -354,6 +354,10 @@ function ServerSettingsForm() {
                                     </MenuItem>
                                 ))}
                             </Select>
+
+                            <p style={{ margin: '6px 0px', color: '#4c4c4c' }}>
+                                Changes to some settings may take longer (up to a few hours) to be visible on the website.
+                            </p>
 
                             <div>
                                 <Button

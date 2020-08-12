@@ -21,7 +21,8 @@ export default function () {
 
     const [icon, setIcon] = useState<File | undefined>();
 
-    const [infoText, setInfoText] = useState('.ico files only. Recommended sizes: 512x512 192x192 64x64 32x32 16x16');
+    const defaultInfoText = '.ico files only. Recommended sizes: 512x512 192x192 64x64 32x32 16x16';
+    const [infoText, setInfoText] = useState(defaultInfoText);
 
     const classes = useStyles();
 
@@ -52,6 +53,10 @@ export default function () {
                         setBusinessIcon(icon).then(() => {
                             setIcon(undefined)
                             setInfoText('Icon set!')
+                            setTimeout(() => {
+                                setIcon(undefined)
+                                setInfoText(defaultInfoText)
+                            }, 5000)
                         })
                     }}
                 >Upload Icon</Button> : <p style={{ fontSize: '12px' }}>{infoText}</p>
