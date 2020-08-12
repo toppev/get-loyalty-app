@@ -24,8 +24,27 @@ function updateServerOwner(data: { email: string, updated: { email: string } }) 
     return post(`${SERVER_API_URL}/user/update`, data, true)
 }
 
+
+/**
+ * Ping the server until it responds.
+ */
+function waitForServer(callback: () => any) {
+
+    const sendRequest = () => {
+        setTimeout(() => {
+            get('/ping')
+                .then(callback)
+                .catch(() => setTimeout(sendRequest, 2000))
+        }, 500)
+    }
+
+    sendRequest()
+
+}
+
 export {
     getOrCreateServer,
     updateServer,
-    updateServerOwner
+    updateServerOwner,
+    waitForServer
 }

@@ -26,7 +26,7 @@ import { Alert } from "@material-ui/lab";
 import { backendURL } from "../../config/axios";
 import useRequest from "../../hooks/useRequest";
 import SaveChangesSnackbar from "../common/SaveChangesSnackbar";
-import { getOrCreateServer, updateServer } from "../../services/serverService";
+import { getOrCreateServer, updateServer, waitForServer } from "../../services/serverService";
 import RetryButton from "../common/button/RetryButton";
 import { isURL } from "../../util/Validate";
 import { listPages } from "../../services/pageService";
@@ -118,7 +118,7 @@ export default function () {
             <Box display="flex" flexDirection={bigScreen ? "row" : "column"}>
                 <Paper className={classes.paper}>
                     <Typography className={classes.sectionTypography} variant="h6" align="center">
-                        Translations & Names
+                        Translations
                     </Typography>
                     <p className={classes.description}
                     >You can translate messages and other things here.</p>
@@ -241,7 +241,9 @@ function ServerSettingsForm() {
 
     return (
         <div>
-            <Typography className={classes.sectionTypography} variant="h6" align="center">Other</Typography>
+            <Typography className={classes.sectionTypography} variant="h6" align="center">
+                Other Settings
+            </Typography>
             {loading && <LinearProgress/>}
             {error && <RetryButton error={error}/>}
             <Dialog open={popupOpen}>
@@ -269,10 +271,24 @@ function ServerSettingsForm() {
                         updateRequest.performRequest(
                             () => updateServer(values),
                             (res) => {
-                                actions.setSubmitting(false);
+                                actions.setSubmitting(false)
+                                setPopupOpen(false)
                             },
-                            () => actions.setSubmitting(false)
+                            (e) => {
+                                const status = e.response.status
+                                if (status === 408 || status === 504 || status === 524) {
+                                    waitForServer(() => {
+                                        actions.setSubmitting(false)
+                                        setPopupOpen(false)
+                                    })
+                                } else {
+                                    actions.setSubmitting(false)
+                                    setPopupOpen(false)
+                                }
+                            }
                         );
+                    } else {
+                        actions.setSubmitting(false)
                     }
                 }}
             >
