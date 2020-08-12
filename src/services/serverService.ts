@@ -16,23 +16,6 @@ async function getOrCreateServer(data: { email: string, token?: string }, create
     return { created: res.status === 201, ...res };
 }
 
-/**
- * Ping the server until it responds.
- */
-function waitForServer(callback: () => any) {
-
-    const sendRequest = () => {
-        setTimeout(() => {
-            get('/ping')
-                .then(callback)
-                .catch(() => setTimeout(sendRequest, 2000))
-        }, 500)
-    }
-
-    sendRequest()
-
-}
-
 function updateServer(data: ServerSettings) {
     return post(`${SERVER_API_URL}/server/update`, data, true)
 }
@@ -43,7 +26,6 @@ function updateServerOwner(data: { email: string, updated: { email: string } }) 
 
 export {
     getOrCreateServer,
-    waitForServer,
     updateServer,
     updateServerOwner
 }

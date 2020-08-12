@@ -21,7 +21,7 @@ import PasswordResetRequestDialog from "./PasswordResetRequestDialog";
 import AppContext from "../../context/AppContext";
 import { loginRequest, onLoginOrAccountCreate, registerRequest } from '../../services/authenticationService';
 import usePasswordReset from "./usePasswordReset";
-import { getOrCreateServer, waitForServer } from "../../services/serverService";
+import { getOrCreateServer } from "../../services/serverService";
 import { AxiosResponse } from 'axios';
 import { isEmail } from "../../util/Validate";
 import ReCAPTCHA from 'react-google-recaptcha';
@@ -149,14 +149,12 @@ export default function LoginForm({}: LoginFormProps) {
             const { email } = values
             getOrCreateServer({ email, token }, creatingAccount)
                 .then(() => {
-                    waitForServer(() => {
-                        values.token = token
-                        if (creatingAccount) {
-                            createAccount(values, actions).then()
-                        } else {
-                            loginAccount(values, actions).then()
-                        }
-                    })
+                    values.token = token
+                    if (creatingAccount) {
+                        createAccount(values, actions).then()
+                    } else {
+                        loginAccount(values, actions).then()
+                    }
                 })
                 .catch((e) => {
                     actions.setSubmitting(false)
