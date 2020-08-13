@@ -12,7 +12,7 @@ async function getOrCreateServer(data: { email: string, token?: string }, create
             deleted : 'Seems like your data was deleted. Perhaps your plan expired?' +
             'Please be in contact if you would like to restore and upgrade your plan.')
     }
-    setBackendUrl(res.data.publicAddress)
+    setBackendUrl(res.data.apiendpoint)
     return { created: res.status === 201, ...res };
 }
 
