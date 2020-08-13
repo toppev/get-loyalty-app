@@ -97,7 +97,7 @@ class _LoginPageState extends State<LoginPage> {
                     setState(() => buttonDisabled = true);
                     try {
                       await userService.login(
-                          UserCredentials(_email.trim(), _password.trim()));
+                          UserCredentials(_email.trim(), _password));
                       setState(() {
                         _email = "";
                         _password = "";
