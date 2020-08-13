@@ -96,6 +96,7 @@ const useStyles = makeStyles((theme: Theme) =>
         templateDialog: {},
         pageCard: {
             margin: '15px',
+            textAlign: 'center'
         },
         pageDesc: {
             color: theme.palette.grey[700],
@@ -511,7 +512,7 @@ function TemplateSelectorDialog({ open, onClose, onSelect }: TemplateSelectorDia
     const [templates, setTemplates] = useResponseState<Page[]>(response, [], res => res.data.map((d: any) => new Page(d)))
 
     const blankPage = new Page({
-        id: 'blank_page',
+        _id: 'blank_page',
         name: 'Blank Page',
         description: 'Start from scratch with a blank page.'
     })
@@ -520,6 +521,7 @@ function TemplateSelectorDialog({ open, onClose, onSelect }: TemplateSelectorDia
         <>
             <Button
                 className={classes.actionButton}
+                disabled={page._id?.length !== 24}
                 color="primary"
                 variant="contained"
                 onClick={() => setPreviewPage(page)}

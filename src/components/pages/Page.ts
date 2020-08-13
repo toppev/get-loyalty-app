@@ -10,7 +10,7 @@ class Page {
     externalURL?: string
 
     constructor(data: any) {
-        this._id = data._id;
+        this._id = data._id || data.id;
         this.name = data.name;
         this.description = data.description;
         this.stage = data.stage;

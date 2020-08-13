@@ -298,7 +298,7 @@ function ServerSettingsForm() {
                             <p className={classes.info}>
                                 Create a new DNS <b>A record </b>
                                 to <b>"{backendURL.replace("https://", "").replace(/\/.*$/, '')}" </b>
-                                and enter an address for your loyalty app below.
+                                and enter the address for your loyalty app below.
                             </p>
                             <TextField
                                 className={classes.field}

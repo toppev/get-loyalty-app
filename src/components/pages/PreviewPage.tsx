@@ -33,6 +33,10 @@ export default function PreviewPage({ page, onClose, actions, open = true }: Pre
             <CloseButton onClick={onClose}/>
             <DialogContent className={classes.previewDialogContent}>
                 <PreviewIframe src={`${backendURL}/page/${page._id}/html`}/>
+                <p>
+                    Placeholders (the {"{{ stuff }}"} things) do not work in the preview.
+                    They are replaced with dynamic content.
+                </p>
                 {actions}
             </DialogContent>
         </Dialog>
