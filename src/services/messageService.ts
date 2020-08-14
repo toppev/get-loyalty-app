@@ -25,18 +25,16 @@ function useSubscribe(identifiers: string[]) {
     const { user } = useContext(AppContext)
 
     const subscribeRecursively = (id: string) => {
-        if (!subscribedTo.includes(id)) {
-            subscribedTo.push(id)
-            subscribeMessage(user.id, id).then(res => {
-                const { status } = res;
-                // Resubscribe on success or timeout
-                if ((status >= 200 && status < 300) || status === 408 || status === 504) {
-                    resub(id)
-                } else {
-                    console.log(`An error occurred while subscribing to messages. Not trying anymore. Status: ${status}`)
-                }
-                const contentType = res.headers.get("content-type")
+        if (subscribedTo.includes(id)) {
+            return
+        }
+        subscribedTo.push(id)
+        subscribeMessage(user.id, id).then(res => {
+            const { status } = res;
+            // Resubscribe on success or timeout
+            if ((status >= 200 && status < 300) || status === 408 || status === 504) {
                 resub(id)
+                const contentType = res.headers.get("content-type")
                 if (contentType?.indexOf("application/json") !== -1) {
                     res.json().then(data => {
                         if (data.message) {
@@ -47,8 +45,8 @@ function useSubscribe(identifiers: string[]) {
                         }
                     })
                 }
-            })
-        }
+            }
+        })
     }
 
     const resub = (id: string) => {
