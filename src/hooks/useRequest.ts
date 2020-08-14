@@ -71,7 +71,7 @@ export default function useRequest(
                     setError({
                         message: opts.errorMessage || parseError(err),
                         error: err,
-                        retry: () => execute(),
+                        retry: canRetry(err) ? () => execute() : undefined,
                         clearError: () => setError(undefined)
                     });
                     if (requestContext.onError) {
@@ -102,10 +102,18 @@ export default function useRequest(
 
 }
 
+function canRetry(err: any) {
+    // Do not allow retrying with invalid body/fields
+    return err?.response?.status !== 400
+}
+
 function parseError(err: any) {
     const data = err?.response?.data
+    if (Array.isArray(data)) {
+        return data.join(', ')
+    }
     if (Array.isArray(data?.message)) {
-        return data?.message.join()
+        return data?.message.join(', ')
     }
     return data?.message
 }
