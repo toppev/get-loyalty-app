@@ -1,8 +1,10 @@
 const request = require("request");
 const StatusError = require("../helpers/statusError");
 
+const VERIFY_CAPTCHA = false
+
 function verifyCAPTCHA(req, res, next) {
-    if (process.env.NODE_ENV === 'test') {
+    if (process.env.NODE_ENV === 'test' || !VERIFY_CAPTCHA) {
         return next()
     }
     const secret = process.env.CAPTCHA_SECRET_KEY;
