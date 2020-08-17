@@ -69,7 +69,7 @@ app.use(passport.session());
 if (!isTesting) {
     app.use(csurf());
     app.use(function (req, res, next) {
-        res.cookie('XSRF-TOKEN', req.csrfToken(), { domain: 'getloyalty.app' });
+        res.cookie('XSRF-TOKEN', req.csrfToken(), { domain: process.env.COOKIE_DOMAIN });
         next()
     });
     app.use(function (err, req, res, next) {
