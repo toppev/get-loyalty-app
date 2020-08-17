@@ -120,7 +120,7 @@ export default function LoginForm({}: LoginFormProps) {
         loginRequest(values)
             .then(onSuccess)
             .catch(err => {
-                setErrors({ password: `${err}` })
+                setErrors({ password: `${err?.response?.data?.message || err}` })
             })
             .finally(() => {
                 setMessage('')
@@ -134,7 +134,7 @@ export default function LoginForm({}: LoginFormProps) {
             .then(onSuccess)
             .catch(err => {
                 console.log("Error creating an account: " + err);
-                setErrors({ password: `${err}. Please try again.` });
+                setErrors({ password: `${err?.response?.data?.message || err}. Please try again.` });
             })
             .finally(() => {
                 setMessage('')

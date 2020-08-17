@@ -5,7 +5,9 @@ export const API_URL = 'https://api.getloyalty.app/v1';
 export const SERVER_API_URL = `${API_URL}/servers`;
 
 /** The current server instances URL */
-export let backendURL = window.localStorage.getItem('API_URL') || 'https://invalid_url_should_not_be_used.adadawda';
+export let backendURL = window.localStorage.getItem('API_URL')
+    || (process.env.NODE_ENV === "development" && 'http://localhost:3001')
+    || 'https://invalid_url_should_not_be_used.adadawda';
 
 export function setBackendUrl(url: string) {
     backendURL = url
