@@ -22,17 +22,19 @@ function closeDatabase() {
     mongoose.connection.close();
 }
 
-function deleteUploadsDirectory(maxFiles) {
-    const { uploadDir } = require('../src/helpers/uploader');
+function deleteUploadsDirectory(dir) {
+    const uploadDir = dir || require('../src/helpers/uploader').uploadDir;
 
     const fs = require('fs');
     const files = fs.readdirSync(uploadDir);
-    if (files.length > maxFiles) {
-        console.log(`Warning: not deleting upload directory ${uploadDir} because it has more files than expected ${maxFiles}`)
-    } else {
-        files.forEach(file => {
-            fs.unlinkSync(uploadDir + '/' + file);
-        });
-        fs.rmdirSync(uploadDir);
-    }
+    files.forEach(file => {
+        const curPath = uploadDir + '/' + file;
+        if (fs.lstatSync(curPath).isDirectory()) {
+            deleteUploadsDirectory(curPath)
+        } else {
+            fs.unlinkSync(curPath);
+        }
+    });
+
+    if (dir) fs.rmdirSync(dir);
 }

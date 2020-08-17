@@ -45,7 +45,7 @@ describe('Logged in user with permissions can', () => {
     });
 
     it('update page', async () => {
-        const res = await api
+        await api
             .post(`/page/${testPageData.id}`)
             .set('Cookie', cookie)
             .send(updatedPageData)
@@ -62,7 +62,7 @@ describe('Logged in user with permissions can', () => {
 
 
     it('update page gjs only', async () => {
-        const res = await api
+        await api
             .post(`/page/${testPageData.id}/?gjsOnly=true`)
             .set('Cookie', cookie)
             .send(updatedPageData2.gjs)
@@ -87,7 +87,7 @@ describe('Logged in user with permissions can', () => {
     });
 
     it('upload page html', async () => {
-        const res = await api
+        await api
             .post(`/page/${testPageData.id}/upload`)
             .set('Cookie', cookie)
             .send({ html: '<p>test</p>' })
@@ -102,34 +102,37 @@ describe('Logged in user with permissions can', () => {
         expect(res.text).toBe('<p>test</p>');
     });
 
+    // language=HTML
     const htmlPage = `
-    <div>
-        <h1>Hello {{user.email}}!</h1>
-        <br>
-        <p>This is a test with åäö</p>
-    </div>
+        <div>
+            <h1>Hello {{user.email}}!</h1>
+            <br>
+            <p>This is a test with åäö</p>
+        </div>
     `;
 
+    // language=CSS
     const pageCss = `
-    h1 {
+      h1 {
         color: red;
-    }
+      }
     `;
 
     it('replace page html', async () => {
-        const res = await api
+        await api
             .post(`/page/${testPageData.id}/upload`)
             .set('Cookie', cookie)
             .send({ html: htmlPage, css: pageCss })
             .expect(200);
     });
 
+    // language=HTML
     const expectedPage = `
-    <div>
-        <h1 style="color: red;">Hello ${userParams.email}!</h1>
-        <br>
-        <p>This is a test with åäö</p>
-    </div>
+        <div>
+            <h1 style="color: red;">Hello ${userParams.email}!</h1>
+            <br>
+            <p>This is a test with åäö</p>
+        </div>
     `;
 
 
@@ -145,5 +148,5 @@ describe('Logged in user with permissions can', () => {
 
 afterAll(() => {
     closeDatabase();
-    deleteUploadsDirectory(1)
+    deleteUploadsDirectory()
 });

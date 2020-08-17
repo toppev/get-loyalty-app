@@ -18,7 +18,7 @@ async function loadDefaultTemplates() {
                 return (async () => {
                     const page = await pageService.createPage(template);
                     const inlineHtml = await getTemplateSource(page.id);
-                    await uploader.upload(`page_${page.id}.html`, inlineHtml);
+                    await uploader.upload(`page_${page.id}`,`index.html`, inlineHtml);
                 })
             }
         }))

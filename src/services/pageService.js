@@ -84,7 +84,7 @@ async function uploadPage(pageId, { html, css }) {
     // Inline the css
     const tmpl = `${html}<style>${css}</style>`;
     const inlineHtml = juice(tmpl);
-    await uploader.upload(`page_${pageId}.html`, inlineHtml);
+    await uploader.upload(`page_${pageId}`, `index.html`, inlineHtml);
     // TODO: queue screenshot or something?
     const page = await PageData.findById(pageId);
     if (page) {
@@ -143,7 +143,7 @@ async function getTemplates() {
 }
 
 async function getPageContent(pageId) {
-    const path = uploader.toPath(`page_${pageId}.html`);
+    const path = uploader.toPath(`page_${pageId}/index.html`);
     return await fs.promises.readFile(path, 'utf8');
 }
 

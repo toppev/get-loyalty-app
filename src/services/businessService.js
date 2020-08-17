@@ -94,6 +94,6 @@ async function getIcon() {
 }
 
 async function uploadIcon(icon) {
-    const path = await uploader.upload(`icon.ico`, icon)
+    const path = await uploader.upload('', `icon.ico`, icon)
     return { path }
 }

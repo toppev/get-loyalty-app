@@ -149,5 +149,5 @@ describe('Logged in user can', () => {
 
 afterAll(() => {
     closeDatabase();
-    deleteUploadsDirectory(1)
+    deleteUploadsDirectory()
 });
