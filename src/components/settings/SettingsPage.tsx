@@ -297,7 +297,7 @@ function ServerSettingsForm() {
                         <Form>
                             <p className={classes.info}>
                                 Create a new DNS <b>A record </b>
-                                to <b>"{backendURL.replace("https://", "").replace(/\/.*$/, '')}" </b>
+                                to <b>{backendURL.replace("https://", "").replace(/\/.*$/, '')} </b>
                                 and enter the address for your loyalty app below.
                             </p>
                             <TextField
@@ -358,7 +358,7 @@ function ServerSettingsForm() {
                                 ))}
                             </Select>
 
-                            <p style={{ margin: '6px 0px', color: '#4c4c4c' }}>
+                            <p style={{ margin: '18px 0px 6px 0px', color: '#5e5e5e' }}>
                                 Changes to some settings may take longer (up to a few hours) to be visible on the
                                 website.
                             </p>
@@ -368,8 +368,9 @@ function ServerSettingsForm() {
                                     className={classes.updateButton}
                                     disabled={isSubmitting}
                                     variant="contained"
+                                    size="small"
                                     onClick={() => submitForm()}
-                                >Update</Button>
+                                >Update & Restart</Button>
                             </div>
                         </Form>
                     </Paper>
