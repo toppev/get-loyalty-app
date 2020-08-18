@@ -25,8 +25,6 @@ function propsAreEqual(prev, next) {
     return prev.page._id === next.page._id;
 }
 
-let XSRF_TOKEN = ""
-
 function GrapesPageEditor(props) {
 
     const url = `${backendURL}/page`;
@@ -50,14 +48,12 @@ function GrapesPageEditor(props) {
                 // Either save or create if undefined
                 urlStore: `${url}/${props.page._id || ""}/?gjsOnly=true`,
                 urlLoad: `${url}/${props.page._id}/?gjsOnly=true`,
-                headers: {
-                    'X-XSRF-TOKEN': XSRF_TOKEN
-                }
             }
         });
 
         editor.on('storage:start', () => {
-            XSRF_TOKEN = Cookie.get('XSRF-TOKEN')
+            const storage = editor.StorageManager.getCurrentStorage();
+            storage.attributes.headers['XSRF-TOKEN'] = Cookie.get('XSRF-TOKEN')
         })
 
         editor.on('load', () => {
