@@ -56,7 +56,7 @@ function GrapesPageEditor(props) {
             }
         });
 
-        editor.on('storage:start:store', () => {
+        editor.on('storage:start', () => {
             XSRF_TOKEN = Cookie.get('XSRF-TOKEN')
         })
 
