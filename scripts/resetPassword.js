@@ -6,7 +6,7 @@ const userService = require('../src/services/userService');
 
 const readlineSync = require('readline-sync');
 
-
+console.log(`Connecting to ${process.env.MONGO_URI}`)
 mongoose.connect(process.env.MONGO_URI, {
     useCreateIndex: true,
     useNewUrlParser: true,
@@ -15,17 +15,16 @@ mongoose.connect(process.env.MONGO_URI, {
 }, function (err) {
     if (err) throw err;
 
-
-    const email = readlineSync.question('Email address? ');
+    const email = readlineSync.question('Email address: ');
 
     User.find({ email: email }).then(users => {
         const user = users[0];
         if (!user) {
             console.log('User not found.')
         } else {
-            const password = readlineSync.question('New password? ');
+            const password = readlineSync.question('New password: ');
             userService.update(user.id, { password: password })
-            console.log('Password updated.')
+                .then(user => console.log(user, 'Password updated.'))
         }
     })
 
