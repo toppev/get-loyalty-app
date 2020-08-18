@@ -223,6 +223,7 @@ function ServerSettingsForm() {
         (res) => setAskNotifications(res.data?.website?.askNotifications))
 
     const [popupOpen, setPopupOpen] = useState(false);
+    const [pingingServer, setPingingServer] = useState(false);
 
     const validate = (settings: ServerSettings) => {
         const errors: FormikErrors<ServerSettings> = {};
@@ -232,7 +233,7 @@ function ServerSettingsForm() {
         return errors;
     }
 
-    const loading = serverInfo.loading || updateRequest.loading
+    const loading = serverInfo.loading || updateRequest.loading || pingingServer
     const error = serverInfo.error || updateRequest.error
 
     const pageRequest = useRequest(listPages)
@@ -244,8 +245,10 @@ function ServerSettingsForm() {
             <Typography className={classes.sectionTypography} variant="h6" align="center">
                 Other Settings
             </Typography>
-            {loading && <LinearProgress/>}
-            {error && <RetryButton error={error}/>}
+
+            {loading ? <LinearProgress/> : error && <RetryButton error={error}/>}
+            {pingingServer && <p>This is taking an unexpectedly long time...</p>}
+
             <Dialog open={popupOpen}>
                 <DialogContent style={{ padding: '25px' }}>
                     <CloseButton onClick={() => setPopupOpen(false)}/>
@@ -274,12 +277,14 @@ function ServerSettingsForm() {
                                 actions.setSubmitting(false)
                                 setPopupOpen(false)
                             },
-                            (e) => {
-                                const status = e.response.status
+                            (err) => {
+                                const status = err.response?.status
                                 if (status === 408 || status === 504 || status === 524) {
+                                    setPingingServer(true)
                                     waitForServer(() => {
                                         actions.setSubmitting(false)
                                         setPopupOpen(false)
+                                        setPingingServer(false)
                                     })
                                 } else {
                                     actions.setSubmitting(false)
@@ -335,6 +340,7 @@ function ServerSettingsForm() {
                                 style={{ marginTop: '10px' }}
                             >Select when the user is asked to enable push notifications</FormHelperText>
                             <Select
+                                disabled={isSubmitting}
                                 className={classes.field}
                                 type="text"
                                 defaultValue="disabled"
