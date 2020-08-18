@@ -69,7 +69,7 @@ export default function (props: ProductFormProps) {
                     actions.setSubmitting(false)
                     performRequest(
                         () => editing ? updateProduct(product) : addProduct(product),
-                        (res) => props.onProductSubmitted(res.data)
+                        (res) => props.onProductSubmitted(new Product(res.data))
                     );
                 }}
             >{({ submitForm, isSubmitting }) => (

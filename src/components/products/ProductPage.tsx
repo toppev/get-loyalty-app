@@ -45,7 +45,7 @@ export default function () {
 
     const { search, setSearch, searchFilter } = useSearch()
 
-    const { error: errorListing, loading: listing, response } = useRequest(listProducts);
+    const { error: errorListing, loading: listing, response, execute: reloadProducts } = useRequest(listProducts);
     const [products, setProducts] = useResponseState<Product[]>(response, [], res => res.data.map((it: any) => new Product(it)));
     const otherRequest = useRequest();
 
@@ -111,8 +111,8 @@ export default function () {
                         setFormOpen(false);
                         setEditingProduct(undefined);
                     }}
-                    onProductSubmitted={(product: Product) => {
-                        setProducts([...products.filter(it => it.id !== product.id), product])
+                    onProductSubmitted={() => {
+                        reloadProducts()
                         setFormOpen(false);
                         setEditingProduct(undefined);
                     }}/>
