@@ -59,66 +59,69 @@ export default function () {
         <div>
             {error ? (
                 <RetryButton error={error}/>
-            ) : (<div className={classes.paper}>
+            ) : (
+                <div className={classes.paper}>
 
-                <div className={classes.info}>
-                    <p>Create or import existing products from a .csv file here.</p>
-                    <Tip>
-                        You don't have to create all products.
-                        You can create generic products, for example "Pizza", "Vegan burgers" or "Men's haircut".
-                    </Tip>
-                </div>
+                    <div className={classes.info}>
+                        <p>Create or import existing products from a .csv file here.</p>
+                        <Tip>
+                            You don't have to create all products.
+                            You can create generic products, for example "Pizza", "Vegan burgers" or "Men's haircut".
+                        </Tip>
+                    </div>
 
-                <Box display="flex" className={classes.tools}>
-                    <NewButton
-                        name="New Product"
-                        buttonProps={{
-                            className: classes.newBtn,
-                            onClick: () => setFormOpen(true)
-                        }}
-                    />
-                    <ImportProducts className={classes.importBtn} variant="contained"/>
-                </Box>
-
-                <SearchField
-                    setSearch={setSearch}
-                    name={"product_search"}
-                    placeholder={"Search products..."}
-                />
-
-                {loading && <LinearProgress/>}
-
-                <ul className={classes.productList}>
-                    {filteredProducts.map((item, index) => (
-                        <ProductRow
-                            key={index}
-                            product={item}
-                            startEditing={product => setEditingProduct(product)}
-                            onDelete={() => setProducts(products.filter(p => p.id !== item.id))}
+                    <Box display="flex" className={classes.tools}>
+                        <NewButton
+                            name="New Product"
+                            buttonProps={{
+                                className: classes.newBtn,
+                                onClick: () => setFormOpen(true)
+                            }}
                         />
-                    ))}
-                </ul>
+                        <ImportProducts className={classes.importBtn} variant="contained"/>
+                    </Box>
 
-                <p className={classes.noProducts}>{filteredProducts.length == 0 && (products.length == 0
-                    ? "You don't have any products"
-                    : "No products found")}</p>
+                    <SearchField
+                        setSearch={setSearch}
+                        name={"product_search"}
+                        placeholder={"Search products..."}
+                    />
 
+                    {loading && <LinearProgress/>}
 
-                <ProductFormDialog
-                    open={formOpen || !!editingProduct}
-                    initialProduct={editingProduct}
-                    onClose={() => {
-                        setFormOpen(false);
-                        setEditingProduct(undefined);
-                    }}
-                    onProductSubmitted={() => {
-                        reloadProducts()
-                        setFormOpen(false);
-                        setEditingProduct(undefined);
-                    }}/>
+                    <ul className={classes.productList}>
+                        {filteredProducts.map((item, index) => (
+                            <ProductRow
+                                key={index}
+                                product={item}
+                                startEditing={product => setEditingProduct(product)}
+                                onDelete={() => setProducts(products.filter(p => p.id !== item.id))}
+                            />
+                        ))}
+                    </ul>
 
-            </div>)
-            }
+                    <p className={classes.noProducts}>
+                        {filteredProducts.length == 0 && (products.length == 0
+                                ? "You don't have any products"
+                                : "No products found"
+                        )}
+                    </p>
+
+                    <ProductFormDialog
+                        open={formOpen || !!editingProduct}
+                        initialProduct={editingProduct}
+                        onClose={() => {
+                            setFormOpen(false);
+                            setEditingProduct(undefined);
+                        }}
+                        onProductSubmitted={() => {
+                            reloadProducts()
+                            setFormOpen(false);
+                            setEditingProduct(undefined);
+                        }}/>
+
+                </div>
+            )}
         </div>
     )
 }
