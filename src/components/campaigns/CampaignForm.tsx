@@ -1,3 +1,4 @@
+import allRequirements from "@toppev/loyalty-campaigns";
 import { Campaign, Requirement } from "./Campaign";
 import React, { useState } from "react";
 import {
@@ -53,7 +54,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         typography: {
             margin: '40px 0px 8px 0px',
-            color: theme.palette.grey[700]
+            color: theme.palette.grey[900]
         },
         tip: {
             color: theme.palette.grey[500]
@@ -82,7 +83,7 @@ export default function ({ initialCampaign, onSubmitted }: CampaignFormProps) {
     const [categories, setCategories] = useState(campaign.categories);
     const [products, setProducts] = useState(campaign.products);
     const [endRewards, setEndRewards] = useState<Reward[]>(campaign.endReward);
-    const [requirements, setRequirements] = useState<Requirement[]>([]);
+    const [requirements, setRequirements] = useState<Requirement[]>(campaign.requirements);
 
     const [isDates, setIsDates] = useState<boolean>(!!campaign.start || !!campaign.end);
     const [startDate, setStartDate] = useState<Date | undefined>(campaign.start);
@@ -171,10 +172,18 @@ export default function ({ initialCampaign, onSubmitted }: CampaignFormProps) {
 
                     <Typography variant="h6" className={classes.typography}>Duration & Dates</Typography>
                     <RadioGroup name="Dates" value={isDates} onChange={(e, val) => setIsDates(val === "true")}>
-                        <FormControlLabel value="true" control={<Radio/>} checked={isDates}
-                                          label="Temporary campaign (ends automatically)"/>
-                        <FormControlLabel value="false" control={<Radio/>} checked={!isDates}
-                                          label="Continuous (no end date)"/>
+                        <FormControlLabel
+                            value="true"
+                            control={<Radio/>}
+                            checked={isDates}
+                            label={<span style={{ color: '#636363' }}>Temporary campaign (ends automatically)</span>}
+                        />
+                        <FormControlLabel
+                            value="false"
+                            control={<Radio/>}
+                            checked={!isDates}
+                            label={<span style={{ color: '#636363' }}>Continuous (no end date)</span>}
+                        />
                     </RadioGroup>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <KeyboardDatePicker
@@ -196,9 +205,17 @@ export default function ({ initialCampaign, onSubmitted }: CampaignFormProps) {
                     </MuiPickersUtilsProvider>
 
                     <Typography variant="h6" className={classes.typography}>Campaign Type(s)</Typography>
-                    <p className={classes.tip}>Specify when this campaign is valid. In other words, select requirements
-                        for this campaign</p>
+                    <p className={classes.tip}>
+                        Specify when this campaign is valid. In other words, select requirements
+                        for this campaign
+                    </p>
                     <RequirementSelector initialRequirements={requirements} onChange={setRequirements}/>
+
+                    {requirements.length !== 0 && <p className={classes.tip}>
+                        Remember to explain the campaign in the description (or in the name). For example, if you
+                        selected "{allRequirements.isBirthday.name}", inform the customer that the campaign is only
+                        valid on their birthday.
+                    </p>}
 
                     <Typography variant="h6" className={classes.typography}>End Rewards</Typography>
 
@@ -260,15 +277,6 @@ function validate(values: Campaign): FormikErrors<Campaign> {
     if (!values.name.trim().length) {
         errors.name = 'Name can not be empty.'
     }
-    /*
-    // FIXME: does not work
-    if (values.maxRewards?.user && values.maxRewards.user < 1) {
-        errors.maxRewards!!.user = 'Max rewards per user can not be less than 1.';
-    }
-    if (values.maxRewards?.total && values.maxRewards.total < 0) {
-        errors.maxRewards!!.total = 'Max (total) rewards can not be less than 0.';
-    }
-    */
     if (values.transactionPoints && values.transactionPoints < 0) {
         errors.transactionPoints = 'Points per purchase can not be negative.'
     }

@@ -1,6 +1,7 @@
 import Product from "../products/Product";
 import Category from "../categories/Category";
 import Reward from "../rewards/Reward";
+import allRequirements from "@toppev/loyalty-campaigns";
 
 class Campaign {
 
@@ -69,6 +70,7 @@ class Requirement {
     ) {
     }
 }
+
 
 export {
     Campaign,

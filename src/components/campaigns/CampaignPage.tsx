@@ -37,7 +37,7 @@ export default function () {
     const [formOpen, setFormOpen] = useState(false);
 
     const { error, loading, response, execute: fetchCampaigns } = useRequest(listCampaigns, {});
-    const [campaigns, setCampaigns] = useResponseState<Campaign[]>(response, [], res => res.data.map((it: any) => new Campaign(it)));
+    const [campaigns] = useResponseState<Campaign[]>(response, [], res => res.data.map((it: any) => new Campaign(it)));
     const otherRequests = useRequest();
 
     return error ? (
@@ -48,13 +48,18 @@ export default function () {
                 name="New Campaign"
                 buttonProps={{
                     className: classes.newBtn,
-                    onClick: () => setFormOpen(true)
+                    onClick: () => {
+                        setFormCampaign(undefined)
+                        setFormOpen(true)
+                    }
                 }}
             />
             {loading || otherRequests.loading && <LinearProgress/>}
             <Grid className={classes.container} spacing={4} container direction="row" alignItems="flex-start">
 
-                {campaigns.length == 0 && <p className={classes.noCampaigns}>You don't have any campaigns. Create one by clicking the button above.</p>}
+                {campaigns.length == 0 &&
+                <p className={classes.noCampaigns}>You don't have any campaigns. Create one by clicking the button
+                    above.</p>}
 
                 {campaigns.map(campaign => (
                     <Grid item xs={12} md={6} lg={3} key={campaign.id}>
@@ -75,9 +80,12 @@ export default function () {
             </Grid>
             <CampaignFormDialog
                 open={formOpen}
-                onClose={() => setFormOpen(false)}
+                onClose={() => {
+                    setFormCampaign(undefined)
+                    setFormOpen(false)
+                }}
                 initialCampaign={formCampaign}
-                onSubmitted={campaign => {
+                onSubmitted={_campaign => {
                     setFormOpen(false)
                     fetchCampaigns()
                 }}/>

@@ -29,9 +29,7 @@ export function RequirementEditor(props: RequirementEditorProps) {
 
     const { requirement } = props;
 
-    const requirementType = allRequirements[requirement.type];
-
-    const valueDescriptions = requirementType?.valueDescriptions || [];
+    const valueDescriptions = allRequirements[requirement.type]?.valueDescriptions || [];
     const question = requirement.question ? format(requirement.question, requirement.values) : undefined;
 
     return (
@@ -39,9 +37,11 @@ export function RequirementEditor(props: RequirementEditorProps) {
             <div>
                 {valueDescriptions.map((valueDesc, index) => {
                     const { name, type } = valueDesc;
+
                     // Textfield type, either "text" or "number"
                     const fieldType = (type === "number" || typeof type === "number") ? "number" : "text";
-                    const defaultValue = type === "number" ? undefined : type;
+                    const defaultValue = requirement.values[index] || (type === "number" ? undefined : type);
+
                     return (
                         <TextField
                             key={`val_${index}`}
@@ -49,7 +49,7 @@ export function RequirementEditor(props: RequirementEditorProps) {
                             name={name}
                             defaultValue={defaultValue}
                             type={fieldType}
-                            label={`${name} (${type})`}
+                            label={`${name} (${fieldType})`}
                             multiline // so the placeholder shows correctly
                             placeholder={`Value used in the question or the system uses when calculating whether the requirement is met (e.g purchase amount or time).`}
                             onChange={(e) => {

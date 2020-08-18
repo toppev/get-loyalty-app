@@ -80,7 +80,10 @@ export default function (props: RequirementSelectorProps) {
                     <RequirementEditor
                         key={`edit_${req.type}`}
                         requirement={req}
-                        onChange={updatedReq => setRequirements([...requirements.filter(r => r.type !== updatedReq.type), updatedReq])}
+                        onChange={updatedReq => {
+                            // TODO: keep order
+                            return setRequirements([...requirements.filter(r => r.type !== updatedReq.type), updatedReq])
+                        }}
                     />
                 ))}
             </div>

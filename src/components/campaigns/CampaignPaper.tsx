@@ -6,7 +6,7 @@ import { plural } from "../common/StringUtils";
 import Tooltip from "@material-ui/core/Tooltip";
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import { RenderList } from "../common/RenderList";
-
+import allRequirements from "@toppev/loyalty-campaigns";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -48,12 +48,12 @@ const useStyles = makeStyles((theme: Theme) =>
     }));
 
 
-const _MS_PER_DAY = 1000 * 60 * 60 * 24;
+const MS_PER_DAY = 1000 * 60 * 60 * 24;
 
 function dateDiffInDays(from: Date, to: Date): number {
     const utc1 = Date.UTC(from.getFullYear(), from.getMonth(), from.getDate());
     const utc2 = Date.UTC(to.getFullYear(), to.getMonth(), to.getDate());
-    return Math.floor((utc2 - utc1) / _MS_PER_DAY);
+    return Math.floor((utc2 - utc1) / MS_PER_DAY);
 }
 
 interface CampaignPaperProps {
@@ -65,8 +65,10 @@ interface CampaignPaperProps {
 
 export default function (props: CampaignPaperProps) {
 
+    const classes = useStyles();
+
     const { campaign } = props;
-    const { start, end } = campaign;
+    const { start, end, requirements, maxRewards, endReward, categories, products } = campaign;
 
     // Days from/till campaign start/end date
     const diffString = (date?: Date) => {
@@ -82,8 +84,6 @@ export default function (props: CampaignPaperProps) {
     const toStartStr = diffString(start)
     const toEndStr = diffString(end)
 
-    const classes = useStyles();
-
     return (
         <Paper className={classes.paper}>
             <Typography className={classes.typography} variant="h5" align="center">
@@ -91,17 +91,24 @@ export default function (props: CampaignPaperProps) {
             </Typography>
             <p className={classes.description}>{campaign.description}</p>
             <Divider style={{ marginBottom: '6px' }}/>
-            {campaign.requirements.length !== 0 && (
+            {requirements.length !== 0 && (
                 <>
-                    <b>Campaign
-                        Type</b> ({`${campaign.requirements.length} ${plural("trait", campaign.requirements)}`})
+                    <b>{plural("Campaign Type", requirements)}</b> ({`${requirements.length} ${plural("trait", requirements)}`})
                     <ul>
-                        {campaign.requirements.map(req => (
+                        {requirements.map(req => (
                             <li key={req.type}>
                                 <b>{req.type}</b>
                                 {req.question && <p>Question: <i>{req.question}</i></p>}
                                 {req.values.length !== 0 &&
-                                <p>{plural("Value", req.values)}: {req.values.join(', ')}</p>}
+                                <div>
+                                    {req.values.map((val, index) => {
+                                            const valueTypes = allRequirements[req.type].valueDescriptions || []
+                                            return (
+                                                <p key={val}>{valueTypes[index]?.name || 'unknown'}: <b>{val}</b></p>
+                                            )
+                                        }
+                                    )}
+                                </div>}
                             </li>
                         ))}
                     </ul>
@@ -116,10 +123,10 @@ export default function (props: CampaignPaperProps) {
             </p>
             <br/>
             <p>
-                Rewarded: <b>{campaign.rewardedCount || 0}/{campaign.maxRewards.total || 'unlimited'}</b>
+                Rewarded: <b>{campaign.rewardedCount || 0}/{maxRewards.total || 'unlimited'}</b>
                 <br/>
                 <span className={classes.detail}>
-                    (max <b>{campaign.maxRewards.user}</b> {plural('reward', campaign.maxRewards.user)} per user)
+                    (max <b>{maxRewards.user}</b> {plural('reward', maxRewards.user)} per user)
                 </span>
             </p>
             <br/>
@@ -144,13 +151,13 @@ export default function (props: CampaignPaperProps) {
             <br/>
             <div>
                 <RenderList
-                    list={campaign.endReward}
+                    list={endReward}
                     title="End Rewards:"
                     emptyString="none"
                     renderAll={items => items.map(item => <RewardItem key={item.id} reward={item}/>)}
                 />
                 <RenderList
-                    list={campaign.categories}
+                    list={categories}
                     title="Categories:"
                     renderAll={items => (
                         <ul>
@@ -159,7 +166,7 @@ export default function (props: CampaignPaperProps) {
                     )}
                 />
                 <RenderList
-                    list={campaign.products}
+                    list={products}
                     title="Products:"
                     renderAll={items => (
                         <ul>
