@@ -49,7 +49,8 @@ export default function useRequest(
 
     const [requestContext, setRequestContext] = useState<RequestWithCallback>({
         request: initialRequest,
-        callback: initialCallback
+        callback: initialCallback,
+        onError: opts.options?.onError
     });
 
     const [loading, setLoading] = useState<undefined | boolean>(undefined);
@@ -62,21 +63,17 @@ export default function useRequest(
             requestContext.request()
                 .then((res: AxiosResponse) => {
                     setResponse(res)
-                    if (requestContext.callback) {
-                        requestContext.callback(res)
-                    }
+                    requestContext.callback && requestContext.callback(res)
                 })
                 .catch((err: any) => {
-                    console.log(err);
+                    console.error(err);
                     setError({
                         message: opts.errorMessage || parseError(err),
                         error: err,
                         retry: canRetry(err) ? () => execute() : undefined,
                         clearError: () => setError(undefined)
                     });
-                    if (requestContext.onError) {
-                        requestContext.onError(err)
-                    }
+                    requestContext.onError && requestContext.onError(err)
                 }).finally(() => setLoading(false))
         }
     }, [opts.errorMessage, requestContext])
@@ -113,7 +110,10 @@ function parseError(err: any) {
         return data.join(', ')
     }
     if (Array.isArray(data?.message)) {
-        return data?.message.join(', ')
+        return data.message.join(', ')
     }
-    return data?.message
+    if (data?.message) {
+        return data.message
+    }
+    return err.response?.statusText
 }
