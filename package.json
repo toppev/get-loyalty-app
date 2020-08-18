@@ -1,6 +1,6 @@
 {
   "homepage": "https://panel.getloyalty.app",
-  "name": "kantis-panel",
+  "name": "loyalty-panel",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
