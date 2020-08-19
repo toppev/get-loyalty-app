@@ -22,6 +22,7 @@ declare const index: {
     isPurchaseGreaterThan: CampaignType
     isBirthday: CampaignType
     stamps: CampaignType
+    customQuestion: CampaignType
 }
 
 export = index

@@ -52,6 +52,12 @@ module.exports = {
             const currentStamps = customerData.purchases.filter(purchase => duringCampaign(purchase.createdAt))
             return currentStamps.length + 1 === maxStamps
         }
+    },
+    customQuestion: {
+        name: 'Custom Question',
+        description: 'Add a Yes/No question the cashier will answer. ' +
+            'If answered "yes" and all other selected requirements are met, the customer will be rewarded.',
+        question: 'The custom yes-no question.'
     }
 
 }
