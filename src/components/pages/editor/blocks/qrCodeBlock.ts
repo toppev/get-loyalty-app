@@ -32,8 +32,8 @@ function addQRCodeType(editor: any) {
 
 function addQRCodeBlock(blockManager: any) {
     blockManager.add(loyaltyQRCode, {
-        label: `QR Code`,
-        content: `<span data-gjs-type=${loyaltyQRCode}>QR CODE</span>`,
+        label: `Custom QR Code`,
+        content: `<span data-gjs-type=${loyaltyQRCode}/>`,
         render: ({ model }: any) => `<div class="gjs-block-label" style="margin-top: 30px;">${model.get('label')}</div></div>`,
     });
 }

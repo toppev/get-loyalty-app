@@ -84,7 +84,7 @@ function GrapesPageEditor(props) {
         addUserRewardsBlock(bm);
 
         addQRCodeType(editor);
-        addQRCodeBlock(bm);
+        // addQRCodeBlock(bm);
         addUserQRBlock(bm);
 
         addPlaceholderBlock(bm);
