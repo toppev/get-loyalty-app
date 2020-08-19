@@ -21,9 +21,8 @@ async function takeScreenshot(path, fileName, fullUrl = false) {
         if (process.env.NODE_ENV === 'test') {
             return;
         }
-        const stream = request.get(SERVICE_URL, {
-            json: { url: fullUrl ? path : BASE_URL + path }
-        }, (err, _res, _body) => {
+        const url = fullUrl ? path : BASE_URL + path
+        const stream = request.get(`${SERVICE_URL}?url=${url}`, {}, (err, _res, _body) => {
             if (err) {
                 reject(err)
             }
