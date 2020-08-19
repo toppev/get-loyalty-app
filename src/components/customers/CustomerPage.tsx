@@ -117,7 +117,7 @@ export default function () {
                 onClose={() => setRewardAllSelector(false)}
                 open={rewardAllSelector}
                 onSelect={(reward) => {
-                    if (window.confirm('You are about to reward to EVERYONE.' +
+                    if (window.confirm('You are about to reward EVERYONE.' +
                         '\nThis action is irreversible.' +
                         '\nClick OK to confirm rewarding all customers.')) {
                         setRewardAllSelector(false)
