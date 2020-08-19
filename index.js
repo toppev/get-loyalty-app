@@ -13,10 +13,6 @@
  * @type {import("./index")}
  */
 module.exports = {
-    basicCampaign: {
-        name: 'Basic Campaign',
-        description: 'Default campaign type without any special functionality.'
-    },
     isPurchaseGreaterThan: {
         name: 'Purchase Price',
         description: 'If the total cost of the purchase is greater than X',

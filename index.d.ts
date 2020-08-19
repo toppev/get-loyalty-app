@@ -19,7 +19,6 @@ declare interface ValueDescription {
 declare const index: {
     [key: string]: CampaignType
     // To access typed individual properties
-    basicCampaign: CampaignType
     isPurchaseGreaterThan: CampaignType
     isBirthday: CampaignType
     stamps: CampaignType

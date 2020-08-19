@@ -1,4 +1,4 @@
-const { basicCampaign, isBirthday, isPurchaseGreaterThan, stamps } = require('../index')
+const { isBirthday, isPurchaseGreaterThan, stamps } = require('../index')
 
 describe('isBirthday campaign', () => {
 
@@ -47,14 +47,6 @@ describe('isPurchaseGreaterThan campaign', () => {
 
     it('has question', () => {
         expect(isPurchaseGreaterThan.question.length).toBeGreaterThan(10)
-    })
-
-})
-
-describe('basic campaign', () => {
-
-    it('does not have "requirement" function', () => {
-        expect(basicCampaign.requirement).toBeUndefined()
     })
 
 })
