@@ -49,7 +49,7 @@ module.exports = {
                 return false
             }
             const duringCampaign = (date) => date > campaign.start && (!campaign.end || date < campaign.end)
-            const currentStamps = customerData.purchases.filter(purchase => duringCampaign(purchase.createdAt))
+            const currentStamps = customerData.purchases.filter(it => duringCampaign(it.createdAt))
             return currentStamps.length + 1 === maxStamps
         }
     },
