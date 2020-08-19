@@ -28,42 +28,6 @@ beforeAll(async () => {
     await businessService.getBusiness();
 });
 
-describe('Logged in user with permissions can modify customer purchases', () => {
-
-    let purchaseId;
-
-    it('create purchase', async () => {
-        const purchase = { categories: ['5e2708e560885bbf21fbb9de'] };
-        const res = await api
-            .post(`/customer/${userId}/purchase`)
-            .set('Cookie', cookie)
-            .send(purchase)
-            .expect(200);
-        purchaseId = res.body.purchases[0]._id;
-        expect(res.body.purchases[0].categories[0]).toBe(purchase.categories[0]);
-    });
-
-    it('update purchase', async () => {
-        const patchData = { categories: ['5e2756df4d931c1fe5b9013f'] };
-        const res = await api
-            .patch(`/customer/${userId}/purchase/${purchaseId}`)
-            .set('Cookie', cookie)
-            .send(patchData)
-            .expect(200);
-        expect(res.body.purchases[0].categories[0]).toBe(patchData.categories[0]);
-    });
-
-    it('delete purchase', async () => {
-        await api
-            .delete(`/customer/${userId}/purchase/${purchaseId}`)
-            .set('Cookie', cookie)
-            .expect(200);
-        const user = await User.findById(userId);
-        const data = await user.customerData;
-        expect(data.purchases.length).toBe(0);
-    });
-});
-
 describe('Logged in user with permissions can modify customer rewards', () => {
 
     let firstReward = { name: 'first coupon!', itemDiscount: '20% OFF' };

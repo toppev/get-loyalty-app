@@ -5,13 +5,8 @@ const customerService = require('../../services/customerService');
 const permit = require('../../middlewares/permitMiddleware');
 
 const validation = require('../../helpers/bodyFilter');
-const purchaseValidator = validation.validate(validation.purchaseValidator);
 const propertiesValidator = validation.validate(validation.customerPropertiesValidator);
 const rewardValidator = validation.validate(validation.rewardValidator);
-
-router.post('/purchase/', permit('purchase:create'), purchaseValidator, newPurchase);
-router.patch('/purchase/:purchaseId', permit('purchase:update'), purchaseValidator, updatePurchase);
-router.delete('/purchase/:purchaseId', permit('purchase:delete'), deletePurchase);
 
 router.post('/rewards', permit('reward:update'), rewardValidator, updateRewards);
 router.delete('/reward/:rewardId', permit('reward:revoke'), revokeReward);
@@ -21,28 +16,6 @@ router.get('/', permit('customer:get'), getCustomerData);
 
 module.exports = router;
 
-// PURCHASES
-function newPurchase(req, res, next) {
-    const { userId } = req.params;
-    customerService.addPurchase(userId, req.body)
-        .then(purchases => res.json({ purchases: purchases }))
-        .catch(err => next(err));
-}
-
-function updatePurchase(req, res, next) {
-    const { purchaseId, userId } = req.params;
-    customerService.updatePurchase(userId, purchaseId, req.body)
-        .then(purchases => res.json({ purchases: purchases }))
-        .catch(err => next(err));
-}
-
-function deletePurchase(req, res, next) {
-    const { purchaseId, userId } = req.params;
-    customerService.deletePurchase(userId, purchaseId)
-        .then(() => res.json({}))
-        .catch(err => next(err));
-}
-
 // Rewards
 function giveReward(req, res, next) {
     const { userId } = req.params;
@@ -51,8 +24,7 @@ function giveReward(req, res, next) {
         .catch(err => next(err));
 }
 
-// Might use later
-// Should this also return basic information of the user
+
 function updateRewards(req, res, next) {
     const { userId } = req.params;
     customerService.updateRewards(userId, req.body)

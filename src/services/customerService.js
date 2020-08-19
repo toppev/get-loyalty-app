@@ -2,9 +2,6 @@ const User = require('../models/user');
 
 module.exports = {
     addPurchase,
-    updatePurchase,
-    deletePurchase,
-    getPurchases,
     updateCustomer,
     updateCustomerProperties,
     addReward,
@@ -71,59 +68,6 @@ async function addPurchase(userId, purchase) {
     const user = await User.findById(userId);
     user.customerData.purchases.push(purchase);
     await user.save();
-    return user.customerData.purchases;
-}
-
-/**
- * Update the given purchase. Throws an error if the purchase is not found.
- * Returns the users current purchases (with the updated purchase)
- * @param {id} userId the user's id
- * @param {id} purchaseId value of purchase's `_id` to query by
- * @param {object} purchase the updated version of the purchase
- */
-async function updatePurchase(userId, purchaseId, purchase) {
-    purchase._id = purchaseId;
-    const user = await User.findById(userId);
-    if (!user) {
-        throw Error('User not found');
-    }
-    const customerData = user.customerData;
-    const newPurchases = customerData.purchases.map(obj => obj._id.equals(purchaseId) ? Object.assign(obj, purchase) : obj);
-    if (newPurchases.length !== customerData.purchases.length) {
-        user.customerData.purchases = newPurchases;
-        await user.save();
-    }
-    return customerData.purchases;
-}
-
-/**
- * Delete the given purchases.
- * If the purchase doesn't exists in any user's purchases and error will be thrown.
- * Returns the list of purchases where the given purchase was (and is now removed)
- * @param {id} userId the user's id
- * @param {id} purchaseId value of purchase's `_id` to query by
- */
-async function deletePurchase(userId, purchaseId) {
-    const user = await User.findById(userId);
-    if (!user) {
-        throw Error('User not found');
-    }
-    const customerData = user.customerData;
-    const newPurchases = customerData.purchases.filter(purchase => purchase.id.toString() !== purchaseId);
-    if (newPurchases.length !== customerData.purchases.length) {
-        customerData.purchases = newPurchases;
-        await user.save();
-    }
-    return customerData.purchases;
-}
-
-/**
- * Find all purchases by the given user in the given business. Returns a list of purchases
- * @param {id} id value of user's `_id` to query by
- * @param {business|id} business the business or its id
- */
-async function getPurchases(id, business) {
-    const user = await User.findById(id);
     return user.customerData.purchases;
 }
 

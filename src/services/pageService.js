@@ -81,11 +81,14 @@ async function uploadPage(pageId, { html, css }) {
     if (res.error) {
         throw new StatusError(`Invalid placeholders. ${res.error}`, 400)
     }
-    // Inline the css
+    // TODO: link the css instead of inlining for performance benefits
     const tmpl = `${html}<style>${css}</style>`;
     const inlineHtml = juice(tmpl);
-    await uploader.upload(`page_${pageId}`, `index.html`, inlineHtml);
-    // TODO: queue screenshot or something?
+
+    const dir = `page_${pageId}`;
+    await uploader.upload(dir, 'index.html', inlineHtml);
+    await uploader.upload(dir, 'main.css', css);
+
     const page = await PageData.findById(pageId);
     if (page) {
         createScreenshot(pageId)
