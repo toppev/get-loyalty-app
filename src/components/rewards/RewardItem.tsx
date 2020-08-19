@@ -69,7 +69,7 @@ export default function (props: RewardRowProps) {
                     Products: {reward.products.length ? reward.products.map(p => p.name).join(", ") : 'Any product'}
                 </Grid>
                 <Grid item>
-                    Categories: {reward.products.length ? reward.categories.map(c => c.name).join(", ") : 'Any category'}
+                    Categories: {reward.categories.length ? reward.categories.map(c => c.name).join(", ") : 'Any category'}
                 </Grid>
                 <Grid item className={classes.alignRight}>
                     {actions}
