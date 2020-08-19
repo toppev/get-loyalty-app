@@ -85,7 +85,27 @@ function getThumbnail(req, res, next) {
 async function getHtml(req, res, next) {
     try {
         const { pageId } = req.params;
-        const user = req.user;
+
+        // Used in the screenshot/example
+        const exampleReward = {
+            name: 'Example Reward',
+            description: 'An example reward!',
+            itemDiscount: '100%',
+            customerPoints: 100,
+            expires: Date.now()
+        }
+        const exampleUser = {
+            isBirthday: true,
+            customerData: {
+                rewards: [exampleReward],
+                usedRewards: [exampleReward],
+                properties: { points: 200 }
+            },
+            authentication: {}
+        }
+
+        const user = req.user || exampleUser;
+
         const html = await pageService.renderPageView(pageId, user);
         res.send(html);
         next();
