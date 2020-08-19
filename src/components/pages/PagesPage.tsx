@@ -208,7 +208,8 @@ export default function () {
                         onClose={() => setTemplateSelectorOpen(false)}
                         onSelect={(page) => {
                             // Create a new page using the same page
-                            // Basically just creates a "personal" clone
+                            // Basically just creates a "personal" clone (without description)
+                            page.description = ''
                             otherRequests.performRequest(
                                 () => createPage(page),
                                 (res) => {
