@@ -206,6 +206,16 @@ async function addCampaignRewards(user, campaign) {
 
 function _listCustomers() {
     return User.find()
+        .populate({
+            path: 'customerData',
+            populate: [{
+                path: 'rewards.categories',
+                model: 'Category',
+            }, {
+                path: 'rewards.products',
+                model: 'Product',
+            }]
+        })
 }
 
 async function rewardAllCustomers(reward) {
