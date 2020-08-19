@@ -73,6 +73,7 @@ const campaignSchema = new Schema({
     },
     endReward: [rewardSchema],
 }, {
+    timestamps: true,
     toJSON: { virtuals: true },
     toObject: { virtuals: true }
 });
