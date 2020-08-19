@@ -13,7 +13,11 @@ export default function (props: PageViewProps) {
 
     useEffect(replaceQRCodes, [html]);
 
-    return (
+    return page.externalURL ? (
+        <div className="page-holder">
+            <iframe height="100%" width="100%" frameBorder="0" src={page.externalURL}/>
+        </div>
+    ) : (
         <div className="page-view" dangerouslySetInnerHTML={{ __html: html }}/>
     )
 }
