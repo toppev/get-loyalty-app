@@ -20,7 +20,14 @@ function App() {
     const [error, setError] = useState<any>()
     const [pages, setPages] = useState<Page[]>([])
 
-    const updatePage = (page: Page) => setPages(prev => [...prev.filter(p => p._id !== page._id), page])
+    const updatePage = (page: Page) => setPages(prev => {
+        let newPages = [...prev]
+        let index = prev.findIndex(old => old._id === page._id)
+        if (index !== -1) {
+            newPages[index] = page
+        }
+        return newPages
+    })
 
     // Authentication
     useEffect(() => {
