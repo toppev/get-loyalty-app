@@ -4,6 +4,8 @@ const uploader = require('../helpers/uploader');
 const fs = require('fs');
 const StatusError = require('../helpers/statusError');
 const templateService = require('./templateService');
+const iconService = require('./iconService');
+
 
 module.exports = {
     getOwnBusiness,
@@ -88,12 +90,21 @@ async function getPublicInformation() {
     return Business.findOne().select('public');
 }
 
-async function getIcon() {
-    const file = uploader.toPath(`icon.ico`)
-    return fs.existsSync(file) ? file : undefined;
+async function getIcon(size) {
+    let file;
+    if (size) {
+        file = uploader.toPath(`icons/icon-${size}.png`)
+        if (fs.existsSync(file)) return file;
+        file = uploader.toPath(`icons/icon.png`)
+    } else {
+        file = uploader.toPath(`icons/favicon.ico`)
+    }
+    return fs.existsSync(file) ? file : undefined
 }
 
 async function uploadIcon(icon) {
-    const path = await uploader.upload('', `icon.ico`, icon)
+    const path = await uploader.upload('icons', 'icon.png', icon)
+    await iconService.resizeToPNG(icon, [180, 192, 512], uploader.toPath('icons'), 'icon')
+    await iconService.generateFavicon(uploader.toPath('icons/icon-192.png'), uploader.toPath('icons/favicon.ico'))
     return { path }
 }

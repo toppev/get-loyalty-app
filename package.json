@@ -30,11 +30,13 @@
     "nodemailer": "^6.4.10",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
+    "readline-sync": "^1.4.10",
     "request": "^2.88.2",
+    "sharp": "^0.25.4",
+    "to-ico": "^1.1.5",
     "validator": "^13.0.0",
     "web-push": "^3.4.4",
-    "winston": "^3.3.3",
-    "readline-sync": "^1.4.10"
+    "winston": "^3.3.3"
   },
   "devDependencies": {
     "eslint": "^6.8.0",

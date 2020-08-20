@@ -28,7 +28,8 @@ async function upload(dirName, fileName, data) {
         await fs.promises.mkdir(dir, { recursive: true })
     }
 
-    return fs.promises.writeFile(path, data)
+    await fs.promises.writeFile(path, data)
+    return path
 }
 
 module.exports = {

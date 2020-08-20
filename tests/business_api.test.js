@@ -127,12 +127,12 @@ describe('Logged in user can', () => {
         await api
             .post(`/business/icon`)
             .type('multipart/form-data')
-            .attach('file', 'testresources/favicon.ico')
+            .attach('file', 'testresources/icon-192x192.png')
             .set('Cookie', cookie)
             .expect(200)
     })
 
-    it('get icon', async () => {
+    it('get icon (favicon.ico)', async () => {
         const res = await api
             .get(`/business/icon`)
             .set('Cookie', cookie)
@@ -140,9 +140,21 @@ describe('Logged in user can', () => {
 
         expect(res.headers['content-type']).toBe('image/x-icon')
 
-        const buf = await fs.promises.readFile('testresources/favicon.ico')
+        const buf = await fs.promises.readFile('testresources/converted-favicon.ico')
         expect(res.body).toEqual(buf);
 
+    })
+
+    it('get icon 512x512', async () => {
+        const res = await api
+            .get(`/business/icon/?size=512`)
+            .set('Cookie', cookie)
+            .expect(200)
+
+        expect(res.headers['content-type']).toBe('image/png')
+
+        const buf = await fs.promises.readFile('testresources/converted-icon-512x512.png')
+        expect(res.body).toEqual(buf);
     })
 
 });

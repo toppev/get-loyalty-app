@@ -56,7 +56,7 @@ function getPublicInformation(req, res, next) {
 }
 
 function getIcon(req, res, next) {
-    businessService.getIcon()
+    businessService.getIcon(req.query.size)
         .then(file => file ? res.sendFile(file) : res.sendStatus(404))
         .catch(err => next(err));
 }
@@ -65,7 +65,6 @@ function uploadIcon(req, res, next) {
     const fileSizeLimit = 32; // KB
     const busboy = new Busboy({ headers: req.headers, limits: { fileSize: (1024 * fileSizeLimit) } });
     busboy.on('file', function (fieldName, file, filename, encoding, mimetype) {
-        // TODO: validate type etc?
         file.on('limit', function () {
             res.status(400).json({ message: `Max file size: ${fileSizeLimit}KB` });
         });
