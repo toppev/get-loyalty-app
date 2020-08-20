@@ -7,12 +7,22 @@ const enableNotificationsClass = 'enable-notifications'
 /** Class that will be hidden when push notifications are enabled */
 const hideNotificationClass = enableNotificationsClass
 
+/** Whether to hide the classes if service worker or push manager is not supported */
+const hideIfNotSupported = true
+
 /**
  * Asks the user to enable push notifications as (and if) specified in the settings.
  * Either after a timeout or on a specific page.
  */
 export function startSubscribeTask() {
-    hideNotificationClasses();
+    getPushManager()
+        .then((pm) => {
+            // Hide if already subscribed
+            pm.getSubscription().then(subscription => subscription && hideNotificationClasses())
+        })
+        // Or if push notifications are not supported
+        .catch(() => hideIfNotSupported && hideNotificationClasses())
+
     // Click a button to enable notifications (IMO better UX)
     window.onclick = (e) => {
         if (e.target.className.split(' ').includes(enableNotificationsClass)) {
@@ -68,32 +78,28 @@ function subscribeUser() {
 }
 
 /**
- * Hides notification classes if a subscription for push notifications exists
+ * Hides push notification classes
  */
 function hideNotificationClasses() {
-    getPushManager().then((pm) => {
-        pm.getSubscription().then(sub => {
-            if (sub) {
-                const style = document.createElement('style')
-                // language=CSS
-                style.textContent = `
-                  .${hideNotificationClass} {
-                    display: none;
-                  }
-                `
-                document.head.append(style);
-            }
-        })
-    })
+    const style = document.createElement('style')
+    // language=CSS
+    style.textContent = `
+      .${hideNotificationClass} {
+        display: none;
+      }
+    `
+    document.head.append(style);
 }
 
 function getPushManager() {
     return new Promise((resolve, reject) => {
-        if ('serviceWorker' in navigator) {
+        if (!('serviceWorker' in navigator)) {
+            reject('serviceWorker not supported')
+        } else {
             navigator.serviceWorker.ready.then((registration) => {
                 if (!registration.pushManager) {
-                    console.log('Push manager unavailable.')
-                    reject()
+                    console.log('pushManager unavailable.')
+                    reject('pushManager unavailable')
                 } else {
                     resolve(registration.pushManager)
                 }
