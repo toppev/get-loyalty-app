@@ -15,6 +15,15 @@ export function replaceQRCodes() {
             qr.addData(code)
             qr.make()
             el.innerHTML = qr.createSvgTag()
+
+            const svgSize = "100%"
+            const svgMaxSize = "360px"
+            Array.from(el.children).forEach(child => {
+                child.setAttribute("height", svgSize)
+                child.setAttribute("width", svgSize)
+                // @ts-ignore
+                if (child.style) child.style.maxWidth = svgMaxSize
+            })
         }
     })
 
