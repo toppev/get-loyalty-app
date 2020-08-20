@@ -1,6 +1,6 @@
 import { createStyles, FormControl, FormControlLabel, Radio, RadioGroup, Theme, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import React, { useState } from "react";
+import React from "react";
 import { PUBLISHED, UNPUBLISHED } from "./Page";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -15,28 +15,19 @@ const useStyles = makeStyles((theme: Theme) =>
     }));
 
 interface StageSelectorProps {
-    initialStage?: string
+    stage?: string
     onChange: (stage: any) => boolean
 }
 
-export default function ({ initialStage, onChange }: StageSelectorProps) {
+export default function ({ stage = UNPUBLISHED, onChange }: StageSelectorProps) {
 
     const classes = useStyles();
-
-    const [stage, setStage] = useState<any>(initialStage || UNPUBLISHED);
-
-    const handleChange = (value: any) => {
-        if (onChange(value)) {
-            setStage(value)
-        }
-    }
-
 
     return (
         <FormControl>
             <Typography className={classes.title}>Stage of the page</Typography>
 
-            <RadioGroup name="Dates" value={stage} onChange={(e, val) => handleChange(val)}>
+            <RadioGroup name="Dates" value={stage} onChange={(e, val) => onChange(val)}>
                 <FormControlLabel
                     value={UNPUBLISHED}
                     control={<Radio/>}

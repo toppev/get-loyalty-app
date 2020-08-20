@@ -24,9 +24,8 @@ import {
 } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import WebIcon from '@material-ui/icons/Web';
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { backendURL, post } from '../../config/axios';
-import AppContext from '../../context/AppContext';
 import CloseButton from '../common/button/CloseButton';
 import IdText from '../common/IdText';
 import RetryButton from '../common/button/RetryButton';
@@ -151,13 +150,11 @@ export default function () {
     const theme = useTheme();
     const bigScreen = useMediaQuery(theme.breakpoints.up('md'));
 
-    const { business } = useContext(AppContext)
-
     const [pageOpen, setPageOpen] = useState<Page | null>(null);
     const [templateSelectorOpen, setTemplateSelectorOpen] = useState(false);
     const [urlSelectorOpen, setUrlSelectorOpen] = useState(false);
 
-    const { error: listError, loading: listLoading, response, execute } = useRequest(listPages);
+    const { error: listError, loading: listLoading, response } = useRequest(listPages);
     const [pages, setPages] = useResponseState<Page[]>(response, [], res => res.data.map((it: any) => new Page(it)));
 
     const sortedPages = [...pages].sort(((a, b) => {
@@ -166,7 +163,7 @@ export default function () {
 
     const otherRequests = useRequest();
     const error = listError || otherRequests.error;
-    const loading = listLoading || otherRequests.loading;
+    const loading = listLoading; // Showing load on otherRequests looks annoying
 
     const movePage = (page: Page, direction: "right" | "left") => {
         const modifier = direction === "right" ? 1 : -1;
@@ -254,9 +251,11 @@ export default function () {
                     />
                 </Box>
                 <Divider className={classes.actionCardsDivider}/>
+
                 {loading && <LinearProgress/>}
+
                 <Box display="flex" flexWrap="wrap">
-                    {sortedPages.filter((page: Page) => !page.isDiscarded()).map((page: Page) => (
+                    {sortedPages.filter(page => !page.isDiscarded()).map(page => (
                         <PageCard
                             key={page._id}
                             className={classes.pageCard}
@@ -283,7 +282,8 @@ export default function () {
                                         color="secondary"
                                         onClick={() => {
                                             if (window.confirm(`Do you want to remove the page "${page.name}"?`)) {
-                                                // Not actually deleting them, instead make it invisible (unavailable)
+                                                // Not actually deleting them,
+                                                // instead make it invisible/(unavailable/discarded)
                                                 otherRequests.performRequest(
                                                     () => deletePage(page),
                                                     () => {
@@ -308,6 +308,7 @@ export default function () {
                     ))}
                 </Box>
             </div>
+
             {pageOpen &&
             <div>
                 <Divider className={classes.divider}/>
@@ -316,7 +317,7 @@ export default function () {
                         <div className={classes.settingDiv}>
                             <div>
                                 <StageSelector
-                                    initialStage={pageOpen.stage}
+                                    stage={pageOpen.stage}
                                     onChange={(value) => {
                                         if (value !== PUBLISHED || window.confirm(`Confirm publishing "${pageOpen.name}". Anyone can see this page.`)) {
                                             otherRequests.performRequest(
@@ -338,7 +339,7 @@ export default function () {
                             <Typography className={classes.iconTitle} variant="h6">Icon</Typography>
                             <PageIcon icon={pageOpen.icon}/>
                             <IconSelector
-                                initialIcon={pageOpen.icon}
+                                initialIcon={pageOpen.icon || pageOpen.pathname}
                                 onSubmit={(icon) => {
                                     otherRequests.performRequest(
                                         () => {
@@ -354,7 +355,7 @@ export default function () {
                         <div className={`${classes.settingDiv} ${classes.center}`}>
                             <Typography className={classes.iconTitle} variant="h6">Pathname</Typography>
                             <PathnameField
-                                initialValue={pageOpen.pathname}
+                                value={pageOpen.pathname}
                                 onSubmit={(pathname) => {
                                     otherRequests.performRequest(
                                         () => {
@@ -369,19 +370,20 @@ export default function () {
                 </Box>
                 <PageEditor page={pageOpen}/>
             </div>}
+
         </div>
     )
 }
 
 interface PathnameFieldProps {
     onSubmit: (pathname: string) => any
-    initialValue: string
+    value: string
 }
 
-function PathnameField({ onSubmit, initialValue }: PathnameFieldProps) {
+function PathnameField({ onSubmit, value }: PathnameFieldProps) {
 
-    if (!initialValue.startsWith('/')) {
-        initialValue = `/${initialValue}`;
+    if (!value.startsWith('/')) {
+        value = `/${value}`;
     }
 
     const classes = useStyles();
@@ -393,7 +395,7 @@ function PathnameField({ onSubmit, initialValue }: PathnameFieldProps) {
                 name="pathname"
                 label="URL pathname of this page"
                 placeholder="e.g /home or /rewards"
-                defaultValue={initialValue}
+                value={value}
                 onChange={(e) => onSubmit(e.target.value)}
             />
         </div>
@@ -485,8 +487,8 @@ function PageCard(props: PageCardProps) {
             <CardActions className={`${classes.cardActions} hoverable`}>
                 {displayStage &&
                 <Typography variant="h6">
-                    Stage: <span
-                    className={page.isPublished() ? classes.published : classes.unpublished}>{page.stage}</span>
+                    Stage:
+                    <span className={page.isPublished() ? classes.published : classes.unpublished}> {page.stage}</span>
                 </Typography>}
                 {actions}
                 {displayId && <IdText id={page._id}/>}
@@ -554,12 +556,12 @@ function TemplateSelectorDialog({ open, onClose, onSelect }: TemplateSelectorDia
                             ))}
                             {error && <RetryButton error={error}/>}
                         </Grid>
+                        <PreviewPage
+                            page={previewPage}
+                            onClose={() => setPreviewPage(undefined)}
+                            actions={(<SelectTemplateButton onClick={() => onSelect(previewPage!!)}/>)}
+                        />
                     </DialogContent>
-                    <PreviewPage
-                        page={previewPage}
-                        onClose={() => setPreviewPage(undefined)}
-                        actions={(<SelectTemplateButton onClick={() => onSelect(previewPage!!)}/>)}
-                    />
                 </>
             </div>
         </Dialog>

@@ -6,7 +6,7 @@ import grapesjsTuiImageEditor from 'grapesjs-tui-image-editor';
 import 'grapesjs/dist/css/grapes.min.css';
 import React, { useEffect } from "react";
 import { addPlaceholderBlock, registerListener } from "./blocks/placeholderBlock";
-import { addCampaignsBlock } from "./blocks/campaignBlock";
+import { addCampaignsBlock } from "./blocks/campaignsBlock";
 import { addUserRewardsBlock } from "./blocks/userRewardsBlock";
 import Cookie from "js-cookie";
 import { uploadHtmlCss } from "../../../services/pageService";
