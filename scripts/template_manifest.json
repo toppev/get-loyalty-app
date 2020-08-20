@@ -1,6 +1,6 @@
 {
-  "short_name": "%NAME%",
-  "name": "%NAME%",
+  "short_name": "%REACT_APP_NAME%",
+  "name": "%REACT_APP_NAME%",
   "icons": [
     {
       "src": "%REACT_APP_API_URL%/business/icon",
