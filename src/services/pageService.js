@@ -113,8 +113,7 @@ async function validateHandlebars(html) {
 
 async function createScreenshot(pageId) {
     const pagePath = `/page/${pageId}/html`;
-    const fileName = `ss_${pageId}`;
-    const path = uploader.toPath(`${fileName}.jpg`);
+    const path = uploader.toPath(`page_${pageId}/screenshot.jpg`);
     try {
         await pageScreenshot.takeScreenshot(pagePath, path);
     } catch (err) {
@@ -130,7 +129,7 @@ async function createScreenshot(pageId) {
  * @param {any} pageId the id of the page
  */
 async function getThumbnail(pageId) {
-    const file = uploader.toPath(`ss_${pageId}.jpg`);
+    const file = uploader.toPath(`page_${pageId}/screenshot.jpg`);
     if (fs.existsSync(file)) {
         return file;
     }
