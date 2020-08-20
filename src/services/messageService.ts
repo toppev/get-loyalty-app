@@ -34,8 +34,7 @@ function useSubscribe(identifiers: string[]) {
             // Resubscribe on success or timeout
             if ((status >= 200 && status < 300) || status === 408 || status === 504) {
                 resub(id)
-                const contentType = res.headers.get("content-type")
-                if (contentType?.indexOf("application/json") !== -1) {
+                if (res.headers.get('content-length') !== "0") {
                     res.json().then(data => {
                         if (data.message) {
                             if (data.id) data.id = Math.random()
