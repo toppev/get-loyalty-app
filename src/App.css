@@ -18,19 +18,23 @@
 
 .navbar a {
   display: table-cell;
-  color: #c6c6c6;
+  color: #d7d7d7;
   text-align: center;
-  padding: 2px;
   font-size: 16px;
   text-decoration: none;
 }
 
 .navbar .active {
-  background-color: #dddddd;
+  border-bottom: #1976D2 solid 4px !important;
   color: black;
 }
 
+.navlink {
+  border: solid #212121 1px
+}
+
 .pageIcon {
+  padding: 2px;
   width: 28px;
   margin: auto;
   display: block;

@@ -13,7 +13,7 @@ export default function (props: NavbarProps) {
     return pages?.length > 1 ? (
         <nav className="navbar">
             {pages?.map(page => (
-                <NavLink key={page._id} to={page.pathname + window.location.search}>
+                <NavLink key={page._id} to={page.pathname + window.location.search} className="navlink">
                     <PageIcon page={page}/>
                 </NavLink>
             ))}
