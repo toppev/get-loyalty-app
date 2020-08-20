@@ -15,7 +15,7 @@ function addCampaignsBlock(blockManager: any) {
         label: `Campaigns`,
         content: (`
             <div class="${campaignsClass}">
-                <h2>Campaigns</h2>cam
+                <h2>Campaigns</h2>
                 {{#each campaigns}}
                 <div class="${campaignItemClass}">
                     <h3>{{name}}</h3>
