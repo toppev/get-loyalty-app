@@ -25,6 +25,8 @@ function App() {
         let index = prev.findIndex(old => old._id === page._id)
         if (index !== -1) {
             newPages[index] = page
+        } else {
+            newPages.push(page)
         }
         return newPages
     })
