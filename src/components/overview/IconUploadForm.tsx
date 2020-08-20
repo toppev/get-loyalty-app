@@ -21,7 +21,7 @@ export default function () {
 
     const [icon, setIcon] = useState<File | undefined>();
 
-    const defaultInfoText = '.ico files only. Recommended sizes: 512x512 192x192 64x64 32x32 16x16';
+    const defaultInfoText = '.png file recommended. JPEG might work :)';
     const [infoText, setInfoText] = useState(defaultInfoText);
 
     const classes = useStyles();
@@ -36,7 +36,7 @@ export default function () {
                 onSubmit={e => e.preventDefault()}>
                 <input
                     type="file"
-                    accept=".ico, .png"
+                    accept=".png, .jpeg, .jpg, .svg"
                     onChange={e => {
                         e.preventDefault()
                         setIcon(e.target.files?.[0])
