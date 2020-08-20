@@ -64,7 +64,7 @@ export default function () {
                         </div>
                     )
                 )}
-                {request.error && <RetryButton error={request.error}/>}
+                <RetryButton error={request.error}/>
             </Box>
 
             {!!editing &&

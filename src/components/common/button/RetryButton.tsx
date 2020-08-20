@@ -4,7 +4,7 @@ import React from "react";
 import RequestError from "../../../util/requestError";
 
 interface ButtonProps {
-    error: RequestError
+    error?: RequestError
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -29,7 +29,7 @@ export default function ({ error: errorObject }: ButtonProps) {
 
     const classes = useStyles();
 
-    const { message, error, retry, clearError } = errorObject;
+    const { message, error, retry, clearError } = errorObject || {};
 
     const errorString = error?.response?.data?.message || error?.toString() || 'unknown error';
 
@@ -52,5 +52,5 @@ export default function ({ error: errorObject }: ButtonProps) {
             >Retry</Button>
             }
         </div>
-    ) : (null);
+    ) : null;
 }

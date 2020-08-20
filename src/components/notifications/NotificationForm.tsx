@@ -99,7 +99,7 @@ export default function ({ notification, onSubmitted, cooldownExpires, setCooldo
                         placeholder="Your website or link to anything else (e.g social media)"
                     />
                     {loading && <LinearProgress/>}
-                    {error && <RetryButton error={error}/>}
+                   <RetryButton error={error}/>
                     <div className={classes.submitDiv}>
                         <Button
                             className={classes.submitButton}

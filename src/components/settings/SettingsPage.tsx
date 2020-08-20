@@ -246,7 +246,7 @@ function ServerSettingsForm() {
                 Other Settings
             </Typography>
 
-            {loading ? <LinearProgress/> : error && <RetryButton error={error}/>}
+            {loading ? <LinearProgress/> : <RetryButton error={{ ...error, retry: undefined }}/>}
             {pingingServer && <p>This is taking an unexpectedly long time...</p>}
 
             <Dialog open={popupOpen}>

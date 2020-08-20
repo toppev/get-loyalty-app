@@ -250,7 +250,7 @@ export default function ({ initialCampaign, onSubmitted }: CampaignFormProps) {
                         />
                     </div>
 
-                    {error && <RetryButton error={error}/>}
+                   <RetryButton error={error}/>
 
                     <div className={classes.submitDiv}>
                         <Button

@@ -554,7 +554,7 @@ function TemplateSelectorDialog({ open, onClose, onSelect }: TemplateSelectorDia
                                     />
                                 </Grid>
                             ))}
-                            {error && <RetryButton error={error}/>}
+                           <RetryButton error={error}/>
                         </Grid>
                         <PreviewPage
                             page={previewPage}

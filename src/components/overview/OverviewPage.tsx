@@ -98,7 +98,7 @@ export default function () {
                     variant="h4"
                     align="center"
                 >Business information</Typography>
-                {error && <RetryButton error={error}/>}
+               <RetryButton error={error}/>
                 {/*
                 Workaround because Formik doesn't change the values correctly
                 Comparing the length of the business id will make sure the page waits for the business to load.

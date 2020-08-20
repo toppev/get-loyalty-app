@@ -62,7 +62,7 @@ export default function (props: NotificationHistoryProps) {
         <Paper className={classes.paper}>
             <Typography variant="h5" className={classes.typography}>Notification History</Typography>
             {loading && <LinearProgress/>}
-            {error && <RetryButton error={error}/>}
+           <RetryButton error={error}/>
             {newNotifications?.map(n => (
                 <NotificationCard key={n.id} notification={n} className={`${classes.card} ${classes.newCard}`}/>
             ))}

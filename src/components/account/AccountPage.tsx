@@ -129,7 +129,7 @@ function EmailForm({ user }: EmailFormProps) {
                         />
                         <div className={classes.progressErrorDiv}>
                             {isSubmitting && <LinearProgress/>}
-                            {error && <RetryButton error={error}/>}
+                            <RetryButton error={error}/>
                         </div>
                         <Button
                             disabled={isSubmitting || !canSubmit}
@@ -224,7 +224,7 @@ function ResetPassword({ user, title, highlight }: ResetPasswordProps) {
                                 variant="contained"
                             >{title}</Button>
                         </Form>
-                        {error && <RetryButton error={error}/>}
+                       <RetryButton error={error}/>
                         {isSubmitting && <LinearProgress/>}
                     </Paper>
                 );
