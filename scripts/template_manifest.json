@@ -8,17 +8,17 @@
       "type": "image/x-icon"
     },
     {
-      "src": "%REACT_APP_API_URL%/business/icon/?size=180",
+      "src": "%REACT_APP_API_URL%/business/icon?size=180",
       "sizes": "180x180",
       "type": "image/png"
     },
     {
-      "src": "%REACT_APP_API_URL%/business/icon/?size=512",
+      "src": "%REACT_APP_API_URL%/business/icon?size=192",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "%REACT_APP_API_URL%/business/icon/?size=512",
+      "src": "%REACT_APP_API_URL%/business/icon?size=512",
       "sizes": "512x512",
       "type": "image/png"
     }
