@@ -20,6 +20,7 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function () {
 
     const [icon, setIcon] = useState<File | undefined>();
+    const [uploading, setUploading] = useState(false);
 
     const defaultInfoText = '.png file recommended. JPEG might work :)';
     const [infoText, setInfoText] = useState(defaultInfoText);
@@ -30,7 +31,8 @@ export default function () {
         <div>
             <div className={classes.selectDiv}>
                 <p className={classes.text}>Select Icon</p>
-                <img src={icon ? URL.createObjectURL(icon) : `${backendURL}/business/icon`} alt="(no icon)"/>
+                <img src={icon ? URL.createObjectURL(icon) : `${backendURL}/business/icon`} alt="(no icon)"
+                     width="100px"/>
             </div>
             <form
                 onSubmit={e => e.preventDefault()}>
@@ -45,12 +47,15 @@ export default function () {
             </form>
             {icon ?
                 <Button
+                    disabled={uploading}
                     className={classes.upload}
                     color="primary"
                     size="small"
                     variant="contained"
                     onClick={() => {
+                        setUploading(true)
                         setBusinessIcon(icon).then(() => {
+                            setUploading(false)
                             setIcon(undefined)
                             setInfoText('Icon set!')
                             setTimeout(() => {

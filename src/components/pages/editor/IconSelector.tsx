@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         iconsGrid: {
             maxHeight: '500px',
-            overflow: 'hidden'
+            overflow: 'auto'
         },
         customHtmlDiv: {
             textAlign: 'center',
