@@ -8,7 +8,7 @@ export default function (props: HTMLProps<HTMLIFrameElement>) {
             title="Preview"
             style={{ backgroundColor: 'white' }}
             height={720}
-            width={360}
+            width={375}
             {...props}
         />
     )
