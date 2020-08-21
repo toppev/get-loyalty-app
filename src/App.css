@@ -18,7 +18,7 @@
 
 .navbar a {
   display: table-cell;
-  color: #d7d7d7;
+  color: #E0E0E0;
   text-align: center;
   font-size: 16px;
   text-decoration: none;
@@ -29,8 +29,17 @@
   color: black;
 }
 
+.navbar .active .pageIcon svg {
+  fill: #ffffff;
+}
+
+.navbar .pageIcon svg {
+  fill: #9e9e9e;
+}
+
 .navlink {
-  border: solid #212121 1px
+  border: solid #212121 1px;
+  padding: 4px;
 }
 
 .pageIcon {
