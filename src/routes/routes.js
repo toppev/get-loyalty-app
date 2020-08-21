@@ -28,7 +28,7 @@ router.use('/user', requireLogin.unless({
     ]
 }), users);
 
-router.use('/business', requireLogin, business);
+router.use('/business', requireLogin.unless({ path: ['/business/icon'] }), business);
 router.use('/category', category)
 router.use('/campaign', requireLogin, campaigns);
 router.use('/product', requireLogin, products);

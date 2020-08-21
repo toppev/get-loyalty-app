@@ -132,10 +132,9 @@ describe('Logged in user can', () => {
             .expect(200)
     })
 
-    it('get icon (favicon.ico)', async () => {
+    it('get icon (favicon.ico) (not logged in)', async () => {
         const res = await api
             .get(`/business/icon`)
-            .set('Cookie', cookie)
             .expect(200)
 
         expect(res.headers['content-type']).toBe('image/x-icon')
