@@ -238,7 +238,7 @@ function ServerSettingsForm() {
 
     const pageRequest = useRequest(listPages)
     // If used for anything else it is recommended to use a custom parser to map the pages to real page instances
-    const [pages] = useResponseState<Page[]>(pageRequest.response, []);
+    const [pages] = useResponseState<Page[]>(pageRequest.response, [], res => res.data.map((it: any) => new Page(it)));
 
     return (
         <div>
@@ -246,7 +246,7 @@ function ServerSettingsForm() {
                 Other Settings
             </Typography>
 
-            {loading ? <LinearProgress/> : <RetryButton error={{ ...error, retry: undefined }}/>}
+            {loading ? <LinearProgress/> : <RetryButton error={error ? { ...error, retry: undefined } : undefined}/>}
             {pingingServer && <p>This is taking an unexpectedly long time...</p>}
 
             <Dialog open={popupOpen}>
@@ -279,7 +279,8 @@ function ServerSettingsForm() {
                             },
                             (err) => {
                                 const status = err.response?.status
-                                if (status === 408 || status === 504 || status === 524) {
+                                // Timeout (probably)
+                                if (!status || status === 408 || status === 504 || status === 524) {
                                     setPingingServer(true)
                                     waitForServer(() => {
                                         actions.setSubmitting(false)
@@ -357,7 +358,7 @@ function ServerSettingsForm() {
                                         {v.name}
                                     </MenuItem>
                                 ))}
-                                {pages.map(page => (
+                                {pages.filter(it => it.isDiscarded()).map(page => (
                                     <MenuItem key={page._id} value={page.pathname}>
                                         {`On "/${page.pathname}" page`}
                                     </MenuItem>
