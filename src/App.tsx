@@ -62,7 +62,11 @@ function App() {
     // Load pages
     const loadPages = () => {
         getPages()
-            .then(res => refreshHtmlPages(res.data))
+            .then(res => {
+                const pages = res.data
+                setPages(pages)
+                refreshHtmlPages(pages)
+            })
             .catch(err => {
                 console.log(err)
                 setError('Failed to load pages')
@@ -74,7 +78,7 @@ function App() {
             const fetchRest = (excludeId?: string) => refreshPages.forEach(it => it._id !== excludeId && fetchHtml(it))
             // Fetch the current page first for better performance
             const path = window.location.pathname.substring(1) // e.g "/home" -> "home"
-            const current = refreshPages.find(page => page.pathname === path)
+            const current = refreshPages.find(page => page.pathname === path) || refreshPages[0]
             if (current) {
                 fetchHtml(current).then(() => fetchRest(current._id))
             } else {
