@@ -56,6 +56,7 @@ function register(req, res, next) {
 
 function logout(req, res, next) {
     req.logout()
+    req.session = null
     res.json({ success: true });
 }
 
