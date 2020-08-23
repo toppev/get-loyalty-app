@@ -18,7 +18,7 @@ router.post('/login/:loginService', authenticator, login);
 router.post('/register', userValidator, verifyCAPTCHA, register);
 // Use the jwt
 router.get('/profile', getCurrent);
-router.get('/logout', logout);
+router.post('/logout', logout);
 // With permissions
 router.get('/all', permit('user:list'), getAll);
 router.patch('/:userId', permit('user:update'), userValidator, update);

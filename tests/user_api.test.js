@@ -116,7 +116,7 @@ describe('Logged in user should', () => {
 
     it('logout', async () => {
         const res = await api
-            .get('/user/logout')
+            .post('/user/logout')
             .set('Cookie', cookie)
             .expect(200);
         expect(res.headers['set-cookie'][0].startsWith('loyalty_session=;'))
