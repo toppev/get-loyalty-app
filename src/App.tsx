@@ -9,6 +9,7 @@ import { AccountNotificationValues } from './components/account/AccountNotificat
 import LoginDialog from "./components/authentication/LoginDialog";
 import { onLoginOrAccountCreate, profileRequest } from "./services/authenticationService";
 import { backendURL } from "./config/axios";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 
 // Lazy Pages
 const OverviewPage = lazy(() => import('./components/overview/OverviewPage'));
@@ -105,47 +106,50 @@ export default function () {
                     />
                 </div>
                 {loginDialog && <LoginDialog open={loginDialog}/>}
-                {showContent && <div style={styles.content}>
-                    <Suspense
-                        fallback={(
-                            <div style={styles.loadingDiv}>
-                                <h2>Loading...</h2>
-                            </div>
-                        )}>
-                        <Switch>
-                            <Route exact path="/">
-                                <OverviewPage/>
-                            </Route>
-                            <Route path="/products">
-                                <ProductPage/>
-                            </Route>
-                            <Route path="/campaigns">
-                                <CampaignPage/>
-                            </Route>
-                            <Route path="/customers">
-                                <CustomerPage/>
-                            </Route>
-                            <Route path="/Notifications">
-                                <NotificationsPage/>
-                            </Route>
-                            <Route path="/pages">
-                                <PagesPage/>
-                            </Route>
-                            <Route path="/demo">
-                                <DemoPage/>
-                            </Route>
-                            <Route path="/settings">
-                                <SettingsPage/>
-                            </Route>
-                            <Route path="/account">
-                                <AccountPage/>
-                            </Route>
-                            <Route path="/feedback">
-                                <FeedbackPage/>
-                            </Route>
-                        </Switch>
-                    </Suspense>
-                </div>}
+                {showContent &&
+                <ErrorBoundary>
+                    <div style={styles.content}>
+                        <Suspense
+                            fallback={(
+                                <div style={styles.loadingDiv}>
+                                    <h2>Loading...</h2>
+                                </div>
+                            )}>
+                            <Switch>
+                                <Route exact path="/">
+                                    <OverviewPage/>
+                                </Route>
+                                <Route path="/products">
+                                    <ProductPage/>
+                                </Route>
+                                <Route path="/campaigns">
+                                    <CampaignPage/>
+                                </Route>
+                                <Route path="/customers">
+                                    <CustomerPage/>
+                                </Route>
+                                <Route path="/Notifications">
+                                    <NotificationsPage/>
+                                </Route>
+                                <Route path="/pages">
+                                    <PagesPage/>
+                                </Route>
+                                <Route path="/demo">
+                                    <DemoPage/>
+                                </Route>
+                                <Route path="/settings">
+                                    <SettingsPage/>
+                                </Route>
+                                <Route path="/account">
+                                    <AccountPage/>
+                                </Route>
+                                <Route path="/feedback">
+                                    <FeedbackPage/>
+                                </Route>
+                            </Switch>
+                        </Suspense>
+                    </div>
+                </ErrorBoundary>}
             </AppContext.Provider>
         </Router>
     </div>);
