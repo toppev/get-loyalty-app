@@ -43,7 +43,7 @@ function App() {
                         .then(onLogin)
                         .catch(_err => setError('Could not register a new account. Something went wrong :('))
                 } else {
-                    setError(`Something went wrong :(\nError: ${err?.response.body || err.toString()}`)
+                    setError(`Something went wrong :(\n${err.response?.body || err.toString()}`)
                 }
             })
         // eslint-disable-next-line react-hooks/exhaustive-deps

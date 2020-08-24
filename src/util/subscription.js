@@ -25,7 +25,7 @@ export function startSubscribeTask() {
 
     // Click a button to enable notifications (IMO better UX)
     window.onclick = (e) => {
-        if (e.target.className.split(' ').includes(enableNotificationsClass)) {
+        if (e.target.className?.split(' ').includes(enableNotificationsClass)) {
             subscribeUser()
         }
     }
@@ -70,7 +70,8 @@ function subscribeUser() {
                             hideNotificationClasses()
                         })
                     }).catch((e) => {
-                        console.error('An error occurred during the subscription process', Notification.permission, e)
+                        console.error('Failed to add a new subscription', Notification.permission, e)
+                        hideNotificationClasses()
                     })
                 }
             })
