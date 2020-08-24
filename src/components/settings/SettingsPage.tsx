@@ -247,7 +247,7 @@ function ServerSettingsForm() {
             </Typography>
 
             {loading ? <LinearProgress/> : <RetryButton error={error ? { ...error, retry: undefined } : undefined}/>}
-            {pingingServer && <p>This is taking an unexpectedly long time...</p>}
+            {pingingServer && <p style={{ textAlign: 'center' }}>This is taking an unexpectedly long time...</p>}
 
             <Dialog open={popupOpen}>
                 <DialogContent style={{ padding: '25px' }}>
@@ -286,6 +286,7 @@ function ServerSettingsForm() {
                                         actions.setSubmitting(false)
                                         setPopupOpen(false)
                                         setPingingServer(false)
+                                        error?.clearError && error.clearError()
                                     })
                                 } else {
                                     actions.setSubmitting(false)
