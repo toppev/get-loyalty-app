@@ -149,21 +149,23 @@ async function addCampaignRewards(user, campaign) {
     return campaign.endReward
 }
 
-async function _listCustomers() {
-    return populateUser(await User.find())
+function _listCustomers() {
+    return User.find().populate(userPopulateSchema)
+}
+
+const userPopulateSchema = {
+    path: 'customerData',
+    populate: [{
+        path: 'rewards.categories',
+        model: 'Category',
+    }, {
+        path: 'rewards.products',
+        model: 'Product',
+    }]
 }
 
 async function populateUser(user) {
-    return user.populate({
-        path: 'customerData',
-        populate: [{
-            path: 'rewards.categories',
-            model: 'Category',
-        }, {
-            path: 'rewards.products',
-            model: 'Product',
-        }]
-    }).execPopulate()
+    return user.populate(userPopulateSchema).execPopulate()
 }
 
 async function rewardAllCustomers(reward) {
