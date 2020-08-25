@@ -152,9 +152,13 @@ async function getPageContent(pageId) {
 async function getPageContext(user) {
     const business = await Business.findOne().lean();
     if (business) {
-        // All page placeholders
-        const userInfo = await customerService.getCustomerInfo(user);
-        userInfo.rewards = (userInfo.rewards || []).map(reward => {
+        //
+        // Add all page placeholders somewhere here
+        //
+        await customerService.populateUser(user)
+        // FIXME: hacky, required for handlebar placeholders to work
+        const userInfo = JSON.parse(JSON.stringify(await customerService.getCustomerInfo(user)))
+        userInfo.rewards = (userInfo.customerData.rewards || []).map(reward => {
             return {
                 scanCode: scanService.toScanCode(user, reward),
                 ...reward,

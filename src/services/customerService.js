@@ -13,7 +13,8 @@ module.exports = {
     searchCustomers,
     rewardAllCustomers,
     updateCustomerLevel,
-    getCurrentLevel
+    getCurrentLevel,
+    populateUser
 };
 
 /**
@@ -148,18 +149,21 @@ async function addCampaignRewards(user, campaign) {
     return campaign.endReward
 }
 
-function _listCustomers() {
-    return User.find()
-        .populate({
-            path: 'customerData',
-            populate: [{
-                path: 'rewards.categories',
-                model: 'Category',
-            }, {
-                path: 'rewards.products',
-                model: 'Product',
-            }]
-        })
+async function _listCustomers() {
+    return populateUser(await User.find())
+}
+
+async function populateUser(user) {
+    return user.populate({
+        path: 'customerData',
+        populate: [{
+            path: 'rewards.categories',
+            model: 'Category',
+        }, {
+            path: 'rewards.products',
+            model: 'Product',
+        }]
+    }).execPopulate()
 }
 
 async function rewardAllCustomers(reward) {
