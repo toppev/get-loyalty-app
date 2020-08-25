@@ -59,11 +59,6 @@ function GrapesPageEditor(props) {
             storage.attributes.headers['XSRF-TOKEN'] = Cookie.get('XSRF-TOKEN')
         })
 
-        editor.on('load', () => {
-            editor.setDevice('Mobile portrait')
-            //  editor.runCommand('core:open-blocks');
-        })
-
         editor.on('storage:start:store', () => {
             uploadHtmlCss(props.page, editor.getHtml(), editor.getCss())
                 .then(() => props.setError())
