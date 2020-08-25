@@ -69,7 +69,7 @@ const placeholders: Placeholders = {
     },
     customerRewards: {
         name: 'Customer Rewards',
-        identifier: 'rewards',
+        identifier: 'customerRewards',
         placeholders: {
             unused: {
                 name: 'Number of rewards',

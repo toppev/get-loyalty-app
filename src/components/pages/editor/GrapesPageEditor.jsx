@@ -17,6 +17,7 @@ import { addEnableNotificationsButton } from "./blocks/enableNotificationsBlock"
 import { backendURL } from "../../../config/axios";
 import { addProductsBlock } from "./blocks/productsBlock";
 import { addUserQRBlock } from "./blocks/userQRCode";
+import { addRewardQRBlock } from "./blocks/rewardQRCode";
 
 // So the editor is not rendered every time if the page id didn't change
 export default React.memo(GrapesPageEditor, propsAreEqual);
@@ -86,6 +87,7 @@ function GrapesPageEditor(props) {
         addQRCodeType(editor);
         // addQRCodeBlock(bm);
         addUserQRBlock(bm);
+        addRewardQRBlock(bm);
 
         addPlaceholderBlock(bm);
         addEnableNotificationsButton(bm);
