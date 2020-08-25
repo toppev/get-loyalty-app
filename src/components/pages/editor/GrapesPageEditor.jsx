@@ -12,7 +12,7 @@ import Cookie from "js-cookie";
 import { uploadHtmlCss } from "../../../services/pageService";
 import { addRichTextEditorPlaceholders } from "./richPlaceholder";
 import { usePlaceholderContext } from "./placeholderContext";
-import { addQRCodeBlock, addQRCodeType } from "./blocks/qrCodeBlock";
+import { addQRCodeType } from "./blocks/qrCodeBlock";
 import { addEnableNotificationsButton } from "./blocks/enableNotificationsBlock";
 import { backendURL } from "../../../config/axios";
 import { addProductsBlock } from "./blocks/productsBlock";

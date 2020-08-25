@@ -438,10 +438,10 @@ function PageCard(props: PageCardProps) {
         <Card className={classes.card} {...otherProps}>
             <div className={classes.cardContentDiv}>
                 <div className={classes.backgroundImage} style={backgroundImageCss}/>
-                <CardContent className={classes.cardContent}>
+                <CardContent className={`${classes.cardContent} hoverable`}>
                     <TextField
                         disabled={!editing}
-                        className={classes.pageNameField}
+                        className={`${classes.pageNameField} show-on-hover`}
                         defaultValue={page.name}
                         margin="dense"
                         name="name"
@@ -457,8 +457,7 @@ function PageCard(props: PageCardProps) {
                                     title={
                                         <React.Fragment>
                                             <Typography>{`Rename`}</Typography>
-                                            This name is used in the url.
-                                            Good names are simple. For example, "home", "products" or "campaigns"
+                                            The name of the page is not shown to customers.
                                         </React.Fragment>
                                     }
                                 >
@@ -554,7 +553,7 @@ function TemplateSelectorDialog({ open, onClose, onSelect }: TemplateSelectorDia
                                     />
                                 </Grid>
                             ))}
-                           <RetryButton error={error}/>
+                            <RetryButton error={error}/>
                         </Grid>
                         <PreviewPage
                             page={previewPage}

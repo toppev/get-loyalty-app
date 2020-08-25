@@ -253,7 +253,7 @@ function ServerSettingsForm() {
                 <DialogContent style={{ padding: '25px' }}>
                     <CloseButton onClick={() => setPopupOpen(false)}/>
                     <Typography variant="h5" color="secondary">Your app is restarting...</Typography>
-                    <p>This may take up to a few minutes.</p>
+                    <p>This may take a few minutes.</p>
                 </DialogContent>
             </Dialog>
 
