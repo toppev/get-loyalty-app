@@ -7,8 +7,8 @@ export default function (props: HTMLProps<HTMLIFrameElement>) {
         <iframe
             title="Preview"
             style={{ backgroundColor: 'white' }}
-            height={720}
-            width={375}
+            height={750}
+            width={420}
             {...props}
         />
     )

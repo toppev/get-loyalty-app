@@ -145,7 +145,8 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         drawerPaper: {},
         footerItem: {
-            fontSize: '12px'
+            fontSize: '12px',
+            color: '#6e7cd0'
         },
         otherLinks: {
             position: 'relative',
@@ -219,7 +220,7 @@ export default function Navigator(props: NavigatorProps) {
                                     button
                                     component={component}
                                     className={classes.item}
-                                    style={{paddingRight: '6px'}}
+                                    style={{ paddingRight: '6px' }}
                                     {...otherProps}
                                 >
                                     <ListItemIcon className={classes.itemIcon}>
@@ -227,7 +228,8 @@ export default function Navigator(props: NavigatorProps) {
                                                color="secondary">{icon}</Badge>
                                     </ListItemIcon>
                                     <ListItemText classes={{ primary: classes.itemPrimary }}>{childId}</ListItemText>
-                                    {external && <OpenInNewIcon fontSize="small" style={{ fontSize: '14px', marginLeft: '8px' }}/>}
+                                    {external &&
+                                    <OpenInNewIcon fontSize="small" style={{ fontSize: '14px', marginLeft: '8px' }}/>}
                                 </ListItem>
                             )
                         })}

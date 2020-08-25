@@ -53,10 +53,15 @@ function onLoginOrAccountCreate(context: AppContextInterface, res: AxiosResponse
     }
 }
 
+function logout() {
+    return post('/user/logout', {})
+}
+
 
 export {
     profileRequest,
     loginRequest,
     registerRequest,
-    onLoginOrAccountCreate
+    onLoginOrAccountCreate,
+    logout
 }

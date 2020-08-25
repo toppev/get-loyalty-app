@@ -34,10 +34,11 @@ interface CustomerLevelProps {
     open: boolean
     onClose: () => any
     initialLevel: CustomerLevel
+    currentLevels: CustomerLevel[]
     onSubmit: (level: CustomerLevel, setSubmitting: (b: boolean) => any) => any
 }
 
-export default function ({ initialLevel, onSubmit, onClose }: CustomerLevelProps) {
+export default function ({ initialLevel, onSubmit, onClose, currentLevels }: CustomerLevelProps) {
 
     const [colorPickerOpen, setColorPickerOpen] = useState(false);
     const [levelColor, setLevelColor] = useState(initialLevel.color || '#aaaaaa');
@@ -52,8 +53,9 @@ export default function ({ initialLevel, onSubmit, onClose }: CustomerLevelProps
         }
         if (value.requiredPoints === undefined) {
             errors.requiredPoints = 'Points must be specified'
+        } else if (currentLevels.some(it => it.requiredPoints === value.requiredPoints && it._id !== initialLevel._id)) {
+            errors.requiredPoints = `A level with ${value.requiredPoints} points already exists!`
         }
-        // TODO: check no equal requiredPoints exist (except if updating)
         return errors;
     }
 

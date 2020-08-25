@@ -72,6 +72,7 @@ export default function () {
                 open={true}
                 onClose={() => setEditing(undefined)}
                 initialLevel={editing}
+                currentLevels={orderedLevels}
                 onSubmit={(level, setSubmitting) => {
                     const business = { ...context.business }
                     business.public.customerLevels = [...business.public.customerLevels.filter(it => it._id !== level._id), level]
