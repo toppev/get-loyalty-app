@@ -14,7 +14,7 @@ export function replaceQRCodes() {
             const qr = qrcode(0, 'L')
             qr.addData(code)
             qr.make()
-            el.innerHTML = qr.createSvgTag()
+            el.innerHTML = qr.createSvgTag(undefined, 2)
 
             const svgSize = "100%"
             const svgMaxSize = "360px"
