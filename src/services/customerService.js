@@ -165,7 +165,7 @@ const userPopulateSchema = {
 }
 
 async function populateUser(user) {
-    return user.populate(userPopulateSchema).execPopulate()
+    return user.populate && user.populate(userPopulateSchema).execPopulate()
 }
 
 async function rewardAllCustomers(reward) {

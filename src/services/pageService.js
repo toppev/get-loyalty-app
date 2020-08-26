@@ -166,7 +166,6 @@ async function getPageContext(user) {
         })
 
         const customerData = userInfo.customerData;
-        const { config } = business;
         const products = (await productService.getAllProducts(true)).map(it => it.toObject());
         let campaigns = await campaignService.getAllCampaigns(true);
         campaigns = campaigns.map(rawCampaign => {
@@ -187,7 +186,7 @@ async function getPageContext(user) {
 
             return campaign;
         });
-
+        const { config } = business;
         const { translations } = config;
         const points = customerData.properties.points;
         let customerLevels = business.public.customerLevels
