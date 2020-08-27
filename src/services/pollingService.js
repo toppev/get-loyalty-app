@@ -22,7 +22,7 @@ function sendToUser(userId, data, type = '') {
                 'Content-Type': 'application/json; charset=utf-8',
                 'Polling-Authentication': process.env.POLLING_AUTHENTICATION
             },
-            uri: `${BASE_URL}/${id}`,
+            uri: `${BASE_URL}/${id}/send`,
             body: data,
             method: 'POST'
         })

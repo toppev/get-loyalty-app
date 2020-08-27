@@ -94,8 +94,9 @@ async function uploadPage(pageId, { html, css }) {
     // Refresh the page for the page owner to automatically see changes
     const owner = await User.findOne({ role: 'business' })
     pollingService.sendToUser(owner.id, {
-        message: 'Changes detected (development mode)',
-        refresh: true
+        message: '[Development Mode]\nChanges detected',
+        refresh: true,
+        duration: 1000
     }, pollingService.IDENTIFIERS.OTHER)
 
     const page = await PageData.findById(pageId);
