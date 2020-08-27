@@ -4,12 +4,14 @@ const juice = require('juice');
 const pageScreenshot = require('./pageScreenshot');
 const fs = require('fs');
 const Business = require("../models/business");
+const User = require("../models/user");
 const handlebars = require("handlebars");
 const StatusError = require('../helpers/statusError');
 const customerService = require('./customerService');
 const campaignService = require('./campaignService');
 const productService = require('./productService');
 const scanService = require('./scanService');
+const pollingService = require('./pollingService');
 
 module.exports = {
     createPage,
@@ -88,6 +90,13 @@ async function uploadPage(pageId, { html, css }) {
     const dir = `page_${pageId}`;
     await uploader.upload(dir, 'index.html', inlineHtml);
     await uploader.upload(dir, 'main.css', css);
+
+    // Refresh the page for the page owner to automatically see changes
+    const owner = await User.findOne({ role: 'business' })
+    pollingService.sendToUser(owner.id, {
+        message: 'Changes detected (development mode)',
+        refresh: true
+    }, pollingService.IDENTIFIERS.OTHER)
 
     const page = await PageData.findById(pageId);
     if (page) {

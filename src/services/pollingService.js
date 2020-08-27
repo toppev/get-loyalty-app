@@ -6,7 +6,8 @@ const POLLING_IDENTIFIERS = {
     SCAN: 'scan',
     REWARD_GET: 'reward_get',
     SCAN_GET: 'scan_get',
-    REWARD_USE: 'reward_use'
+    REWARD_USE: 'reward_use',
+    OTHER: 'other'
 }
 
 function sendToUser(userId, data, type = '') {
