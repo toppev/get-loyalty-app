@@ -10,8 +10,9 @@ function addUserRewardsBlock(blockManager: any) {
     blockManager.add(userRewardsClass, {
         label: `User Rewards`,
         content: (`
-            <div class="${userRewardsClass}">
-                {{#each user.rewards}}
+            <div class="${userRewardsClass}" style="text-align: center">
+                <h2>Rewards {{user.rewards.length}}</h2>
+                <p>{{#each user.rewards}}</p>
                 <div class="${userRewardItemClass}">
                     <p>{{name}}</p>
                     
@@ -20,18 +21,18 @@ function addUserRewardsBlock(blockManager: any) {
                     <p>{{description}}</p>
                     <p>{{itemDiscount}}</p>
                     <p>{{requirement}}</p>
-                    <p>{{customerPoints}} {{translation.points.plural}}</p>
-                    {{#each products}}
+                    <p>{{#if customerPoints}} {{customerPoints}} points {{/if}}</p>
+                    <p>{{#if products.length}} {{#each products}}</p>
                         <span>{{name}}</span>
-                        {{#unless @last}}, {{/unless}}
-                    {{/each}}
-                    {{#unless @last}},{{/unless}}
-                    {{#each categories}}
+                        <span>{{#unless @last}}, {{/unless}}</span>
+                    <p>{{/each}} {{/fi}}</p>
+                    <p>{{#unless @last}},{{/unless}}</p>
+                    <p>{{#if categories.length}} {{#each categories}}
                         <span>{{name}}</span>
-                        {{#unless @last}}, {{/unless}}
-                    {{/each}}
+                        <span>{{#unless @last}}, {{/unless}}</span>
+                    <p>{{/each}} {{/if}}</p>
                 </div>
-                {{/each}}
+                <p>{{/each}}</p>
             </div>
             `
         ),

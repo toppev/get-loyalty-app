@@ -214,7 +214,10 @@ function ServerSettingsForm() {
     const classes = useStyles();
     const context = useContext(AppContext)
 
-    const updateRequest = useRequest();
+    const updateRequest = useRequest(undefined, {
+        errorMessage: 'Update request might have failed. ' +
+            'If something broke, please wait a few minutes and contact support if the problems continue!'
+    });
     // Select components don't want to work well with formik :(
     const [askNotifications, setAskNotifications] = useState<string>('disabled');
     const serverInfo = useRequest(

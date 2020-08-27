@@ -15,26 +15,27 @@ function addCampaignsBlock(blockManager: any) {
         label: `Campaigns`,
         content: (`
             <div class="${campaignsClass}">
-                <h2>Campaigns</h2>
-                {{#each campaigns}}
+                <h2><b>Campaigns</b> ({{campaigns.length}})</h2>
+                <p>{{#each campaigns}}</p>
                 <div class="${campaignItemClass}">
                     <h3>{{name}}</h3>
                     <p>{{description}}</p>
-                    <p>{{start}} - {{end}}</p>
+                    <p>Starts: {{start}}</p>
+                    <p>{{#if end}}Ends: {{end}}{{/if}}</p>
                     <br/>
-                    <div style="font-size: 16px; font-weight: bold">
-                        {{campaign.currentStamps}}/{{campaign.totalStampsNeeded}}
+                    <div style="font-size: 22px;">
+                        <p>{{#if totalStampsNeeded}}</p>
+                        <p>{{currentStamps}}/{{totalStampsNeeded}}</p>
                         <div style="font-size: 24px">
-                            {{#each campaign.currentStamps}}
-                                ${POINTS_ICON}
-                            {{/each}}
-                            {{#each campaign.stampsNeeded}}
-                                ${POINTS_NEEDED_ICON}
-                            {{/each}}                  
+                            <p>{{#each currentStamps}}${POINTS_ICON}</p>
+                            <p>{{/each}}</p>
+                            <p>{{#each stampsNeeded}}${POINTS_NEEDED_ICON}</p>
+                            <p>{{/each}}</p>
                         </div>
+                        <p>{{/if}}</p>
                     </div>
                     <div class="${campaignRewardsClass}">
-                        {{#each campaign.rewards}}
+                        <p>{{#each rewards}}</p>
                             <div class="${campaignRewardClass}">
                                 <p>{{name}}</p>
                                 <p>{{description}}</p>
@@ -42,10 +43,10 @@ function addCampaignsBlock(blockManager: any) {
                                 <p>{{requirement}}</p>
                                 <p>{{customerPoints}} {{translation.points.plural}}</p>
                             </div>
-                        {{/each}}
+                        <p>{{/each}}</p>
                     </div>
                 </div>
-                {{/each}}
+                <p>{{/each}}</p>
             </div>
             `
         ),

@@ -7,19 +7,21 @@ function addProductsBlock(blockManager: any) {
     blockManager.add(productsClass, {
         label: `Products`,
         content: (`
-            <div class="${productsClass}">
-                <h2>Products</h2>
-                {{#each products}}
+            <div class="${productsClass}" style="text-align: center">
+                <h2>
+                    <b>Products</b> ({{products.length}})
+                </h2>
+                <p>{{#each products}}</p>
                 <div class="${productItemClass}">
                     <h3>{{name}}</h3>
-                    {{#each images}}
+                    <p>{{#each images}}</p>
                         <img src="{{this}}" width="100%" style="display: block; margin-left: auto; margin-right: auto;">
-                    {{/each}}
+                    <p>{{/each}}</p>
                     <p>{{description}}</p>
                     <p>{{price}}</p>
                     <br/>
                 </div>
-                {{/each}}
+                <p>{{/each}}</p>
             </div>
             `
         ),
