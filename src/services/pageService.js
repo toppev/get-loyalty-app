@@ -181,7 +181,7 @@ async function getPageContext(user) {
                 campaign.end = campaign.end.toLocaleDateString(undefined, dateOpts)
             }
 
-            const stampsNeeded = campaign.currentStamps.length - campaign.totalStampsNeeded;
+            const stampsNeeded = campaign.totalStampsNeeded - campaign.currentStamps.length;
             campaign.stampsNeeded = Array.from({ length: stampsNeeded }, () => ({}));
 
             return campaign;
