@@ -12,6 +12,7 @@ import { claimCoupon } from "./services/couponService";
 import { Helmet } from "react-helmet";
 import { AppContext, defaultAppContext } from './AppContext';
 import NotificationHandler from "./components/notification/NotificationHandler";
+import { initUserFormScript, useUserFormInitialValues } from "./util/userForm";
 
 function App() {
 
@@ -98,6 +99,9 @@ function App() {
             updatePage(page)
         }
     }
+
+    initUserFormScript()
+    useUserFormInitialValues()
 
     return (
         <AppContext.Provider value={contextState}>
