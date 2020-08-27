@@ -18,6 +18,7 @@ import { backendURL } from "../../../config/axios";
 import { addProductsBlock } from "./blocks/productsBlock";
 import { addUserQRBlock } from "./blocks/userQRCode";
 import { addRewardQRBlock } from "./blocks/rewardQRCode";
+import { addEmailBlock } from "./blocks/userFormBlock";
 
 // So the editor is not rendered every time if the page id didn't change
 export default React.memo(GrapesPageEditor, propsAreEqual);
@@ -35,6 +36,7 @@ function GrapesPageEditor(props) {
         const editor = GrapesJS.init({
             // Auto-saved on exit, see useEffect return cleanup function
             noticeOnUnload: false,
+            allowScripts: true,
             container: `#page-editor`,
             canvas: {
                 styles: ["./editorCanvas.css"]
@@ -86,6 +88,8 @@ function GrapesPageEditor(props) {
 
         addPlaceholderBlock(bm);
         addEnableNotificationsButton(bm);
+
+        addEmailBlock(bm);
 
         const saveIfNeeded = () => {
             if (editor.getDirtyCount()) {

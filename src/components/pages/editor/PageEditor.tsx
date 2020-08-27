@@ -4,6 +4,7 @@ import {
     createStyles,
     Dialog,
     DialogContent,
+    Link,
     makeStyles,
     Theme,
     Typography,
@@ -16,6 +17,7 @@ import { SelectPlaceholderCallback } from "./blocks/placeholderBlock";
 import PlaceholderSelector from "./PlaceholderSelector";
 import CloseButton from "../../common/button/CloseButton";
 import Alert from "@material-ui/lab/Alert";
+import Tip from "../../common/Tip";
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -87,6 +89,8 @@ export default function ({ page }: PageEditorProps) {
         </div>
     ) : (
         <div>
+            <Tip>Open <Link href="/demo" target="_blank" rel="noopener noreferrer">demo page</Link> in another tab/window to see
+                changes.</Tip>
             <div className={classes.saveChangesDiv}>
                 <span className={classes.savedText}>Changes are automatically saved</span>
             </div>

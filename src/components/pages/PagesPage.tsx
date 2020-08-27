@@ -438,10 +438,10 @@ function PageCard(props: PageCardProps) {
         <Card className={classes.card} {...otherProps}>
             <div className={classes.cardContentDiv}>
                 <div className={classes.backgroundImage} style={backgroundImageCss}/>
-                <CardContent className={`${classes.cardContent} hoverable`}>
+                <CardContent className={`${classes.cardContent}`}>
                     <TextField
                         disabled={!editing}
-                        className={`${classes.pageNameField} show-on-hover`}
+                        className={classes.pageNameField}
                         defaultValue={page.name}
                         margin="dense"
                         name="name"
