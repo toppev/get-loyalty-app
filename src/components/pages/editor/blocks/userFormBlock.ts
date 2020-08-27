@@ -6,7 +6,7 @@ function addEmailBlock(blockManager: any) {
         // language=HTML
         content: (`
             <div>
-            <form id=${userFormclass} onsubmit="submitChanges()">
+            <form id=${userFormclass}>
                 
                 <div>
                     <input type="email" id="user-email" name="email" value="" placeholder="Email address"/>
@@ -19,10 +19,16 @@ function addEmailBlock(blockManager: any) {
                     <input type="date" id="birthday-selector" name="birthday" autocomplete="bday" min="1900-01-01" max="2020-12-31">
                 </div>
                 
-                <button type="submit">Save changes</button>
+                <button id="user-form-submit">Save changes</button>
                 
             </form>
             <script>
+                const submitBtn = document.querySelector("#user-form-submit")
+                submitBtn.addEventListener("click", function(e){
+                    e.preventDefault();
+                    submitChanges();
+                });
+            
                 const url = "http://localhost:3001" + "/user"
                 // const url = window.location.origin + "/api/user"
                 
@@ -43,6 +49,7 @@ function addEmailBlock(blockManager: any) {
                 });
 
                 function submitChanges() {
+                    submitBtn.disabled = true;
                     fetch(url, {
                         "headers": {
                             "content-type": "application/json",
@@ -55,6 +62,8 @@ function addEmailBlock(blockManager: any) {
                         }),
                         "method": "PATCH",
                         "credentials": "include"
+                    }).finally(() => {
+                        submitBtn.disabled = false;
                     });
                 }
 
