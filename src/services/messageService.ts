@@ -59,7 +59,8 @@ function useSubscribe(identifiers: string[]) {
     }
 
     return {
-        notification
+        notification,
+        setNotification
     }
 
 }

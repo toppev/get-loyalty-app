@@ -7,7 +7,8 @@ export interface Notification {
     id: any
     status?: "success" | "error" | "neutral"
     refresh?: boolean
-    vibrate: number | number[] | boolean
+    vibrate?: number | number[] | boolean
+    duration?: number
 }
 
 interface NotificationProps {
