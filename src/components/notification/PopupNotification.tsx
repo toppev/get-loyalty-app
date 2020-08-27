@@ -21,7 +21,9 @@ export default function ({ notification }: NotificationProps) {
 
     return (
         <div className={`notification ${status} ${notification ? 'active' : ''}`}>
-            <p>{message}</p>
+            {!!message && message.split('\n').map(line => (
+                <p>{line}</p>
+            ))}
         </div>
     )
 }

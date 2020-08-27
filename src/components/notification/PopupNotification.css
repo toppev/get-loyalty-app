@@ -4,29 +4,29 @@
   opacity: 0;
   z-index: 2;
   width: 72%;
-  height: 8%;
+  max-width: 360px;
+  height: fit-content;
+  min-height: 8%;
+  max-height: 110px;
   left: 0;
   right: 0;
   top: 7%;
   margin-left: auto;
   margin-right: auto;
-  max-width: 360px;
-  max-height: 90px;
   position: absolute;
-  display: flex;
   align-items: center;
   border: solid #1d1d1d 1px;
-  background-color: #0a88a1;
+  background-color: rgba(30, 200, 220, 0.9);
 }
 
 .active {
-  opacity: 0.9;
+  opacity: 1;
 }
 
 .success {
-  background-color: #019c66;
+  background-color: rgba(1, 156, 102, 0.9);
 }
 
 .error {
-  background-color: #b13c3c;
+  background-color: rgba(177, 60, 60, 0.9);
 }
