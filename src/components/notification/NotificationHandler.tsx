@@ -10,7 +10,7 @@ export default function (props: NotificationHandlerProps) {
 
     // Subscribe to long polling messages/notifications (e.g "Scanned", "Received a reward")
     // We could subscribe when needed or migrate to websockets but this is good enough for now
-    const { notification } = useSubscribe(['scan', 'reward_get', 'scan_get', 'reward_use'])
+    const { notification } = useSubscribe(['scan', 'reward_get', 'scan_get', 'reward_use', 'other'])
 
     if (notification) {
         const { refresh, vibrate } = notification
