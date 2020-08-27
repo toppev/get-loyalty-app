@@ -6,7 +6,7 @@ function addEmailBlock(blockManager: any) {
         // language=HTML
         content: (`
             <div>
-            <form id=${userFormclass} action="" onsubmit="submitEmail()">
+            <form id=${userFormclass} onsubmit="submitChanges()">
                 
                 <div>
                     <input type="email" id="user-email" name="email" value="" placeholder="Email address"/>
@@ -16,12 +16,10 @@ function addEmailBlock(blockManager: any) {
                 
                 <div>
                     <label for="birthday-selector">Birthday</label>
-                    <input type="date" id="birthday-selector" name="birthday" min="1900-01-01" max="2020-12-31">
+                    <input type="date" id="birthday-selector" name="birthday" autocomplete="bday" min="1900-01-01" max="2020-12-31">
                 </div>
                 
-                <div>
-                    <input type="submit" value="Submit">
-                </div>
+                <button type="submit">Save changes</button>
                 
             </form>
             <script>
@@ -44,22 +42,20 @@ function addEmailBlock(blockManager: any) {
                     }) 
                 });
 
-                function submitEmail() {
-                    if (emailField.value.length !== 0) {
-                        fetch(url, {
-                            "headers": {
-                                "content-type": "application/json",
-                                "x-xsrf-token": getCookie("XSRF-TOKEN")
-                            },
-                            "body": JSON.stringify({
-                                        email: emailField.value,
-                                        birthday: new Date(birthdayField.value),
-                                        acceptAll: true,
-                            }),
-                            "method": "PATCH",
-                            "credentials": "include"
-                        });
-                    }
+                function submitChanges() {
+                    fetch(url, {
+                        "headers": {
+                            "content-type": "application/json",
+                            "x-xsrf-token": getCookie("XSRF-TOKEN")
+                        },
+                        "body": JSON.stringify({
+                                    email: emailField.value,
+                                    birthday: new Date(birthdayField.value),
+                                    acceptAll: true,
+                        }),
+                        "method": "PATCH",
+                        "credentials": "include"
+                    });
                 }
 
                 function getCookie(name) {
