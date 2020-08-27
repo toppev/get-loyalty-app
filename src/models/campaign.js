@@ -93,8 +93,8 @@ campaignSchema.methods.getCurrentStamps = function (customerData) {
 };
 
 campaignSchema.virtual("totalStampsNeeded").get(function () {
-    const req = this.requirements.some(it => it.type === 'stamps')
-    if (!req || !req.values || !req.values.length) return 0
+    const req = this.requirements.find(it => it.type === 'stamps')
+    if (!req || !req.values.length) return 0
     return parseInt(req.values[0], 10)
 });
 
