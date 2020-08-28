@@ -2,17 +2,16 @@ import { patch } from "../config/axios";
 import { AppContext } from "../AppContext";
 import { useContext } from "react";
 
-const submitId = "user-form-submit"
-
 const getUserForm = () => document.querySelector(`#user-form`)
 const getEmailField = () => document.getElementById("user-email");
 const getBirthdayField = () => document.getElementById("birthday-selector");
-const getSubmitBtn = () => document.querySelector(`#${submitId}`)
+const getSubmitBtn = () => document.querySelector(`#user-form-submit`)
 
-/** Makes sure email and birthday fields have their default values */
 export function useUserFormInitialValues() {
     const { user } = useContext(AppContext);
     if (!user) return
+
+    // Handle default values
 
     const ef = getEmailField()
     if (ef) ef.value = user.email || "";
@@ -23,11 +22,16 @@ export function useUserFormInitialValues() {
         if (bf) bf.value = bd.slice(0, 10);
     }
 
+    // Handle form submission
     const form = getUserForm()
-    form && form.addEventListener("onsubmit", e => {
-        e.preventDefault();
-        submitChanges();
-    })
+    if (form) {
+        form.onsubmit = e => {
+            e.preventDefault();
+            if (form?.reportValidity() !== false) {
+                submitChanges();
+            }
+        }
+    }
 }
 
 function submitChanges() {
@@ -38,6 +42,12 @@ function submitChanges() {
         email: getEmailField().value,
         birthday: new Date(getBirthdayField().value),
         acceptAll: true,
+    }).catch(err => {
+        const msg = err.response?.data?.message
+        if (msg) {
+            // FIXME: show the error somewhere else
+            window.alert(msg)
+        }
     }).finally(() => {
         submitBtn.disabled = false;
     });
