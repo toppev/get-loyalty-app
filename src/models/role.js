@@ -21,6 +21,7 @@ const roles = {
             'scan:get': true,
             'scan:use': true,
             'notification:*': true,
+            'user:*': _ownUserOnly
         },
     },
     user: {
@@ -37,7 +38,7 @@ const roles = {
  */
 async function _ownUserOnly(params) {
     const reqParams = params.reqParams;
-    return params.userId && params.userId == reqParams.userId;
+    return params.userId && (params.userId == reqParams.userId || !reqParams.userId);
 }
 
 async function can(role, operation, params) {

@@ -22,6 +22,7 @@ router.post('/logout', logout);
 // With permissions
 router.get('/all', permit('user:list'), getAll);
 router.patch('/:userId', permit('user:update'), userValidator, update);
+router.patch('/', permit('user:update'), userValidator, update);
 router.delete('/:userId', permit('user:delete'), deleteUser);
 router.get('/:userId', permit('user:get'), getById);
 
@@ -102,7 +103,7 @@ function getCurrent(req, res, next) {
 }
 
 function update(req, res, next) {
-    const id = req.params.userId;
+    const id = req.params.userId || req.user.id;
     checkAccepted({ ...req.user, ...req.body })
     userService.update(id, req.body)
         .then(user => res.json(user))
