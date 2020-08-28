@@ -49,7 +49,9 @@ function GrapesPageEditor(props) {
             ],
             storageManager: {
                 type: 'remote',
-                stepsBeforeSave: 5,
+                // Doesn't work? FIXME?
+                // stepsBeforeSave: 5,
+
                 // Either save or create if undefined
                 urlStore: `${url}/${props.page._id || ""}/?gjsOnly=true`,
                 urlLoad: `${url}/${props.page._id}/?gjsOnly=true`,
