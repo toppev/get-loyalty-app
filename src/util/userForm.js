@@ -36,19 +36,19 @@ export function useUserFormInitialValues() {
 
 function submitChanges() {
     const submitBtn = getSubmitBtn()
-    submitBtn.disabled = true;
+    submitBtn.disabled = true
 
     patch('/user', {
         email: getEmailField().value,
         birthday: new Date(getBirthdayField().value),
         acceptAll: true,
     }).catch(err => {
+        submitBtn.disabled = false
+
         const msg = err.response?.data?.message
         if (msg) {
             // FIXME: show the error somewhere else
             window.alert(msg)
         }
-    }).finally(() => {
-        submitBtn.disabled = false;
-    });
+    })
 }
