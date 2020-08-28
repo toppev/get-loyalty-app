@@ -12,7 +12,6 @@ import { claimCoupon } from "./services/couponService";
 import { Helmet } from "react-helmet";
 import { AppContext, defaultAppContext } from './AppContext';
 import NotificationHandler from "./components/notification/NotificationHandler";
-import { initUserFormScript, useUserFormInitialValues } from "./util/userForm";
 
 function App() {
 
@@ -100,9 +99,6 @@ function App() {
         }
     }
 
-    initUserFormScript()
-    useUserFormInitialValues()
-
     return (
         <AppContext.Provider value={contextState}>
             <div className="App">
@@ -111,8 +107,8 @@ function App() {
                     <link id="favicon" rel="icon" href={`${BASE_URL}/business/icon`} type="image/x-icon"/>
                 </Helmet>
 
-                <NotificationHandler onRefresh={refreshHtmlPages}/>
                 {error && <p className="ErrorMessage">Error: {error.response?.message || error.toString()}</p>}
+
                 <Switch>
                     {pages.map(page => (
                         <Route exact path={`/${page.pathname}`} key={page._id}>
@@ -122,7 +118,10 @@ function App() {
                     {pages.length > 0 &&
                     <Redirect to={{ pathname: pages[0].pathname, search: window.location.search }}/>}
                 </Switch>
+
                 <Navbar pages={pages || []}/>
+
+                <NotificationHandler onRefresh={refreshHtmlPages}/>
             </div>
         </AppContext.Provider>
     )

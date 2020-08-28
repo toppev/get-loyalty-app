@@ -4,35 +4,36 @@ import { useContext } from "react";
 
 const submitId = "user-form-submit"
 
-/** Initialize user form submission script */
-export function initUserFormScript() {
-    window.onclick = e => {
-        if (e.target?.id === submitId) {
-            e.preventDefault();
-            submitChanges();
-        }
-    }
-}
-
+const getUserForm = () => document.querySelector(`#user-form`)
 const getEmailField = () => document.getElementById("user-email");
 const getBirthdayField = () => document.getElementById("birthday-selector");
+const getSubmitBtn = () => document.querySelector(`#${submitId}`)
 
 /** Makes sure email and birthday fields have their default values */
 export function useUserFormInitialValues() {
     const { user } = useContext(AppContext);
-    if(!user) return
+    if (!user) return
 
-    getEmailField().value = user.email || "";
+    const ef = getEmailField()
+    if (ef) ef.value = user.email || "";
 
     if (user.birthday) {
         const bd = new Date(Date.parse(user.birthday)).toISOString()
-        getBirthdayField().value = bd.slice(0, 10);
+        const bf = getBirthdayField()
+        if (bf) bf.value = bd.slice(0, 10);
     }
+
+    const form = getUserForm()
+    form && form.addEventListener("onsubmit", e => {
+        e.preventDefault();
+        submitChanges();
+    })
 }
 
 function submitChanges() {
-    const submitBtn = document.querySelector(`#${submitId}`)
+    const submitBtn = getSubmitBtn()
     submitBtn.disabled = true;
+
     patch('/user', {
         email: getEmailField().value,
         birthday: new Date(getBirthdayField().value),
