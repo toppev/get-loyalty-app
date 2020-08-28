@@ -22,7 +22,7 @@ export class ErrorBoundary extends React.Component<{}, ErrorBoundaryState> {
 
     render() {
         if (this.state.hasError) {
-            return <h1>Something went wrong. Try refreshing the page.</h1>;
+            return <h1 style={{ color: "orangered", fontSize: '24px' }}>Something went wrong. Try refreshing the page.</h1>;
         }
         return this.props.children;
     }

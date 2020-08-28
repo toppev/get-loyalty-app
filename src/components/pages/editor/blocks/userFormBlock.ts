@@ -18,7 +18,7 @@ function addUserFormBlock(blockManager: any) {
                         <input type="date" id="birthday-selector" name="birthday" autocomplete="bday" min="1900-01-01" max="2010-12-31">
                     </div>
                 
-                    <button id="user-form-submit">Save changes</button>
+                    <button id="user-form-submit" disabled>Save changes</button>
                 </form>
             </div>
         `),
