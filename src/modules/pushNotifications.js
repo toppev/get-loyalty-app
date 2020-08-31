@@ -1,11 +1,12 @@
 import { post } from "../config/axios";
+import { someParentHasClassname } from "../util/classUtils";
 
 
 /** Class that triggers push notification prompt when clicked */
 const enableNotificationsClass = 'enable-notifications'
 
 /** Class that will be hidden when push notifications are enabled */
-const hideNotificationClass = enableNotificationsClass
+const hideNotificationSelector = `.${enableNotificationsClass} .hide-if-notifications-enabled`
 
 /** Whether to hide the classes if service worker or push manager is not supported */
 const hideIfNotSupported = true
@@ -24,11 +25,12 @@ export function startSubscribeTask() {
         .catch(() => hideIfNotSupported && hideNotificationClasses())
 
     // Click a button to enable notifications (IMO better UX)
-    window.onclick = (e) => {
-        if (e.target.className?.split(' ').includes(enableNotificationsClass)) {
+    window.onclick = e => {
+        if (someParentHasClassname(e.target, enableNotificationsClass)) {
             subscribeUser()
         }
     }
+
     // Timers/pages
     let settingValue = process.env.REACT_APP_ASK_NOTIFICATIONS
     const time = parseInt(settingValue, 10);
@@ -45,7 +47,6 @@ export function startSubscribeTask() {
             }
         }, 1000)
     }
-
 }
 
 const convertedVapidKey = urlBase64ToUint8Array(process.env.REACT_APP_PUBLIC_VAPID_KEY)
@@ -85,7 +86,7 @@ function hideNotificationClasses() {
     const style = document.createElement('style')
     // language=CSS
     style.textContent = `
-      .${hideNotificationClass} {
+      ${hideNotificationSelector} {
         display: none;
       }
     `
