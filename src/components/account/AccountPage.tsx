@@ -97,7 +97,7 @@ function EmailForm({ user }: EmailFormProps) {
 
     const initials: EmailValues = { email: user.email };
 
-    const { error, performRequest } = useRequest()
+    const { error, performRequest, loading } = useRequest()
 
     return (
         <Formik
@@ -117,7 +117,7 @@ function EmailForm({ user }: EmailFormProps) {
                 })
             }}
         >
-            {({ submitForm, isSubmitting, handleChange }) => (
+            {({ submitForm }) => (
                 <Paper className={!user.email ? clsx(classes.paper, classes.highlight) : classes.paper}>
                     <Form>
                         <TextField
@@ -128,11 +128,11 @@ function EmailForm({ user }: EmailFormProps) {
                             placeholder="example@email.com"
                         />
                         <div className={classes.progressErrorDiv}>
-                            {isSubmitting && <LinearProgress/>}
+                            {loading && <LinearProgress/>}
                             <RetryButton error={error}/>
                         </div>
                         <Button
-                            disabled={isSubmitting || !canSubmit}
+                            disabled={loading || !canSubmit}
                             onClick={submitForm}
                             variant="contained"
                             color="primary"
@@ -175,7 +175,7 @@ function ResetPassword({ user, title, highlight }: ResetPasswordProps) {
     const classes = useStyles();
     const context = useContext(AppContext);
 
-    const { error, performRequest } = useRequest()
+    const { loading, error, performRequest } = useRequest()
 
     return (
 
@@ -193,7 +193,7 @@ function ResetPassword({ user, title, highlight }: ResetPasswordProps) {
                     })
             }}
         >
-            {({ submitForm, isSubmitting, handleChange }) => {
+            {({ submitForm }) => {
                 return (
                     <Paper className={highlight ? clsx(classes.paper, classes.highlight) : classes.paper}>
                         <Typography
@@ -218,14 +218,14 @@ function ResetPassword({ user, title, highlight }: ResetPasswordProps) {
                             />
                             <Button
                                 className={classes.passwordBtn}
-                                disabled={isSubmitting || !canSubmit}
+                                disabled={loading || !canSubmit}
                                 onClick={submitForm}
                                 startIcon={(<LockIcon/>)}
                                 variant="contained"
                             >{title}</Button>
                         </Form>
-                       <RetryButton error={error}/>
-                        {isSubmitting && <LinearProgress/>}
+                        <RetryButton error={error}/>
+                        {loading && <LinearProgress/>}
                     </Paper>
                 );
             }}
