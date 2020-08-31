@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import Page, { LOADING_HTML } from "../model/Page";
-import { replaceQRCodes } from "../util/QRCode";
-import { useUserFormInitialValues } from "../util/userForm";
+import { replaceQRCodes } from "../modules/QRCode";
+import { useUserFormInitialValues } from "../modules/userForm";
 
 interface PageViewProps {
     page: Page

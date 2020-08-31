@@ -1,3 +1,8 @@
+/**
+ * Manages subscribing to messages (not push notifications!).
+ * The server sends notification messages via this system. For example, when scanning.
+ */
+
 import { Notification } from "../components/notification/PopupNotification";
 import { useContext, useState } from "react";
 import { AppContext } from "../AppContext";
@@ -66,7 +71,5 @@ function useSubscribe(identifiers: string[]) {
 }
 
 export {
-    subscribeMessage,
-    unsubscribeMessage,
     useSubscribe
 }
