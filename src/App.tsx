@@ -10,6 +10,7 @@ import LoginDialog from "./components/authentication/LoginDialog";
 import { onLoginOrAccountCreate, profileRequest } from "./services/authenticationService";
 import { backendURL } from "./config/axios";
 import { ErrorBoundary } from "./components/ErrorBoundary";
+import AccountButton from "./components/AccountMenu";
 
 // Lazy Pages
 const OverviewPage = lazy(() => import('./components/overview/OverviewPage'));
@@ -99,12 +100,15 @@ export default function () {
         <Router>
             <AppContext.Provider value={appContext}>
                 <Header handleDrawerToggle={handleDrawerToggle}/>
-                <div onClick={() => !notMobile && handleDrawerToggle()}>
-                    <Navigator
-                        notifications={notifications}
-                        handleDrawerToggle={handleDrawerToggle}
-                        open={navDrawerOpen}
-                    />
+                <div>
+                    <div onClick={() => !notMobile && handleDrawerToggle()}>
+                        <Navigator
+                            notifications={notifications}
+                            handleDrawerToggle={handleDrawerToggle}
+                            open={navDrawerOpen}
+                        />
+                    </div>
+                    <AccountButton notifications={notifications}/>
                 </div>
                 {loginDialog && <LoginDialog open={loginDialog}/>}
                 {showContent &&

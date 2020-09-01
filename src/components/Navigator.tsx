@@ -54,7 +54,6 @@ const categories = [
     {
         id: 'Other',
         children: [
-            { id: 'My Account', icon: <AccountBox/>, to: '/account' },
             { id: 'Feedback', icon: <FeedbackIcon/>, to: '/feedback' },
             { id: 'Help & Support', icon: <HelpIcon/>, to: `https://support.${DOMAIN_HOME_PAGE}` },
         ],
