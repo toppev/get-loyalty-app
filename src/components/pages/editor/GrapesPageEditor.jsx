@@ -36,7 +36,6 @@ function GrapesPageEditor(props) {
         const editor = GrapesJS.init({
             // Auto-saved on exit, see useEffect return cleanup function
             noticeOnUnload: false,
-            allowScripts: true,
             container: `#page-editor`,
             canvas: {
                 styles: ["./editorCanvas.css"]
