@@ -16,20 +16,16 @@ function addUserRewardsBlock(blockManager: any) {
                 <div class="${userRewardItemClass}">
                     <p>{{name}}</p>
                     
-                    <img data-gjs-type="${loyaltyQRCode}" ${DATA_IDENTIFIER}="{{scanCode}}"/>
+                    <div data-gjs-type="${loyaltyQRCode}" ${DATA_IDENTIFIER}="{{scanCode}}"/>
                     
                     <p>{{description}}</p>
                     <p>{{itemDiscount}}</p>
                     <p>{{requirement}}</p>
                     <p>{{#if customerPoints}} {{customerPoints}} points {{/if}}</p>
-                    <p>{{#if products.length}} {{#each products}}</p>
-                        <span>{{name}}</span>
-                        <span>{{#unless @last}}, {{/unless}}</span>
-                    <p>{{/each}} {{/fi}}</p>
+                    <p>{{#if products}}Products: {{#each products}} {{name}}{{#unless @last}}, {{/unless}}</p>
+                    <p>{{/each}} {{/if}}</p>
                     <p>{{#unless @last}},{{/unless}}</p>
-                    <p>{{#if categories.length}} {{#each categories}}
-                        <span>{{name}}</span>
-                        <span>{{#unless @last}}, {{/unless}}</span>
+                    <p>{{#if categories}}Categories: {{#each categories}} {{name}}{{#unless @last}}, {{/unless}}</p>
                     <p>{{/each}} {{/if}}</p>
                 </div>
                 <p>{{/each}}</p>
