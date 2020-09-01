@@ -74,18 +74,19 @@ export default function () {
 
     const handleDrawerToggle = () => setNavDrawerOpen(!navDrawerOpen);
 
-    const paddingLeftDrawerOpen = 236;
-
     const theme = useTheme();
     const notMobile = useMediaQuery(theme.breakpoints.up('sm'));
+
+    const paddingLeftDrawerOpen = 209;
+    const leftRightPadding = notMobile ? 25 : 10
 
     const styles = {
         header: {
             paddingRight: notMobile && navDrawerOpen ? paddingLeftDrawerOpen : 0
         },
         bodyDiv: {
-            margin: '65px 20px 20px 0px',
-            paddingLeft: notMobile ? paddingLeftDrawerOpen + 15 : 0,
+            margin: `65px ${leftRightPadding}px 20px ${leftRightPadding}px`,
+            paddingLeft: notMobile ? paddingLeftDrawerOpen : 0,
         },
         content: {},
         loadingDiv: {
