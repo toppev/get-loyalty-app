@@ -34,6 +34,13 @@ const useStyles = makeStyles((theme: Theme) =>
             marginTop: '50px',
             color: theme.palette.grey[100],
         },
+        qrCode: {
+            backgroundColor: 'white',
+            padding: '10px',
+            paddingBottom: '5px', // wtf?
+            margin: 'auto',
+            width: 'fit-content'
+        },
         copyBtn: {
             marginLeft: '4px'
         },
@@ -72,7 +79,9 @@ export default function () {
                         Edit pages <Link href='/pages' underline='always' color='inherit'>here</Link>
                     </p>
                     <div className={classes.linkItem}>
-                        <QRCode value={src}/>
+                        <div className={classes.qrCode}>
+                            <QRCode value={src}/>
+                        </div>
                     </div>
                     <div className={classes.linkItem}>
                         <Link href={src} color="inherit" target="_blank" rel="noopener"><u>{src}</u></Link>
