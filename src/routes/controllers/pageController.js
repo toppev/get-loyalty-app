@@ -97,6 +97,7 @@ async function getHtml(req, res, next) {
         const exampleUser = {
             isBirthday: true,
             customerData: {
+                purchases: [],
                 rewards: [exampleReward],
                 usedRewards: [exampleReward],
                 properties: { points: 200 }
