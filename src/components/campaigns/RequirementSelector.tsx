@@ -81,8 +81,11 @@ export default function (props: RequirementSelectorProps) {
                         key={`edit_${req.type}`}
                         requirement={req}
                         onChange={updatedReq => {
-                            // TODO: keep order
-                            return setRequirements([...requirements.filter(r => r.type !== updatedReq.type), updatedReq])
+                            const newRequirements = [...requirements]
+                            const index = requirements.findIndex(old => old.type === updatedReq.type)
+                            if (index !== -1) newRequirements[index] = updatedReq
+                            else newRequirements.push(updatedReq)
+                            return newRequirements
                         }}
                     />
                 ))}
