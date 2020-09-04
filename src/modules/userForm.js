@@ -3,8 +3,11 @@ import { AppContext } from "../AppContext";
 import { useContext } from "react";
 
 const getUserForm = () => document.querySelector(`#user-form`)
+
 const getEmailField = () => document.getElementById("user-email");
 const getBirthdayField = () => document.getElementById("birthday-selector");
+const getNewsLetterCheckbox = () => document.querySelector(`#user-form-receive-newsletter`)
+
 const getSubmitBtn = () => document.querySelector(`#user-form-submit`)
 
 export function useUserFormInitialValues() {
@@ -50,6 +53,7 @@ function submitChanges() {
         email: getEmailField().value,
         birthday: new Date(getBirthdayField().value),
         acceptAll: true,
+        newsLetter: getNewsLetterCheckbox()?.value,
     }).catch(err => {
         submitBtn.disabled = false
 
