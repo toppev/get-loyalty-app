@@ -31,7 +31,12 @@ export function useUserFormInitialValues() {
         form.onsubmit = e => {
             e.preventDefault()
             if (form?.reportValidity() !== false) {
-                submitChanges()
+                if (user.businessOwner) {
+                    window.alert("Your email would have been updated but because you're the owner of this business" +
+                        " it would cause problems.\n\nUpdate your email: panel.getloyalty.app/account")
+                } else {
+                    submitChanges()
+                }
             }
         }
     }

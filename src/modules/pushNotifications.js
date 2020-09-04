@@ -5,7 +5,7 @@ import { someParentHasClassname } from "../util/classUtils";
 /** Class that triggers push notification prompt when clicked */
 const enableNotificationsClass = 'enable-notifications'
 
-/** Class that will be hidden when push notifications are enabled */
+/** Selector that will be hidden when push notifications are enabled */
 const hideNotificationSelector = `.${enableNotificationsClass} .hide-if-notifications-enabled`
 
 /** Whether to hide the classes if service worker or push manager is not supported */
