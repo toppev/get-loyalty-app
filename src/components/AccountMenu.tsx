@@ -41,7 +41,7 @@ export default function (props: AccountButtonProps) {
     return (
         <div className={classes.wrapperDiv}>
             <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
-                <Badge classes={{ root: classes.menuIcon, badge: classes.badge }} color="secondary" badgeContent={2}>
+                <Badge classes={{ root: classes.menuIcon, badge: classes.badge }} color="secondary" badgeContent={props.notifications['My Account']}>
                     <AccountCircleIcon className={classes.icon} fontSize="large"/>
                 </Badge>
             </IconButton>

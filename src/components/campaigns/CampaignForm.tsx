@@ -166,8 +166,8 @@ export default function ({ initialCampaign, onSubmitted }: CampaignFormProps) {
                         className={classes.field}
                         name="couponCode"
                         type="text"
-                        label="Coupon code (customers can use to gain rewards)"
-                        placeholder="e.g SUMMER2020, STUDENT20 or name of an event"
+                        label="Coupon code (customers can use to gain rewards) (Under development, not working yet)"
+                        placeholder="e.g SUMMER2020, STUDENT20 or name of an event. Leave empty for none"
                     />
 
                     <Typography variant="h6" className={classes.typography}>Duration & Dates</Typography>
@@ -250,7 +250,7 @@ export default function ({ initialCampaign, onSubmitted }: CampaignFormProps) {
                         />
                     </div>
 
-                   <RetryButton error={error}/>
+                    <RetryButton error={error}/>
 
                     <div className={classes.submitDiv}>
                         <Button

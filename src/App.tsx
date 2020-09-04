@@ -48,11 +48,11 @@ export default function () {
     const [appContext, setAppContext] = useState<AppContextInterface>(context);
 
     useEffect(() => {
-        const { user } = appContext;
+        const { user, loggedIn } = appContext;
         setNotifications(prev => {
             return {
                 ...prev,
-                'My Account': (+!user.email) + (+!user.hasPassword)
+                'My Account': loggedIn ? (+!user.email) + (+!user.hasPassword) : 0
             }
         })
     }, [appContext]);

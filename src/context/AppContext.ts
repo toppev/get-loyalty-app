@@ -95,9 +95,9 @@ export const defaultAppContext: AppContextInterface = {
         }
     },
     user: {
-        email: 'test@example.com',
-        hasPassword: true,
-        _id: 'testid1234',
+        email: '',
+        hasPassword: false,
+        _id: 'id_unknown',
         role: 'user'
     },
     loggedIn: false,
