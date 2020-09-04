@@ -67,7 +67,7 @@ async function sendPushNotification(notificationParam) {
     if (expires) {
         throw new StatusError(`You're still on cooldown. You can send next push notification ${expires.toUTCString()}`, 400);
     }
-    let users = await customerService.searchCustomers( 0)
+    let users = await customerService.searchCustomers(0)
     users = users.filter(u => {
         const pn = u.customerData.pushNotifications
         return pn && pn.endpoint // good enough
@@ -85,14 +85,16 @@ async function sendPushNotification(notificationParam) {
             link
         },
     })
-    // FIXME: might not want to await sendNotifications as it may take some time and instead return before it
-    const result = await webpushService.sendNotification(users.map(u => u.customerData.pushNotifications), payloadString);
+
+    webpushService.sendNotification(users.map(u => u.customerData.pushNotifications), payloadString).then(res => {
+        console.log(`Sent push notification. Result: ${res}`)
+    })
+
     const newNotification = new PushNotification({ ...notificationParam, receivers: users.length });
     await newNotification.save();
     const newCooldown = await getCooldownExpiration([newNotification]);
     return {
         cooldownExpires: newCooldown,
-        result: result,
         notification: newNotification
     }
 }
