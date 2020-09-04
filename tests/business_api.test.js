@@ -152,7 +152,7 @@ describe('Logged in user can', () => {
 
         expect(res.headers['content-type']).toBe('image/png')
 
-        const buf = await fs.promises.readFile('testresources/converted-icon-512x512.png')
+        const buf = await fs.promises.readFile('testresources/converted-icon-512.png')
         expect(res.body).toEqual(buf);
     })
 
