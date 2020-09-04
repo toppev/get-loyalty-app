@@ -31,6 +31,10 @@ const userSchema = new Schema({
         },
         index: true
     },
+    newsLetter: {
+        type: Boolean,
+        default: false
+    },
     password: {
         type: String,
     },
