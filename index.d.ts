@@ -1,4 +1,6 @@
-export declare const index: {
+export = index
+
+declare const index: {
     [key: string]: CampaignType
     // To access typed individual properties
     isPurchaseGreaterThan: CampaignType
