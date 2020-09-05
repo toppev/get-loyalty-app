@@ -18,8 +18,10 @@ const hideIfNotSupported = true
 export function startSubscribeTask() {
     getPushManager()
         .then((pm) => {
-            // Hide if already subscribed
-            pm.getSubscription().then(subscription => subscription && hideNotificationClasses())
+            // Hide if granted/denied
+            if (Notification.permission !== "default") {
+                hideNotificationClasses()
+            }
         })
         // Or if push notifications are not supported
         .catch(() => hideIfNotSupported && hideNotificationClasses())

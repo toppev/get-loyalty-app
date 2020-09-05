@@ -6,7 +6,7 @@ const getUserForm = () => document.querySelector(`#user-form`)
 
 const getEmailField = () => document.getElementById("user-email");
 const getBirthdayField = () => document.getElementById("birthday-selector");
-const getNewsLetterCheckbox = () => document.querySelector(`#user-form-receive-newsletter`)
+const getNewsLetterCheckbox = () => document.getElementById("user-form-newsletter")
 
 const getSubmitBtn = () => document.querySelector(`#user-form-submit`)
 
