@@ -1,14 +1,9 @@
 // @ts-check
 /**
- * Contains types of campaigns
+ * All campaigns types.
  *
- * All types should have a meaningful "name" property and a brief "description" property
- *
- * Each type may have "requirement" function that calculates if the user can receive the rewards
- * If humans are needed (to answer a question), the "question" attribute should be specified
- *
- * Parameters to the requirement function: values (from database, valueDescriptions property should describe these values),
- * user, purchase, customerData (of the current business)
+ * Each type may have "requirement" function that calculates if the user can receive the rewards.
+ * If humans are needed (to answer a question), the "question" attribute should be specified.
  *
  * @type {import("./index")}
  */
