@@ -163,7 +163,7 @@ async function useScan(scanStr, data) {
     }
 
     // e.g [{ id: "questionId", options: ["someAnswer"], question: "asd?"}]
-    const answers = data;
+    const { answers } = data;
 
     const productQuestion = answers.find(e => e.id === IDENTIFIERS.PRODUCTS);
     const products = productQuestion ? productQuestion.options || [] : [];
