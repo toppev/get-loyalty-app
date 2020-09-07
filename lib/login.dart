@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'error_dialog.dart';
@@ -61,17 +62,20 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildTextFields() {
     return new Container(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(120, 270, 120, 90),
+        padding: const EdgeInsets.fromLTRB(50, 180, 50, 90),
         child: new Column(
           children: <Widget>[
             new Container(
               child: new TextField(
+                keyboardType: TextInputType.emailAddress,
+                autofillHints: [AutofillHints.email],
                 controller: _emailFilter,
                 decoration: new InputDecoration(labelText: 'Email'),
               ),
             ),
             new Container(
               child: new TextField(
+                autofillHints: [AutofillHints.password],
                 controller: _passwordFilter,
                 decoration: new InputDecoration(labelText: 'Password'),
                 obscureText: true,
@@ -96,8 +100,8 @@ class _LoginPageState extends State<LoginPage> {
                 : () async {
                     setState(() => buttonDisabled = true);
                     try {
-                      await userService.login(
-                          UserCredentials(_email.trim(), _password));
+                      await userService
+                          .login(UserCredentials(_email.trim(), _password));
                       setState(() {
                         _email = "";
                         _password = "";

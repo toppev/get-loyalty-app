@@ -40,7 +40,8 @@ class UserService {
       throw "HTTP status code: ${res.statusCode}. Body: ${res.body}";
     }
     var body = json.decode(res.body);
-    backendUrl = body['publicAddress'];
+    print(body);
+    backendUrl = body['apiendpoint'];
     print('backendUrl set to $backendUrl');
   }
 
