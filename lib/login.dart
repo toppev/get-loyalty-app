@@ -60,9 +60,15 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _buildTextFields() {
+
+    final size = MediaQuery.of(context).size;
+
+    final paddingLR = size.width > 480 ? size.width * 0.25 : size.width * 0.1;
+    final paddingTop = size.height * 0.25;
+
     return new Container(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(50, 180, 50, 90),
+        padding: new EdgeInsets.fromLTRB(paddingLR, paddingTop, paddingLR, 75),
         child: new Column(
           children: <Widget>[
             new Container(
