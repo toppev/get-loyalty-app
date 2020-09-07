@@ -28,7 +28,9 @@ class GetScan {
 class Question {
   dynamic id;
   String question;
-  List<String> options; // also known as answers
+
+  /// Also used as answers
+  List<String> options;
 
   Question(this.id, this.question, this.options);
 
@@ -89,8 +91,9 @@ class ScanService {
   Future<UseScan> useScan(String scan, List<Question> answers) async {
     var url = '$backendUrl/scan/$scan';
     print('#useScan called. Sending request to $url');
-    final response = await sessionService.post(url, answers.map((e) => e.toJson()));
+    final response = await sessionService.post(url, jsonEncode(answers));
     if (response.statusCode == 200) {
+      print('#useScan responded with ${response.statusCode}');
       return UseScan.fromJson(json.decode(response.body));
     } else {
       var body = json.decode(response.body);
