@@ -64,8 +64,8 @@ class _ScannerPageState extends State<ScannerPage> {
                             globalKey.currentState.setScanning(newState);
                             print('Camera state changed: $newState');
                           },
-                          child: Text(isScanning ? SCANNING : PAUSED,
-                              style: TextStyle(fontSize: 20)),
+                          child:
+                              Text(isScanning ? SCANNING : PAUSED, style: TextStyle(fontSize: 20)),
                           color: isScanning ? Colors.redAccent : Colors.green,
                         ),
                       ),
@@ -100,8 +100,7 @@ class _ScannerPageState extends State<ScannerPage> {
               _onScanSubmitted(result);
             }).catchError((e) {
               print(e);
-              showError(context,
-                  message: "Please check connection", error: e.toString());
+              showError(context, message: "Please check connection", error: e.toString());
             });
           },
           questions: data.questions),
@@ -120,9 +119,7 @@ class _ScannerPageState extends State<ScannerPage> {
                   children: <Widget>[
                     Text("Name: ${reward['name']}"),
                     Text("Discount: ${reward['description']}"),
-                    reward['requirement'] != null
-                        ? Text("Note: ${reward['requirement']}")
-                        : null,
+                    reward['requirement'] != null ? Text("Note: ${reward['requirement']}") : null,
                     Text(reward['description']),
                   ],
                 ),

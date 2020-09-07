@@ -10,7 +10,6 @@ import 'services/user_service.dart';
 const APP_TITLE = 'GetLoyalty.App - Scanner App';
 
 void main() async {
-
   WidgetsFlutterBinding.ensureInitialized();
 
   final sessionService = SessionService();
@@ -21,11 +20,11 @@ void main() async {
         providers: [
           Provider(create: (context) => sessionService),
           Provider(
-              create: (context) => UserService(
-                  Provider.of<SessionService>(context, listen: false))),
+              create: (context) =>
+                  UserService(Provider.of<SessionService>(context, listen: false))),
           Provider(
-              create: (context) => ScanService(
-                  Provider.of<SessionService>(context, listen: false))),
+              create: (context) =>
+                  ScanService(Provider.of<SessionService>(context, listen: false))),
         ],
         child: MaterialApp(
             home: LoginPage(

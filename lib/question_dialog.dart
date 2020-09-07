@@ -23,8 +23,8 @@ class _QuestionDialogWidgetState extends State<QuestionDialogWidget> {
   @override
   void initState() {
     super.initState();
-    answers = new Map.fromIterable(widget.questions,
-        key: (v) => v, value: (v) => new List<String>());
+    answers =
+        new Map.fromIterable(widget.questions, key: (v) => v, value: (v) => new List<String>());
   }
 
   @override
@@ -68,8 +68,7 @@ class _QuestionDialogWidgetState extends State<QuestionDialogWidget> {
   }
 
   Widget renderOption(String option, Question question) {
-    var isAnswer =
-        answers[question] != null && answers[question].contains(option);
+    var isAnswer = answers[question] != null && answers[question].contains(option);
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: RaisedButton(

@@ -14,8 +14,7 @@ class GetScan {
     List<Question> questions =
         json['questions'].map<Question>((e) => Question.fromJson(e)).toList();
 
-    return GetScan(json['rewards'], json['campaigns'], questions,
-        scannedString: scannedString);
+    return GetScan(json['rewards'], json['campaigns'], questions, scannedString: scannedString);
   }
 
   Map<String, dynamic> toJson() => {
@@ -90,8 +89,7 @@ class ScanService {
   Future<UseScan> useScan(String scan, List<Question> answers) async {
     var url = '$backendUrl/scan/$scan';
     print('#useScan called. Sending request to $url');
-    final response =
-        await sessionService.post(url, answers.map((e) => e.toJson()));
+    final response = await sessionService.post(url, answers.map((e) => e.toJson()));
     if (response.statusCode == 200) {
       return UseScan.fromJson(json.decode(response.body));
     } else {

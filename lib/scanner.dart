@@ -71,8 +71,7 @@ class ScannerWidgetState extends State<ScannerWidget> {
             widget.onScan(result);
           }).catchError((e) {
             print(e);
-            showError(context,
-                message: "Please check connection", error: e.toString());
+            showError(context, message: "Please check connection", error: e.toString());
           });
         }
         print('Scanned $stateText');

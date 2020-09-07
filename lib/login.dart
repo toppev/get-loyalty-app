@@ -60,7 +60,6 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _buildTextFields() {
-
     final size = MediaQuery.of(context).size;
 
     final paddingLR = size.width > 480 ? size.width * 0.25 : size.width * 0.1;
@@ -106,18 +105,16 @@ class _LoginPageState extends State<LoginPage> {
                 : () async {
                     setState(() => buttonDisabled = true);
                     try {
-                      await userService
-                          .login(UserCredentials(_email.trim(), _password));
+                      await userService.login(UserCredentials(_email.trim(), _password));
                       setState(() {
                         _email = "";
                         _password = "";
                       });
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) => ScannerPage()));
+                      Navigator.of(context)
+                          .pushReplacement(MaterialPageRoute(builder: (context) => ScannerPage()));
                     } catch (e) {
                       showError(context,
-                          message:
-                              'Failed to login. Check credentials and network connection',
+                          message: 'Failed to login. Check credentials and network connection',
                           error: e.toString());
                     } finally {
                       setState(() => buttonDisabled = false);
@@ -140,8 +137,8 @@ class _LoginPageState extends State<LoginPage> {
     var userService = Provider.of<UserService>(context);
     userService.profile().then((success) {
       if (success != null && success != false) {
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => ScannerPage()));
+        Navigator.of(context)
+            .pushReplacement(MaterialPageRoute(builder: (context) => ScannerPage()));
       }
     }).catchError((e) => print(e));
   }

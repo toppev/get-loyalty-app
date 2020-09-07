@@ -6,9 +6,7 @@ const SERVER_API_URL = "https://api.getloyalty.app/servers";
 const BACKEND_KEY = "backend_url";
 var backendUrl = ""; // http://10.0.2.2:3001 for localhost:3001
 
-const Map<String, String> _defaultHeaders = {
-  'content-type': 'application/json'
-};
+const Map<String, String> _defaultHeaders = {'content-type': 'application/json'};
 
 class SessionService {
   final storage = new FlutterSecureStorage();
@@ -48,8 +46,7 @@ class SessionService {
   }
 
   Future<Response> post(String url, dynamic data) async {
-    http.Response response =
-        await http.post(url, body: data, headers: _getHeaders());
+    http.Response response = await http.post(url, body: data, headers: _getHeaders());
     if (response.statusCode < 200 || response.statusCode >= 300) {
       print('Request to $url failed with status code ${response.statusCode}, '
           'response body: ${response.body}');
@@ -94,10 +91,7 @@ class SessionService {
       // Split at first '='
       var sepIndex = rawCookie.indexOf('=');
       if (sepIndex == -1) return;
-      var keyValue = [
-        rawCookie.substring(0, sepIndex),
-        rawCookie.substring(sepIndex + 1)
-      ];
+      var keyValue = [rawCookie.substring(0, sepIndex), rawCookie.substring(sepIndex + 1)];
       if (keyValue.length == 2) {
         var key = keyValue[0].trim();
         var value = keyValue[1];
