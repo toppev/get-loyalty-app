@@ -93,20 +93,26 @@ async function getScan(scanStr) {
         const products = [].concat(...campaigns.map(c => c.products));
         const requirements = [];
 
-        campaigns.map(c => c.requirements).forEach(req => {
-            if (req.question) {
-                requirements.push(format(req.question, req.values))
-            }
-        })
+        // Add campaign requirements
+        campaigns.map(c => c.requirements).forEach(req => req.question && requirements.push(req))
+
         addQuestions(questions, categories, products, requirements);
-        questions.push({ question: 'Confirm', options: ['Yes', 'No'] });
+
+        // Confirmation question
+        questions.push({
+            id: IDENTIFIERS.CONFIRM,
+            question: 'Confirm',
+            options: ['Yes', 'No']
+        });
     }
+
     const business = await Business.findOne();
     pollingService.sendToUser(userId, {
         message: business.config.translations.qrScanned.singular,
         refresh: false,
         vibrate: [200]
     }, POLLING_IDENTIFIERS.SCAN);
+
     return { questions, ...otherData };
 }
 
@@ -127,12 +133,15 @@ function addQuestions(questions, categories, products, requirements) {
     }
     if (requirements) {
         requirements.forEach(req => {
-            if (req) {
-                const identifier = IDENTIFIERS.REQUIREMENT(req);
-                // No duplicate questions
-                if (!questions.some(r => r.id === identifier)) {
-                    questions.push({ id: identifier, question: req, options: ['Yes', 'No'] })
-                }
+            if (!req) return
+            const identifier = IDENTIFIERS.REQUIREMENT(req);
+            // No duplicate questions
+            if (!questions.some(r => r.id === identifier)) {
+                questions.push({
+                    id: identifier,
+                    question: format(req.question, req.values),
+                    options: ['Yes', 'No']
+                })
             }
         })
     }
@@ -153,7 +162,8 @@ async function useScan(scanStr, data) {
         pollingService.sendToUser(userId, { message: responseMessage, refresh: true }, POLLING_IDENTIFIERS.REWARD_USE)
     }
 
-    const { answers } = data;
+    // e.g [{ id: "questionId", options: ["someAnswer"], question: "asd?"}]
+    const answers = data;
 
     const productQuestion = answers.find(e => e.id === IDENTIFIERS.PRODUCTS);
     const products = productQuestion ? productQuestion.options || [] : [];
