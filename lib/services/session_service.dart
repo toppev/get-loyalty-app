@@ -8,6 +8,8 @@ var backendUrl = ""; // http://10.0.2.2:3001 for localhost:3001
 
 const Map<String, String> _defaultHeaders = {'content-type': 'application/json'};
 
+const timeoutSeconds = 5;
+
 class SessionService {
   final storage = new FlutterSecureStorage();
 
@@ -36,7 +38,9 @@ class SessionService {
   _getHeaders() => {..._defaultHeaders, ...headers};
 
   Future<Response> get(String url) async {
-    http.Response response = await http.get(url, headers: _getHeaders());
+    final response = await http
+        .get(url, headers: _getHeaders())
+        .timeout(const Duration(seconds: timeoutSeconds));
     if (response.statusCode < 200 || response.statusCode >= 300) {
       print('Request to $url failed with status code ${response.statusCode}, '
           'response body: ${response.body}');
@@ -46,7 +50,9 @@ class SessionService {
   }
 
   Future<Response> post(String url, dynamic data) async {
-    http.Response response = await http.post(url, body: data, headers: _getHeaders());
+    final response = await http
+        .post(url, body: data, headers: _getHeaders())
+        .timeout(const Duration(seconds: timeoutSeconds));
     if (response.statusCode < 200 || response.statusCode >= 300) {
       print('Request to $url failed with status code ${response.statusCode}, '
           'response body: ${response.body}');
@@ -68,7 +74,7 @@ class SessionService {
 
   /// Updates the cookies, stores them and generates a new 'cookie' header in
   void _updateCookie(http.Response response) {
-    String allSetCookie = response.headers['set-cookie'];
+    final allSetCookie = response.headers['set-cookie'];
     if (allSetCookie != null) {
       var setCookies = allSetCookie.split(',');
       for (var setCookie in setCookies) {
@@ -104,7 +110,7 @@ class SessionService {
 
   /// Generate the cookie header from #values map
   String _generateCookieHeader() {
-    String cookie = "";
+    var cookie = "";
     for (var key in values.keys) {
       if (cookie.length > 0) cookie += ";";
       cookie += key + "=" + values[key];
