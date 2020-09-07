@@ -11,9 +11,18 @@ class GetScan {
   GetScan(this.reward, this.campaigns, this.questions, {this.scannedString});
 
   factory GetScan.fromJson(Map<String, dynamic> json, {scannedString}) {
-    return GetScan(json['rewards'], json['campaigns'], json['questions'],
+    List<Question> questions =
+        json['questions'].map<Question>((e) => Question.fromJson(e)).toList();
+
+    return GetScan(json['rewards'], json['campaigns'], questions,
         scannedString: scannedString);
   }
+
+  Map<String, dynamic> toJson() => {
+        'reward': reward,
+        'campaigns': campaigns,
+        'questions': questions.map((e) => e.toJson()),
+      };
 }
 
 /// Question or answer
@@ -28,7 +37,7 @@ class Question {
     return Question(
       json['id'],
       json['question'],
-      json['options'],
+      json['options'].cast<String>().toList(),
     );
   }
 
@@ -53,6 +62,12 @@ class UseScan {
       json['usedReward'],
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        'message': message,
+        'newRewards': newRewards,
+        'usedReward': usedReward,
+      };
 }
 
 class ScanService {
@@ -75,7 +90,8 @@ class ScanService {
   Future<UseScan> useScan(String scan, List<Question> answers) async {
     var url = '$backendUrl/scan/$scan';
     print('#useScan called. Sending request to $url');
-    final response = await sessionService.post(url, json.encode({answers}));
+    final response =
+        await sessionService.post(url, answers.map((e) => e.toJson()));
     if (response.statusCode == 200) {
       return UseScan.fromJson(json.decode(response.body));
     } else {

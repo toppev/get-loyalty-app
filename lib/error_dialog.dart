@@ -6,7 +6,7 @@ void showError(context, {String message, String error}) {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-            title: Text("Connection error"),
+            title: Text("An error occurred"),
             content: Text(message),
             actions: [
               error == null

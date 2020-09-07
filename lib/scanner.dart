@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -66,7 +67,7 @@ class ScannerWidgetState extends State<ScannerWidget> {
         } else {
           setScanning(false);
           scanService.getScan(scanData).then((result) {
-            print('handling request result: $result');
+            print('Handling request result: ${result.toJson()}');
             widget.onScan(result);
           }).catchError((e) {
             print(e);

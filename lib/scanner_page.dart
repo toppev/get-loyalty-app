@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'error_dialog.dart';
+import 'menu.dart';
 import 'question_dialog.dart';
 import 'scanner.dart';
 import 'services/scan_service.dart';
-import 'menu.dart';
 
 const PAUSED = "Start Scanning";
 const SCANNING = "Stop Scanning";
@@ -88,15 +88,15 @@ class _ScannerPageState extends State<ScannerPage> {
   }
 
   void _onScanGet(GetScan data) {
-    var scanService = Provider.of<ScanService>(context);
+    var scanService = Provider.of<ScanService>(context, listen: false);
     print('Scan get result: $data');
     showDialog(
       context: context,
       builder: (BuildContext context) => QuestionDialogWidget(
           onSubmit: (res) {
-            print('Answers: $res');
+            print('Answers: ${res.map((e) => e.toJson())}');
             scanService.useScan(data.scannedString, res).then((result) {
-              print('Scan used. Response: $result');
+              print('Scan used. Response: ${result.toJson()}');
               _onScanSubmitted(result);
             }).catchError((e) {
               print(e);
