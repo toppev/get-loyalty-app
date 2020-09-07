@@ -67,12 +67,17 @@ class _QuestionDialogWidgetState extends State<QuestionDialogWidget> {
     );
   }
 
+  /// Lowercase strings that have a negative meaning
+  final negativeStrings = ['no', 'false', 'not'];
+
   Widget renderOption(String option, Question question) {
     var isAnswer = answers[question] != null && answers[question].contains(option);
+    var negativeAnswer = negativeStrings.contains(option.toLowerCase());
+
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: RaisedButton(
-        color: isAnswer ? Colors.green : Colors.white70,
+        color: isAnswer ? negativeAnswer ? Colors.redAccent : Colors.green : Colors.white70,
         onPressed: () {
           setState(() {
             if (isAnswer) {
