@@ -58,9 +58,7 @@ class _ScannerPageState extends State<ScannerPage> {
                         child: RaisedButton(
                           onPressed: () {
                             var newState = !isScanning;
-                            setState(() {
-                              isScanning = newState;
-                            });
+                            setState(() => isScanning = newState);
                             globalKey.currentState.setScanning(newState);
                             print('Camera state changed: $newState');
                           },
@@ -96,6 +94,7 @@ class _ScannerPageState extends State<ScannerPage> {
           onSubmit: (res) {
             scanService.useScan(data.scannedString, res).then((result) {
               print('Scan used. Response: ${result.toJson()}');
+              Navigator.of(context).pop();
               _onScanSubmitted(result);
             }).catchError((e) {
               print(e);
