@@ -90,10 +90,10 @@ class ScanService {
 
   Future<UseScan> useScan(String scan, List<Question> answers) async {
     var url = '$backendUrl/scan/$scan';
-    print('#useScan called. Sending request to $url');
-    final response = await sessionService.post(url, jsonEncode(answers));
+    final bodyJson = jsonEncode({'answers': answers});
+    print('#useScan called. Sending request to $url, body: $bodyJson');
+    final response = await sessionService.post(url, bodyJson);
     if (response.statusCode == 200) {
-      print('#useScan responded with ${response.statusCode}');
       return UseScan.fromJson(json.decode(response.body));
     } else {
       var body = json.decode(response.body);

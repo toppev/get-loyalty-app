@@ -94,7 +94,6 @@ class _ScannerPageState extends State<ScannerPage> {
       context: context,
       builder: (BuildContext context) => QuestionDialogWidget(
           onSubmit: (res) {
-            print('Answers: ${res.map((e) => e.toJson())}');
             scanService.useScan(data.scannedString, res).then((result) {
               print('Scan used. Response: ${result.toJson()}');
               _onScanSubmitted(result);
