@@ -86,10 +86,8 @@ campaignSchema.pre('save', async function (next) {
 });
 
 campaignSchema.methods.getCurrentStamps = function (customerData) {
-    const req = this.requirements.some(it => it.type === 'stamps')
-    if (!req) return []
     const duringCampaign = (date) => date > this.start && (!this.end || date < this.end)
-    return customerData.purchases.filter(purchase => duringCampaign(purchase.createdAt))
+    return customerData.purchases.filter(purchase => duringCampaign(new Date(purchase.createdAt)))
 };
 
 campaignSchema.virtual("totalStampsNeeded").get(function () {
