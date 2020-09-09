@@ -64,7 +64,7 @@ class ScannerWidgetState extends State<ScannerWidget> {
         var stateText = scanData;
         // The scanned code is userId:rewardId or just userId but be flexible so we can change it without updating the client
         if (scanData.length < 24 || scanData.length > 50) {
-          stateText = "(INVALID) " + stateText;
+          stateText = "INVALID: $stateText. Not a loyalty QR code?";
         } else {
           setScanning(false);
           scanService.getScan(scanData).then((result) {
@@ -93,7 +93,12 @@ class ScannerWidgetState extends State<ScannerWidget> {
     });
   }
 
-  void setScanning(bool scanning) {
+
+  void setScanning(bool scanning, {startCooldown}) {
+    if (startCooldown == true) {
+      lastScanned = new DateTime.now().millisecondsSinceEpoch;
+    }
+
     if (scanning) {
       resetTimer();
       controller.resumeCamera();

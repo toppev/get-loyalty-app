@@ -110,7 +110,7 @@ class _ScannerPageState extends State<ScannerPage> {
     // If true, the customer did not scan a reward (and did not use one)
     // Nothing to open so start scanning again
     if (result.usedReward == null) {
-      globalKey.currentState.setScanning(true);
+      globalKey.currentState.setScanning(true, startCooldown: true);
     } else {
       var reward = result.usedReward;
       showDialog(
