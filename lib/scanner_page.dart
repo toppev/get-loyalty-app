@@ -101,7 +101,8 @@ class _ScannerPageState extends State<ScannerPage> {
               showError(context, message: "Please check connection", error: e.toString());
             });
           },
-          questions: data.questions),
+          questions: data.questions,
+          data: data.toJson()),
     );
   }
 

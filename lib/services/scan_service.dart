@@ -7,20 +7,28 @@ class GetScan {
   String scannedString;
   List<dynamic> campaigns;
   List<Question> questions;
+  Map<String, Object> user;
 
-  GetScan(this.reward, this.campaigns, this.questions, {this.scannedString});
+  GetScan(this.reward, this.campaigns, this.questions, {this.scannedString, this.user});
 
   factory GetScan.fromJson(Map<String, dynamic> json, {scannedString}) {
     List<Question> questions =
         json['questions'].map<Question>((e) => Question.fromJson(e)).toList();
 
-    return GetScan(json['rewards'], json['campaigns'], questions, scannedString: scannedString);
+    return GetScan(
+      json['rewards'],
+      json['campaigns'],
+      questions,
+      scannedString: scannedString,
+      user: json['user'],
+    );
   }
 
   Map<String, dynamic> toJson() => {
         'reward': reward,
         'campaigns': campaigns,
         'questions': questions.map((e) => e.toJson()),
+        'user': user,
       };
 }
 

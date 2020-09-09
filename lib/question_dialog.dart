@@ -7,10 +7,14 @@ class QuestionDialogWidget extends StatefulWidget {
   final List<Question> questions;
   final ValueChanged<List<Question>> onSubmit;
 
+  /// All data. E.g "user", "reward", "campaigns"
+  final Map<String, Object> data;
+
   const QuestionDialogWidget({
     Key key,
-    this.questions,
     this.onSubmit,
+    this.questions,
+    this.data = const {},
   }) : super(key: key);
 
   @override
@@ -35,10 +39,28 @@ class _QuestionDialogWidgetState extends State<QuestionDialogWidget> {
   }
 
   dialogContent(BuildContext context) {
+    Map<String, Object> user = widget.data['user'];
+    if (user == null) user = {};
+    final userInfoEl = Padding(
+        padding: const EdgeInsets.only(right: 12, top: 12),
+        child: Align(
+          alignment: Alignment.topRight,
+          child: DefaultTextStyle(
+            style: TextStyle(color: Colors.black54, fontSize: 16),
+            child: Column(children: [
+              Text(
+                'UserID: ${user['id']}',
+                textAlign: TextAlign.end,
+              ),
+            ]),
+          ),
+        ));
+
+    List<Widget> children = [userInfoEl];
+    children.addAll(widget.questions.map((e) => renderQuestion(e)).toList());
+
     return SingleChildScrollView(
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: widget.questions.map((e) => renderQuestion(e)).toList()));
+        child: Column(mainAxisAlignment: MainAxisAlignment.start, children: children));
   }
 
   Widget renderQuestion(Question question) {
