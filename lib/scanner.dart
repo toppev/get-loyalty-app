@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -31,7 +30,7 @@ class ScannerWidgetState extends State<ScannerWidget> {
   QRViewController controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
 
-  var scanService;
+  ScanService scanService;
 
   Timer timer;
 
@@ -68,6 +67,7 @@ class ScannerWidgetState extends State<ScannerWidget> {
           setScanning(false);
           scanService.getScan(scanData).then((result) {
             print('Handling request result: ${result.toJson()}');
+            result.scannedString = scanData;
             widget.onScan(result);
           }).catchError((e) {
             print(e);

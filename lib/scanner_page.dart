@@ -38,7 +38,7 @@ class _ScannerPageState extends State<ScannerPage> {
                 scale: 0.8,
                 child: ScannerWidget(
                   key: globalKey,
-                  onScan: _onScanGet,
+                  onScan: _onScan,
                   onScanToggle: _updateToggleButton,
                 )),
             flex: 1,
@@ -85,7 +85,7 @@ class _ScannerPageState extends State<ScannerPage> {
     });
   }
 
-  void _onScanGet(GetScan data) {
+  void _onScan(GetScan data) {
     var scanService = Provider.of<ScanService>(context, listen: false);
     print('Scan get result: $data');
     showDialog(
@@ -107,7 +107,11 @@ class _ScannerPageState extends State<ScannerPage> {
   }
 
   _onScanSubmitted(UseScan result) {
-    if (result.usedReward != null) {
+    // If true, the customer did not scan a reward (and did not use one)
+    // Nothing to open so start scanning again
+    if (result.usedReward == null) {
+      globalKey.currentState.setScanning(true);
+    } else {
       var reward = result.usedReward;
       showDialog(
           context: context,
