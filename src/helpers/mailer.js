@@ -1,7 +1,11 @@
-const nodemailer = require('nodemailer');
-const config = require('../config/emailConfig.json');
+// See src/config/mailerConfig.js for configuration
 
-module.exports = emailPasswordReset;
+const nodemailer = require('nodemailer');
+const config = require('../config/mailerConfig.js');
+
+module.exports = {
+    emailPasswordReset
+}
 
 const transporter = nodemailer.createTransport({
     service: config.emailService,

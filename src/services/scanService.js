@@ -68,10 +68,16 @@ async function validateRewardId(rewardId, customerData) {
  */
 async function getScan(scanStr) {
     const { user, userId, rewardId } = await parseScanString(scanStr);
-    const customerData = user.customerData;
-    const otherData = { customerData };
+    const { customerData } = user;
     const questions = [];
+
+    const userInfo = await customerService.getCustomerInfo(user);
     const reward = await validateRewardId(rewardId, customerData);
+
+    const otherData = {
+        user: userInfo,
+        reward: reward,
+    };
 
     if (reward) {
         addQuestions(questions, reward.categories, reward.products, [reward.requirement]);
@@ -82,9 +88,7 @@ async function getScan(scanStr) {
         // Campaigns the user can (possibly) receive. I.e has not received and the campaign limits haven't been reached
         const campaigns = await asyncFilter(currentCampaigns, campaign => {
             return campaignService.canReceiveCampaignRewards(userId, campaign, () => true).catch(err => {
-                if (err.name !== 'StatusError') {
-                    throw err;
-                }
+                if (err.name !== 'StatusError') throw err;
             })
         });
         otherData.campaigns = campaigns;

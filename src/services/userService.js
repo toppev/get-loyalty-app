@@ -1,5 +1,5 @@
 const User = require('../models/user');
-const emailPasswordReset = require('../helpers/mailer');
+const { emailPasswordReset } = require('../helpers/mailer');
 const ResetPassword = require('../models/passwordReset');
 const crypto = require('crypto');
 
@@ -37,7 +37,7 @@ async function forgotPassword(email) {
                 userId
             });
             await reset.save();
-            emailPasswordReset(email, token);
+            await emailPasswordReset(email, token);
         }
     }
 }
