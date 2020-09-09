@@ -18,7 +18,6 @@ beforeAll(async () => {
 describe('Logged in user can', () => {
 
     let userId;
-    let business;
     let cookie;
 
     beforeAll(async () => {
@@ -29,11 +28,12 @@ describe('Logged in user can', () => {
             .send(userParams)
             .expect(200);
         cookie = res.headers['set-cookie'];
-        business = await businessService.createBusiness({}, userId);
+        await businessService.createBusiness({}, userId);
     });
 
     it('scan (get) userId and rewardId', async () => {
-        const reward = { name: 'Free items', itemDiscount: 'Free!' };
+        const category1 = await categoryService.create({ name: 'test category1' });
+        const reward = { name: 'Free items', itemDiscount: 'Free!', categories: [category1] };
         const rewards = await customerService.addReward(userId, reward);
         const rewardId = rewards[0]._id;
         const scan = `${userId}:${rewardId}`;
@@ -41,8 +41,10 @@ describe('Logged in user can', () => {
             .get(`/scan/${scan}`)
             .set('Cookie', cookie)
             .expect(200);
+        expect(res.body.reward.categories.length).toBe(1)
+        expect(res.body.reward.categories[0].name).toBe(category1.name)
         expect(res.body.questions).toBeDefined();
-        expect(res.body.customerData).toBeDefined();
+        expect(res.body.user.customerData).toBeDefined();
         expect(res.body.reward._id).toBeDefined();
         const questions = res.body.questions;
         expect(questions[questions.length - 1].question).toBe('Use reward "Free items"?')
@@ -88,7 +90,7 @@ describe('Logged in user can', () => {
             .set('Cookie', cookie)
             .expect(200);
         expect(res.body.questions).toBeDefined();
-        expect(res.body.customerData).toBeDefined();
+        expect(res.body.user.customerData).toBeDefined();
         expect(res.body.campaigns.length).toBe(1);
         expect(res.body.campaigns[0].name).toBe(campaign2.name);
 
