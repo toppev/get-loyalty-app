@@ -8,9 +8,11 @@ import 'error_dialog.dart';
 import 'services/scan_service.dart';
 
 const MAX_SCAN_DURATION = Duration(minutes: 3);
-const SCAN_COOLDOWN = 5000; // In millis
+const SCAN_COOLDOWN = 2500; // In millis
+const SCAN_COOLDOWN_SAME_STRING = 10000; // In millis
 
 var lastScanned = 0;
+String lastScannedString;
 
 class ScannerWidget extends StatefulWidget {
   final ValueChanged<GetScan> onScan;
@@ -56,7 +58,7 @@ class ScannerWidgetState extends State<ScannerWidget> {
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
     controller.scannedDataStream.listen((scanData) async {
-      if (!checkCooldown()) {
+      if (!checkCooldown(scanData)) {
         print('Still on cooldown (scanned $scanData)');
       } else {
         var stateText = scanData;
@@ -67,7 +69,6 @@ class ScannerWidgetState extends State<ScannerWidget> {
           setScanning(false);
           scanService.getScan(scanData).then((result) {
             print('Handling request result: ${result.toJson()}');
-            result.scannedString = scanData;
             widget.onScan(result);
           }).catchError((e) {
             print(e);
@@ -103,10 +104,12 @@ class ScannerWidgetState extends State<ScannerWidget> {
     widget.onScanToggle(scanning);
   }
 
-  bool checkCooldown() {
-    var now = new DateTime.now().millisecondsSinceEpoch;
-    if (now - SCAN_COOLDOWN > lastScanned) {
+  bool checkCooldown(str) {
+    final now = new DateTime.now().millisecondsSinceEpoch;
+    if (now - SCAN_COOLDOWN > lastScanned &&
+        (now - SCAN_COOLDOWN_SAME_STRING > lastScanned || str != lastScannedString)) {
       lastScanned = now;
+      lastScannedString = str;
       return true;
     }
     return false;
