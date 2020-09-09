@@ -54,7 +54,7 @@ class _ScannerPageState extends State<ScannerPage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       Container(
-                        margin: EdgeInsets.all(8.0),
+                        margin: EdgeInsets.all(48.0),
                         child: RaisedButton(
                           onPressed: () {
                             var newState = !isScanning;
@@ -62,9 +62,9 @@ class _ScannerPageState extends State<ScannerPage> {
                             globalKey.currentState.setScanning(newState);
                             print('Camera state changed: $newState');
                           },
-                          child:
-                              Text(isScanning ? SCANNING : PAUSED, style: TextStyle(fontSize: 20)),
                           color: isScanning ? Colors.redAccent : Colors.green,
+                          child:
+                              Text(isScanning ? SCANNING : PAUSED),
                         ),
                       ),
                     ],
