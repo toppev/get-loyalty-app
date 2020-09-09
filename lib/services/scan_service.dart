@@ -92,7 +92,7 @@ class ScanService {
       return GetScan.fromJson(json.decode(response.body), scannedString: scan);
     } else {
       var body = json.decode(response.body);
-      throw ('${body['message'] != null ? body['message'] : "HTTP status code: ${response.statusCode}"}');
+      throw ('${body['message'] ?? "HTTP status code: ${response.statusCode}"}');
     }
   }
 
@@ -105,7 +105,7 @@ class ScanService {
       return UseScan.fromJson(json.decode(response.body));
     } else {
       var body = json.decode(response.body);
-      throw ('${body['message'] != null ? body['message'] : "HTTP status code: ${response.statusCode}"}');
+      throw ('${body['message'] ?? "HTTP status code: ${response.statusCode}"}');
     }
   }
 }

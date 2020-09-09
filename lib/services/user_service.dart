@@ -56,14 +56,13 @@ class UserService {
   _handleUserResponse(Response response) {
     if (response.statusCode >= 200 && response.statusCode <= 300) {
       var body = json.decode(response.body);
-      var business = body['businessOwner'];
-      if (business != null) {
+      if (body['businessOwner'] != null) {
         return body;
       }
       throw 'No businesses found. Is it wrong account?';
     } else {
       var body = json.decode(response.body);
-      throw ('${body['message'] != null ? body['message'] : "HTTP status code: ${response.statusCode}.Body: $body"}');
+      throw ('${body['message'] ?? "HTTP status code: ${response.statusCode}.Body: $body"}');
     }
   }
 }

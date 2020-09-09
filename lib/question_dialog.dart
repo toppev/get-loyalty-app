@@ -40,7 +40,7 @@ class _QuestionDialogWidgetState extends State<QuestionDialogWidget> {
 
   dialogContent(BuildContext context) {
     Map<String, Object> user = widget.data['user'];
-    if (user == null) user = {};
+    user ??= {};
     final userInfoEl = Padding(
         padding: const EdgeInsets.only(right: 12, top: 12),
         child: Align(
@@ -90,10 +90,10 @@ class _QuestionDialogWidgetState extends State<QuestionDialogWidget> {
   }
 
   /// Lowercase strings that have a negative meaning
-  final negativeStrings = ['no', 'false', 'not'];
+  static const negativeStrings = ['no', 'false', 'not'];
 
   Widget renderOption(String option, Question question) {
-    var isAnswer = answers[question] != null && answers[question].contains(option);
+    var isAnswer = answers[question]?.contains(option);
     var negativeAnswer = negativeStrings.contains(option.toLowerCase());
 
     return Padding(
