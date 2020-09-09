@@ -31,6 +31,7 @@ async function parseScanString(scanStr) {
     if (!user) {
         throw new StatusError('User not found', 404);
     }
+    await customerService.populateUser(user)
     const rewardId = split[1];
     return { user, userId, rewardId }
 }
