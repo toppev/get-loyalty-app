@@ -94,7 +94,7 @@ class _QuestionDialogWidgetState extends State<QuestionDialogWidget> {
 
   Widget renderOption(String option, Question question) {
     var isAnswer = answers[question]?.contains(option);
-    var negativeAnswer = negativeStrings.contains(option.toLowerCase());
+    var negativeAnswer = negativeStrings.contains(option?.toLowerCase());
 
     return Padding(
       padding: const EdgeInsets.all(12.0),
@@ -117,7 +117,7 @@ class _QuestionDialogWidgetState extends State<QuestionDialogWidget> {
         },
         child: Padding(
           padding: const EdgeInsets.all(12.0),
-          child: Text(option, style: TextStyle(fontSize: 36)),
+          child: Text(option ?? '<invalid>', style: TextStyle(fontSize: 36)),
         ),
       ),
     );
