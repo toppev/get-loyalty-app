@@ -61,7 +61,14 @@ export default function () {
         // Login -> fetch business or create one
         if (validAPI) {
             profileRequest()
-                .then(res => onLoginOrAccountCreate(context, res))
+                .then(res => {
+                    if (res.data.businessOwner) {
+                        onLoginOrAccountCreate(context, res)
+                    } else {
+                        console.log('Can not login to panel: not a business owner')
+                        setLoginDialog(true)
+                    }
+                })
                 .catch(err => {
                     if (err.response) {
                         console.log(err);
