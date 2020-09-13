@@ -1,16 +1,16 @@
 // @ts-check
 /**
- * All campaigns types.
+ * All campaign types.
  *
- * Each type may have "requirement" function that calculates if the user can receive the rewards.
- * If humans are needed (to answer a question), the "question" attribute should be specified.
+ * Each type may have "requirement" function that returns whether the user can receive the rewards.
+ * If humans are needed (to answer a question), the "question" property should be specified.
  *
  * @type {import("./index")}
  */
 module.exports = {
     isPurchaseGreaterThan: {
         name: 'Purchase Price',
-        description: 'If the total cost of the purchase is greater than X',
+        description: 'If the total cost of the purchase is more than the set value.',
         // We don't know the price so ask a human
         // {0} is the value parameter
         question: "Is the price of the purchase more than {0}?",
@@ -21,7 +21,7 @@ module.exports = {
     },
     isBirthday: {
         name: 'Customer Birthday',
-        description: "If it's the customer's birthday!",
+        description: "If it's the customer's birthday.",
         requirement: function ({ user }) {
             const { birthday: bd } = user
             if (bd) {

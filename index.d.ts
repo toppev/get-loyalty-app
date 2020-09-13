@@ -27,11 +27,11 @@ declare interface ValueDescription {
 
 declare interface User {
     id: string
-    email: string | undefined
+    email?: string
     hasPassword: boolean
     role: "user" | "business"
     lastVisit: Date
-    birthday: Date | undefined
+    birthday?: Date
     authentication: {
         service: string
     }
@@ -63,14 +63,14 @@ declare interface Purchase {
 declare interface Reward {
     id: string
     name: string
-    description: string | undefined
+    description?: string
     products: Product[]
     categories: Category[]
     // Linked campaign (i.e the campaign that rewarded the customer)
     campaign: Campaign
     itemDiscount: string
     customerPoints: number
-    requirement: string | undefined
+    requirement?: string
     expires: Date
     // ObjectID that identifies rewards even if the _id changes
     // i.e this field does not change when a user receives the Campaign#rewards
@@ -80,10 +80,10 @@ declare interface Reward {
 declare interface Product {
     id: string
     name: string
-    description: string | undefined
+    description?: string
     categories: Category[]
     images: string[]
-    price: string | undefined
+    price?: string
 }
 
 declare interface Category {
@@ -92,24 +92,24 @@ declare interface Category {
     parents: Category[]
     children: Category[]
     keywords: string[]
-    official: boolean | undefined
-    categoryType: undefined | null | "business" | "product" | "service"
+    official?: boolean
+    categoryType?: null | "business" | "product" | "service"
 }
 
 declare interface Campaign {
     id: string
     start: Date
-    end: Date | undefined
+    end?: Date
     createdAt: Date
     name: string
-    description: string | undefined
+    description?: string
     products: Product[]
     categories: Category[]
     requirements: any[]
-    couponCode: string | undefined
+    couponCode?: string
     rewardedCount: number
     maxRewards: {
-        total: number | undefined
+        total?: number
         user: number
     }
     transactionPoints: number
