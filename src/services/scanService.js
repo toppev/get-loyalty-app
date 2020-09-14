@@ -124,7 +124,7 @@ async function getScan(scanStr) {
     return { questions, ...otherData };
 }
 
-function addQuestions(questions, categories, products, requirements, { categoryQuestion, productQuestion }) {
+function addQuestions(questions, categories, products, requirements, { categoryQuestion, productQuestion } = {}) {
     if (categories && categories.length) {
         questions.push({
             id: IDENTIFIERS.CATEGORIES,
