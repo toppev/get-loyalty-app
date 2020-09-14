@@ -19,8 +19,9 @@ module.exports = {
  * If the user was not found nothing will be done.
  * Throws and error if the user didn't use local authentication strategy.
  * @param {string} email the user's email address
+ * @param {string} [redirectUrl=process.env.FRONTEND_ORIGIN] the url where the user should be redirected to
  */
-async function forgotPassword(email) {
+async function forgotPassword(email, redirectUrl) {
     const user = await User.findOne({
         email: email
     });
@@ -37,7 +38,7 @@ async function forgotPassword(email) {
                 userId
             });
             await reset.save();
-            await emailPasswordReset(email, token);
+            await emailPasswordReset(email, token, redirectUrl);
         }
     }
 }

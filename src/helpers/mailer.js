@@ -15,15 +15,19 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-async function emailPasswordReset(email, token) {
-    const url = config.baseUrl + '/resetpassword/' + token;
+async function emailPasswordReset(email, token, redirectUrl) {
+    if (process.env.NODE_ENV === 'test') return;
+
+    const redirect = redirectUrl || process.env.FRONTEND_ORIGIN;
+    const url = `${process.env.PUBLIC_URL}/user/resetpassword/${token}?redirect${redirect}`;
+
     const mailOptions = {
         from: config.email,
         to: email,
         subject: config.emailSubject,
         text: config.emailText.replace('{url}', url),
     };
-    if (process.env.NODE_ENV === 'test') return;
+
     transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
             console.log(error);

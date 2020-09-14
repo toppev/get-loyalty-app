@@ -76,7 +76,12 @@ function resetPassword(req, res, next) {
                 if (err) {
                     return next(err);
                 } else {
-                    res.json({ ...user, success: true })
+                    const { redirect } = req.query;
+                    if (redirect) {
+                        res.redirect(redirect)
+                    } else {
+                        res.json({ ...user, success: true })
+                    }
                 }
             });
         })
