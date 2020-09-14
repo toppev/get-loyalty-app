@@ -63,8 +63,7 @@ class _ScannerPageState extends State<ScannerPage> {
                             print('Camera state changed: $newState');
                           },
                           color: isScanning ? Colors.redAccent : Colors.green,
-                          child:
-                              Text(isScanning ? SCANNING : PAUSED),
+                          child: Text(isScanning ? SCANNING : PAUSED),
                         ),
                       ),
                     ],
@@ -116,19 +115,46 @@ class _ScannerPageState extends State<ScannerPage> {
       showDialog(
           context: context,
           builder: (BuildContext context) {
+            var height = MediaQuery.of(context).size.height;
+            var width = MediaQuery.of(context).size.width;
+
             return AlertDialog(
-                title: Text("Customer used reward: ${reward['name']}"),
-                content: Column(
-                  children: <Widget>[
-                    Text("Name: ${reward['name']}"),
-                    Text("Discount: ${reward['description']}"),
-                    reward['requirement'] != null ? Text("Note: ${reward['requirement']}") : null,
-                    Text(reward['description']),
-                  ],
+                title: Text(
+                  "Customer used reward: ${reward['name']}",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 24, color: Colors.black54),
+                ),
+                shape:
+                    RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                content: DefaultTextStyle(
+                  style: TextStyle(fontSize: 28, color: Colors.black87),
+                  child: Container(
+                    width: width * 0.7,
+                    height: height * 0.5,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 24.0),
+                      child: Column(
+                        children: <Widget>[
+                          Text("Name: ${reward['name']}"),
+                          Text("Discount: ${reward['description']}"),
+                          Text(reward['requirement'] != null
+                              ? "Note: ${reward['requirement']}"
+                              : ""),
+                          Text(reward['description']),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
                 actions: [
                   new FlatButton(
-                      child: Text("Close message"),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "Close message",
+                          style: TextStyle(fontSize: 30),
+                        ),
+                      ),
                       onPressed: () {
                         Navigator.of(context).pop();
                         globalKey.currentState.setScanning(true);
