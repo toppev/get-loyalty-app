@@ -89,7 +89,8 @@ export default function () {
     const context = useContext(AppContext);
 
     const [saved, setSaved] = useState(true);
-    const [error, setError] = useState('');
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [error, setError] = useState(''); // For future use
 
     const theme = useTheme();
     const request = useRequest()

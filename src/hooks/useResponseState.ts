@@ -20,6 +20,7 @@ export default function useResponseState<T>(
             // TODO: better type check?
             setState(parser ? parser(response) : response.data)
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [response])
 
     return [

@@ -78,6 +78,7 @@ export default function () {
                     }
                 });
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const handleDrawerToggle = () => setNavDrawerOpen(!navDrawerOpen);

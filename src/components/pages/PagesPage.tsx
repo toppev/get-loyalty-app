@@ -511,7 +511,7 @@ function TemplateSelectorDialog({ open, onClose, onSelect }: TemplateSelectorDia
         performInitially: true,
         errorMessage: 'Failed to load template pages'
     });
-    const [templates, setTemplates] = useResponseState<Page[]>(response, [], res => res.data.map((d: any) => new Page(d)))
+    const [templates] = useResponseState<Page[]>(response, [], res => res.data.map((d: any) => new Page(d)))
 
     const blankPage = new Page({
         _id: 'blank_page',

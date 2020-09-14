@@ -58,7 +58,7 @@ export default function () {
     const [formOpen, setFormOpen] = useState(false);
     const [editingProduct, setEditingProduct] = useState<Product | undefined>();
 
-    const { search, setSearch, searchFilter } = useSearch()
+    const { setSearch, searchFilter } = useSearch()
 
     const { error: errorListing, loading: listing, response, execute: reloadProducts } = useRequest(listProducts);
     const [products, setProducts] = useResponseState<Product[]>(response, [], res => res.data.map((it: any) => new Product(it)));
@@ -113,8 +113,8 @@ export default function () {
                                     <TableCell>Description</TableCell>
                                     <TableCell>Price</TableCell>
                                     <TableCell>Categories</TableCell>
-                                    <TableCell></TableCell>
-                                    <TableCell></TableCell>
+                                    <TableCell/>
+                                    <TableCell/>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -131,7 +131,7 @@ export default function () {
                     </TableContainer>
 
                     <p className={classes.noProducts}>
-                        {filteredProducts.length == 0 && (products.length == 0
+                        {filteredProducts.length === 0 && (products.length === 0
                                 ? "You don't have any products"
                                 : "No products found"
                         )}

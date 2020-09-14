@@ -89,24 +89,24 @@ export default function ({ initialCampaign, onSubmitted }: CampaignFormProps) {
     const [startDate, setStartDate] = useState<Date | undefined>(campaign.start);
     const [endDate, setEndDate] = useState<Date | undefined>(campaign.end);
 
-    const { error, loading, response, performRequest } = useRequest();
+    const { error, loading, performRequest } = useRequest();
 
     const [productSelectorOpen, setProductSelectorOpen] = useState(false);
 
     const isEditing = !!initialCampaign;
     const title = isEditing ? 'Edit Campaign' : 'Create Campaign';
 
-    const mergeCampaign = (campaign: Campaign) => {
+    const mergeCampaign = (newCampaign: Campaign) => {
         // Update categories and other stuff here
-        Object.assign(campaign, { categories, products, endReward: endRewards, requirements })
+        Object.assign(newCampaign, { categories, products, endReward: endRewards, requirements })
         if (isDates) {
-            campaign.start = startDate;
-            campaign.end = endDate;
+            newCampaign.start = startDate;
+            newCampaign.end = endDate;
         } else {
-            campaign.start = undefined;
-            campaign.end = undefined;
+            newCampaign.start = undefined;
+            newCampaign.end = undefined;
         }
-        return campaign
+        return newCampaign
     }
 
     return (
@@ -191,7 +191,7 @@ export default function ({ initialCampaign, onSubmitted }: CampaignFormProps) {
                             label="Campaign start date (dd/MM/yyyy)"
                             format="dd/MM/yyyy"
                             value={startDate}
-                            onChange={(date, value) => date && setStartDate(date)}
+                            onChange={(date) => date && setStartDate(date)}
                         />
                         <KeyboardDatePicker
                             disabled={!isDates}
@@ -200,7 +200,7 @@ export default function ({ initialCampaign, onSubmitted }: CampaignFormProps) {
                             label="Campaign end date (dd/MM/yyyy)"
                             format="dd/MM/yyyy"
                             value={endDate}
-                            onChange={(date, value) => date && setEndDate(date)}
+                            onChange={(date) => date && setEndDate(date)}
                         />
                     </MuiPickersUtilsProvider>
 

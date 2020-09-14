@@ -3,7 +3,7 @@ const loyaltyQRCode = 'loaylty-qrcode'
 
 function addQRCodeType(editor: any) {
     editor.DomComponents.addType(loyaltyQRCode, {
-        isComponent: (el: any) => el.tagName == loyaltyQRCode,
+        isComponent: (el: any) => el.tagName === loyaltyQRCode,
         model: {
             defaults: {
                 draggable: true,

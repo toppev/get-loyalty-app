@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import RewardItem, { RemoveEditRewardActions } from "../rewards/RewardItem";
 import Customer from "./Customer";
 import Reward from "../rewards/Reward";
-import { Button, createStyles, Divider, Grid, LinearProgress, Theme, Typography } from "@material-ui/core";
+import { Button, createStyles, Divider, Grid, LinearProgress, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { YesNo } from "../common/StringUtils";
 import RetryButton from "../common/button/RetryButton";
@@ -12,7 +12,7 @@ import useRequest from "../../hooks/useRequest";
 import RewardFormDialog from "../rewards/RewardFormDialog";
 
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
     createStyles({
         container: {},
         item: {
@@ -44,7 +44,7 @@ export default function ({ initialCustomer }: CustomerDetailsProps) {
     const { rewards } = customer.customerData;
     const [newRewardOpen, setNewRewardOpen] = useState(false);
 
-    const { error, loading, response, performRequest } = useRequest();
+    const { error, loading, performRequest } = useRequest();
 
     return error ? (
         <RetryButton error={error}/>
@@ -113,11 +113,9 @@ interface CustomerRewardProps {
 
 function CustomerReward({ reward, customer, onUpdate }: CustomerRewardProps) {
 
-    const classes = useStyles();
-
     const [editing, setEditing] = useState(false);
 
-    const { error, loading, response, performRequest } = useRequest();
+    const { error, loading, performRequest } = useRequest();
 
     return error ? (
         <RetryButton error={error}/>

@@ -1,4 +1,3 @@
-import React from "react";
 import { placeholders } from "./Placeholders";
 import { ellipsis } from "../../common/StringUtils";
 
@@ -21,8 +20,8 @@ function addRichTextEditorPlaceholders(editor, context) {
 function listPlaceholderOptions(context) {
     const { values } = context;
     const result = [];
-    Object.entries(placeholders).map(([key, value]) => {
-        Object.entries(value.placeholders).map(([property, placeholder]) => {
+    Object.entries(placeholders).forEach(([, value]) => {
+        Object.entries(value.placeholders).forEach(([property, placeholder]) => {
             const text = `{{${value.identifier}.${property}}}`;
             const subObj = values[value.identifier];
             const val = subObj && subObj[property];

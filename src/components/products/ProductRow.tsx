@@ -112,18 +112,14 @@ function EditDeleteActions(props: ProductRowProps) {
 
     const classes = useStyles();
 
-    const { error, loading, response, performRequest } = useRequest();
+    const { performRequest } = useRequest();
 
     return (
         <>
             <Button
                 className={classes.editBtn}
                 startIcon={(<EditIcon/>)}
-                onClick={() => {
-                    if (props.startEditing) {
-                        props.startEditing(props.product);
-                    }
-                }}
+                onClick={() => props.startEditing && props.startEditing(props.product)}
                 variant="contained" color="primary">Edit</Button>
             <Button
                 className={classes.removeBtn}

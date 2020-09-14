@@ -1,13 +1,4 @@
-import {
-    Button,
-    createStyles,
-    Dialog,
-    DialogContent,
-    DialogContentText,
-    LinearProgress,
-    Theme,
-    Typography
-} from "@material-ui/core";
+import { Button, createStyles, Dialog, DialogContent, DialogContentText, LinearProgress, Theme, Typography } from "@material-ui/core";
 import React, { useState } from "react";
 import ProductRow from "./ProductRow";
 import Product from "./Product";
@@ -59,7 +50,7 @@ export default function ({ open, text, onClickClose, onSubmit, limitNotification
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
 
     const { error, loading, response } = useRequest(() => listProducts());
-    const [products, setProducts] = useResponseState<Product[]>(response, [], res => res.data.map((it: any) => new Product(it)));
+    const [products] = useResponseState<Product[]>(response, [], res => res.data.map((it: any) => new Product(it)));
 
     const classes = useStyles();
 
@@ -80,7 +71,7 @@ export default function ({ open, text, onClickClose, onSubmit, limitNotification
                         variant="outlined"
                         onClick={() => setSelectedProducts([])}
                     >Deselect All</Button>}
-                    
+
                     <div className={classes.info}>
                         {products.length > 0 &&
                         <p>You don't need to select all products. Instead, leave it empty and all products are

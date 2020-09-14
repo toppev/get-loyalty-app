@@ -82,7 +82,7 @@ export default function () {
         }, searchTimeout));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [performRequest, search]);
-    const [customers, setCustomers] = useResponseState<Customer[]>(response, [], (res) => {
+    const [customers] = useResponseState<Customer[]>(response, [], (res) => {
         return res.data.customers?.map((it: any) => new Customer(it)) || []
     });
     const [rewardAllSelector, setRewardAllSelector] = useState(false);
@@ -141,7 +141,7 @@ export default function () {
                             <TableCell>Points</TableCell>
                             <TableCell>Last website visit</TableCell>
                             <TableCell>Role</TableCell>
-                            <TableCell></TableCell>
+                            <TableCell/>
                         </TableRow>
                     </TableHead>
                     <TableBody>

@@ -29,6 +29,7 @@ export default function (callback?: (res: AxiosResponse) => any, onError?: (err:
                     }
                 })
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [resetCode, API_ADDRESS])
 
 }

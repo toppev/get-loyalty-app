@@ -1,12 +1,11 @@
-import { createStyles, Dialog, DialogContent, makeStyles, Theme } from "@material-ui/core";
-import React, { useContext } from "react";
-import AppContext from "../../context/AppContext";
+import { createStyles, Dialog, DialogContent, makeStyles } from "@material-ui/core";
+import React from "react";
 import CloseButton from "../common/button/CloseButton";
 import { backendURL } from "../../config/axios";
 import { Page } from "./Page";
 import PreviewIframe from "../common/PreviewIframe";
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
     createStyles({
         previewDialogContent: {
             textAlign: 'center',
@@ -25,8 +24,6 @@ interface PreviewPageProps {
 export default function PreviewPage({ page, onClose, actions, open = true }: PreviewPageProps) {
 
     const classes = useStyles();
-
-    const appContext = useContext(AppContext);
 
     return !page ? null : (
         <Dialog onClose={onClose} open={open} maxWidth={false}>

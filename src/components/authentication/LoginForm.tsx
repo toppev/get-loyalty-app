@@ -77,12 +77,9 @@ interface FormValues {
     acceptAll: boolean
 }
 
-interface LoginFormProps {
-}
-
 const initialValues: FormValues = { email: "", password: "", token: "", acceptAll: false }
 
-export default function LoginForm({}: LoginFormProps) {
+export default function LoginForm() {
 
     const classes = useStyles();
     const context = useContext(AppContext);

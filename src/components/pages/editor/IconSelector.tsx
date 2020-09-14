@@ -55,11 +55,12 @@ interface IconSelectorProps {
 export default function (props: IconSelectorProps) {
 
     const classes = useStyles();
+    const icons = SVGIcons;
 
     const { onSubmit, initialIcon } = props;
 
     const [open, setOpen] = useState(false);
-    const [icons, setIcons] = useState<string[]>(SVGIcons);
+
     const [customOpen, setCustomOpen] = useState(false);
     const [html, setHtml] = useState(icons.includes(initialIcon) ? '' : initialIcon);
 

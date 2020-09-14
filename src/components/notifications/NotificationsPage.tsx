@@ -41,7 +41,7 @@ export default function () {
 
     const { loading, error, response } = useRequest(listNotificationHistory);
 
-    const [history, setHistory] = useResponseState<PushNotification[]>(response, [], res => {
+    const [history] = useResponseState<PushNotification[]>(response, [], res => {
         const expires = res.data.cooldownExpires;
         setCooldownExpires(expires ? new Date(expires) : undefined)
         return res.data.notifications.map((it: any) => new PushNotification(it))
@@ -79,7 +79,7 @@ export default function () {
                 />
             </Box>
             <p className={classes.info}>*Push notifications are not (yet) supported on Safari (iOS).</p>
-            <p style={{fontSize: '11px', color: 'grey', marginLeft: '25px'}}>We limit how often you can send push notifications.</p>
+            <p style={{ fontSize: '11px', color: 'grey', marginLeft: '25px' }}>We limit how often you can send push notifications.</p>
         </div>
     )
 

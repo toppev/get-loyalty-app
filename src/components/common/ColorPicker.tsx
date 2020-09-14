@@ -1,13 +1,12 @@
 import { SketchPicker } from "react-color"
 import React, { useState } from "react";
-import { createStyles, Dialog, DialogContent, DialogProps, makeStyles, Theme } from "@material-ui/core";
+import { createStyles, Dialog, DialogContent, makeStyles } from "@material-ui/core";
 import CloseButton from "./button/CloseButton";
 
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
     createStyles({
-        dialog: {
-        },
+        dialog: {},
     }));
 
 interface ColorPickerProps {
