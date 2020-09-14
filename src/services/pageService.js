@@ -165,6 +165,8 @@ async function getPageContext(user) {
         //
         // Add all page placeholders somewhere here
         //
+        const dateOpts = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
+
         await customerService.populateUser(user)
         // FIXME: hacky, required for handlebar placeholders to work
         const userInfo = JSON.parse(JSON.stringify(await customerService.getCustomerInfo(user)))
@@ -172,6 +174,12 @@ async function getPageContext(user) {
             return {
                 scanCode: scanService.toScanCode(user, reward),
                 ...reward,
+            }
+        })
+        userInfo.usedRewards = userInfo.customerData.usedRewards.map(used => {
+            return {
+                dateUsed: used.dateUsed.toLocaleDateString(undefined, dateOpts),
+                ...used
             }
         })
 
@@ -183,7 +191,6 @@ async function getPageContext(user) {
             // Add currentStamps and stampsNeeded lists so we can actually display stamp icons or something (easily)
             campaign.currentStamps = rawCampaign.getCurrentStamps(customerData);
 
-            const dateOpts = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
             if (campaign.start) {
                 campaign.start = campaign.start.toLocaleDateString(undefined, dateOpts)
             }
