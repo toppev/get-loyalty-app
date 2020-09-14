@@ -192,12 +192,10 @@ async function useScan(scanStr, data) {
     let newRewards = [];
     const campaigns = await campaignService.getOnGoingCampaigns(true)
     for (const campaign of campaigns) {
-        let eligible;
         // May throw (status)errors, catch them so it won't affect the response status
         try {
             // FIXME: campaign products and categories are ignored
-            eligible = await campaignService.isEligible(user, campaign, isTruthyAnswer)
-            if (eligible) {
+            if (await campaignService.isEligible(user, campaign, isTruthyAnswer)) {
                 if (await campaignService.canReceiveCampaignRewards(userId, campaign, isTruthyAnswer)) {
                     const rewards = await customerService.addCampaignRewards(user, campaign);
                     newRewards.push(...rewards);
@@ -208,8 +206,6 @@ async function useScan(scanStr, data) {
                 }
             }
         } catch (err) {
-            // Not eligible
-            eligible = false;
             if (err.name !== 'StatusError') {
                 console.log(`ERROR! User not eligible to participate in a campaign because an error occurred ${err}`)
             }

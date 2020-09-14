@@ -12,8 +12,8 @@ module.exports = (req, res, next) => {
         if (err) return next(err);
         if (!user) throw new StatusError(info.message, 401)
 
-        req.login(user, function (err) {
-            if (err) return next(err);
+        req.login(user, (e) => {
+            if (e) return next(e);
             return next();
         });
     })(req, res, next);

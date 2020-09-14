@@ -44,7 +44,7 @@ async function createBusiness(businessParam, userId) {
     const business = new Business(businessParam);
     await business.save();
     await setUserRole(userId, 'business');
-    templateService.loadDefaultTemplates().then()
+    templateService.loadDefaultTemplates().then(() => console.log('Default page templates loaded'))
     return business;
 }
 

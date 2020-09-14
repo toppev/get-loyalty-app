@@ -77,7 +77,6 @@ describe('user can', () => {
             .send(testNotification)
             .set('Cookie', cookie)
             .expect(200);
-        console.log(res.body)
         expect(res.body.cooldownExpires).toBeDefined();
     });
 

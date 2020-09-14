@@ -1,5 +1,5 @@
 // Roles and permissions
-// * is accepted (wildcard)
+// * (a wildcard) works
 const roles = {
     admin: {
         can: { '*': true },
@@ -38,7 +38,7 @@ const roles = {
  */
 async function _ownUserOnly(params) {
     const reqParams = params.reqParams;
-    return params.userId && (params.userId == reqParams.userId || !reqParams.userId);
+    return params.userId && (params.userId === reqParams.userId || !reqParams.userId);
 }
 
 async function can(role, operation, params) {
