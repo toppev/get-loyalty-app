@@ -139,15 +139,14 @@ async function canReceiveCampaignRewards(userId, campaign, answerQuestion) {
 }
 
 /**
- * Checks that the campaign requirements are met.
+ * Checks that the campaign requirements (campaign types) are met.
  * For example, the user has enough purchases or the purchase was a specific product (see answerQuestion param).
  * Ignores campaign dates etc. Only checks the requirements.
  *
  * @param {User} user the user
  * @param {Campaign} campaign the campaign
- * @param {Function(string)<boolean>} answerQuestion callback to answer whether the specified requirement question
- * got a truthy
- * answer. The callback gets the type as an argument.
+ * @param {Function<boolean>} answerQuestion callback to answer whether the specified requirement question got a
+ * truthy answer. The callback gets the type (string) as an argument.
  */
 async function isEligible(user, campaign, answerQuestion) {
     const { requirements } = campaign;

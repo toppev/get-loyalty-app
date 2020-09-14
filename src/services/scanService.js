@@ -81,7 +81,10 @@ async function getScan(scanStr) {
     };
 
     if (reward) {
-        addQuestions(questions, reward.categories, reward.products, [reward.requirement]);
+        addQuestions(questions, reward.categories, reward.products, [reward.requirement], {
+            productQuestion: 'Only these products',
+            categoryQuestion: 'Only these categories'
+        });
         questions.push({ id: 'success', question: `Use reward "${reward.name}"?`, options: ['Yes', 'No'] });
         otherData.reward = reward;
     } else {
@@ -121,18 +124,18 @@ async function getScan(scanStr) {
     return { questions, ...otherData };
 }
 
-function addQuestions(questions, categories, products, requirements) {
+function addQuestions(questions, categories, products, requirements, { categoryQuestion, productQuestion }) {
     if (categories && categories.length) {
         questions.push({
             id: IDENTIFIERS.CATEGORIES,
-            question: 'Select categories',
+            question: categoryQuestion || 'Select categories',
             options: categories.map(c => c.name)
         })
     }
     if (products && products.length) {
         questions.push({
             id: IDENTIFIERS.PRODUCTS,
-            question: 'Select products',
+            question: productQuestion || 'Select products',
             options: products.map(p => p.name)
         })
     }
@@ -192,6 +195,7 @@ async function useScan(scanStr, data) {
         let eligible;
         // May throw (status)errors, catch them so it won't affect the response status
         try {
+            // FIXME: campaign products and categories are ignored
             eligible = await campaignService.isEligible(user, campaign, isTruthyAnswer)
             if (eligible) {
                 if (await campaignService.canReceiveCampaignRewards(userId, campaign, isTruthyAnswer)) {
