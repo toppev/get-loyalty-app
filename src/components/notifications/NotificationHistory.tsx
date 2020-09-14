@@ -62,14 +62,14 @@ export default function (props: NotificationHistoryProps) {
         <Paper className={classes.paper}>
             <Typography variant="h5" className={classes.typography}>Notification History</Typography>
             {loading && <LinearProgress/>}
-           <RetryButton error={error}/>
+            <RetryButton error={error}/>
             {newNotifications?.map(n => (
                 <NotificationCard key={n.id} notification={n} className={`${classes.card} ${classes.newCard}`}/>
             ))}
             {history.map(n => (
                 <NotificationCard key={n.id} notification={n} className={classes.card}/>
             ))}
-            {empty && <Typography className={classes.noNotifications} variant="h6">You haven't sent any
+            {empty && !loading && <Typography className={classes.noNotifications} variant="h6">You haven't sent any
                 notifications</Typography>}
         </Paper>
     )

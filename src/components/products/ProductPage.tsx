@@ -1,4 +1,16 @@
-import { Box, createStyles, LinearProgress, makeStyles, Theme } from '@material-ui/core';
+import {
+    Box,
+    createStyles,
+    LinearProgress,
+    makeStyles,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Theme
+} from '@material-ui/core';
 import React, { useState } from 'react';
 import RetryButton from '../common/button/RetryButton';
 import ImportProducts from './importer/ImportProducts';
@@ -35,7 +47,10 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         noProducts: {
             color: theme.palette.grey[600],
-        }
+        },
+        head: {
+            backgroundColor: '#c9d2d4'
+        },
     }));
 
 export default function () {
@@ -89,16 +104,31 @@ export default function () {
 
                     {loading && <LinearProgress/>}
 
-                    <ul className={classes.productList}>
-                        {filteredProducts.map((item, index) => (
-                            <ProductRow
-                                key={index}
-                                product={item}
-                                startEditing={product => setEditingProduct(product)}
-                                onDelete={() => setProducts(products.filter(p => p.id !== item.id))}
-                            />
-                        ))}
-                    </ul>
+                    <TableContainer>
+                        <Table>
+                            <TableHead className={classes.head}>
+                                <TableRow>
+                                    <TableCell>Show/Hide</TableCell>
+                                    <TableCell>Name</TableCell>
+                                    <TableCell>Description</TableCell>
+                                    <TableCell>Price</TableCell>
+                                    <TableCell>Categories</TableCell>
+                                    <TableCell></TableCell>
+                                    <TableCell></TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {filteredProducts.map(product => (
+                                    <ProductRow
+                                        key={product.id}
+                                        product={product}
+                                        startEditing={product => setEditingProduct(product)}
+                                        onDelete={() => setProducts(products.filter(p => p.id !== product.id))}
+                                    />
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
 
                     <p className={classes.noProducts}>
                         {filteredProducts.length == 0 && (products.length == 0
