@@ -15,7 +15,8 @@ import useResponseState from "../../hooks/useResponseState";
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         container: {
-            marginTop: '30px'
+            margin: '30px 0px',
+            maxWidth: '100%',
         },
         newBtn: {
             marginBottom: '15px'

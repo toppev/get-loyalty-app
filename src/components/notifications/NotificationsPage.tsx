@@ -78,7 +78,7 @@ export default function () {
                     newNotifications={newNotifications}
                 />
             </Box>
-            <p className={classes.info}>*Push notifications are not (yet) supported on Safari (iOS).</p>
+            <p className={classes.info}>*Safari (iOS) does not (yet) support push notifications.</p>
             <p style={{ fontSize: '11px', color: 'grey', marginLeft: '25px' }}>We limit how often you can send push notifications.</p>
         </div>
     )

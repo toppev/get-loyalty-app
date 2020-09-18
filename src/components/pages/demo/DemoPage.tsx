@@ -1,4 +1,4 @@
-import { Box, Button, createStyles, Link, makeStyles, Theme, Typography } from "@material-ui/core";
+import { Box, Button, createStyles, Link, makeStyles, Theme, Typography, useMediaQuery, useTheme } from "@material-ui/core";
 import LinkIcon from "@material-ui/icons/Link";
 import QRCode from "qrcode.react";
 import React from "react";
@@ -55,6 +55,7 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function () {
 
     const classes = useStyles();
+    const notMobile = useMediaQuery(useTheme().breakpoints.up('sm'));
 
     // FIXME: should we iframe the self hosted page or??
     // Probably good enough for now
@@ -63,7 +64,13 @@ export default function () {
     return (
         <Box display="flex" flexWrap="wrap" flexDirection="row" alignItems="center" className={classes.boxDesktop}>
             <Box className={classes.item}>
-                <PreviewIframe src={src} className={classes.pagePreview}/>
+                {notMobile ? <PreviewIframe src={src} className={classes.pagePreview}/> :
+                    <div>
+                        <h2 style={{ color: 'white', margin: '50px 0px 120px 0px' }}>You can view the demo page <Link
+                            href={src} target="_blank" rel="noopener"><u>here</u></Link>.
+                        </h2>
+                    </div>
+                }
             </Box>
             <Box className={classes.item}>
                 <div className={classes.qrCodeStuff}>
