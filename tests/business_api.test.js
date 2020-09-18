@@ -2,6 +2,8 @@ const fs = require('fs');
 const businessService = require('../src/services/businessService');
 const campaignService = require('../src/services/campaignService');
 const User = require('../src/models/user');
+const Category = require('../src/models/category');
+const Product = require('../src/models/product');
 const app = require('../app');
 const api = require('supertest')(app);
 const { initDatabase, closeDatabase, deleteUploadsDirectory } = require('./testUtils');
@@ -88,14 +90,23 @@ describe('Logged in user can', () => {
     });
 
     it('list rewards', async () => {
+        const category = await (new Category({ name: 'testCategory' })).save()
+        const product = await (new Product({ name: 'testProduct' })).save()
         await campaignService.create({
             name: 'dasdawdasd',
-            endReward: [{ name: 'free stuff', itemDiscount: 'free' }]
+            endReward: [{
+                name: 'free stuff',
+                itemDiscount: 'free',
+                products: [product],
+                categories: [category]
+            }]
         });
         const res = await api
             .get(`/business/reward/list`)
             .set('Cookie', cookie)
             .expect(200)
+        expect(res.body[0].products[0].name).toBe('testProduct');
+        expect(res.body[0].categories[0].name).toBe('testCategory');
         expect(res.body.length).toBe(1);
         expect(res.body[0].name).toBe('free stuff');
     })
