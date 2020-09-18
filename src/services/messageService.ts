@@ -14,6 +14,7 @@ function subscribeMessage(userId: string, identifier: string) {
     });
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function unsubscribeMessage(userId: string, identifier: string) {
     return fetch(`${process.env.REACT_APP_POLLING_API_URL}/${identifier}_${userId}`, {
         "body": "{}",

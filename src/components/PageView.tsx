@@ -10,14 +10,16 @@ interface PageViewProps {
 export default function (props: PageViewProps) {
 
     const { page } = props
+    const { externalURL, pathname: title } = page
+
     const html = page.html || LOADING_HTML
 
     useEffect(replaceQRCodes, [html]);
     useUserFormInitialValues()
 
-    return page.externalURL ? (
+    return externalURL ? (
         <div className="page-holder">
-            <iframe height="100%" width="100%" frameBorder="0" src={page.externalURL}/>
+            <iframe title={title.charAt(0).toUpperCase() + title.slice(1)} height="100%" width="100%" frameBorder="0" src={externalURL}/>
         </div>
     ) : (
         <div className="page-view" dangerouslySetInnerHTML={{ __html: html }}/>

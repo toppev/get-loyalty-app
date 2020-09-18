@@ -116,11 +116,11 @@ function sendSubscription(subscription) {
     return post(`/notifications/subscribe`, subscription)
 }
 
-// https://github.com/GoogleChromeLabs/web-push-codelab/issues/46#issuecomment-429273981
+// Edited from https://github.com/GoogleChromeLabs/web-push-codelab/issues/46#issuecomment-429273981
 function urlBase64ToUint8Array(base64String) {
     const padding = '='.repeat((4 - base64String.length % 4) % 4)
     const base64 = (base64String + padding)
-        .replace(/\-/g, '+')
+        .replace(/-/g, '+')
         .replace(/_/g, '/')
     const rawData = window.atob(base64)
     const outputArray = new Uint8Array(rawData.length)
