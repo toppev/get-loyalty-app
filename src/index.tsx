@@ -3,14 +3,11 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { BrowserRouter as Router } from "react-router-dom";
 import { startSubscribeTask } from "./modules/pushNotifications";
 
 ReactDOM.render(
     <React.StrictMode>
-        <Router>
-            <App/>
-        </Router>
+        <App/>
     </React.StrictMode>,
     document.getElementById('root')
 );

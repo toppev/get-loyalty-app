@@ -4,7 +4,7 @@ import { getPageHtml, getPages } from "./services/pageService";
 import Page, { ERROR_HTML } from "./model/Page";
 import PageView from "./components/PageView";
 import { profileRequest, registerRequest } from "./services/userService";
-import { Redirect, Route, Switch } from "react-router-dom";
+import { Redirect, Route, Switch, BrowserRouter as Router } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import { BASE_URL } from "./config/axios";
 import { AxiosResponse } from "axios";
@@ -100,30 +100,33 @@ function App() {
     }
 
     return (
-        <AppContext.Provider value={contextState}>
-            <div className="App">
+        <Router>
 
-                <Helmet>
-                    <link id="favicon" rel="icon" href={`${BASE_URL}/business/icon`} type="image/x-icon"/>
-                </Helmet>
+            <AppContext.Provider value={contextState}>
+                <div className="App">
 
-                {error && <p className="ErrorMessage">Error: {error.response?.message || error.toString()}</p>}
+                    <Helmet>
+                        <link id="favicon" rel="icon" href={`${BASE_URL}/business/icon`} type="image/x-icon"/>
+                    </Helmet>
 
-                <Switch>
-                    {pages.map(page => (
-                        <Route exact path={`/${page.pathname}`} key={page._id}>
-                            <PageView page={page}/>
-                        </Route>
-                    ))}
-                    {pages.length > 0 &&
-                    <Redirect to={{ pathname: pages[0].pathname, search: window.location.search }}/>}
-                </Switch>
+                    {error && <p className="ErrorMessage">Error: {error.response?.message || error.toString()}</p>}
 
-                <Navbar pages={pages || []}/>
+                    <Switch>
+                        {pages.map(page => (
+                            <Route exact path={`/${page.pathname}`} key={page._id}>
+                                <PageView page={page}/>
+                            </Route>
+                        ))}
+                        {pages.length > 0 &&
+                        <Redirect to={{ pathname: pages[0].pathname, search: window.location.search }}/>}
+                    </Switch>
 
-                <NotificationHandler onRefresh={refreshHtmlPages}/>
-            </div>
-        </AppContext.Provider>
+                    <Navbar pages={pages || []}/>
+
+                    <NotificationHandler onRefresh={refreshHtmlPages}/>
+                </div>
+            </AppContext.Provider>
+        </Router>
     )
 }
 
