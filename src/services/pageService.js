@@ -178,8 +178,9 @@ async function getPageContext(user) {
         })
         userInfo.usedRewards = userInfo.customerData.usedRewards.map(used => {
             return {
-                dateUsed: used.dateUsed.toLocaleDateString(undefined, dateOpts),
-                ...used
+                ...used,
+                // FIXME: used.dateUsed is string because of the JSON.parse(JSON.stringify(...))
+                dateUsed: new Date(used.dateUsed).toLocaleDateString(undefined, dateOpts),
             }
         })
 
