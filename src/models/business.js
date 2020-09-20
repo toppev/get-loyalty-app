@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const rewardSchema = require('./reward');
+const defaultCustomerLevels = require('../config/defaultLevels');
 
 const configSchema = new Schema({
     translations: {
@@ -104,6 +105,22 @@ const planSchema = new Schema({
     }
 })
 
+const customerLevelSchema = new Schema({
+    name: {
+        type: String,
+        required: true,
+    },
+    requiredPoints: {
+        type: Schema.Types.Number,
+        default: 0,
+    },
+    // IDEA: background image?
+    color: {
+        type: String,
+    },
+    rewards: [rewardSchema]
+})
+
 const businessSchema = new Schema({
     email: {
         type: String,
@@ -142,21 +159,10 @@ const businessSchema = new Schema({
             type: mongoose.Types.ObjectId,
             ref: 'Category',
         }],
-        customerLevels: [{
-            name: {
-                type: String,
-                required: true,
-            },
-            requiredPoints: {
-                type: Schema.Types.Number,
-                default: 0,
-            },
-            // IDEA: background image?
-            color: {
-                type: String,
-            },
-            rewards: [rewardSchema]
-        }]
+        customerLevels: {
+            type: [customerLevelSchema],
+            default: defaultCustomerLevels
+        }
     }
 }, {
     // Max collection size is 5MB and only one document is allowed
