@@ -24,7 +24,12 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         menu: {
             marginTop: '40px',
-            minWidth: '100px'
+            minWidth: '100px',
+        },
+        linkBadge: {
+            paddingLeft: '6px',
+            paddingRight: '6px',
+            marginTop: "-12px",
         }
     }));
 
@@ -38,10 +43,13 @@ export default function (props: AccountButtonProps) {
 
     const [anchorEl, setAnchorEl] = useState<any | undefined>(undefined);
 
+    const myAccountNotifications = props.notifications['My Account'];
+    const allNotifications = myAccountNotifications // Append other notifications here
+
     return (
         <div className={classes.wrapperDiv}>
             <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
-                <Badge classes={{ root: classes.menuIcon, badge: classes.badge }} color="secondary" badgeContent={props.notifications['My Account']}>
+                <Badge classes={{ root: classes.menuIcon, badge: classes.badge }} color="secondary" badgeContent={allNotifications}>
                     <AccountCircleIcon className={classes.icon} fontSize="large"/>
                 </Badge>
             </IconButton>
@@ -55,7 +63,9 @@ export default function (props: AccountButtonProps) {
             >
                 <MenuItem>
                     <Link href="/account">
-                        <AccountBox fontSize="small"/> My Account
+                        <AccountBox fontSize="small"/>
+                        My Account
+                        <Badge classes={{ root: classes.linkBadge }} color="secondary" badgeContent={myAccountNotifications}/>
                     </Link>
                 </MenuItem>
                 <MenuItem>
