@@ -87,7 +87,7 @@ async function sendPushNotification(notificationParam) {
     })
 
     webpushService.sendNotification(users.map(u => u.customerData.pushNotifications), payloadString).then(res => {
-        console.log(`Sent push notification. Result: ${res}`)
+        console.log('Sent push notification. Result:', JSON.stringify(res))
     })
 
     const newNotification = new PushNotification({ ...notificationParam, receivers: users.length });

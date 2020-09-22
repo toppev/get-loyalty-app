@@ -19,7 +19,7 @@ module.exports = {
 };
 
 /**
- * Get the business the given user owns.
+ * Get the id of the business the given user owns.
  *
  * @param user the user object (with customerData etc)
  * @return returns id of the first business found (only 1 business)
@@ -44,7 +44,7 @@ async function createBusiness(businessParam, userId) {
     const business = new Business(businessParam);
     await business.save();
     await setUserRole(userId, 'business');
-    templateService.loadDefaultTemplates().then(() => console.log('Default page templates loaded'))
+    templateService.loadDefaultTemplates().then()
     return business;
 }
 

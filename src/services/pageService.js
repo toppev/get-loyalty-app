@@ -63,19 +63,17 @@ async function loadPage(id, gjsOnly) {
  * Find the given business's pages. The returned pages do not include the "gjs" data.
  */
 async function getBusinessPages() {
-    const pages = await PageData.find({ template: false }).select('-gjs');
-    return pages;
+    return PageData.find({ template: false }).select('-gjs');
 }
 
 /**
  * Return only the ids of the published pages. First should be the home page.
  */
 async function getPublicPage() {
-    const pages = await PageData.find({
+    return PageData.find({
         stage: 'published',
         template: false,
     }).sort('pageIndex').select('_id icon pathname');
-    return pages;
 }
 
 async function uploadPage(pageId, { html, css }) {
@@ -94,7 +92,7 @@ async function uploadPage(pageId, { html, css }) {
     // Refresh the page for the page owner to automatically see changes
     const owner = await User.findOne({ role: 'business' })
     pollingService.sendToUser(owner.id, {
-        message: '[Development Mode]\nChanges detected',
+        message: '[Editor]\nChanges detected',
         refresh: true,
         duration: 1000
     }, pollingService.IDENTIFIERS.OTHER)
@@ -103,11 +101,11 @@ async function uploadPage(pageId, { html, css }) {
     if (page) {
         createScreenshot(pageId)
             .then(() => {
-                console.log(`Created or updated page thumbnail of ${pageId}`)
+                console.log('Created or updated page thumbnail of', pageId)
             })
             .catch(err => console.error(`Failed to create a screenshot of ${pageId} page: ${err}`));
     } else {
-        console.log(`Page with invalid id was uploaded ${pageId}`);
+        console.log('Page with invalid ID was uploaded', pageId);
     }
 }
 
@@ -115,8 +113,8 @@ async function validateHandlebars(html) {
     try {
         const template = handlebars.compile(html);
         template({})
-    } catch (e) {
-        return { error: e };
+    } catch (err) {
+        return { error: err };
     }
     return true;
 }
@@ -128,7 +126,7 @@ async function createScreenshot(pageId) {
         await pageScreenshot.takeScreenshot(pagePath, path);
     } catch (err) {
         if (err) {
-            console.log(`Failed to create a screenshot ${err.message || err}`);
+            console.log('Failed to create a screenshot', err.message || err);
         }
     }
     return path;
@@ -156,7 +154,7 @@ async function getTemplates() {
 
 async function getPageContent(pageId) {
     const path = uploader.toPath(`page_${pageId}/index.html`);
-    return await fs.promises.readFile(path, 'utf8');
+    return await uploader.readFile(path, 'utf8');
 }
 
 async function getPageContext(user) {
@@ -243,5 +241,6 @@ async function renderPageView(pageId, user) {
     // IDEA: we could precompile when the page is saved, send the precompiled + data to browser
     // browser can compile with handlebars.runtime library
     const template = handlebars.compile(pageHtml);
+    // IDEA: should we cache the compiled html based on the context or user/page
     return template(context)
 }

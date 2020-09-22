@@ -28,12 +28,24 @@ async function upload(dirName, fileName, data) {
         await fs.promises.mkdir(dir, { recursive: true })
     }
 
-    await fs.promises.writeFile(path, data)
+    await writeFile(path, data)
     return path
+}
+
+/* Wrappers - So it's easy to replace with a S3 or whatever */
+
+async function readFile(source, opts) {
+    return await fs.promises.readFile(source, opts);
+}
+
+async function writeFile(path, data) {
+    await fs.promises.writeFile(path, data)
 }
 
 module.exports = {
     uploadDir,
     upload,
-    toPath
+    toPath,
+    readFile,
+    writeFile
 }

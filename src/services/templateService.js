@@ -22,6 +22,7 @@ async function loadDefaultTemplates() {
                 })
             }
         }))
+        console.log('Default page templates loaded:', TEMPLATE_IDS)
     } catch (e) {
         console.log(`Failed to load/save default templates: ${e}`)
     }

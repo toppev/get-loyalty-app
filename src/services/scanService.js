@@ -26,6 +26,9 @@ const IDENTIFIERS = {
  */
 async function parseScanString(scanStr) {
     const split = scanStr.split(":");
+    if (split.length !== 2) {
+        throw new StatusError('Invalid code', 400);
+    }
     const userId = split[0];
     const user = await userService.getById(userId);
     if (!user) {

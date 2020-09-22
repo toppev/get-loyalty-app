@@ -36,5 +36,5 @@ function deleteUploadsDirectory(dir) {
         }
     });
 
-    if (dir) fs.rmdirSync(dir);
+    dir && fs.rmdirSync(dir);
 }

@@ -20,16 +20,15 @@ if (!isTesting) {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useFindAndModify: false
-    }, function (err) {
+    }, (err) => {
         if (err) throw err;
         console.log("Connected to the mongo database");
         const port = 3001;
-        app.listen(port, function () {
+        app.listen(port, () => {
             console.log('Listening on port ' + port);
         });
     });
-    app.use(morgan('":method :url" :status (len: :res[content-length] - :response-time ms) ":user-agent"',
-        { stream: logger.stream }));
+    app.use(morgan('":method :url" :status (len: :res[content-length] - :response-time[0] ms) ":user-agent"', { stream: logger.stream }));
 }
 // If this app is sitting behind a reverse proxy (e.g nginx)
 // app.enable('trust proxy')
@@ -68,11 +67,11 @@ app.use(passport.initialize());
 app.use(passport.session());
 if (!isTesting) {
     app.use(csurf());
-    app.use(function (req, res, next) {
+    app.use((req, res, next) => {
         res.cookie('XSRF-TOKEN', req.csrfToken(), { domain: process.env.COOKIE_DOMAIN });
         next()
     });
-    app.use(function (err, req, res, next) {
+    app.use((err, req, res, next) => {
         if (err.code !== 'EBADCSRFTOKEN') return next(err)
         // Bypass csrf error on login because the scanner app does not support it (currently)
         if (req.url === '/user/login') {

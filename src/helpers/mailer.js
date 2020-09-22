@@ -28,9 +28,9 @@ async function emailPasswordReset(email, token, redirectUrl) {
         text: config.emailText.replace('{url}', url),
     };
 
-    transporter.sendMail(mailOptions, function (error, info) {
+    transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
-            console.log(error);
+            console.log('Failed to email password reset', error);
         } else {
             console.log('Password reset email was sent to ' + email + '\nInfo: ' + info);
         }
