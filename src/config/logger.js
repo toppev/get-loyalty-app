@@ -5,6 +5,9 @@ const printfFormat = printf(({ level, message, timestamp }) => {
     return `${timestamp} ${level}: ${message}`;
 });
 
+/** Toggle whether to log to the log files. */
+const LOG_FILES = false;
+
 const options = {
     file: {
         level: 'info',
@@ -29,8 +32,10 @@ const logger = createLogger({
         timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
         printfFormat
     ),
-    transports: [
+    transports: LOG_FILES ? [
         new transports.File(options.file),
+        new transports.Console(options.console)
+    ] : [
         new transports.Console(options.console)
     ],
     exitOnError: false,
