@@ -19,6 +19,7 @@ import { addProductsBlock } from "./blocks/productsBlock";
 import { addUserQRBlock } from "./blocks/userQRCode";
 import { addRewardQRBlock } from "./blocks/rewardQRCode";
 import { addUserFormBlock } from "./blocks/userFormBlock";
+import codeEditor from "./codeeditor/codeEditor";
 
 // So the editor is not rendered every time if the page id didn't change
 export default React.memo(GrapesPageEditor, propsAreEqual);
@@ -99,6 +100,8 @@ function GrapesPageEditor(props) {
         addEnableNotificationsButton(bm);
 
         addUserFormBlock(bm);
+
+        codeEditor(editor);
 
         const saveIfNeeded = () => {
             if (editor.getDirtyCount()) {
