@@ -19,7 +19,7 @@ export default function (props: PageViewProps) {
 
     return externalURL ? (
         <div className="page-holder">
-            <iframe title={title.charAt(0).toUpperCase() + title.slice(1)} height="100%" width="100%" frameBorder="0" src={externalURL}/>
+            <iframe title={title} height="100%" width="100%" frameBorder="0" src={externalURL}/>
         </div>
     ) : (
         <div className="page-view" dangerouslySetInnerHTML={{ __html: html }}/>
