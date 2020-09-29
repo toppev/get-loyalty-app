@@ -3,20 +3,33 @@ import './App.css';
 import { getPageHtml, getPages } from "./services/pageService";
 import Page, { ERROR_HTML } from "./model/Page";
 import PageView from "./components/PageView";
-import { getBusinessId, profileRequest, registerRequest } from "./services/authenticationService";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { profileRequest, registerRequest } from "./services/userService";
+import { Redirect, Route, Switch, BrowserRouter as Router } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import { setBusinessId } from "./config/axios";
+import { BASE_URL } from "./config/axios";
 import { AxiosResponse } from "axios";
-import { useQuery } from "./useQuery";
 import { claimCoupon } from "./services/couponService";
+import { Helmet } from "react-helmet";
+import { AppContext, defaultAppContext } from './AppContext';
+import NotificationHandler from "./components/notification/NotificationHandler";
 
 function App() {
 
-    const [error, setError] = useState<any>()
-    const [pages, setPages] = useState<Page[]>()
+    const [contextState, setContextState] = useState(defaultAppContext)
 
-    const updatePage = (page: Page) => setPages([...(pages?.filter(p => p._id !== page._id) || []), page])
+    const [error, setError] = useState<any>()
+    const [pages, setPages] = useState<Page[]>([])
+
+    const updatePage = (page: Page) => setPages(prev => {
+        let newPages = [...prev]
+        let index = prev.findIndex(old => old._id === page._id)
+        if (index !== -1) {
+            newPages[index] = page
+        } else {
+            newPages.push(page)
+        }
+        return newPages
+    })
 
     // Authentication
     useEffect(() => {
@@ -24,42 +37,35 @@ function App() {
             .then(onLogin)
             .catch(err => {
                 // TODO: Option to login on other responses?
-                if (err.response?.status === 403) {
+                const status = err?.response?.status;
+                if (status === 401 || status === 403 || status === 404) {
                     registerRequest()
                         .then(onLogin)
                         .catch(_err => setError('Could not register a new account. Something went wrong :('))
                 } else {
-                    setError('Something went wrong :(')
+                    setError(`Something went wrong :(\n${err.response?.body || err.toString()}`)
                 }
             })
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    const onLogin = (_res: AxiosResponse) => {
-        getBusinessId()
-            .then(bId => {
-                if (!bId || bId.length !== 24) {
-                    setError('Invalid business')
-                } else {
-                    setBusinessId(bId)
-                }
-                checkCoupon()
-                    .then(loadPages)
-                    .catch(err => setError(err))
-            })
-            .catch(_err => setError('Failed to identify business :('))
+    const onLogin = (res: AxiosResponse) => {
+        setContextState({ ...contextState, user: res.data })
+        const query = new URLSearchParams(window.location.search)
+        const couponCode = query.get('coupon') || query.get('code')
+        const checkCoupon = async () => couponCode && claimCoupon(couponCode)
+        checkCoupon()
+            .then(loadPages)
+            .catch(err => setError(err?.response.body?.message || err.toString))
     }
-
-    const query = useQuery();
-    const couponCode = query.get('coupon') || query.get('code');
-    const checkCoupon = async () => couponCode && claimCoupon(couponCode)
 
     // Load pages
     const loadPages = () => {
         getPages()
             .then(res => {
-                const newPages = res.data
-                setPages(newPages) // So the page contents will be loaded
+                const pages = res.data
+                setPages(pages)
+                refreshHtmlPages(pages)
             })
             .catch(err => {
                 console.log(err)
@@ -67,41 +73,60 @@ function App() {
             })
     }
 
-    useEffect(() => {
-        // For slightly better performance, load the first page (landing page) first
-        if (pages?.length) {
-            const first = pages[0]
-            fetchHtml(first).then(() => pages.forEach(fetchHtml))
+    const refreshHtmlPages = (refreshPages = pages) => {
+        if (refreshPages.length) {
+            const fetchRest = (excludeId?: string) => refreshPages.forEach(it => it._id !== excludeId && fetchHtml(it))
+            // Fetch the current page first for better performance
+            const path = window.location.pathname.substring(1) // e.g "/home" -> "home"
+            const current = refreshPages.find(page => page.pathname === path) || refreshPages[0]
+            if (current) {
+                fetchHtml(current).then(() => fetchRest(current._id))
+            } else {
+                fetchRest()
+            }
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [pages])
+    }
 
     const fetchHtml = async (page: Page) => {
         try {
             const res = await getPageHtml(page._id)
             page.html = res.data
-            updatePage(page)
         } catch (err) {
             console.log(err)
             page.html = ERROR_HTML
+        } finally {
             updatePage(page)
         }
     }
 
     return (
-        <div className="App">
-            {error && <p className="ErrorMessage">Error: {error.response?.message || error.toString()}</p>}
-            <Router>
-                <Switch>
-                    {pages?.map(page => (
-                        <Route exact path={page.pathname}>
-                            <PageView page={page} key={page._id}/>
-                        </Route>
-                    ))}
-                </Switch>
-                <Navbar pages={pages || []}/>
-            </Router>
-        </div>
+        <Router>
+
+            <AppContext.Provider value={contextState}>
+                <div className="App">
+
+                    <Helmet>
+                        <link id="favicon" rel="icon" href={`${BASE_URL}/business/icon`} type="image/x-icon"/>
+                    </Helmet>
+
+                    {error && <p className="ErrorMessage">Error: {error.response?.message || error.toString()}</p>}
+
+                    <Switch>
+                        {pages.map(page => (
+                            <Route exact path={`/${page.pathname}`} key={page._id}>
+                                <PageView page={page}/>
+                            </Route>
+                        ))}
+                        {pages.length > 0 &&
+                        <Redirect to={{ pathname: pages[0].pathname, search: window.location.search }}/>}
+                    </Switch>
+
+                    <Navbar pages={pages || []}/>
+
+                    <NotificationHandler onRefresh={refreshHtmlPages}/>
+                </div>
+            </AppContext.Provider>
+        </Router>
     )
 }
 

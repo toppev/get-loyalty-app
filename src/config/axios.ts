@@ -1,67 +1,51 @@
 import axios from "axios";
-import { BUSINESS_ID } from "./businessConfig"
 
-const BASE_URL = '';
-
+const BASE_URL = process.env.REACT_APP_API_URL
 const instance = axios.create({
     baseURL: BASE_URL,
     withCredentials: true,
-});
+})
 
-// Used in requests. Easier if it's stored here instead of state
-export let businessId = BUSINESS_ID;
-const headers = {}
-
-function setBusinessId(id: string) {
-    businessId = id;
-}
-
-/**
- * Returns BASE_URL/business/:id
- * For example,
- * http://localhost:3000/business/5ed26d9d9a3bf3a7eb7dd587
- */
-function getBusinessUrl() {
-    return `${BASE_URL}/business/${businessId}`;
-}
-
-async function get(path: string) {
+async function get(path: string, fullPath?: boolean) {
     return instance({
         method: 'GET',
-        url: BASE_URL + path,
-        headers: headers
-    });
+        url: fullPath ? path : BASE_URL + path,
+    })
 }
 
-async function post(path: string, data: any) {
+async function deleteRequest(path: string, fullPath?: boolean) {
+    return instance({
+        method: 'DELETE',
+        url: fullPath ? path : BASE_URL + path,
+    })
+}
+
+async function post(path: string, data: any, fullPath?: boolean) {
     return instance({
         method: 'POST',
-        url: BASE_URL + path,
+        url: fullPath ? path : BASE_URL + path,
         data: data,
         headers: {
             'Content-Type': 'application/json',
-            ...headers
         }
-    });
+    })
 }
 
-async function patch(path: string, data: any) {
+async function patch(path: string, data: any, fullPath?: boolean) {
     return instance({
         method: 'PATCH',
-        url: BASE_URL + path,
+        url: fullPath ? path : BASE_URL + path,
         data: data,
         headers: {
             'Content-Type': 'application/json',
-            ...headers
         }
-    });
+    })
 }
 
 export {
     post,
     get,
     patch,
-    getBusinessUrl,
-    setBusinessId,
+    deleteRequest,
     BASE_URL,
 }

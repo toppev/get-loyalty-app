@@ -11,3 +11,15 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/*
+ Not sure if we will keep this
+ Makes sure there won't be annoying scrollbars
+
+html, body {
+  position: fixed;
+  left: 0;
+  right: 0;
+}
+
+*/

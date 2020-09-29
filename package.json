@@ -11,16 +11,20 @@
     "@types/react": "^16.9.35",
     "@types/react-dom": "^16.9.8",
     "@types/react-router-dom": "^5.1.5",
+    "@types/react-helmet": "^6.0.0",
     "axios": "^0.19.2",
+    "cra-append-sw": "^2.7.0",
+    "qrcode-generator": "^1.4.4",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-helmet": "^6.1.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
     "typescript": "^3.7.5"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "PORT=3002 react-scripts start",
+    "build": "node ./scripts/createManifest.js && react-scripts build react-scripts build && cra-append-sw ./public/custom-sw.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -40,6 +44,7 @@
     ]
   },
   "devDependencies": {
+    "dotenv": "^8.2.0",
     "eslint-plugin-react-hooks": "^4.0.4"
   }
 }
