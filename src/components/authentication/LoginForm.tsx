@@ -145,8 +145,10 @@ export default function LoginForm() {
             setMessage("Connecting...")
             const { email } = values
             getOrCreateServer({ email, token }, creatingAccount)
-                .then(() => {
-                    values.token = token
+                .then(async () => {
+                    // We need a new token for "loyalty-backend" as first one was used by the "loyalty-servers"
+                    // Kinda hacky
+                    values.token = await getCaptchaToken()
                     if (creatingAccount) {
                         createAccount(values, actions).then()
                     } else {
