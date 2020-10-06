@@ -1,20 +1,13 @@
-import { Button, createStyles, LinearProgress, makeStyles, TextField, Theme, Typography } from "@material-ui/core";
-import FastfoodIcon from '@material-ui/icons/Fastfood';
+import { Button, createStyles, LinearProgress, makeStyles, Theme, Typography } from "@material-ui/core";
 import SaveIcon from '@material-ui/icons/Save';
 import { Form, Formik, FormikErrors } from "formik";
 import React, { useState } from "react";
-import CategoryChangeField from '../categories/CategorySelector';
+import CategorySelector from '../categories/CategorySelector';
 import IdText from "../common/IdText";
 import ProductSelector from "../products/ProductSelector";
 import Reward from "./Reward";
-
-export interface RewardFormProps {
-    initialReward?: Reward,
-    onSubmitted: (reward: Reward) => void
-}
-
-
-const emptyReward = new Reward(`new_reward_${Math.random() * 1000 | 0}`, "", "", "");
+import { TextField } from "formik-material-ui";
+import SelectProductsButton from "../products/button/SelectProductsButton";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -42,23 +35,41 @@ const useStyles = makeStyles((theme: Theme) =>
         submitButton: {
             margin: theme.spacing(3, 0, 2),
         },
+        typography: {
+            marginTop: '30px',
+            fontSize: '14px',
+            color: theme.palette.grey[600]
+        }
     }));
 
+const getEmptyReward = () => new Reward({
+    id: `new_reward_${Math.random() * 1000 | 0}`,
+    name: "",
+    description: "",
+    itemDiscount: ""
+});
+
+export interface RewardFormProps {
+    initialReward?: Reward,
+    onSubmitted: (reward: Reward) => void
+}
 
 export default function (props: RewardFormProps) {
 
     const classes = useStyles();
 
-    const reward: Reward = props.initialReward || emptyReward;
+    const reward: Reward = props.initialReward || getEmptyReward();
     // not formik fields so keep track of them here
     const [categories, setCategories] = useState(reward.categories);
     const [products, setProducts] = useState(reward.products);
 
     const [productSelectorOpen, setProductSelectorOpen] = useState(false);
 
+    const title = props.initialReward ? 'Edit Reward' : 'Create Reward';
+
     return (
         <div className={classes.paper}>
-            <Typography component="h1" variant="h5">reward</Typography>
+            <Typography component="h1" variant="h5">{title}</Typography>
             <Formik
                 initialValues={reward}
                 validate={validate}
@@ -70,7 +81,6 @@ export default function (props: RewardFormProps) {
                 }}
             >{({ submitForm, isSubmitting }) => (
                 <Form className={classes.form}>
-
                     <TextField
                         className={classes.field}
                         name="name"
@@ -96,8 +106,8 @@ export default function (props: RewardFormProps) {
                         className={classes.field}
                         name="requirement"
                         type="text"
-                        label="Description"
-                        placeholder='e.g "If total purchase is more than 10€\" or leave empty'
+                        label="Note/Requirement"
+                        placeholder='e.g "If total purchase is more than 10€" or just leave empty'
                     />
 
                     <TextField
@@ -108,48 +118,66 @@ export default function (props: RewardFormProps) {
                         placeholder="Customer points to receive"
                     />
 
-                    <Typography variant="h6">(Optional) Select which categories or products are included in the discount</Typography>
-
-                    <CategoryChangeField
+                    <p className={classes.typography}>
+                        (Optional) Select which categories or products are included in the discount
+                    </p>
+                    <CategorySelector
                         className={classes.field}
                         initialCategories={reward.categories}
                         onCategoriesUpdate={setCategories}
                     />
+                    <SelectProductsButton
+                        products={products}
+                        buttonProps={{
+                            disabled: isSubmitting,
+                            onClick: () => setProductSelectorOpen(true)
+                        }}
+                    />
 
-                    <Button className={classes.submitButton}
-                        variant="contained"
-                        color="primary"
-                        disabled={isSubmitting}
-                        startIcon={(<FastfoodIcon />)}
-                        onClick={() => setProductSelectorOpen(true)}>Select Products</Button>
                     <ProductSelector
                         open={productSelectorOpen}
                         onClickClose={() => setProductSelectorOpen(false)}
-                        onSubmit={products => setProducts(products)}
+                        onSubmit={products => {
+                            setProducts(products)
+                            setProductSelectorOpen(false)
+                        }}
                         text="Select products eligible for the discount"
                     />
 
-                    {isSubmitting && <LinearProgress />}
-                    <br />
+                    {isSubmitting && <LinearProgress/>}
+                    <br/>
                     <div className={classes.submitDiv}>
-                        <Button className={classes.submitButton}
+                        <Button
+                            className={classes.submitButton}
                             variant="contained"
                             color="primary"
                             disabled={isSubmitting}
-                            startIcon={(<SaveIcon />)}
-                            onClick={submitForm}>Save</Button>
+                            startIcon={(<SaveIcon/>)}
+                            onClick={submitForm}
+                        >Save</Button>
                     </div>
 
-                    <IdText id={reward._id} />
+                    <IdText id={reward.id}/>
                 </Form>
             )}
             </Formik>
-        </div >
+        </div>
     )
 }
 
 function validate(values: Reward): FormikErrors<Reward> {
     const errors: FormikErrors<Reward> = {};
-    // TODO
+    if (!values.name.trim()) {
+        errors.name = 'Name is required';
+    }
+    if (!values.itemDiscount.trim()) {
+        errors.itemDiscount = 'Discount must be specified. Examples: -50%, Free Coffee or a burger for 7€';
+    }
+    if (values.categories?.length > 5) {
+        errors.categories = 'Too many categories. Keep it simple: either specify a few categories or none at all'
+    }
+    if (values.products?.length > 10) {
+        errors.products = 'Too many products. Keep it simple: either specify a few products or none at all'
+    }
     return errors;
 }

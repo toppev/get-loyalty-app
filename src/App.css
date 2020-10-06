@@ -1,3 +1,11 @@
 .App {
   text-align: center;
 }
+
+.hoverable:hover > .show-on-hover {
+  visibility: visible;
+}
+
+.show-on-hover {
+  visibility: hidden
+}

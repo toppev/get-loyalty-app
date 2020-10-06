@@ -1,178 +1,405 @@
-import { Button, ButtonProps, Card, CardActionArea, CardActions, CardContent, CardMedia, CardProps, createStyles, Dialog, DialogContent, Grid, IconButton, LinearProgress, makeStyles, TextField, Theme } from '@material-ui/core';
+import {
+    Box,
+    Button,
+    ButtonProps,
+    Card,
+    CardActions,
+    CardContent,
+    CardProps,
+    createStyles,
+    Dialog,
+    DialogContent,
+    Divider,
+    Grid,
+    IconButton,
+    LinearProgress,
+    makeStyles,
+    Paper,
+    TextField,
+    Theme,
+    Tooltip,
+    Typography,
+    useMediaQuery,
+    useTheme
+} from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import WebIcon from '@material-ui/icons/Web';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { BASE_URL, get, post } from '../../config/axios';
-import AppContext from '../../context/AppContext';
-import CloseButton from '../common/CloseButton';
+import React, { useState } from 'react';
+import { backendURL, post } from '../../config/axios';
+import CloseButton from '../common/button/CloseButton';
 import IdText from '../common/IdText';
-import RetryButton from '../common/RetryButton';
-import Page from './Page';
-import PageEditor from './PageEditor';
+import RetryButton from '../common/button/RetryButton';
+import { Page, PUBLISHED } from './Page';
+import PageEditor from './editor/PageEditor';
+import useRequest from "../../hooks/useRequest";
+import useResponseState from "../../hooks/useResponseState";
+import { createPage, deletePage, listPages, listTemplates, updatePage } from "../../services/pageService";
+import StageSelector from "./StageSelector";
+import PreviewPage from "./PreviewPage";
+import IconSelector from "./editor/IconSelector";
+import URLSelectorDialog from "./URLSelectorDialog";
+import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
+import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
+import PageIcon from "./PageIcon";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
+        cardsDiv: {},
         card: {
-            textAlign: 'center',
             margin: '15px',
+            width: '368px',
+            minHeight: '200px',
+        },
+        actionCardsDivider: {
+            backgroundColor: theme.palette.grey[800]
         },
         cardMedia: {
-
+            height: '10%'
         },
         cardActions: {
-            display: 'block'
-        },
-        cardActionsDiv: {
+            display: 'block',
             textAlign: 'center',
         },
         actionButton: {
             margin: '5px'
         },
         templateList: {
+            minHeight: '300px',
             margin: '10px'
         },
-        previewDialogContent: {
-            textAlign: 'center',
-            maxWidth: '410px'
-        },
         templateSelectorCard: {
-            borderTop: 'solid 6px orange'
+            borderTop: 'solid 6px orange',
         },
         pageName: {
             fontSize: '22px',
             color: 'darkgray'
         },
-        editPageNameBtn: {
+        editPageNameBtn: {},
+        pageNameField: {},
+        unpublished: {
+            color: theme.palette.grey[500],
         },
-        pageNameField: {
-
+        published: {
+            color: "#26a829",
+        },
+        settingDiv: {
+            textAlign: 'center',
+            paddingTop: '20px',
+            position: 'relative',
+            height: '100%',
+            width: '100%',
+        },
+        divider: {
+            backgroundColor: theme.palette.grey[700]
+        },
+        templateDialog: {},
+        pageCard: {
+            margin: '15px',
+            textAlign: 'center'
+        },
+        pageDesc: {
+            color: theme.palette.grey[700],
+            margin: '0px 5px'
+        },
+        center: {
+            textAlign: 'center'
+        },
+        saveButton: {},
+        pathnameDiv: {},
+        pathnameField: {
+            margin: '10px 0px'
+        },
+        iconTitle: {
+            color: theme.palette.grey[600]
+        },
+        info: {
+            color: theme.palette.info.dark,
+            fontSize: '12px',
+            position: 'absolute',
+            bottom: 5,
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            left: 0,
+            right: 0,
+            textAlign: 'center',
+        },
+        cardContentDiv: {
+            position: 'relative'
+        },
+        cardContent: {
+            position: 'relative',
+            zIndex: 2
+        },
+        backgroundImage: {
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover',
+            '-webkit-mask-image': 'linear-gradient(to bottom, black 50%, transparent 100%)',
+            maskImage: 'linear-gradient(to bottom, black 50%, transparent 100%)',
+            position: 'absolute' as const,
+            left: 0,
+            top: 0,
+            width: '100%',
+            height: '100%',
+            opacity: 0.6,
         }
     }));
 
 export default function () {
 
-    const [loading, setLoading] = useState(false);
-    const [pageOpen, setPageOpen] = useState<Page | null>(null);
-    const testpage = { _id: "d12jhd12hjd", name: "test page" };
-    const testpage2 = { _id: "d12jawdadd12hjd", name: "test page" };
-    const [pages, setPages] = useState<Page[]>([testpage, testpage2]);
-    const [error, setError] = useState("");
+    const classes = useStyles();
+    const theme = useTheme();
+    const bigScreen = useMediaQuery(theme.breakpoints.up('md'));
 
+    const [pageOpen, setPageOpen] = useState<Page | null>(null);
     const [templateSelectorOpen, setTemplateSelectorOpen] = useState(false);
+    const [urlSelectorOpen, setUrlSelectorOpen] = useState(false);
+
+    const { error: listError, loading: listLoading, response } = useRequest(listPages);
+    const [pages, setPages] = useResponseState<Page[]>(response, [], res => res.data.map((it: any) => new Page(it)));
+
+    const sortedPages = [...pages].sort(((a, b) => {
+        return (a.pageIndex || 0) - (b.pageIndex || 0)
+    }))
+
+    const otherRequests = useRequest();
+    const error = listError || otherRequests.error;
+    const loading = listLoading; // Showing load on otherRequests looks annoying
+
+    const movePage = (page: Page, direction: "right" | "left") => {
+        const modifier = direction === "right" ? 1 : -1;
+        const other = sortedPages[sortedPages.indexOf(page) + modifier]
+        let newSlot = other.pageIndex
+        // FIXME
+        // If the order is messed (same index), add +1/-1 to newSlot
+        // It might skip 1 but whatever
+        if (newSlot === page.pageIndex) {
+            newSlot += modifier
+        }
+        other.pageIndex = page.pageIndex
+        page.pageIndex = newSlot
+        otherRequests.performRequest(() => updatePage(page, false))
+        otherRequests.performRequest(() => updatePage(other, false))
+    }
+
+    return error ? (<RetryButton error={error}/>) : (
+        <div>
+            <div className={classes.cardsDiv}>
+                <Box display="flex" flexWrap="wrap">
+                    <PageCard
+                        className={`${classes.card} ${classes.center} ${classes.templateSelectorCard}`}
+                        page={new Page({ _id: '1', name: 'Create a new page' })}
+                        displayId={false}
+                        displayStage={false}
+                        actions={(
+                            <Button
+                                className={classes.actionButton}
+                                color="primary"
+                                variant="contained"
+                                startIcon={(<WebIcon/>)}
+                                onClick={() => setTemplateSelectorOpen(true)}
+                            >Select a Template</Button>
+                        )}
+                    />
+                    <TemplateSelectorDialog
+                        open={templateSelectorOpen}
+                        onClose={() => setTemplateSelectorOpen(false)}
+                        onSelect={(page) => {
+                            // Create a new page using the same page
+                            // Basically just creates a "personal" clone (without description)
+                            page.description = ''
+                            otherRequests.performRequest(
+                                () => createPage(page),
+                                (res) => {
+                                    setTemplateSelectorOpen(false);
+                                    setPages([...pages, new Page(res.data)])
+                                }
+                            );
+                        }}
+                    />
+
+                    <PageCard
+                        className={`${classes.card} ${classes.center} ${classes.templateSelectorCard}`}
+                        page={new Page({
+                            _id: '2',
+                            name: 'Use existing page',
+                            description: 'Create a new page using an existing website. E.g social media site, form or homepage.'
+                        })}
+                        displayId={false}
+                        displayStage={false}
+                        actions={(
+                            <Button
+                                className={classes.actionButton}
+                                color="primary"
+                                variant="contained"
+                                startIcon={(<WebIcon/>)}
+                                onClick={() => setUrlSelectorOpen(true)}
+                            >Set URL</Button>
+                        )}
+                    />
+                    <URLSelectorDialog
+                        open={urlSelectorOpen}
+                        onClose={() => setUrlSelectorOpen(false)}
+                        onSubmit={url => {
+                            otherRequests.performRequest(
+                                () => createPage(new Page({ name: 'New page', id: 'new_page', externalURL: url })),
+                                (res) => {
+                                    setUrlSelectorOpen(false);
+                                    setPages([...pages, new Page(res.data)])
+                                }
+                            );
+                        }}
+                    />
+                </Box>
+                <Divider className={classes.actionCardsDivider}/>
+
+                {loading && <LinearProgress/>}
+
+                <Box display="flex" flexWrap="wrap">
+                    {sortedPages.filter(page => !page.isDiscarded()).map(page => (
+                        <PageCard
+                            key={page._id}
+                            className={classes.pageCard}
+                            editableName
+                            page={page}
+                            image={`${backendURL}/page/${page._id}/thumbnail`}
+                            actions={(
+                                <>
+                                    <IconButton
+                                        className="show-on-hover"
+                                        disabled={page === sortedPages[0]}
+                                        onClick={() => movePage(page, "left")}
+                                    ><KeyboardArrowLeftIcon/></IconButton>
+                                    <Button
+                                        disabled={pageOpen?._id === page._id}
+                                        className={classes.actionButton}
+                                        color="primary"
+                                        variant="contained"
+                                        startIcon={(<EditIcon/>)}
+                                        onClick={() => setPageOpen(page)}
+                                    >Edit</Button>
+                                    <Button
+                                        className={classes.actionButton}
+                                        color="secondary"
+                                        onClick={() => {
+                                            if (window.confirm(`Do you want to remove the page "${page.name}"?`)) {
+                                                // Not actually deleting them,
+                                                // instead make it invisible/(unavailable/discarded)
+                                                otherRequests.performRequest(
+                                                    () => deletePage(page),
+                                                    () => {
+                                                        if (page._id === pageOpen?._id) {
+                                                            setPageOpen(null)
+                                                        }
+                                                    }
+                                                )
+                                            }
+                                        }}
+                                    >Delete</Button>
+                                    <IconButton
+                                        className="show-on-hover"
+                                        disabled={page === sortedPages[sortedPages.length - 1]}
+                                        onClick={() => movePage(page, "right")}
+                                    >
+                                        <KeyboardArrowRightIcon/>
+                                    </IconButton>
+                                </>
+                            )}
+                        />
+                    ))}
+                </Box>
+            </div>
+
+            {pageOpen &&
+            <div>
+                <Divider className={classes.divider}/>
+                <Box display="flex" flexDirection={bigScreen ? "row" : "column"}>
+                    <Paper className={classes.card}>
+                        <div className={classes.settingDiv}>
+                            <div>
+                                <StageSelector
+                                    stage={pageOpen.stage}
+                                    onChange={(value) => {
+                                        if (value !== PUBLISHED || window.confirm(`Confirm publishing "${pageOpen.name}". Anyone can see this page.`)) {
+                                            otherRequests.performRequest(
+                                                () => {
+                                                    pageOpen.stage = value;
+                                                    return updatePage(pageOpen, false)
+                                                }
+                                            )
+                                            return true;
+                                        }
+                                        return false;
+                                    }}/>
+                            </div>
+                            <p className={classes.info}>Published sites are visible to anyone vising the site</p>
+                        </div>
+                    </Paper>
+                    <Paper className={classes.card}>
+                        <div className={`${classes.settingDiv} ${classes.center}`}>
+                            <Typography className={classes.iconTitle} variant="h6">Icon</Typography>
+                            <PageIcon icon={pageOpen.icon}/>
+                            <IconSelector
+                                initialIcon={pageOpen.icon || pageOpen.pathname}
+                                onSubmit={(icon) => {
+                                    otherRequests.performRequest(
+                                        () => {
+                                            pageOpen.icon = icon;
+                                            return updatePage(pageOpen, false)
+                                        }
+                                    )
+                                }}/>
+                            <p className={classes.info}>Icons are used in the site navigation bar</p>
+                        </div>
+                    </Paper>
+                    <Paper className={classes.card}>
+                        <div className={`${classes.settingDiv} ${classes.center}`}>
+                            <Typography className={classes.iconTitle} variant="h6">Pathname</Typography>
+                            <PathnameField
+                                value={pageOpen.pathname}
+                                onSubmit={(pathname) => {
+                                    otherRequests.performRequest(
+                                        () => {
+                                            pageOpen.pathname = pathname;
+                                            return updatePage(pageOpen, false)
+                                        }
+                                    )
+                                }}
+                            />
+                        </div>
+                    </Paper>
+                </Box>
+                <PageEditor page={pageOpen}/>
+            </div>}
+
+        </div>
+    )
+}
+
+interface PathnameFieldProps {
+    onSubmit: (pathname: string) => any
+    value: string
+}
+
+function PathnameField({ onSubmit, value }: PathnameFieldProps) {
+
+    if (!value.startsWith('/')) {
+        value = `/${value}`;
+    }
 
     const classes = useStyles();
 
-    const appContext = useContext(AppContext);
-
-    const fetchData = useCallback(() => {
-        setError("")
-        setLoading(true);
-        get(`/business/${appContext.business._id}/pages/list`)
-            .then(res => {
-                setPages(res.data);
-            }).catch(err => {
-                setError(err);
-            }).finally(() => {
-                setLoading(false);
-            });
-
-    }, [appContext.business._id])
-
-    useEffect(() => {
-        fetchData();
-    }, [fetchData]);
-
-    return (<div>
-        {loading ? (
-            <LinearProgress />
-        ) : error && false && "TODO REMOVE THE FALSE" ? (
-            <RetryButton error={error.toString()} callback={async () => fetchData()} />
-        ) : (
-                    <>
-                        <Grid
-                            container
-                            direction="row"
-                            justify="center"
-                            alignItems="center"
-                        >
-                            <Grid item xs={12} sm={4} key={"page_selector"}>
-                                <PageCard
-                                    className={`${classes.card} ${classes.templateSelectorCard}`}
-                                    page={{
-                                        name: 'Create a new page',
-                                        _id: '',
-                                    }}
-                                    displayId={false}
-                                    actions={(
-                                        <Button
-                                            className={classes.actionButton}
-                                            color="primary"
-                                            variant="contained"
-                                            startIcon={(<WebIcon />)}
-                                            onClick={() => setTemplateSelectorOpen(true)}
-                                        >Select a Template</Button>
-                                    )}
-                                />
-                                <TemplateSelectorDialog
-                                    open={templateSelectorOpen}
-                                    onClose={() => setTemplateSelectorOpen(false)}
-                                    onSelect={(page) => {
-                                        // Create a new page using the same page
-                                        // Basically just creates a "personal" clone
-                                        post(`/business/${appContext.business._id}/pages/`, page)
-                                            .then(res => {
-                                                console.log(res.data) //TODO remove
-                                                setPages([res.data, ...pages])
-                                                setTemplateSelectorOpen(false);
-                                                setPageOpen(res.data);
-                                            }).catch(err => {
-                                                // TODO
-                                            });
-                                    }}
-                                />
-                            </Grid>
-                            {pages.filter(page => !page.invisible).map(page => (
-                                <Grid item xs={12} sm={4} key={page._id}>
-                                    <PageCard
-                                        editableName
-                                        page={page}
-                                        image={`${BASE_URL}/business/${appContext.business._id}/page/${page._id}/thumbnail`}
-                                        actions={(
-                                            <>
-                                                <Button
-                                                    className={classes.actionButton}
-                                                    color="primary"
-                                                    variant="contained"
-                                                    startIcon={(<EditIcon />)}
-                                                    onClick={() => setPageOpen(page)}
-                                                >Edit</Button>
-                                                <Button
-                                                    className={classes.actionButton}
-                                                    color="secondary"
-                                                    onClick={() => {
-                                                        if (window.confirm('Do you want to delete the page?')) {
-                                                            // Not actually deleting them, instead make it invisible (unavailable)
-                                                            page.invisible = true;
-                                                            // Even though it's a POST it works like a PATCH
-                                                            post(`/page/${page._id}`, page)
-                                                                .then(res => {
-                                                                    // ignore for now
-                                                                }).catch(err => {
-                                                                    // ignore for now
-                                                                });
-                                                        }
-                                                    }}
-                                                >Delete</Button>
-                                            </>
-                                        )}
-                                    />
-                                </Grid>
-                            ))}
-                        </Grid>
-                        <div> {pageOpen && <PageEditor page={pageOpen} />} </div>
-                    </>
-                )}
-    </div>);
+    return (
+        <div className={classes.pathnameDiv}>
+            <TextField
+                className={classes.pathnameField}
+                name="pathname"
+                label="URL pathname of this page"
+                placeholder="e.g /home or /rewards"
+                value={value}
+                onChange={(e) => onSubmit(e.target.value)}
+            />
+        </div>
+    )
 }
 
 
@@ -181,12 +408,13 @@ interface PageCardProps extends CardProps {
     editableName?: boolean
     actions?: React.ReactNode
     displayId?: boolean
+    displayStage?: boolean
     image?: string
 }
 
 function PageCard(props: PageCardProps) {
 
-    const { editableName, page, actions, displayId = true, image } = props;
+    const { editableName, page, actions, displayId = true, displayStage = true, image, ...otherProps } = props;
 
     const classes = useStyles();
 
@@ -194,18 +422,23 @@ function PageCard(props: PageCardProps) {
 
     const submitNameChange = () => {
         setEditing(false)
-        const url = `${BASE_URL}/page$/${page._id}`;
-        // TODO handle
-        post(url, { name: page.name })
-            .then(res => { })
-            .catch(err => { })
+        const url = `${backendURL}/page/${page._id}`;
+        post(url, { name: page.name }, true)
+            .catch(err => {
+                // Show notification?
+                console.log(`Failed to rename page: ${err}`)
+            })
     }
 
+    const backgroundImageCss = image ? {
+        backgroundImage: `url(${image})`,
+    } : {}
+
     return (
-        <Card className={classes.card} {...props}>
-            <CardActionArea>
-                {image && <CardMedia className={classes.cardMedia} image={image} />}
-                <CardContent>
+        <Card className={classes.card} {...otherProps}>
+            <div className={classes.cardContentDiv}>
+                <div className={classes.backgroundImage} style={backgroundImageCss}/>
+                <CardContent className={`${classes.cardContent}`}>
                     <TextField
                         disabled={!editing}
                         className={classes.pageNameField}
@@ -218,13 +451,24 @@ function PageCard(props: PageCardProps) {
                             className: classes.pageName,
                             disableUnderline: !editing,
                             endAdornment: editableName ? (
-                                <IconButton
-                                    className={classes.editPageNameBtn}
-                                    onClick={() => editing ? submitNameChange() : setEditing(true)}
+                                <Tooltip
+                                    enterDelay={750}
+                                    leaveDelay={100}
+                                    title={
+                                        <React.Fragment>
+                                            <Typography>{`Rename`}</Typography>
+                                            The name of the page is not shown to customers.
+                                        </React.Fragment>
+                                    }
                                 >
-                                    <EditIcon />
-                                </IconButton>
-                            ) : (null),
+                                    <div>
+                                        <IconButton className={classes.editPageNameBtn}
+                                                    onClick={() => editing ? submitNameChange() : setEditing(true)}>
+                                            <EditIcon/>
+                                        </IconButton>
+                                    </div>
+                                </Tooltip>
+                            ) : null,
                         }}
                         onChange={(e) => page.name = e.target.value}
                         onBlur={() => submitNameChange()}
@@ -235,12 +479,18 @@ function PageCard(props: PageCardProps) {
                             }
                         }}
                     />
-                    {page.description}
+                    <br/>
+                    <span className={classes.pageDesc}>{page.description}</span>
                 </CardContent>
-            </CardActionArea>
-            <CardActions className={classes.cardActions}>
+            </div>
+            <CardActions className={`${classes.cardActions} hoverable`}>
+                {displayStage &&
+                <Typography variant="h6">
+                    Stage:
+                    <span className={page.isPublished() ? classes.published : classes.unpublished}> {page.stage}</span>
+                </Typography>}
                 {actions}
-                {displayId && <IdText id={page._id} />}
+                {displayId && <IdText id={page._id}/>}
             </CardActions>
         </Card>
     )
@@ -254,84 +504,67 @@ interface TemplateSelectorDialogProps {
 
 function TemplateSelectorDialog({ open, onClose, onSelect }: TemplateSelectorDialogProps) {
 
-    const testpage = { _id: "d12jhd12hjd", name: "test page" };
-    const testpage2 = { _id: "d12jhdadöahd12hjd", name: "test page" };
-    const testpage3 = { _id: "dawdawd12jhd12hjd", name: "test page" };
-
-    const [previewPage, setPreviewPage] = useState<Page | undefined>();
-    const [templates, setTemplates] = useState<Page[]>([testpage, testpage2, testpage3]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
-
     const classes = useStyles();
 
-    const appContext = useContext(AppContext);
+    const [previewPage, setPreviewPage] = useState<Page | undefined>();
+    const { error, loading, response } = useRequest(listTemplates, {
+        performInitially: true,
+        errorMessage: 'Failed to load template pages'
+    });
+    const [templates] = useResponseState<Page[]>(response, [], res => res.data.map((d: any) => new Page(d)))
 
-    const fetchData = useCallback(() => {
-        setError("")
-        setLoading(true);
-        get(`/ business / ${appContext.business._id} /page/templates`)
-            .then(res => {
-                setTemplates(res.data);
-            }).catch(err => {
-                setError(err);
-            }).finally(() => {
-                setLoading(false);
-            });
-    }, [appContext.business._id])
-
-    useEffect(() => {
-        fetchData();
-    }, [fetchData]);
+    const blankPage = new Page({
+        _id: 'blank_page',
+        name: 'Blank Page',
+        description: 'Start from scratch with a blank page.'
+    })
 
     const TemplateActions = (page: Page) => (
         <>
             <Button
                 className={classes.actionButton}
+                disabled={page._id?.length !== 24}
                 color="primary"
                 variant="contained"
                 onClick={() => setPreviewPage(page)}
             >Preview Template</Button>
-            <SelectTemplateButton onClick={() => onSelect(page)} />
+            <SelectTemplateButton onClick={() => {
+                onSelect(page);
+                setPreviewPage(undefined);
+            }}/>
         </>
     );
 
     return (
-        <Dialog open={open} onClose={onClose} maxWidth={false}> {loading ? (
-            <LinearProgress />
-        ) : error && false && "TODO REMOVE THE FALSE" ? (
-            <RetryButton error={error.toString()} callback={async () => fetchData()} />
-        ) : (
-                    <div className={classes.templateList}>
-                        <CloseButton onClick={onClose} />
-                        <DialogContent>
-                            <Grid
-                                container
-                                direction="row"
-                                alignItems="center"
-                            >
-                                {templates.filter(page => !page.invisible).map(page => (
-                                    <Grid item xs={12} sm={6} key={page._id}>
-                                        <PageCard
-                                            page={page}
-                                            image={`${BASE_URL} /business/${appContext.business._id} /page/${page._id} /thumbnail`}
-                                            actions={TemplateActions(page)}
-                                        />
-                                    </Grid>
-                                ))}
-                            </Grid>
-                        </DialogContent>
-
+        <Dialog open={open} onClose={onClose} fullWidth maxWidth="md" className={classes.templateDialog}>
+            <div className={classes.templateList}>
+                <>
+                    {loading && <LinearProgress/>}
+                    <CloseButton onClick={onClose}/>
+                    <DialogContent>
+                        <Grid container direction="row" alignItems="center">
+                            {[...templates, blankPage].filter(page => !page.isDiscarded()).map((page: Page) => (
+                                <Grid item xs={12} sm={6} key={page._id}>
+                                    <PageCard
+                                        displayStage={false}
+                                        page={page}
+                                        image={`${backendURL}/page/${page._id}/thumbnail`}
+                                        actions={TemplateActions(page)}
+                                    />
+                                </Grid>
+                            ))}
+                            <RetryButton error={error}/>
+                        </Grid>
                         <PreviewPage
                             page={previewPage}
                             onClose={() => setPreviewPage(undefined)}
-                            onSelect={page => onSelect(page)}
+                            actions={(<SelectTemplateButton onClick={() => onSelect(previewPage!!)}/>)}
                         />
-                    </div>
-                )
-        }
-        </Dialog >
-    );
+                    </DialogContent>
+                </>
+            </div>
+        </Dialog>
+    )
 }
 
 function SelectTemplateButton(props: ButtonProps) {
@@ -346,30 +579,4 @@ function SelectTemplateButton(props: ButtonProps) {
             {...props}
         >Select this template</Button>
     )
-}
-
-interface PreviewPageProps {
-    page: Page | undefined
-    onClose: () => any
-    onSelect: (page: Page) => any
-    open?: boolean
-}
-
-function PreviewPage({ onSelect, page, onClose, open = true }: PreviewPageProps) {
-
-    const classes = useStyles();
-
-    const appContext = useContext(AppContext);
-
-    return !!!page ? (
-        null
-    ) : (
-            <Dialog onClose={onClose} open={open} maxWidth={false}>
-                <CloseButton onClick={onClose} />
-                <DialogContent className={classes.previewDialogContent}>
-                    <iframe title="Page Preview" src={`${BASE_URL}/business/${appContext.business._id}/page/${page._id}/html`} height={640} width={360} />
-                    <SelectTemplateButton onClick={() => onSelect(page)} />
-                </DialogContent>
-            </Dialog>
-        )
 }

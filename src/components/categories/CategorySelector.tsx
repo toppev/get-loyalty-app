@@ -1,8 +1,8 @@
 import { StandardTextFieldProps, TextField } from "@material-ui/core";
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import React, { useEffect, useState } from "react";
-import { get } from "../../config/axios";
 import Category from "./Category";
+import { createCategories, getAllCategories } from "../../services/categoryService";
 
 interface Props extends StandardTextFieldProps {
     initialCategories: Category[],
@@ -20,33 +20,39 @@ export default function (props: Props) {
     }, [categories, props])
 
     useEffect(() => {
-        get(`/category/`).then(res => {
+        getAllCategories().then(res => {
             if (res.status === 200) {
                 setAllCategories(res.data);
             }
-        }).catch(error => {
-        });
+        })
     }, []);
 
     return (
-        // FIXME: does not render new values properly and is complaining of changing defaultValue because 1 editor is used for all products
-        // renderOption crashes and getOptionLabel only renders default values correctly
+        // If this shows incorrectly it's because initialCategories are strings and not array of categories (Category)
+        // See if the request returns category IDs
         <Autocomplete
-            defaultValue={props.initialCategories}
-            options={allCategories}
+            defaultValue={props.initialCategories.map(it => it.name)}
+            options={allCategories.map(it => it.name)}
             autoSelect
             multiple
             freeSolo
-            getOptionLabel={c => c.name}
 
             onChange={(event, values: any[]) => {
-                setCategories(values.map(value => {
-                    return typeof value === 'string' ? new Category(value) : value;
-                }));
+                console.log(values);
+                const newValues = values.map(value => {
+                    return typeof value === 'string' ? new Category({ id: `${Math.random()}`, name: value }) : value;
+                })
+                createCategories(newValues).then(setCategories)
             }}
 
-            renderInput={params => <TextField {...params} name="category" label="Categories" placeholder="Press Enter to add more"
-            />}
+            renderInput={params => (
+                <TextField
+                    {...params}
+                    name="category"
+                    label="Categories"
+                    placeholder="Press Enter to add more"
+                />
+            )}
         />)
 
 }

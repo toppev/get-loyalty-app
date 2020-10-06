@@ -1,0 +1,8 @@
+.loyalty-placeholder {
+    font-style: italic;
+}
+
+.loyalty-placeholder:hover {
+    background-color: #0aef75;
+    text-decoration: none;
+}

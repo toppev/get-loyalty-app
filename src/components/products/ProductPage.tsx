@@ -1,145 +1,157 @@
-import { Button, createStyles, InputAdornment, LinearProgress, ListItem, makeStyles, TextField, Theme } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
-import SearchIcon from '@material-ui/icons/Search';
-import React, { useContext, useEffect, useState } from 'react';
-import { get } from '../../config/axios';
-import AppContext from '../../context/AppContext';
-import RetryButton from '../common/RetryButton';
+import {
+    Box,
+    createStyles,
+    LinearProgress,
+    makeStyles,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Theme
+} from '@material-ui/core';
+import React, { useState } from 'react';
+import RetryButton from '../common/button/RetryButton';
 import ImportProducts from './importer/ImportProducts';
 import Product from './Product';
-import ProductContext from './ProductContext';
 import ProductFormDialog from './ProductFormDialog';
 import ProductRow from './ProductRow';
-
-
-interface State {
-    loading: boolean
-    error: {}
-}
+import SearchField from "../common/SearchField";
+import NewButton from "../common/button/NewButton";
+import { listProducts } from "../../services/productService";
+import useRequest from "../../hooks/useRequest";
+import useResponseState from "../../hooks/useResponseState";
+import useSearch from "../../hooks/useSearch";
+import Tip from "../common/Tip";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
-        // TODO
-        paper: {
-
-        },
+        paper: {},
         productList: {
             paddingLeft: 0,
         },
-        search: {
+        tools: {
             marginBottom: '25px',
         },
-        input: {
-            color: theme.palette.common.white,
-        },
-        inputLabel: {
-            color: theme.palette.common.white,
-        },
-        tools: {
-            marginBottom: '10px',
-        },
         newBtn: {
-            backgroundColor: theme.palette.success.main,
             marginRight: '15px'
         },
         importBtn: {
             backgroundColor: theme.palette.grey[400],
-        }
+        },
+        info: {
+            fontSize: '14px',
+            color: theme.palette.grey[300],
+            marginBottom: '40px'
+        },
+        noProducts: {
+            color: theme.palette.grey[600],
+        },
+        head: {
+            backgroundColor: '#c9d2d4'
+        },
     }));
-
 
 export default function () {
 
-    const appContext = useContext(AppContext);
-    // Whether it should load or is loading
-    const [shouldLoad, setShouldLoad] = useState(appContext.loggedIn);
-    const [error, setError] = useState("");
     const [formOpen, setFormOpen] = useState(false);
     const [editingProduct, setEditingProduct] = useState<Product | undefined>();
-    const [search, setSearch] = useState("");
 
-    const searchFilter = (product: Product) => search.length ? JSON.stringify(product).toLowerCase().includes(search) : true;
+    const { setSearch, searchFilter } = useSearch()
 
-    const context = useContext(ProductContext);
+    const { error: errorListing, loading: listing, response, execute: reloadProducts } = useRequest(listProducts);
+    const [products, setProducts] = useResponseState<Product[]>(response, [], res => res.data.map((it: any) => new Product(it)));
+    const otherRequest = useRequest();
 
     const classes = useStyles();
+    const error = errorListing || otherRequest.error;
+    const loading = listing || otherRequest.loading;
 
-    const fetchData = async () => {
-        get(`/business/${appContext.business._id}/product/all`).then(response => {
-            setShouldLoad(false);
-            context.addProducts(response.data);
-        }).catch(error => {
-            setShouldLoad(false);
-            setError(error);
-        });
-    };
-
-    useEffect(() => {
-        fetchData();
-    }, []);
+    const filteredProducts = products.filter(searchFilter)
 
     return (
         <div>
-            {shouldLoad ? (
-                <LinearProgress />
-            ) : error && false && "TODO REMOVE THE FALSE" ? (
-                <RetryButton error={error.toString()} callback={async () => await fetchData()} />
-            ) : (<div className={classes.paper}>
+            {error ? (
+                <RetryButton error={error}/>
+            ) : (
+                <div className={classes.paper}>
 
+                    <div className={classes.info}>
+                        <p>Create or import existing products from a .csv file here.</p>
+                        <Tip>
+                            You don't have to create all products.
+                            You can create generic products, for example "Pizza", "Vegan burgers" or "Men's haircut".
+                        </Tip>
+                    </div>
 
-                <ListItem className={classes.tools}>
-                    <Button className={classes.newBtn} variant="contained"
-                        startIcon={(<AddIcon />)}
-                        onClick={() => setFormOpen(true)}>New Product</Button>
-                    <ImportProducts className={classes.importBtn} variant="contained" />
-                </ListItem>
+                    <Box display="flex" className={classes.tools}>
+                        <NewButton
+                            name="New Product"
+                            buttonProps={{
+                                className: classes.newBtn,
+                                onClick: () => setFormOpen(true)
+                            }}
+                        />
+                        <ImportProducts className={classes.importBtn} variant="contained"/>
+                    </Box>
 
-                <TextField
-                    className={classes.search}
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <SearchIcon />
-                            </InputAdornment>
-                        ),
-                        className: classes.input
-                    }}
-                    InputLabelProps={{ className: classes.inputLabel }}
-                    name="product_search"
-                    type="search"
-                    placeholder="Search products..."
-                    onChange={(e) => setSearch(e.target.value)
-                    }
-                />
-                <ProductContext.Consumer>
-                    {({ products }) => (
-                        <ul className={classes.productList}>
-                            {products
-                                .filter(searchFilter)
-                                .map((item, index) => <ProductRow startEditing={product => setEditingProduct(product)} key={index} product={item} />)}
-                        </ul>
-                    )}
-                </ProductContext.Consumer>
+                    <SearchField
+                        setSearch={setSearch}
+                        name={"product_search"}
+                        placeholder={"Search products..."}
+                    />
 
-                <ProductFormDialog
-                    open={formOpen || !!editingProduct}
-                    initialProduct={editingProduct}
-                    onClose={() => {
-                        setFormOpen(false);
-                        setEditingProduct(undefined);
-                    }}
-                    onProductSubmitted={(product: Product) => {
-                        // Whether it's a new product or editing
-                        if (!editingProduct) {
-                            context.addProducts([product]);
-                        } else {
-                            context.updateProduct(product);
-                        }
-                        setFormOpen(false);
-                        setEditingProduct(undefined);
-                    }} />
+                    {loading && <LinearProgress/>}
 
-            </div>)}
+                    <TableContainer>
+                        <Table>
+                            <TableHead className={classes.head}>
+                                <TableRow>
+                                    <TableCell>Show/Hide</TableCell>
+                                    <TableCell>Name</TableCell>
+                                    <TableCell>Description</TableCell>
+                                    <TableCell>Price</TableCell>
+                                    <TableCell>Categories</TableCell>
+                                    <TableCell/>
+                                    <TableCell/>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {filteredProducts.map(product => (
+                                    <ProductRow
+                                        key={product.id}
+                                        product={product}
+                                        startEditing={product => setEditingProduct(product)}
+                                        onDelete={() => setProducts(products.filter(p => p.id !== product.id))}
+                                    />
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+
+                    <p className={classes.noProducts}>
+                        {filteredProducts.length === 0 && (products.length === 0
+                                ? "You don't have any products"
+                                : "No products found"
+                        )}
+                    </p>
+
+                    <ProductFormDialog
+                        open={formOpen || !!editingProduct}
+                        initialProduct={editingProduct}
+                        onClose={() => {
+                            setFormOpen(false);
+                            setEditingProduct(undefined);
+                        }}
+                        onProductSubmitted={() => {
+                            reloadProducts()
+                            setFormOpen(false);
+                            setEditingProduct(undefined);
+                        }}/>
+
+                </div>
+            )}
         </div>
     )
 }

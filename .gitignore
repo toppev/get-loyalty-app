@@ -24,3 +24,6 @@ yarn-error.log*
 
 # other
 src/react-app-env.d.ts
+
+# IDE/Editor
+.idea

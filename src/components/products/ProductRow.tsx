@@ -1,10 +1,12 @@
-import { Button, createStyles, makeStyles, Theme } from '@material-ui/core';
-import Grid from '@material-ui/core/Grid';
+import { Button, Collapse, createStyles, IconButton, makeStyles, TableCell, TableRow, Theme } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
-import FastfoodIcon from '@material-ui/icons/Fastfood';
-import React, { useContext } from 'react';
+import React, { useState } from 'react';
 import Product from './Product';
-import ProductContext from './ProductContext';
+import useRequest from "../../hooks/useRequest";
+import { deleteProduct } from "../../services/productService";
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import IdText from "../common/IdText";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -13,15 +15,9 @@ const useStyles = makeStyles((theme: Theme) =>
             marginBottom: '5px',
             padding: '5px 25px 5px 0px'
         },
-        paper: {
-
-        },
-        productItem: {
-
-        },
-        itemIcon: {
-
-        },
+        paper: {},
+        productItem: {},
+        itemIcon: {},
         icon: {
             marginLeft: '8px'
         },
@@ -40,11 +36,17 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         editBtn: {
             margin: '10px 5px 5px 0px',
-            width: '75px'
+            maxWidth: '75px'
         },
         removeBtn: {
             margin: '10px 0px 5px 0px',
-            width: '75px'
+            maxWidth: '75px'
+        },
+        root: {
+            backgroundColor: 'ghostwhite',
+            '& > *': {
+                borderBottom: 'unset',
+            }
         }
     }));
 
@@ -52,42 +54,57 @@ interface ProductRowProps {
     product: Product,
     CustomActions?: JSX.Element
     startEditing?: (product: Product) => any
+    onDelete?: () => any
 }
 
 export default function (props: ProductRowProps) {
 
     const classes = useStyles();
 
+    const { product } = props
+
+    const [viewing, setViewing] = useState(false)
+
     return (
-        <div className={classes.rowDiv}>
+        <>
+            <TableRow className={classes.rowDiv}>
 
-            <Grid
-                container
-                direction="row"
-                justify="space-evenly"
-                alignItems="center"
-            >
-                <Grid item xs={1} sm={1}>
-                    <FastfoodIcon className={classes.icon} />
-                </Grid>
-                <Grid item xs={2} sm={2}>
-                    <b>{props.product.name}</b>
-                </Grid>
-                <Grid item sm={3} className={classes.itemDesc}>
-                    {props.product.description}
-                </Grid>
-                <Grid item xs={1} sm={1}>
-                    {props.product.price}
-                </Grid>
-                <Grid item xs={2} sm={2} className={classes.categories}>
-                    {props.product.categories.map(c => c.name).join(", ")}
-                </Grid>
-                <Grid item xs={2} sm={2}>
+                <TableCell>
+                    <IconButton
+                        onClick={() => setViewing(!viewing)}
+                    >{viewing ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>}</IconButton>
+                </TableCell>
+                <TableCell>
+                    {product.name}
+                </TableCell>
+                <TableCell>
+                    {product.description}
+                </TableCell>
+                <TableCell>
+                    {product.price}
+                </TableCell>
+                <TableCell>
+                    {product.categories.map(c => c.name).join(", ")}
+                </TableCell>
+                <TableCell>
                     {props.CustomActions || <EditDeleteActions {...props} />}
-                </Grid>
-            </Grid>
-
-        </div>
+                </TableCell>
+                <TableCell>
+                    <IdText id={product.id} text={false}/>
+                </TableCell>
+            </TableRow>
+            <TableRow className={classes.root}>
+                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
+                    <Collapse in={viewing} timeout="auto" unmountOnExit>
+                        <div className={classes.root}>
+                            <div>
+                                There's nothing here (work in progress)
+                            </div>
+                        </div>
+                    </Collapse>
+                </TableCell>
+            </TableRow>
+        </>
     )
 }
 
@@ -95,26 +112,24 @@ function EditDeleteActions(props: ProductRowProps) {
 
     const classes = useStyles();
 
-    const context = useContext(ProductContext);
-
+    const { performRequest } = useRequest();
 
     return (
         <>
             <Button
                 className={classes.editBtn}
-                startIcon={(<EditIcon />)}
-                onClick={() => {
-                    if (props.startEditing) {
-                        props.startEditing(props.product);
-                    }
-                }}
+                startIcon={(<EditIcon/>)}
+                onClick={() => props.startEditing && props.startEditing(props.product)}
                 variant="contained" color="primary">Edit</Button>
             <Button
                 className={classes.removeBtn}
                 color="secondary"
                 onClick={() => {
                     if (window.confirm('Do you want to delete the item? This action is irreversible.')) {
-                        context.deleteProduct(props.product);
+                        performRequest(
+                            () => deleteProduct(props.product),
+                            props.onDelete
+                        );
                     }
                 }}
             >Delete</Button>

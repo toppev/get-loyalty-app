@@ -3,19 +3,14 @@ import SaveIcon from '@material-ui/icons/Save';
 import { Form, Formik, FormikErrors } from 'formik';
 import { TextField } from 'formik-material-ui';
 import React, { useState } from 'react';
-import Category from '../categories/Category';
-import CategoryChangeField from '../categories/CategorySelector';
+import CategorySelector from '../categories/CategorySelector';
 import IdText from '../common/IdText';
 import Product from './Product';
+import { addProduct, updateProduct } from "../../services/productService";
+import useRequest from "../../hooks/useRequest";
+import RetryButton from "../common/button/RetryButton";
 
-export interface ProductFormProps {
-    initialProduct?: Product,
-    onProductSubmitted: (product: Product) => void
-}
-
-
-const categories: Category[] = [];
-const emptyProduct = { _id: `new_product_${Math.random() * 1000 | 0}`, name: "", description: "", price: "", categories: categories };
+const emptyProduct = new Product({ id: `new_product_${Math.random() * 1000 | 0}`, name: '' });
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -46,6 +41,11 @@ const useStyles = makeStyles((theme: Theme) =>
     }));
 
 
+export interface ProductFormProps {
+    initialProduct?: Product,
+    onProductSubmitted: (product: Product) => void
+}
+
 export default function (props: ProductFormProps) {
 
     const classes = useStyles();
@@ -53,6 +53,9 @@ export default function (props: ProductFormProps) {
     const product = props.initialProduct || emptyProduct;
     // CategoryChangeField is not formik field so keep track of categories here
     const [categories, setCategories] = useState(product.categories);
+
+    const { error, loading, performRequest } = useRequest();
+    const editing = !!props.initialProduct;
 
     return (
         <div className={classes.paper}>
@@ -64,32 +67,38 @@ export default function (props: ProductFormProps) {
                     // Update categories here
                     product.categories = categories;
                     actions.setSubmitting(false)
-                    props.onProductSubmitted(product)
+                    performRequest(
+                        () => editing ? updateProduct(product) : addProduct(product),
+                        (res) => props.onProductSubmitted(new Product(res.data))
+                    );
                 }}
             >{({ submitForm, isSubmitting }) => (
                 <Form className={classes.form}>
 
-                    <TextField className={classes.field} name="name" type="text" label="Name" placeholder="Pizza" />
-                    <TextField className={classes.field} name="description" type="text" label="Description" placeholder="A delicious pineapple pizza!" />
-                    <TextField className={classes.field} name="price" type="text" label="Price" placeholder="10€ take it or leave it" />
+                    <TextField className={classes.field} name="name" type="text" label="Name" placeholder="Pizza"/>
+                    <TextField className={classes.field} name="description" type="text" label="Description"
+                               placeholder="A delicious pineapple pizza!"/>
+                    <TextField className={classes.field} name="price" type="text" label="Price"
+                               placeholder="10€ take it or leave it"/>
 
-                    <CategoryChangeField className={classes.field}
+                    <CategorySelector
+                        className={classes.field}
                         initialCategories={product.categories}
                         onCategoriesUpdate={setCategories}
                     />
-
-                    {isSubmitting && <LinearProgress />}
-                    <br />
+                    {(isSubmitting || loading) && <LinearProgress/>}
+                   <RetryButton error={error}/>
                     <div className={classes.submitDiv}>
-                        <Button className={classes.submitButton}
+                        <Button
+                            className={classes.submitButton}
                             variant="contained"
                             color="primary"
                             disabled={isSubmitting}
-                            startIcon={(<SaveIcon />)}
-                            onClick={submitForm}>Save</Button>
+                            startIcon={(<SaveIcon/>)}
+                            onClick={submitForm}
+                        >Save</Button>
                     </div>
-
-                    <IdText id={product._id} />
+                    <IdText id={product.id}/>
                 </Form>
             )}
             </Formik>
@@ -97,8 +106,14 @@ export default function (props: ProductFormProps) {
     )
 }
 
-function validate(values: Product): FormikErrors<Product> {
+function validate(value: Product): FormikErrors<Product> {
     const errors: FormikErrors<Product> = {};
-    // TODO
+    if (value.name?.trim().length < 3) {
+        errors.name = 'Invalid name'
+    }
+    const categoryLimit = 5;
+    if (value.categories.length > categoryLimit) {
+        errors.categories = `Too many categories. You can specify up to ${categoryLimit} categories`
+    }
     return errors;
 }
