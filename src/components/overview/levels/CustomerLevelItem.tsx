@@ -31,8 +31,11 @@ export default function ({ level, startEditing, onDelete }: CustomerLevelProps) 
 
     return (
         <Paper className={classes.paper} style={{ backgroundColor: level.color || "" }}>
-            <Typography className={classes.name}>{level.name}</Typography>
-            <b>Required points: {level.requiredPoints}</b>
+            <Typography className={classes.name}>
+                {level.name}
+            </Typography>
+            {level.requiredPoints === 0 && <p>(initial level)</p>}
+            <b>Required points: {level.requiredPoints} </b>
             <RenderList
                 list={level.rewards}
                 title="End Rewards:"

@@ -73,7 +73,7 @@ export default function ({ initialLevel, onSubmit, onClose, currentLevels }: Cus
                         onSubmit(values, actions.setSubmitting)
                     }}
                 >
-                    {({ submitForm, isSubmitting, handleChange }) => (
+                    {({ values, submitForm, isSubmitting, handleChange }) => (
                         <div className={classes.formDiv}>
                             <TextField
                                 className={classes.field}
@@ -89,6 +89,9 @@ export default function ({ initialLevel, onSubmit, onClose, currentLevels }: Cus
                                 label="Required customer points"
                                 placeholder="Points needed for this level"
                             />
+                            <div>
+                                {values.requiredPoints === 0 && <span>This will be the initial level.</span>}
+                            </div>
 
                             <Button
                                 className={classes.colorPickerBtn}
