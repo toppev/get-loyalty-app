@@ -23,6 +23,8 @@ const SettingsPage = lazy(() => import('./components/settings/SettingsPage'));
 const CampaignPage = lazy(() => import('./components/campaigns/CampaignPage'));
 const NotificationsPage = lazy(() => import('./components/notifications/NotificationsPage'));
 const FeedbackPage = lazy(() => import('./components/feedback/FeedbackPage'));
+const NotFoundPage = lazy(() => import('./components/NotFoundPage'));
+
 
 export default function () {
 
@@ -158,6 +160,10 @@ export default function () {
                                 </Route>
                                 <Route path="/feedback">
                                     <FeedbackPage/>
+                                </Route>
+
+                                <Route>
+                                    <NotFoundPage/>
                                 </Route>
                             </Switch>
                         </Suspense>
