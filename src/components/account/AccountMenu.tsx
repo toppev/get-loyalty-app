@@ -1,10 +1,10 @@
 import { Badge, createStyles, IconButton, Link, makeStyles, Menu, MenuItem, Theme } from "@material-ui/core";
 import React, { useState } from "react";
-import { AccountNotificationValues } from "./account/AccountNotifications";
+import { AccountNotificationValues } from "./AccountNotifications";
 import AccountBox from '@material-ui/icons/AccountBox';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import { logout } from "../services/authenticationService";
+import { logout } from "../../services/authenticationService";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

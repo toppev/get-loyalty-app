@@ -10,7 +10,7 @@ import LoginDialog from "./components/authentication/LoginDialog";
 import { onLoginOrAccountCreate, profileRequest } from "./services/authenticationService";
 import { backendURL } from "./config/axios";
 import { ErrorBoundary } from "./components/ErrorBoundary";
-import AccountButton from "./components/AccountMenu";
+import AccountButton from "./components/account/AccountMenu";
 
 // Lazy Pages
 const OverviewPage = lazy(() => import('./components/overview/OverviewPage'));

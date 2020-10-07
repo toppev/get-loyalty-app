@@ -30,7 +30,7 @@ export default function () {
     return (
         <div>
             <div className={classes.selectDiv}>
-                <p className={classes.text}>Select Icon</p>
+                <p className={classes.text}>Upload Icon</p>
                 <img src={icon ? URL.createObjectURL(icon) : `${backendURL}/business/icon`} alt="(no icon)"
                      width="100px"/>
             </div>
