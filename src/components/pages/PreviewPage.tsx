@@ -1,7 +1,7 @@
 import { createStyles, Dialog, DialogContent, makeStyles } from "@material-ui/core";
 import React from "react";
 import CloseButton from "../common/button/CloseButton";
-import { API_URL, backendURL } from "../../config/axios";
+import { API_URL } from "../../config/axios";
 import { Page } from "./Page";
 import PreviewIframe from "../common/PreviewIframe";
 
