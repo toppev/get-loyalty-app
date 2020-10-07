@@ -5,7 +5,7 @@ const VERIFY_REQUESTS = process.env.NODE_ENV !== 'test'
 
 function verifyCAPTCHA(req, res, next) {
     if (!VERIFY_REQUESTS) return next()
-    
+
     const secret = process.env.CAPTCHA_SECRET_KEY;
     const token = req.body.token;
     const url = `https://www.google.com/recaptcha/api/siteverify?secret=${secret}&response=${token}`;
@@ -15,6 +15,7 @@ function verifyCAPTCHA(req, res, next) {
             next()
         } else {
             next(error || new StatusError('Invalid CAPTCHA token', 400))
+            console.log("err", error, "response", body, "secret length:", secret.length, "token length:", token)
         }
     })
 
