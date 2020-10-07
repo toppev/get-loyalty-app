@@ -1,7 +1,7 @@
 import { createStyles, Dialog, DialogContent, makeStyles } from "@material-ui/core";
 import React from "react";
 import CloseButton from "../common/button/CloseButton";
-import { backendURL } from "../../config/axios";
+import { API_URL, backendURL } from "../../config/axios";
 import { Page } from "./Page";
 import PreviewIframe from "../common/PreviewIframe";
 
@@ -29,7 +29,7 @@ export default function PreviewPage({ page, onClose, actions, open = true }: Pre
         <Dialog onClose={onClose} open={open} maxWidth={false}>
             <CloseButton onClick={onClose}/>
             <DialogContent className={classes.previewDialogContent}>
-                <PreviewIframe src={`${backendURL}/page/${page._id}/html`}/>
+                <PreviewIframe src={`${API_URL}/page/${page._id}/html`}/>
                 <p>
                     Placeholders (the {"{{ stuff }}"} things) do not work in the preview.
                     They are replaced with dynamic content.
