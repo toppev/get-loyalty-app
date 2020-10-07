@@ -207,6 +207,7 @@ export default function () {
                             // Create a new page using the same page
                             // Basically just creates a "personal" clone (without description)
                             page.description = ''
+                            page.template = false
                             otherRequests.performRequest(
                                 () => createPage(page),
                                 (res) => {
@@ -490,6 +491,7 @@ function PageCard(props: PageCardProps) {
                     <span className={page.isPublished() ? classes.published : classes.unpublished}> {page.stage}</span>
                 </Typography>}
                 {actions}
+                {page.template && <p style={{ color: 'orangered' }}>This is a template page.</p>}
                 {displayId && <IdText id={page._id}/>}
             </CardActions>
         </Card>

@@ -7,6 +7,7 @@ class Page {
     icon: string
     pageIndex: number
     pathname: string
+    template: boolean;
     externalURL?: string
 
     constructor(data: any) {
@@ -18,6 +19,7 @@ class Page {
         this.pageIndex = data.pageIndex;
         this.pathname = data.pathname;
         this.externalURL = data.externalURL;
+        this.template = data.template;
     }
 
     isPublished() {
