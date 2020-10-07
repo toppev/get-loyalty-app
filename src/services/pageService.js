@@ -61,9 +61,10 @@ async function loadPage(id, gjsOnly) {
 
 /**
  * Find the given business's pages. The returned pages do not include the "gjs" data.
+ * Returned pages include templates created by this server (for editing them).
  */
 async function getBusinessPages() {
-    return PageData.find({ template: false }).select('-gjs');
+    return PageData.find({}).select('-gjs');
 }
 
 /**
