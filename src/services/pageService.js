@@ -187,8 +187,8 @@ async function getPageContext(user) {
         let campaigns = await campaignService.getAllCampaigns(true);
         campaigns = campaigns.map(rawCampaign => {
             const campaign = rawCampaign.toObject();
-            // Add currentStamps and stampsNeeded lists so we can actually display stamp icons or something (easily)
-            campaign.currentStamps = rawCampaign.getCurrentStamps(customerData);
+            // All customer stamps
+            campaign.currentStampsAll = rawCampaign.getCurrentStamps(customerData);
 
             if (campaign.start) {
                 campaign.start = campaign.start.toLocaleDateString(undefined, dateOpts)
@@ -197,8 +197,12 @@ async function getPageContext(user) {
                 campaign.end = campaign.end.toLocaleDateString(undefined, dateOpts)
             }
 
-            const stampsNeeded = campaign.totalStampsNeeded - campaign.currentStamps.length;
+            // Stamps needed to complete this campaign
+            const stampsNeeded = Math.max(campaign.totalStampsNeeded - campaign.currentStampsAll.length, 0);
             campaign.stampsNeeded = Array.from({ length: stampsNeeded }, () => ({}));
+
+            // The progress of completing the campaign, never more than totalStampsNeeded (e.g 9/10, 10/10 but not 11/10)
+            campaign.customerProgress = campaign.currentStampsAll.slice(0, campaign.totalStampsNeeded)
 
             return campaign;
         });
