@@ -31,8 +31,8 @@ export default function PreviewPage({ page, onClose, actions, open = true }: Pre
             <DialogContent className={classes.previewDialogContent}>
                 <PreviewIframe src={`${API_URL}/page/${page._id}/html`}/>
                 <p>
-                    Placeholders (the {"{{ stuff }}"} things) do not work in the preview.
-                    They are replaced with dynamic content.
+                    Placeholders (the {"{{ stuff }}"} things) do not work in this preview.
+                    They are replaced with dynamic content such as your business information or the customer rewards.
                 </p>
                 {actions}
             </DialogContent>
