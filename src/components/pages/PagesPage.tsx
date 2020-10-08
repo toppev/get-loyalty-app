@@ -24,7 +24,7 @@ import {
 } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import WebIcon from '@material-ui/icons/Web';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { backendURL, post } from '../../config/axios';
 import CloseButton from '../common/button/CloseButton';
 import IdText from '../common/IdText';
@@ -509,11 +509,14 @@ function TemplateSelectorDialog({ open, onClose, onSelect }: TemplateSelectorDia
     const classes = useStyles();
 
     const [previewPage, setPreviewPage] = useState<Page | undefined>();
-    const { error, loading, response } = useRequest(listTemplates, {
-        performInitially: true,
+
+    const { error, loading, response, execute: loadTemplates } = useRequest(listTemplates, {
+        performInitially: false,
         errorMessage: 'Failed to load template pages'
     });
+    useEffect(loadTemplates, [open])
     const [templates] = useResponseState<Page[]>(response, [], res => res.data.map((d: any) => new Page(d)))
+
 
     const blankPage = new Page({
         _id: 'blank_page',
