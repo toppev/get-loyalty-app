@@ -13,7 +13,7 @@
   top: 7%;
   margin-left: auto;
   margin-right: auto;
-  position: absolute;
+  position: fixed;
   align-items: center;
   border: solid #1d1d1d 1px;
   background-color: rgba(30, 200, 220, 0.9);
