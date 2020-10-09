@@ -4,7 +4,7 @@ import { getPageHtml, getPages } from "./services/pageService";
 import Page, { ERROR_HTML } from "./model/Page";
 import PageView from "./components/PageView";
 import { profileRequest, registerRequest } from "./services/userService";
-import { BrowserRouter as Router, Redirect, Route, Switch, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Redirect, Route, Switch } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import { BASE_URL } from "./config/axios";
 import { AxiosResponse } from "axios";
@@ -98,9 +98,6 @@ function App() {
             updatePage(page)
         }
     }
-
-    const location = useLocation();
-    useEffect(() => window.scrollTo({ top: 0, behavior: 'smooth' }), [location])
 
     return (
         <Router>

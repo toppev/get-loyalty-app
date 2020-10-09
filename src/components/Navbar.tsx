@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Page from "../model/Page";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import PageIcon from "./PageIcon";
 
 interface NavbarProps {
@@ -9,6 +9,9 @@ interface NavbarProps {
 
 export default function (props: NavbarProps) {
     const { pages } = props
+
+    const location = useLocation();
+    useEffect(() => window.scrollTo({ top: 0, behavior: 'smooth' }), [location])
 
     return pages?.length > 1 ? (
         <nav className="navbar">
