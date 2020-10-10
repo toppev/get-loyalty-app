@@ -29,7 +29,7 @@ export function startSubscribeTask() {
     // Click a button to enable notifications (IMO better UX)
     window.onclick = e => {
         if (someParentHasClassname(e.target, enableNotificationsClass)) {
-            subscribeUser()
+            subscribeUser().then()
         }
     }
 
@@ -44,7 +44,7 @@ export function startSubscribeTask() {
         // Just do polling (pretty stupid) but this way we can keep everything here
         const polling = setInterval(() => {
             if (document.location.pathname.endsWith(settingValue)) {
-                subscribeUser()
+                subscribeUser().then()
                 clearInterval(polling)
             }
         }, 1000)
@@ -54,31 +54,28 @@ export function startSubscribeTask() {
 const convertedVapidKey = urlBase64ToUint8Array(process.env.REACT_APP_PUBLIC_VAPID_KEY)
 
 // Call this function to ask for the permission to show notifications
-function subscribeUser() {
-    getPushManager().then(pushManager => {
-        pushManager.getSubscription()
-            .then((subscription) => {
-                if (subscription !== null) {
-                    console.log('Existing subscription found')
-                    hideNotificationClasses()
-                    // Not sure if we should send the existing subscription?
-                    sendSubscription(subscription).then(() => console.log('Subscription updated'))
-                } else {
-                    pushManager.subscribe({
-                        applicationServerKey: convertedVapidKey,
-                        userVisibleOnly: true,
-                    }).then((newSubscription) => {
-                        sendSubscription(newSubscription).then(() => {
-                            console.log('Subscription added')
-                            hideNotificationClasses()
-                        })
-                    }).catch((e) => {
-                        console.error('Failed to add a new subscription', Notification.permission, e)
-                        hideNotificationClasses()
-                    })
-                }
+async function subscribeUser() {
+    try {
+        const pushManager = await getPushManager()
+        const subscription = await pushManager.getSubscription()
+        if (subscription !== null) {
+            console.log('Existing subscription found')
+            hideNotificationClasses()
+            // Not sure if we should send the existing subscription?
+            sendSubscription(subscription).then(() => console.log('Subscription updated'))
+        } else {
+            const newSub = await pushManager.subscribe({
+                applicationServerKey: convertedVapidKey,
+                userVisibleOnly: true,
             })
-    })
+            await sendSubscription(newSub)
+            console.log('Subscription added')
+            hideNotificationClasses()
+        }
+    } catch (err) {
+        console.error('Failed to add a new subscription', Notification.permission, err)
+        hideIfNotSupported && hideNotificationClasses()
+    }
 }
 
 /**
