@@ -23,9 +23,11 @@ export function useUserFormInitialValues() {
         const bd = new Date(Date.parse(user.birthday)).toISOString()
         const bf = getBirthdayField()
         // e.g 1999-02-16
-        if (bf) bf.value = bd.slice(0, 10)
-        // Disable birthday field to prevent abuse
-        bf.disabled = true
+        if (bf) {
+            bf.value = bd.slice(0, 10)
+            // Disable birthday field to prevent abuse
+            bf.disabled = true
+        }
     }
 
     // Handle form submission
