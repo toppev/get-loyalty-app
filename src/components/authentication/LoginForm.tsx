@@ -23,7 +23,7 @@ import { loginRequest, onLoginOrAccountCreate, registerRequest } from '../../ser
 import usePasswordReset from "./usePasswordReset";
 import { getOrCreateServer } from "../../services/serverService";
 import { AxiosResponse } from 'axios';
-import { isEmail } from "../../util/Validate";
+import { isEmail } from "../../util/validate";
 import ReCAPTCHA from 'react-google-recaptcha';
 import { privacyLink, termsLink } from "../Navigator";
 

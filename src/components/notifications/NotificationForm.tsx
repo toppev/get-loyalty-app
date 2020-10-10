@@ -96,7 +96,7 @@ export default function ({ notification, onSubmitted, cooldownExpires, setCooldo
                         name="link"
                         type="text"
                         label="Notification link (optional)"
-                        placeholder="Your website or link to anything else (e.g social media)"
+                        placeholder="Your website or link to anything else (e.g a feedback form)"
                     />
                     {loading && <LinearProgress/>}
                    <RetryButton error={error}/>

@@ -28,7 +28,7 @@ import useRequest from "../../hooks/useRequest";
 import SaveChangesSnackbar from "../common/SaveChangesSnackbar";
 import { getOrCreateServer, updateServer, waitForServer } from "../../services/serverService";
 import RetryButton from "../common/button/RetryButton";
-import { isURL } from "../../util/Validate";
+import { isURL } from "../../util/validate";
 import { listPages } from "../../services/pageService";
 import useResponseState from "../../hooks/useResponseState";
 import { Page } from "../pages/Page";

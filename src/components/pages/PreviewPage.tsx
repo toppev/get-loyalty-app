@@ -9,7 +9,6 @@ const useStyles = makeStyles(() =>
     createStyles({
         previewDialogContent: {
             textAlign: 'center',
-            maxWidth: '420px'
         },
     }));
 
@@ -26,12 +25,12 @@ export default function PreviewPage({ page, onClose, actions, open = true }: Pre
     const classes = useStyles();
 
     return !page ? null : (
-        <Dialog onClose={onClose} open={open} maxWidth={false}>
+        <Dialog onClose={onClose} open={open} maxWidth="sm">
             <CloseButton onClick={onClose}/>
             <DialogContent className={classes.previewDialogContent}>
                 <PreviewIframe src={`${API_URL}/page/${page._id}/html`}/>
                 <p>
-                    Placeholders (the {"{{ stuff }}"} things) do not work in this preview.
+                    Placeholders (the {"{{ stuff }}"} things) may not work in this preview.
                     They are replaced with dynamic content such as your business information or the customer rewards.
                 </p>
                 {actions}

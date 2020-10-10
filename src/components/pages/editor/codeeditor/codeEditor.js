@@ -21,7 +21,7 @@ export default function (editor) {
         autoCloseBrackets: true,
         styleActiveLine: true,
         smartIndent: true,
-        indentWithTabs: true
+        indentWithTabs: true,
     });
 
     saveBtn.innerHTML = 'Save and exit';
@@ -36,7 +36,7 @@ export default function (editor) {
         modal.close();
     };
 
-    // Listen for CTRL + S
+    // Listen for CTRL + Sapp
     container.onkeydown = function (e) {
         if (e.ctrlKey && e.code === 'KeyS') {
             const code = codeViewer.editor?.getValue();

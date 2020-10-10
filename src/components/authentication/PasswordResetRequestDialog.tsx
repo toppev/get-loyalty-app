@@ -13,7 +13,7 @@ import {
 import CloseButton from "../common/button/CloseButton";
 import EmailIcon from '@material-ui/icons/Email';
 import { post } from "../../config/axios";
-import { isEmail } from "../../util/Validate";
+import { isEmail } from "../../util/validate";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

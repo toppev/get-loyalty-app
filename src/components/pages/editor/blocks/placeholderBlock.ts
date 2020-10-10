@@ -1,4 +1,4 @@
-import { isFullscreen } from "../../../../util/Fullscreen";
+import { isFullscreen } from "../../../../util/fullscreen";
 
 const loyaltyPlaceholder = "loyalty-placeholder";
 

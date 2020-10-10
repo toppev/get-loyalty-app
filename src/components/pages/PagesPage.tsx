@@ -223,7 +223,9 @@ export default function () {
                         page={new Page({
                             _id: '2',
                             name: 'Use existing page',
-                            description: 'Create a new page using an existing website. E.g social media site, form or homepage.'
+                            description: 'Create a new page from an existing website. ' +
+                                'For example, a form, homepage or a social media site. ' +
+                                "Note that all sites won't work."
                         })}
                         displayId={false}
                         displayStage={false}
@@ -439,7 +441,7 @@ function PageCard(props: PageCardProps) {
         <Card className={classes.card} {...otherProps}>
             <div className={classes.cardContentDiv}>
                 <div className={classes.backgroundImage} style={backgroundImageCss}/>
-                <CardContent className={`${classes.cardContent}`}>
+                <CardContent className={`${classes.cardContent} ${classes.center}`}>
                     <TextField
                         disabled={!editing}
                         className={classes.pageNameField}
@@ -485,13 +487,13 @@ function PageCard(props: PageCardProps) {
                 </CardContent>
             </div>
             <CardActions className={`${classes.cardActions} hoverable`}>
+                {<p style={{ color: 'grey' }}>{page.template ? "Template page" : ""}</p>}
                 {displayStage &&
                 <Typography variant="h6">
                     Stage:
                     <span className={page.isPublished() ? classes.published : classes.unpublished}> {page.stage}</span>
                 </Typography>}
                 {actions}
-                {page.template && <p style={{ color: 'orangered' }}>This is a template page.</p>}
                 {displayId && <IdText id={page._id}/>}
             </CardActions>
         </Card>

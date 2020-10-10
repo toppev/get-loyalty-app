@@ -20,7 +20,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import { updateBusiness } from "../../services/businessService";
 import useRequest from "../../hooks/useRequest";
 import RetryButton from "../common/button/RetryButton";
-import { isEmail } from "../../util/Validate";
+import { isEmail } from "../../util/validate";
 import IdText from "../common/IdText";
 import CustomerLevelView from "./levels/CustomerLevelView";
 import IconUploadForm from "./IconUploadForm";

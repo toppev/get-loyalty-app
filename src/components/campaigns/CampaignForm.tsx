@@ -26,7 +26,7 @@ import RequirementSelector from "./RequirementSelector";
 import useRequest from "../../hooks/useRequest";
 import RetryButton from "../common/button/RetryButton";
 import { createCampaign, updateCampaign } from "../../services/campaignService";
-import { isAlphanumeric } from "../../util/Validate";
+import { isAlphanumeric } from "../../util/validate";
 import RewardManager from "../rewards/RewardManager";
 
 const useStyles = makeStyles((theme: Theme) =>

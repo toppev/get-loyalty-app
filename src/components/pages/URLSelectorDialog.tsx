@@ -2,7 +2,7 @@ import { Button, createStyles, Dialog, DialogContent, TextField, Theme } from "@
 import CloseButton from "../common/button/CloseButton";
 import { makeStyles } from "@material-ui/core/styles";
 import React, { useState } from "react";
-import { isDomain } from "../../util/Validate";
+import { isDomain } from "../../util/validate";
 
 interface URLSelectorDialogProps {
     open: boolean,

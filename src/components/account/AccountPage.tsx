@@ -17,7 +17,7 @@ import { Form, Formik, FormikErrors } from "formik";
 import { TextField } from "formik-material-ui";
 import React, { useContext, useState } from "react";
 import AppContext, { User } from "../../context/AppContext";
-import { isEmail } from "../../util/Validate";
+import { isEmail } from "../../util/validate";
 import { updateUser } from "../../services/userService";
 import useRequest from "../../hooks/useRequest";
 import RetryButton from "../common/button/RetryButton";
