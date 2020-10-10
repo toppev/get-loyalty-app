@@ -44,7 +44,7 @@ app.use(parser.json({
 }));
 
 const frontendOrigin = process.env.FRONTEND_ORIGIN || process.env.PUBLIC_URL;
-const origins = [frontendOrigin, 'https://panel.getloyalty.app', 'http://localhost:3002'];
+const origins = [frontendOrigin.split(','), 'https://panel.getloyalty.app', 'http://localhost:3002'];
 console.log(`Allowed origins: ${origins}`);
 
 app.use(cors(function (req, callback) {

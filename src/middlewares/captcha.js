@@ -2,11 +2,11 @@ const request = require("request");
 const StatusError = require("../helpers/statusError");
 const User = require("../models/user");
 
-// "IF_EMPTY" to verify only if there are no users yet (e.g creating the first user) (default)
+// "IF_EMPTY" to verify only if there are no users yet (e.g creating the first user)
 // "ALL" to verify all requests (whatever uses this middleware)
 // "DISABLED" to disable
 const CAPTCHA_MODES = ["DISABLED", "ALL", "IF_EMPTY"]
-const captchaMode = process.env.CAPTCHA_MODE || "IF_EMPTY" // current mode, default ot "IF_EMPTY"
+const captchaMode = process.env.CAPTCHA_MODE || "IF_EMPTY" // current mode, default to "IF_EMPTY"
 if (!CAPTCHA_MODES.includes(captchaMode)) throw Error(`Invalid CAPTCHA_MODE: ${captchaMode}`)
 
 let isEmptyServer;
