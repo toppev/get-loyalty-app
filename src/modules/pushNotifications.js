@@ -6,7 +6,7 @@ import { someParentHasClassname } from "../util/classUtils";
 const enableNotificationsClass = 'enable-notifications'
 
 /** Selector that will be hidden when push notifications are enabled */
-const hideNotificationSelector = `.${enableNotificationsClass} .hide-if-notifications-enabled`
+const hideNotificationSelector = `.${enableNotificationsClass}, .hide-notifications`
 
 /** Whether to hide the classes if service worker or push manager is not supported */
 const hideIfNotSupported = true
