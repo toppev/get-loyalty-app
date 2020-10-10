@@ -7,7 +7,7 @@ const User = require("../models/user");
 // "DISABLED" to disable
 const CAPTCHA_MODES = ["DISABLED", "ALL", "IF_EMPTY"]
 const captchaMode = process.env.CAPTCHA_MODE || "IF_EMPTY" // current mode, default ot "IF_EMPTY"
-if (CAPTCHA_MODES.includes(captchaMode)) throw Error(`Invalid CAPTCHA_MODE: ${captchaMode}`)
+if (!CAPTCHA_MODES.includes(captchaMode)) throw Error(`Invalid CAPTCHA_MODE: ${captchaMode}`)
 
 let isEmptyServer;
 const checkEmpty = () => {
