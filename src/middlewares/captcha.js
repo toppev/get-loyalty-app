@@ -21,11 +21,12 @@ checkEmpty()
 function verifyCAPTCHA(req, res, next) {
     if (process.env.NODE_ENV !== 'test') return next()
     if (captchaMode === "DISABLED" || (captchaMode === "IF_EMPTY" && isEmptyServer)) return next()
-
     if (isEmptyServer) checkEmpty()
 
-    const secret = process.env.CAPTCHA_SECRET_KEY;
     const token = req.body.token;
+    if (!token) return next(new StatusError('Empty captcha token', 400))
+
+    const secret = process.env.CAPTCHA_SECRET_KEY;
     const url = `https://www.google.com/recaptcha/api/siteverify?secret=${secret}&response=${token}`;
 
     request.post({ url }, function (error, response, body) {
