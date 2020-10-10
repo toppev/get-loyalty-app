@@ -89,7 +89,7 @@ function hideNotificationClasses() {
     // language=CSS
     style.textContent = `
       ${hideNotificationSelector} {
-        display: none;
+        display: none !important;
       }
     `
     document.head.append(style);
