@@ -5,24 +5,25 @@ const uploader = require('../helpers/uploader');
 const PAGE_API_URL = 'https://api.getloyalty.app/page';
 
 /** IDs of the template pages that will be saved initially */
-const TEMPLATE_IDS = []
+const DEFAULT_PAGES = (process.env.DEFAULT_PAGES || "").split(",")
+console.log(`Template IDs: ${DEFAULT_PAGES}`)
 
 async function loadDefaultTemplates() {
-    if (!TEMPLATE_IDS.length) return;
+    if (!DEFAULT_PAGES.length) return;
     try {
         let templates = await getTemplates();
         if (!Array.isArray(templates)) templates = []
 
         await Promise.all(templates.map(template => {
-            if (TEMPLATE_IDS.includes(template.id)) {
+            if (DEFAULT_PAGES.includes(template.id)) {
                 return (async () => {
                     const page = await pageService.createPage(template);
                     const inlineHtml = await getTemplateSource(page.id);
-                    await uploader.upload(`page_${page.id}`,`index.html`, inlineHtml);
+                    await uploader.upload(`page_${page.id}`, `index.html`, inlineHtml);
                 })
             }
         }))
-        console.log('Default page templates loaded:', TEMPLATE_IDS)
+        console.log('Default page templates loaded:', DEFAULT_PAGES)
     } catch (e) {
         console.log(`Failed to load/save default templates: ${e}`)
     }
