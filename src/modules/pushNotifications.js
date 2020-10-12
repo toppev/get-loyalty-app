@@ -75,6 +75,7 @@ async function subscribeUser() {
     } catch (err) {
         console.error('Failed to add a new subscription', Notification.permission, err)
         hideIfNotSupported && hideNotificationClasses()
+        window.alert("Unfortunately, your device or browser doesn't seem to support push notifications.")
     }
 }
 
