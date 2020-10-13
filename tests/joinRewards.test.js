@@ -1,7 +1,5 @@
-const { initDatabase, closeDatabase } = require('./testUtils');
+const { initDatabase } = require('./testUtils');
 const userService = require('../src/services/userService');
-const User = require('../src/models/user');
-const ResetPassword = require('../src/models/passwordReset');
 const app = require('../app');
 const Business = require("../src/models/business");
 const api = require('supertest')(app);
