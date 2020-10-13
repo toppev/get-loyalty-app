@@ -155,6 +155,7 @@ const businessSchema = new Schema({
             type: String,
             default: 'English'
         },
+        // Business categories (pizzeria, barber, coffee shop etc)
         categories: [{
             type: mongoose.Types.ObjectId,
             ref: 'Category',

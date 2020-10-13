@@ -205,7 +205,8 @@ async function updateCustomerLevel(user, business) {
     const currentLevel = getCurrentLevel(levels, points)
 
     const hasReceived = (reward) => {
-        return customerData.rewards.some(it => it.recognition.equals(reward.recognition))
+        return customerData.rewards.some(rew => rew.recognition.equals(reward.recognition)) ||
+            customerData.usedRewards.some(kv => kv.reward.recognition.equals(reward.recognition))
     }
 
     const newRewards = []

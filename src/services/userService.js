@@ -2,6 +2,8 @@ const User = require('../models/user');
 const { emailPasswordReset } = require('../helpers/mailer');
 const ResetPassword = require('../models/passwordReset');
 const crypto = require('crypto');
+const customerService = require("./customerService");
+const Business = require("../models/business");
 
 module.exports = {
     getAll,
@@ -108,6 +110,11 @@ async function markLastVisit(user) {
  */
 async function create(userParam) {
     const user = new User(userParam);
+    const business = await Business.findOne()
+    if (business) {
+        // Update levels so the user receives join rewards if the business exists (not the owner "joining")
+        await customerService.updateCustomerLevel(user, business)
+    }
     return user.save();
 }
 

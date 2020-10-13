@@ -19,7 +19,7 @@ const checkEmpty = () => {
 checkEmpty()
 
 function verifyCAPTCHA(req, res, next) {
-    if (process.env.NODE_ENV !== 'test') return next()
+    if (process.env.NODE_ENV === 'test') return next()
     if (captchaMode === "DISABLED" || (captchaMode === "IF_EMPTY" && isEmptyServer)) return next()
     if (isEmptyServer) checkEmpty()
 
