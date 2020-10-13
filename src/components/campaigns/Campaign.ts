@@ -1,6 +1,7 @@
 import Product from "../products/Product";
 import Category from "../categories/Category";
 import Reward from "../rewards/Reward";
+import allRequirements from "@toppev/loyalty-campaigns";
 
 class Campaign {
 
@@ -59,7 +60,6 @@ type MaxRewards = { total: number, user: number }
 class Requirement {
 
     constructor(
-        public name: string,
         /**
          * The name of the key (e.g isBirthday)
          */
@@ -69,9 +69,14 @@ class Requirement {
     ) {
     }
 }
+/** Util to get the human readable name of the requirement as it's not stored in campaigns etc */
+function getRequirementName(requirement: Requirement) {
+    return allRequirements[requirement.type].name;
+}
 
 
 export {
     Campaign,
-    Requirement
+    Requirement,
+    getRequirementName
 }

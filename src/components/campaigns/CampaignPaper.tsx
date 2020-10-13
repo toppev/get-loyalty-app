@@ -2,7 +2,7 @@ import { Button, createStyles, Divider, makeStyles, Paper, Theme, Typography } f
 import React from "react";
 import { Campaign } from "./Campaign";
 import RewardItem from "../rewards/RewardItem";
-import { plural } from "../common/StringUtils";
+import { format, plural } from "../common/StringUtils";
 import Tooltip from "@material-ui/core/Tooltip";
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import { RenderList } from "../common/RenderList";
@@ -98,7 +98,7 @@ export default function (props: CampaignPaperProps) {
                         {requirements.map(req => (
                             <li key={req.type}>
                                 <b>{req.type}</b>
-                                {req.question && <p>Question: <i>{req.question}</i></p>}
+                                {req.question && <p>Question: <i>{format(req.question, req.values)}</i></p>}
                                 {req.values.length !== 0 &&
                                 <div>
                                     {req.values.map((val, index) => {

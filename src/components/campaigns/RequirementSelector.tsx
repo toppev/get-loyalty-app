@@ -39,7 +39,7 @@ export default function (props: RequirementSelectorProps) {
             const type = allRequirements[str];
             if (type) {
                 // Create a Requirement from the RequirementType
-                const newRequirement = new Requirement(type.name, str, [], type.question);
+                const newRequirement = new Requirement(str, [], type.question);
                 values.push(newRequirement);
             }
         })
@@ -85,7 +85,7 @@ export default function (props: RequirementSelectorProps) {
                             const index = requirements.findIndex(old => old.type === updatedReq.type)
                             if (index !== -1) newRequirements[index] = updatedReq
                             else newRequirements.push(updatedReq)
-                            return newRequirements
+                            setRequirements(newRequirements)
                         }}
                     />
                 ))}

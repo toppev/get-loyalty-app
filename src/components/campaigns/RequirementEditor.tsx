@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core/styles";
 import { createStyles, TextField, Theme } from "@material-ui/core";
-import { Requirement } from "./Campaign";
+import { getRequirementName, Requirement } from "./Campaign";
 import React from "react";
 import allRequirements from "@toppev/loyalty-campaigns";
 import { format } from "../common/StringUtils";
@@ -66,7 +66,7 @@ export function RequirementEditor(props: RequirementEditorProps) {
                     className={classes.textField}
                     name="question"
                     type="text"
-                    label={`${requirement.name} question`}
+                    label={`${getRequirementName(requirement)} question`}
                     value={question}
                     placeholder={`Question that the cashier must answer (e.g ${question})`}
                     onChange={(e) => {
