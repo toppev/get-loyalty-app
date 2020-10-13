@@ -90,7 +90,8 @@ export default function ({ initialLevel, onSubmit, onClose, currentLevels }: Cus
                                 placeholder="Points needed for this level"
                             />
                             <div>
-                                {values.requiredPoints === 0 && <span>This will be the initial level.</span>}
+                                {values.requiredPoints === 0 &&
+                                <span>This will be the initial level. Customers will get the (end) rewards immediately.</span>}
                             </div>
 
                             <Button

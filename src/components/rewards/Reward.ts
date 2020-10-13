@@ -4,6 +4,7 @@ import Product from "../products/Product"
 export default class Reward {
 
     id: string
+    recognition: string
     name: string
     itemDiscount: string
     description: string
@@ -16,6 +17,7 @@ export default class Reward {
 
     constructor(data: any) {
         this.id = data.id;
+        this.recognition = data.recognition;
         this.name = data.name;
         this.itemDiscount = data.itemDiscount;
         this.description = data.description || '';

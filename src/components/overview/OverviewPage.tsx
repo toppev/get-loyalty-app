@@ -38,6 +38,7 @@ const useStyles = makeStyles((theme: Theme) =>
         paper: {
             padding: '25px',
             flex: '1 1 0px',
+
         },
         field: {
             width: '100%',

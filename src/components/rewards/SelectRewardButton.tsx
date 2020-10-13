@@ -25,8 +25,11 @@ export default function ({ startEditing, reward }: SelectActionProps) {
                 className={classes.button}
                 startIcon={(<EditIcon/>)}
                 onClick={() => {
+                    // Don't want to copy recognition
+                    // It's used to identify this reward even if the _id/id changes
+                    const { recognition, ...clonedReward } = reward
                     if (startEditing) {
-                        startEditing(reward);
+                        startEditing(new Reward(clonedReward));
                     }
                 }}
                 variant="contained"

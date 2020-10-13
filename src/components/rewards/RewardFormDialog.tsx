@@ -1,7 +1,7 @@
-import { createStyles, Dialog, DialogContent, IconButton, makeStyles, Theme } from "@material-ui/core";
-import CloseIcon from '@material-ui/icons/Close';
+import { Dialog, DialogContent } from "@material-ui/core";
 import React from "react";
 import RewardForm, { RewardFormProps } from "./RewardForm";
+import CloseButton from "../common/button/CloseButton";
 
 
 export interface RewardFormDialogProps extends RewardFormProps {
@@ -9,23 +9,12 @@ export interface RewardFormDialogProps extends RewardFormProps {
     onClose: (event: React.MouseEvent<HTMLElement>) => void,
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        closeButton: {
-            position: 'absolute',
-            color: theme.palette.grey[500],
-        },
-    }));
-
 export default function (props: RewardFormDialogProps) {
 
-    const classes = useStyles();
     return (
         <div>
             <Dialog open={props.open}>
-                <IconButton className={classes.closeButton} aria-label="close" onClick={props.onClose}>
-                    <CloseIcon/>
-                </IconButton>
+                <CloseButton onClick={props.onClose}/>
                 <DialogContent>
                     <RewardForm {...props} />
                 </DialogContent>

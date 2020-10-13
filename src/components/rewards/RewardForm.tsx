@@ -157,6 +157,7 @@ export default function (props: RewardFormProps) {
                         >Save</Button>
                     </div>
 
+                    <IdText text="Recognition:" id={reward.recognition}/>
                     <IdText id={reward.id}/>
                 </Form>
             )}
