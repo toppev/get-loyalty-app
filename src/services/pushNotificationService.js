@@ -3,6 +3,7 @@ const Business = require('../models/business');
 const customerService = require('../services/customerService');
 const webpushService = require('../services/webpushService');
 const StatusError = require('../helpers/statusError');
+const User = require("../models/user");
 
 module.exports = {
     addSubscription,
@@ -26,11 +27,15 @@ async function addSubscription(userId, data) {
  * Get notification history, when the cooldown expires and possibly more information
  */
 async function getPushNotificationInfo() {
+
     const notifications = await getPushNotificationHistory();
     const cooldownExpires = await getCooldownExpiration(notifications);
+    const usersSubscribed = await getUsersSubscribed();
+
     return {
         notifications,
-        cooldownExpires
+        cooldownExpires,
+        usersSubscribed
     }
 }
 
@@ -97,4 +102,11 @@ async function sendPushNotification(notificationParam) {
         cooldownExpires: newCooldown,
         notification: newNotification
     }
+}
+
+/**
+ * Get number of customers who have subscribed to push notifications (enabled them). I.e their web push token exists.
+ */
+async function getUsersSubscribed() {
+    return User.countDocuments({ "customerData.pushNotifications.token": { $ne: null } })
 }

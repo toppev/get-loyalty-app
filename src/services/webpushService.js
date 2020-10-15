@@ -37,7 +37,7 @@ async function sendNotification(users, payload) {
     let sent = 0
     let failed = 0
     for (const user of users) {
-        let pushSubscription = {
+        const pushSubscription = {
             "endpoint": user.endpoint,
             "keys": {
                 "p256dh": user.token,
