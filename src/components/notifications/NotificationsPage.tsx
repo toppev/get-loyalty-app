@@ -34,16 +34,22 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function () {
 
     const classes = useStyles();
+
     const context = useContext(AppContext);
 
     const [cooldownExpires, setCooldownExpires] = useState<Date | undefined>();
     const [newNotifications, setNewNotifications] = useState<PushNotification[]>([]);
+    const [usersSubscribed, setUsersSubscribed] = useState<number>(0);
 
     const { loading, error, response } = useRequest(listNotificationHistory);
 
     const [history] = useResponseState<PushNotification[]>(response, [], res => {
-        const expires = res.data.cooldownExpires;
+        const {
+            cooldownExpires: expires,
+            usersSubscribed: subscribed
+        } = res.data;
         setCooldownExpires(expires ? new Date(expires) : undefined)
+        setUsersSubscribed(subscribed)
         return res.data.notifications.map((it: any) => new PushNotification(it))
     });
 
@@ -70,6 +76,7 @@ export default function () {
                     notification={initialNotification}
                     cooldownExpires={cooldownExpires}
                     setCooldownExpires={setCooldownExpires}
+                    usersSubscribed={usersSubscribed}
                 />
                 <NotificationHistory
                     history={history}

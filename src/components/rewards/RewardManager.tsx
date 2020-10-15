@@ -58,11 +58,11 @@ export default function ({ rewards, setRewards }: RewardManagerProps) {
                 onClick={() => setRewardSelectorOpen(true)}
             >Add Reward</Button>
 
-            <RewardSelector
+            {rewardSelectorOpen && <RewardSelector
                 open={rewardSelectorOpen}
                 onClose={() => setRewardSelectorOpen(false)}
                 onSelect={reward => setRewards([...rewards, reward])}
-            />
+            />}
         </div>
     )
 }

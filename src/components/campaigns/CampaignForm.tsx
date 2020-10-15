@@ -239,7 +239,7 @@ export default function ({ initialCampaign, onSubmitted }: CampaignFormProps) {
                                 onClick: () => setProductSelectorOpen(true)
                             }}
                         />
-                        <ProductSelector
+                        {productSelectorOpen && <ProductSelector
                             open={productSelectorOpen}
                             onClickClose={() => setProductSelectorOpen(false)}
                             onSubmit={products => {
@@ -247,7 +247,7 @@ export default function ({ initialCampaign, onSubmitted }: CampaignFormProps) {
                                 setProductSelectorOpen(false)
                             }}
                             text="Select products that are included in the campaign"
-                        />
+                        />}
                     </div>
 
                     <RetryButton error={error}/>

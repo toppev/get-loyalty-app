@@ -21,6 +21,9 @@ const useStyles = makeStyles((theme: Theme) =>
             width: '100%',
             marginTop: theme.spacing(1),
         },
+        subscribed: {
+            color: theme.palette.grey[700]
+        },
         field: {
             width: '100%',
             margin: '12px 0px'
@@ -47,28 +50,34 @@ interface NotificationFormProps {
     cooldownExpires?: Date
     setCooldownExpires: (s: Date) => any
     onSubmitted?: (notification: PushNotification) => any
+    usersSubscribed: number
 }
 
-export default function ({ notification, onSubmitted, cooldownExpires, setCooldownExpires }: NotificationFormProps) {
+export default function (props: NotificationFormProps) {
+
+    const { setCooldownExpires, onSubmitted, notification, cooldownExpires } = props;
 
     const classes = useStyles();
     const { loading, error, performRequest } = useRequest();
 
+    const subsRounded = Math.round(props.usersSubscribed / 10) * 10
+
     return (
         <Paper className={classes.paper}>
             <Typography component="h1" variant="h5">Notification</Typography>
+            {subsRounded > 0 && <p className={classes.subscribed}>About {subsRounded} customers have enabled push notifications.</p>}
             <Formik
                 initialValues={notification}
                 validate={validate}
-                onSubmit={(notification, actions) => {
+                onSubmit={(newNotification, actions) => {
                     if (window.confirm('Are you sure you want to send this notification to all customers that can receive push notifications?')) {
                         performRequest(
-                            () => sendPushNotification(notification),
+                            () => sendPushNotification(newNotification),
                             (res) => {
                                 actions.setSubmitting(false)
                                 setCooldownExpires(new Date(res.data.cooldownExpires))
                                 if (onSubmitted) {
-                                    onSubmitted(notification);
+                                    onSubmitted(newNotification);
                                 }
                             },
                             () => actions.setSubmitting(false)
@@ -99,7 +108,7 @@ export default function ({ notification, onSubmitted, cooldownExpires, setCooldo
                         placeholder="Your website or link to anything else (e.g a feedback form)"
                     />
                     {loading && <LinearProgress/>}
-                   <RetryButton error={error}/>
+                    <RetryButton error={error}/>
                     <div className={classes.submitDiv}>
                         <Button
                             className={classes.submitButton}

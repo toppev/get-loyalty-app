@@ -69,8 +69,8 @@ export default function (props: NotificationHistoryProps) {
             {history.map(n => (
                 <NotificationCard key={n.id} notification={n} className={classes.card}/>
             ))}
-            {empty && !loading && <Typography className={classes.noNotifications} variant="h6">You haven't sent any
-                notifications</Typography>}
+            {empty && !loading &&
+            <Typography className={classes.noNotifications} variant="h6">You haven't sent any notifications</Typography>}
         </Paper>
     )
 }

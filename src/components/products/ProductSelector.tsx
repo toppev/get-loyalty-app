@@ -26,7 +26,8 @@ const useStyles = makeStyles((theme: Theme) =>
             margin: '5px',
         },
         headerDiv: {
-            textAlign: 'center'
+            textAlign: 'center',
+            padding: '10px 0px'
         },
         info: {
             textAlign: 'center',
@@ -57,7 +58,7 @@ export default function ({ open, text, onClickClose, onSubmit, limitNotification
     return error ? (
         <RetryButton error={error}/>
     ) : (
-        <Dialog open={open} fullWidth={true}>
+        <Dialog open={open} maxWidth="md">
             <CloseButton onClick={onClickClose}/>
             <DialogContent>
                 <div className={classes.headerDiv}>
