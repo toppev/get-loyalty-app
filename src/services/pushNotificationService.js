@@ -98,6 +98,7 @@ async function sendPushNotification(notificationParam) {
     const newNotification = new PushNotification({ ...notificationParam, receivers: users.length });
     await newNotification.save();
     const newCooldown = await getCooldownExpiration([newNotification]);
+
     return {
         cooldownExpires: newCooldown,
         notification: newNotification

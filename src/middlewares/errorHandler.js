@@ -1,4 +1,5 @@
 const logger = require('../config/logger');
+const StatusError = require("../helpers/statusError");
 
 function errorHandler(err, req, res, _next) {
     logger.error(`${err.status || 500} - ${err} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
@@ -23,6 +24,11 @@ function errorHandler(err, req, res, _next) {
     if (err.name === 'UnauthorizedError') {
         return res.status(err.status || 401).json({
             message: 'Invalid authentication token'
+        });
+    }
+    if (err instanceof StatusError) {
+        return res.status(err.status || 400).json({
+            message: err.message || 'An error occurred'
         });
     }
     return res.status(err.status || 500).json({
