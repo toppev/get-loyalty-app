@@ -14,13 +14,11 @@ async function loadDefaultTemplates() {
         let templates = await getTemplates();
         if (!Array.isArray(templates)) templates = []
 
-        await Promise.all(templates.map(template => {
+        await Promise.all(templates.map(async template => {
             if (DEFAULT_PAGES.includes(template.id)) {
-                return (async () => {
-                    const page = await pageService.createPage(template);
-                    const inlineHtml = await getTemplateSource(page.id);
-                    await uploader.upload(`page_${page.id}`, `index.html`, inlineHtml);
-                })
+                const page = await pageService.createPage(template);
+                const inlineHtml = await getTemplateSource(page.id);
+                await uploader.upload(`page_${page.id}`, `index.html`, inlineHtml);
             }
         }))
         console.log('Default page templates loaded:', DEFAULT_PAGES)
