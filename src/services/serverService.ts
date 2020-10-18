@@ -8,14 +8,7 @@ async function getOrCreateServer(data: { email: string, token?: string }, create
     if (process.env.NODE_ENV === "development") {
         return { created: true }
     }
-
     const res = await post(`${SERVER_API_URL}/server/get_or_create/?create=${create}`, data, true)
-    const deleted = res.data.serverDeleted
-    if (deleted) {
-        throw new Error(typeof deleted == "string" ?
-            deleted : 'Seems like your data was deleted. Perhaps your plan expired?' +
-            'Please be in contact if you would like to restore and upgrade your plan.')
-    }
     setBackendUrl(res.data.apiendpoint)
     return { created: res.status === 201, ...res };
 }

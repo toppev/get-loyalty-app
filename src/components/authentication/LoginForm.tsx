@@ -157,7 +157,10 @@ export default function LoginForm() {
                 })
                 .catch((e) => {
                     actions.setSubmitting(false)
-                    if (e.response?.status === 404) {
+                    const msg = e?.response?.data?.message
+                    if (msg) {
+                        setMessage(msg)
+                    } else if (e.response?.status === 404) {
                         if (creatingAccount) {
                             setMessage('No servers available. Please try again later.')
                         } else {
