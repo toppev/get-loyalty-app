@@ -13,6 +13,7 @@ const morgan = require('morgan');
 const logger = require('./src/config/logger');
 
 const isTesting = process.env.NODE_ENV === 'test';
+const ENABLE_CSRF = !isTesting || false // Currently broken
 
 if (!isTesting) {
     mongoose.connect(process.env.MONGO_URI, {
@@ -65,7 +66,8 @@ require('./src/config/passport');
 app.use(require('./src/config/sessionConfig'));
 app.use(passport.initialize());
 app.use(passport.session());
-if (!isTesting) {
+
+if (ENABLE_CSRF) {
     app.use(csurf());
     app.use((req, res, next) => {
         res.cookie('XSRF-TOKEN', req.csrfToken(), { domain: process.env.COOKIE_DOMAIN });
@@ -80,6 +82,7 @@ if (!isTesting) {
         return next(err)
     });
 }
+
 app.use(routes);
 app.use(require('./src/middlewares/errorHandler'));
 
