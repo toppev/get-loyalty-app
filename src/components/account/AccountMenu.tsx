@@ -71,7 +71,7 @@ export default function (props: AccountButtonProps) {
                 <MenuItem>
                     <Link
                         onClick={() => {
-                            logout().then(() => window.location.reload())
+                            logout().finally(() => window.location.reload())
                         }}
                     >
                         <ExitToAppIcon/> Logout
