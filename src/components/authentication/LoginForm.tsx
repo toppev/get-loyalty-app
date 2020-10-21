@@ -141,15 +141,16 @@ export default function LoginForm() {
 
     const onFormSubmit = (values: FormValues, actions: FormikHelpers<FormValues>) => {
         setMessage("Verifying...")
-        getCaptchaToken().then(token => {
+        const getToken = async () => creatingAccount ? await getCaptchaToken() : "" // token not required when logging in
+        getToken().then(token => {
             setMessage("Connecting...")
             const { email } = values
             getOrCreateServer({ email, token }, creatingAccount)
                 .then(async () => {
-                    // We need a new token for "loyalty-backend" as first one was used by the "loyalty-servers"
-                    // Kinda hacky
-                    values.token = await getCaptchaToken()
                     if (creatingAccount) {
+                        // We need a new token for "loyalty-backend" as first one was used by the "loyalty-servers"
+                        // Kinda hacky
+                        values.token = await getCaptchaToken()
                         createAccount(values, actions).then()
                     } else {
                         loginAccount(values, actions).then()
