@@ -19,9 +19,9 @@ async function loadDefaultTemplates() {
                 const page = await pageService.createPage(template);
                 const inlineHtml = await getTemplateSource(page.id);
                 await uploader.upload(`page_${page.id}`, `index.html`, inlineHtml);
+                console.log(`Template ${template.id} loaded`)
             }
         }))
-        console.log('Default page templates loaded:', DEFAULT_PAGES)
     } catch (e) {
         console.log(`Failed to load/save default templates: ${e}`)
     }
