@@ -31,6 +31,8 @@ if (!isTesting) {
     });
     app.use(morgan('":method :url" :status (len: :res[content-length] - :response-time[0] ms) ":user-agent"', { stream: logger.stream }));
 }
+
+app.disable("x-powered-by");
 // If this app is sitting behind a reverse proxy (e.g nginx)
 // app.enable('trust proxy')
 app.use(cookieParser());
