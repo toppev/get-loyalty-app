@@ -52,7 +52,15 @@ async function createBusiness(businessParam, userId) {
  * Find a business by its id
  */
 async function getBusiness() {
-    return Business.findOne();
+    return Business.findOne().populate({
+        path: 'public.customerLevels', populate: [{
+            path: 'rewards.categories',
+            model: 'Category',
+        }, {
+            path: 'rewards.products',
+            model: 'Product',
+        }]
+    })
 }
 
 /**

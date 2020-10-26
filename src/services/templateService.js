@@ -17,6 +17,7 @@ async function loadDefaultTemplates() {
         await Promise.all(templates.map(async template => {
             if (DEFAULT_PAGES.includes(template.id)) {
                 const page = await pageService.createPage(template);
+                // FIXME: dont use html of the demo (wrong placeholders)
                 const inlineHtml = await getTemplateSource(page.id);
                 await uploader.upload(`page_${page.id}`, `index.html`, inlineHtml);
                 console.log(`Template ${template.id} loaded`)
