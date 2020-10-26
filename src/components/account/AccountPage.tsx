@@ -98,7 +98,7 @@ function EmailForm({ user }: EmailFormProps) {
 
     const initials: EmailValues = { email: user.email };
 
-    const { error, performRequest, loading, response } = useRequest()
+    const { error, performRequest, loading } = useRequest()
 
     return (
         <Formik

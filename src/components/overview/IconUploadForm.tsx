@@ -23,8 +23,6 @@ export default function () {
     const [icon, setIcon] = useState<File | undefined>();
     const [uploading, setUploading] = useState(false);
 
-    const defaultInfoText = 'PNG (.png) file recommended';
-    const [infoText, setInfoText] = useState(defaultInfoText);
     const [uploaded, setUploaded] = useState(false);
 
     const classes = useStyles();
@@ -67,7 +65,7 @@ export default function () {
                                 }, 5000)
                             })
                         }}
-                    >Upload Icon</Button> : <p style={{fontSize: '12px'}}>{infoText}</p>
+                    >Upload Icon</Button> : <p style={{ fontSize: '12px' }}>PNG (.png) file recommended</p>
             }
         </div>
     )
