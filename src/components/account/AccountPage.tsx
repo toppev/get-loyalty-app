@@ -22,6 +22,7 @@ import { updateUser } from "../../services/userService";
 import useRequest from "../../hooks/useRequest";
 import RetryButton from "../common/button/RetryButton";
 import { updateServerOwner } from "../../services/serverService";
+import Alert from '@material-ui/lab/Alert';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -97,7 +98,7 @@ function EmailForm({ user }: EmailFormProps) {
 
     const initials: EmailValues = { email: user.email };
 
-    const { error, performRequest, loading } = useRequest()
+    const { error, performRequest, loading, response } = useRequest()
 
     return (
         <Formik
@@ -171,6 +172,7 @@ function ResetPassword({ user, title, highlight }: ResetPasswordProps) {
     }
 
     const [canSubmit, setCanSubmit] = useState(false);
+    const [success, setSuccess] = useState<boolean | undefined>();
 
     const classes = useStyles();
     const context = useContext(AppContext);
@@ -187,6 +189,7 @@ function ResetPassword({ user, title, highlight }: ResetPasswordProps) {
                     () => updateUser(user._id, { password: values.password }),
                     () => {
                         actions.setSubmitting(false)
+                        setSuccess(true)
                         context.setUser({
                             ...user, hasPassword: true
                         })
@@ -201,6 +204,7 @@ function ResetPassword({ user, title, highlight }: ResetPasswordProps) {
                             align="center">
                             {title}
                         </Typography>
+                        {success && <Alert severity="success">Password changed successfully!</Alert>}
                         <Form>
                             <TextField
                                 className={classes.field}
@@ -225,7 +229,9 @@ function ResetPassword({ user, title, highlight }: ResetPasswordProps) {
                             >{title}</Button>
                         </Form>
                         <RetryButton error={error}/>
-                        {loading && <LinearProgress/>}
+                        <div style={{ marginTop: '10px' }}>
+                            {loading && <LinearProgress/>}
+                        </div>
                     </Paper>
                 );
             }}

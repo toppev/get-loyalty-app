@@ -251,6 +251,8 @@ function ServerSettingsForm() {
             </Typography>
 
             {loading ? <LinearProgress/> : <RetryButton error={error ? { ...error, retry: undefined } : undefined}/>}
+            {error && <p>Seems like there was an error. Everything may still work correctly.</p>}
+
             {pingingServer && <p style={{ textAlign: 'center' }}>This is taking an unexpectedly long time...</p>}
 
             <Dialog open={popupOpen}>
