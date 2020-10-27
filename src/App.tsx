@@ -73,18 +73,17 @@ export default function () {
                     }
                 })
                 .catch(err => {
-                    if (err.response) {
-                        console.log(err);
-                        setLoginDialog(true);
-                    } else {
-                        const commonError = 'Something went wrong...\nPerhaps our servers are down :(' +
-                            '\nPlease try refreshing the page or clearing cookies and logging in'
-                        // Check if the plan expired
-                        getOrCreateServer({ email: context.user.email }, false)
-                            // @ts-ignore
-                            .then(({ data }) => window.alert(data?.message || commonError))
-                            .catch(({ response }) => window.alert(response?.data?.message || commonError))
-                    }
+                    console.log(err.response.data || err);
+                    const commonError = 'Something went wrong...\nPerhaps our servers are down :(' +
+                        '\nPlease try refreshing the page or clearing cookies and logging in'
+                    // Check if the plan expired
+                    getOrCreateServer({ email: context.user.email }, false)
+                        // @ts-ignore
+                        .then(({ data }) => {
+                            window.alert(data?.message || commonError)
+                            setLoginDialog(true);
+                        })
+                        .catch(({ response }) => window.alert(response?.data?.message || commonError))
                 });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
