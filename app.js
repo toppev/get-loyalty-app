@@ -13,7 +13,7 @@ const morgan = require('morgan');
 const logger = require('./src/config/logger');
 
 const isTesting = process.env.NODE_ENV === 'test';
-const ENABLE_CSRF = !isTesting || false // Currently broken
+const ENABLE_CSRF = !isTesting && false // Currently broken
 
 if (!isTesting) {
     mongoose.connect(process.env.MONGO_URI, {
