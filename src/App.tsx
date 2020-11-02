@@ -76,14 +76,16 @@ export default function () {
                     console.log(err.response.data || err);
                     const commonError = 'Something went wrong...\nPerhaps our servers are down :(' +
                         '\nPlease try refreshing the page or clearing cookies and logging in'
+
+                    const alertAndOpenLogin = (data: any) => {
+                        window.alert(data?.message || commonError)
+                        setLoginDialog(true);
+                    }
                     // Check if the plan expired
                     getOrCreateServer({ email: context.user.email }, false)
                         // @ts-ignore
-                        .then(({ data }) => {
-                            window.alert(data?.message || commonError)
-                            setLoginDialog(true);
-                        })
-                        .catch(({ response }) => window.alert(response?.data?.message || commonError))
+                        .then(({ data }) => alertAndOpenLogin(data))
+                        .catch(({ response }) => alertAndOpenLogin(response.data))
                 });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
