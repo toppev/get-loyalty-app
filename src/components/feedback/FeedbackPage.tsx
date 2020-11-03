@@ -1,26 +1,34 @@
 import React from "react";
-import { createStyles, makeStyles, Theme, Typography } from "@material-ui/core";
+import { createStyles, Link, makeStyles, Theme, Typography } from "@material-ui/core";
+import GitHubIcon from '@material-ui/icons/GitHub';
+
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         title: {
-            fontSize: '22px',
-            color: theme.palette.grey[200],
+            fontSize: '28px',
+            color: theme.palette.grey[300],
         },
         text: {
-            color: theme.palette.grey[200],
+            fontSize: '16px',
+            color: theme.palette.grey[400],
         },
         openSource: {
             fontSize: '12px',
-            color: theme.palette.info.dark,
             marginTop: '40px',
         },
         githubIcon: {
             marginRight: '12px',
             color: 'initial'
+        },
+        email: {
+            color: theme.palette.info.dark,
+            textDecoration: 'none'
         }
     }));
 
+
+const EMAIL = "support@getloyalty.app"
 
 export default function () {
 
@@ -34,10 +42,12 @@ export default function () {
                 or bugs encountered!
             </p>
 
-            // TODO: bug report/feedback forms
-            {/*
+            <p className={classes.text}>
+                Feedback and suggestions forms will be added later.
+                You can email us <a className={classes.email} href={`mailto:${EMAIL}?subject=Feedback`}>{EMAIL}</a>
+            </p>
 
-            <div className={classes.openSource}>
+            <div className={`${classes.openSource} ${classes.text}`}>
                 <Link
                     className={classes.githubIcon}
                     target="_blank"
@@ -49,7 +59,6 @@ export default function () {
                 Some of the stuff is open source.
             </div>
 
-            */}
         </div>
     )
 }

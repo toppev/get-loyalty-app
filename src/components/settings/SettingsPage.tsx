@@ -275,7 +275,9 @@ function ServerSettingsForm() {
                         if (appAddress && !appAddress.startsWith("https://") && !appAddress.startsWith("http://")) {
                             values.appAddress = `https://${values.appAddress}`
                         }
-                        values.website.askNotifications = askNotifications
+                        if (values.website) {
+                            values.website.askNotifications = askNotifications
+                        }
                         setPopupOpen(true)
                         updateRequest.performRequest(
                             () => updateServer(values),

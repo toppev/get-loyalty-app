@@ -42,7 +42,6 @@ export default function () {
     context.setUser = user => {
         setAppContext(prev => ({ ...prev, user }));
     }
-
     context.setBusiness = business => {
         setAppContext(prev => ({ ...prev, business }));
         setShowContent(true);
@@ -75,13 +74,14 @@ export default function () {
                 .catch(err => {
                     console.log(err.response.data || err);
                     const commonError = 'Something went wrong...\nPerhaps our servers are down :(' +
-                        '\nPlease try refreshing the page or clearing cookies and logging in'
+                        '\nPlease try refreshing the page or clearing cookies and logging in.'
 
                     const alertAndOpenLogin = (data: any) => {
                         window.alert(data?.message || commonError)
                         setLoginDialog(true);
                     }
                     // Check if the plan expired
+                    // FIXME: email is empty, not saved in local storage or anywhere so no personalized messages .-.
                     getOrCreateServer({ email: context.user.email }, false)
                         // @ts-ignore
                         .then(({ data }) => alertAndOpenLogin(data))
