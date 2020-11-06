@@ -14,6 +14,10 @@ export function setBackendUrl(url: string) {
     window.localStorage.setItem('API_URL', url)
 }
 
+export function validBackendURL() {
+    return !backendURL.includes('invalid_url')
+}
+
 export const instance = axios.create({
     baseURL: backendURL,
     withCredentials: true,

@@ -1,19 +1,10 @@
 import React, { useEffect, useState } from "react";
-import {
-    Button,
-    createStyles,
-    Dialog,
-    DialogContent,
-    InputAdornment,
-    makeStyles,
-    TextField,
-    Theme,
-    Typography
-} from "@material-ui/core";
+import { Button, createStyles, Dialog, DialogContent, InputAdornment, makeStyles, TextField, Theme, Typography } from "@material-ui/core";
 import CloseButton from "../common/button/CloseButton";
 import EmailIcon from '@material-ui/icons/Email';
 import { post } from "../../config/axios";
 import { isEmail } from "../../util/validate";
+import { ensureServerAPI } from "../../services/serverService";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -78,13 +69,21 @@ export default function (props: PasswordResetRequestDialogProps) {
                         onClick={() => {
                             setButtonText('Sending...')
                             setButtonDisabled(true)
-                            forgotPassword(email).then(_res => {
-                                setMessage('We have emailed you a password request link if the email exists.')
-                            }).catch(() => {
-                                setMessage('An error occurred.');
-                                setButtonText('Try again')
-                                setButtonDisabled(false)
-                            })
+                            ensureServerAPI()
+                                .then(() => {
+                                    forgotPassword(email).then(_res => {
+                                        setMessage('We have emailed you a password request link if the email exists.')
+                                    }).catch(err => {
+                                        setMessage(`An error occurred: ${err?.response?.data?.message || `code ${err?.response?.status}`}`);
+                                        setButtonText('Try again')
+                                        setButtonDisabled(false)
+                                    })
+                                })
+                                .catch(err => {
+                                    setMessage(`An error occurred. Could not find your server: ${err?.response?.data?.message || `code ${err?.response?.status}`}`);
+                                    setButtonText('Try again')
+                                    setButtonDisabled(false)
+                                })
                         }}
                     >{buttonText}</Button>
                 </div>
@@ -94,6 +93,7 @@ export default function (props: PasswordResetRequestDialogProps) {
 }
 
 
-function forgotPassword(email: string) {
+async function forgotPassword(email: string) {
+
     return post('/user/forgotpassword', { email })
 }

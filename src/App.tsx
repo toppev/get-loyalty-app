@@ -8,7 +8,7 @@ import Header from './components/Header';
 import { AccountNotificationValues } from './components/account/AccountNotifications';
 import LoginDialog from "./components/authentication/LoginDialog";
 import { onLoginOrAccountCreate, profileRequest } from "./services/authenticationService";
-import { backendURL } from "./config/axios";
+import { validBackendURL } from "./config/axios";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import AccountButton from "./components/account/AccountMenu";
 import { getOrCreateServer } from "./services/serverService";
@@ -29,12 +29,9 @@ const NotFoundPage = lazy(() => import('./components/NotFoundPage'));
 
 export default function () {
 
-    // Whether we know the API url (e.g from local storage)
-    const validAPI = !backendURL.includes('invalid_url')
-
     const [navDrawerOpen, setNavDrawerOpen] = useState(false);
     const [notifications, setNotifications] = useState<AccountNotificationValues>({});
-    const [loginDialog, setLoginDialog] = useState(!validAPI);
+    const [loginDialog, setLoginDialog] = useState(!validBackendURL());
     // Don't close dialog before everything has loaded so it won't try loading invalid stuff (undefined business id etc)
     const [showContent, setShowContent] = useState(false);
 
@@ -61,7 +58,7 @@ export default function () {
 
     useEffect(() => {
         // Login -> fetch business or create one
-        if (validAPI) {
+        if (validBackendURL()) {
             profileRequest()
                 .then(res => {
                     if (res.data.businessOwner) {

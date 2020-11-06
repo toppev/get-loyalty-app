@@ -1,4 +1,4 @@
-import { get, post, SERVER_API_URL, setBackendUrl } from "../config/axios";
+import { get, post, SERVER_API_URL, setBackendUrl, validBackendURL } from "../config/axios";
 import { ServerSettings } from "../components/settings/SettingsPage";
 
 /**
@@ -11,6 +11,17 @@ async function getOrCreateServer(data: { email: string, token?: string }, create
     const res = await post(`${SERVER_API_URL}/server/get_or_create/?create=${create}`, data, true)
     setBackendUrl(res.data.apiendpoint)
     return { created: res.status === 201, ...res };
+}
+
+/**
+ * Makes sure the app knows the backend URL. Fetches it from the server if needed.
+ */
+async function ensureServerAPI() {
+    if (!validBackendURL()) {
+        throw new Error('Invalid backend URL')
+    }
+    const res = await post(`${SERVER_API_URL}/server/get_or_create/?create=false`, {}, true)
+    setBackendUrl(res.data.apiendpoint)
 }
 
 function updateServer(data: ServerSettings) {
@@ -43,5 +54,6 @@ export {
     getOrCreateServer,
     updateServer,
     updateServerOwner,
-    waitForServer
+    waitForServer,
+    ensureServerAPI
 }
