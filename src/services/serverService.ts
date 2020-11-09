@@ -16,11 +16,11 @@ async function getOrCreateServer(data: { email: string, token?: string }, create
 /**
  * Makes sure the app knows the backend URL. Fetches it from the server if needed.
  */
-async function ensureServerAPI() {
+async function ensureServerAPI(email: string) {
     if (!validBackendURL()) {
         throw new Error('Invalid backend URL')
     }
-    const res = await post(`${SERVER_API_URL}/server/get_or_create/?create=false`, {}, true)
+    const res = await post(`${SERVER_API_URL}/server/get_or_create/?create=false`, { email }, true)
     setBackendUrl(res.data.apiendpoint)
 }
 
