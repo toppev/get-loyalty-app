@@ -11,7 +11,9 @@ const useStyles = makeStyles((theme: Theme) =>
         emailInput: {
             minWidth: '60%'
         },
-        input: {},
+        input: {
+            textAlign: 'center'
+        },
         dialog: {
             textAlign: 'center'
         },
