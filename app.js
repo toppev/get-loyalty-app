@@ -47,7 +47,12 @@ app.use(parser.json({
 }));
 
 const frontendOrigin = process.env.FRONTEND_ORIGIN || process.env.PUBLIC_URL;
-const origins = [...(frontendOrigin ? frontendOrigin.split(',') : ['undefined']), 'https://panel.getloyalty.app', 'http://localhost:3002'];
+const origins = [
+    ...(frontendOrigin ? frontendOrigin.split(',') : ['no_frontend_origin']),
+    'https://panel.getloyalty.app',
+    'http://localhost:3002',
+    'http://localhost:3000' // Just so dev setups can access templates at api.getloyalty.app/...
+];
 console.log(`Allowed origins (${origins.length}): ${origins}`);
 
 app.use(cors(function (req, callback) {
