@@ -209,17 +209,21 @@ async function getPageContext(user) {
         const { config } = business;
         const { translations } = config;
         const points = customerData.properties.points;
+        userInfo.points = points // alias
         let customerLevels = business.public.customerLevels
         const currentLevel = customerService.getCurrentLevel(customerLevels, points)
-        customerLevels = customerLevels.map(lvl => {
-            if (currentLevel && lvl.name === currentLevel.name) {
-                lvl.active = true
-            }
-            if (lvl.requiredPoints > points) {
-                lvl.pointsNeeded = lvl.requiredPoints - points
-            }
-            return lvl
-        })
+        customerLevels = customerLevels
+            .sort((a, b) => (a.requiredPoints || 0) - (b.requiredPoints || 0))
+            .map(lvl => {
+                if (currentLevel && lvl.name === currentLevel.name) {
+                    lvl.active = true
+                }
+                if (lvl.requiredPoints > points) {
+                    lvl.pointsNeeded = lvl.requiredPoints - points
+                }
+                return lvl;
+            });
+        const nextLevel = customerLevels.find(lvl => lvl.requiredPoints > currentLevel.requiredPoints)
 
         return {
             user: userInfo,
@@ -232,6 +236,7 @@ async function getPageContext(user) {
             business: business.public,
             customerLevels,
             currentLevel,
+            nextLevel,
             products,
             campaigns,
             translations
