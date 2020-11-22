@@ -30,15 +30,21 @@ async function loadDefaultTemplates() {
 }
 
 /**
- * Fetch all templates from the API
+ * Fetch all templates from the API. Returns empty list if it fails
  */
 async function getTemplates() {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, _reject) => {
         request.get(`${PAGE_API_URL}/templates`, {}, (err, _res, body) => {
             if (err) {
-                reject(err)
+                console.log(err)
+                resolve([])
             } else {
-                resolve(JSON.parse(body))
+                try {
+                    resolve(JSON.parse(body))
+                } catch (e) {
+                    console.log(e)
+                    resolve([])
+                }
             }
         });
     })
