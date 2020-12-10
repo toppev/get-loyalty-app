@@ -22,6 +22,7 @@ ENV PATH /app/node_modules/.bin:$PATH
 
 # Install (and cache) dependencies
 COPY package.json /app/package.json
+COPY yarn.lock /app/yarn.lock
 RUN yarn
 
 ARG FRONTEND_URL
