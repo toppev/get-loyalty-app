@@ -51,7 +51,8 @@ export function startSubscribeTask() {
     }
 }
 
-const convertedVapidKey = urlBase64ToUint8Array(process.env.REACT_APP_PUBLIC_VAPID_KEY)
+const _vapidKey = process.env.REACT_APP_PUBLIC_VAPID_KEY;
+const convertedVapidKey = _vapidKey && urlBase64ToUint8Array(process.env.REACT_APP_PUBLIC_VAPID_KEY)
 
 // Call this function to ask for the permission to show notifications
 async function subscribeUser() {
