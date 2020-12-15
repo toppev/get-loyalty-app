@@ -46,7 +46,10 @@ app.use(parser.json({
     limit: limit,
 }));
 
-const frontendOrigin = process.env.FRONTEND_ORIGIN || process.env.PUBLIC_URL;
+let frontendOrigin = process.env.FRONTEND_ORIGIN || process.env.PUBLIC_URL;
+if (frontendOrigin && !frontendOrigin.startsWith("https://")) {
+    frontendOrigin = `https://${frontendOrigin}`
+}
 const origins = [
     ...(frontendOrigin ? frontendOrigin.split(',') : ['no_frontend_origin']),
     'https://panel.getloyalty.app',

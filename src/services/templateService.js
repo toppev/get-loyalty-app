@@ -2,7 +2,7 @@ const request = require('request');
 const pageService = require('./pageService');
 const uploader = require('../helpers/uploader');
 
-const PAGE_API_URL = 'https://api.getloyalty.app/v1/page';
+const PAGE_API_URL = 'https://demo.getloyalty.app/api/page';
 
 /** IDs of the template pages that will be saved initially */
 const DEFAULT_PAGES = (process.env.DEFAULT_PAGES || "").split(",")
