@@ -20,15 +20,13 @@ export default function (props: CopyToClipboardProps) {
         setTooltip(true)
     };
 
-    return (
-        <Tooltip
-            open={tooltip}
-            title={"Copied to clipboard!"}
-            leaveDelay={1500}
-            onClose={() => setTooltip(false)}
-            {...props.TooltipProps || {}}
-        >
-            {props.children({ copy: onCopy }) as React.ReactElement}
-        </Tooltip>
-    );
+    return <Tooltip
+        open={tooltip}
+        title={"Copied to clipboard!"}
+        leaveDelay={1500}
+        onClose={() => setTooltip(false)}
+        {...props.TooltipProps || {}}
+    >
+        {props.children({ copy: onCopy })}
+    </Tooltip>;
 }

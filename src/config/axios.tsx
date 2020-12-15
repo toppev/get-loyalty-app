@@ -2,6 +2,7 @@ import axios from "axios";
 
 /** Public/Shared API */
 export const API_URL = 'https://api.getloyalty.app/v1';
+export const DEMO_URL = 'https://demo.getloyalty.app';
 export const SERVER_API_URL = `${API_URL}/servers`;
 
 /** The current server instances URL */

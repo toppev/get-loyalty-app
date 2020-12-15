@@ -1,4 +1,4 @@
-import { API_URL, get, post } from "../config/axios";
+import { DEMO_URL, get, post } from "../config/axios";
 import { Page } from "../components/pages/Page";
 
 function listPages() {
@@ -29,7 +29,8 @@ function uploadHtmlCss(page: Page, html: any, css: any) {
 }
 
 function listTemplates() {
-    return get(`${API_URL}/page/templates`, true);
+    // Get the templates from the demo
+    return get(`${DEMO_URL}/api/page/templates`, true);
 }
 
 

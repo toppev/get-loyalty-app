@@ -106,6 +106,7 @@ export default function () {
                     </span>
                     </div>
                 </div>
+                <p>The app is not working? Restart it on the <Link href='/settings'>settings page</Link>.</p>
             </Box>
 
         </Box>
