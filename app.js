@@ -93,6 +93,8 @@ if (ENABLE_CSRF) {
     });
 }
 
+require('./src/config/planUpdateScheduler')
+
 app.use(routes);
 app.use(require('./src/middlewares/errorHandler'));
 
