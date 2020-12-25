@@ -63,44 +63,37 @@ const planSchema = new Schema({
         type: String,
         default: 'Free plan'
     },
+    // FIXME: not implemented/no value set
     expires: {
         type: Date
     },
     // Change free tier levels here (default values)
     // -1 means unlimited
     limits: {
-        campaigns: {
-            active: {
-                type: Number,
-                default: 2
-            },
-            total: {
-                type: Number,
-                default: 10
-            }
+        campaignsActive: {
+            type: Number,
+            default: 2
         },
-        products: {
-            total: {
-                type: Number,
-                default: 20
-            }
+        campaignsTotal: {
+            type: Number,
+            default: 10
         },
-        pages: {
-            // Not deleted pages
-            active: {
-                type: Number,
-                default: 3
-            },
+        productsTotal: {
+            type: Number,
+            default: 20
         },
-        pushNotifications: {
-            total: {
-                type: Number,
-                default: 5
-            },
-            cooldownMinutes: {
-                type: Number,
-                default: 2880
-            }
+        // Not deleted pages
+        pagesActive: {
+            type: Number,
+            default: 3
+        },
+        pushNotificationsTotal: {
+            type: Number,
+            default: 5
+        },
+        pushNotificationsCooldownMinutes: {
+            type: Number,
+            default: 2880
         }
     }
 })
