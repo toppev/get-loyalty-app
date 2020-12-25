@@ -61,7 +61,7 @@ async function getById(campaignId) {
  */
 async function create(campaign) {
     const business = await Business.findOne();
-    const limit = business.plan.limits.campaigns.total;
+    const limit = business.plan.limits.campaignsTotal;
     if (limit !== -1 && await Campaign.countDocuments({}) >= limit) {
         throw new StatusError('Plan limit reached', 402)
     }
@@ -75,7 +75,7 @@ async function create(campaign) {
  */
 async function update(campaignId, updatedCampaign) {
     const business = await Business.findOne();
-    const limit = business.plan.limits.campaigns.active;
+    const limit = business.plan.limits.campaignsActive;
     if (limit !== -1 && isActive(updatedCampaign) && (await getOnGoingCampaigns()).length >= limit - 1) {
         throw new StatusError('Plan limit reached', 402)
     }

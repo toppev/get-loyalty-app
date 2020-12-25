@@ -27,7 +27,7 @@ module.exports = {
 
 async function createPage(pageParam) {
     const business = await Business.findOne();
-    const limit = business.plan.limits.pages.total;
+    const limit = business.plan.limits.pagesTotal;
     if (limit !== -1 && await PageData.countDocuments({
         template: false,
         stage: { $ne: 'discarded' }

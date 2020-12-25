@@ -9,6 +9,7 @@ const iconService = require('./iconService');
 
 module.exports = {
     getOwnBusiness,
+    getBusinessOwnerUser,
     createBusiness,
     getBusiness,
     update,
@@ -30,6 +31,20 @@ async function getOwnBusiness(user) {
         return (await Business.findOne()).id
     }
     return undefined
+}
+
+/**
+ * Get the user who owns the business
+ */
+async function getBusinessOwnerUser() {
+    const owners = await User.find({ role: 'business' });
+    if (owners.length === 0) {
+        console.log(`Warning: no business owners found`);
+    }
+    if (owners.length > 1) {
+        console.log(`Warning: more business owners than expected: ${owners.length}`);
+    }
+    return owners[0]
 }
 
 /**

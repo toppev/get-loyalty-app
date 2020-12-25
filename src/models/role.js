@@ -41,34 +41,34 @@ async function _ownUserOnly(params) {
     return params.userId && (params.userId === reqParams.userId || !reqParams.userId);
 }
 
-async function can(role, operation, params) {
-    if (!this.roles[role]) {
+async function can(roleName, operation, params) {
+    if (!this.roles[roleName]) {
         return false;
     }
-    const $role = this.roles[role];
-    const can = $role.can;
-    if (await _canOperation(can, '*', params)) {
+    const role = this.roles[roleName];
+    const permits = role.can;
+    if (await _canOperation(permits, '*', params)) {
         return true;
     }
-    if (await _canOperation(can, operation, params)) {
+    if (await _canOperation(permits, operation, params)) {
         return true;
     }
     // e.g product:create and product:remove operations will accept product:*
     const operationWildcard = operation.substring(0, operation.indexOf(':')) + ':*';
-    if (await _canOperation(can, operationWildcard, params)) {
+    if (await _canOperation(permits, operationWildcard, params)) {
         return true;
     }
-    return $role.inherits && $role.inherits.some(childRole => this.can(childRole, operation, params));
+    return role.inherits && role.inherits.some(childRole => this.can(childRole, operation, params));
 }
 
-async function _canOperation(can, operation, params) {
-    if (can[operation] === undefined) {
+async function _canOperation(permits, operation, params) {
+    if (permits[operation] === undefined) {
         return false;
     }
-    if (typeof can[operation] !== 'function') {
-        return can[operation];
+    if (typeof permits[operation] !== 'function') {
+        return permits[operation];
     }
-    return can[operation](params);
+    return permits[operation](params);
 }
 
 module.exports = {

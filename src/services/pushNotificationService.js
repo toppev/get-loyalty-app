@@ -49,7 +49,7 @@ async function getPushNotificationHistory() {
  */
 async function getCooldownExpiration(notifications) {
     const business = await Business.findOne();
-    const cooldownMs = business.plan.limits.pushNotifications.cooldownMinutes * 60 * 1000;
+    const cooldownMs = business.plan.limits.pushNotificationsCooldownMinutes * 60 * 1000;
     if (!notifications.length || cooldownMs <= 0) {
         return
     }
@@ -63,7 +63,7 @@ async function getCooldownExpiration(notifications) {
 
 async function sendPushNotification(notificationParam) {
     const business = await Business.findOne();
-    const limit = business.plan.limits.pushNotifications.total;
+    const limit = business.plan.limits.pushNotificationsTotal;
     const notifications = await getPushNotificationHistory()
     if (limit !== -1 && notifications >= limit) {
         throw new StatusError('Plan limit reached', 402)

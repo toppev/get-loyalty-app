@@ -35,7 +35,7 @@ async function getById(productId) {
  */
 async function create(product) {
     const business = await Business.findOne();
-    const limit = business.plan.limits.products.total;
+    const limit = business.plan.limits.productsTotal;
     if (limit !== -1 && await Product.countDocuments() >= limit) {
         throw new StatusError('Plan limit reached', 402)
     }
