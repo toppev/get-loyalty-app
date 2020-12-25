@@ -3,7 +3,7 @@ const request = require("request");
 
 const USER_PLAN_API = "https://api.getloyalty.app/user/plan"
 const SERVER_KEY = process.env.SERVER_KEY
-if (SERVER_KEY.length < 10 && process.env.NODE_ENV !== 'test') {
+if (!SERVER_KEY && process.env.NODE_ENV !== 'test') {
     console.log(`Invalid SERVER_KEY env var. Length: ${SERVER_KEY.length}`);
 }
 
