@@ -59,6 +59,7 @@ export default function () {
             </div>
 
             <iframe
+                title="Feedback form"
                 src="https://docs.google.com/forms/d/e/1FAIpQLSfqMVzm-5Zim4Ly0NqKSKYMWr-oh39yDzn6Zx9-ogSrGPvKqg/viewform?embedded=true"
                 width="640"
                 height="895"
