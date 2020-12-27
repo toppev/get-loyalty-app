@@ -32,13 +32,12 @@ export default function (editor) {
         const code = codeViewer.editor.getValue();
         editor.DomComponents.getWrapper().set('content', '');
         editor.setComponents(code.trim());
-
         modal.close();
     };
 
-    // Listen for CTRL + Sapp
-    container.onkeydown = function (e) {
-        if (e.ctrlKey && e.code === 'KeyS') {
+    // Listen for CTRL + S (to save)
+    container.onkeydown = (event) => {
+        if (event.ctrlKey && event.code === 'KeyS') {
             const code = codeViewer.editor?.getValue();
             if (code) {
                 console.log('Saving code editor content...')
@@ -67,13 +66,10 @@ export default function (editor) {
             const Css = editor.getCss();
             modal.setContent('');
             modal.setContent(container);
-            codeViewer.setContent(InnerHtml + "<style>" + Css + '</style>');
+            codeViewer.setContent(`${InnerHtml}<style>${Css}</style>`);
 
             modal.open();
             viewer.refresh();
-
-
-            console.log(modal)
         }
     });
 
