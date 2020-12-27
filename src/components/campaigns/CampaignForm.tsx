@@ -223,9 +223,11 @@ export default function ({ initialCampaign, onSubmitted }: CampaignFormProps) {
 
                     <div className={classes.catProdDiv}>
                         <p className={classes.tip}>
-                            (Optional) Select which categories or products are included in the campaign.
+                            (Optional) Select which categories or products are eligible.
+                            If none of the categories/products of this campaign are selected in the scanner app at checkout, the campaign
+                            will not be triggered (i.e no rewards or advancing).
                             <br/>
-                            <b>Leave empty for all categories and products.</b>
+                            <b>Leave empty for all categories and products (recommended).</b>
                         </p>
                         <CategorySelector
                             className={classes.field}
