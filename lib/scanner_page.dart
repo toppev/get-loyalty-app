@@ -115,8 +115,8 @@ class _ScannerPageState extends State<ScannerPage> {
       showDialog(
           context: context,
           builder: (BuildContext context) {
-            var height = MediaQuery.of(context).size.height;
-            var width = MediaQuery.of(context).size.width;
+            final height = MediaQuery.of(context).size.height;
+            final width = MediaQuery.of(context).size.width;
 
             return AlertDialog(
                 title: Text(
