@@ -36,14 +36,15 @@ function updateServerOwner(data: { email: string, updated: { email: string } }) 
 /**
  * Ping the server until it responds.
  */
-function waitForServer(callback: () => any) {
+function waitForServer(callback: () => any, onError?: (error: Error) => any) {
 
     const sendRequest = () => {
-        setTimeout(() => {
-            get('/ping')
-                .then(callback)
-                .catch(() => setTimeout(sendRequest, 5000))
-        }, 500)
+        get('/ping')
+            .then(callback)
+            .catch((err) => {
+                onError && onError(err)
+                setTimeout(sendRequest, 5000)
+            })
     }
 
     sendRequest()

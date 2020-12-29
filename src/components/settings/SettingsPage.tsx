@@ -32,7 +32,7 @@ import { isURL } from "../../util/validate";
 import { listPages } from "../../services/pageService";
 import useResponseState from "../../hooks/useResponseState";
 import { Page } from "../pages/Page";
-import CloseButton from "../common/button/CloseButton";
+import { ServerStatusBar } from "../common/ServerStatusBar";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -224,25 +224,28 @@ function ServerSettingsForm() {
     const serverInfo = useRequest(
         () => getOrCreateServer({ email: context.user.email }, false),
         {},
-        (res) => setAskNotifications(res.data?.website?.askNotifications))
+        (res) => setAskNotifications(res.data?.website?.askNotifications)
+    )
 
     const [popupOpen, setPopupOpen] = useState(false);
     const [pingingServer, setPingingServer] = useState(false);
 
-    const validate = (settings: ServerSettings) => {
+    const loading = serverInfo.loading || updateRequest.loading || pingingServer
+    const error = serverInfo.error || updateRequest.error
+
+    // Needed for askNotifications menu
+    const pageRequest = useRequest(listPages)
+
+    // If used for anything else it is recommended to use a custom parser to map the pages to real page instances (it's ok here)
+    const [pages] = useResponseState<Page[]>(pageRequest.response, [], res => res.data.map((it: any) => new Page(it)));
+
+    const validateForm = (settings: ServerSettings) => {
         const errors: FormikErrors<ServerSettings> = {};
         if (settings.appAddress && !isURL(settings.appAddress)) {
             errors.appAddress = 'Invalid URL'
         }
         return errors;
     }
-
-    const loading = serverInfo.loading || updateRequest.loading || pingingServer
-    const error = serverInfo.error || updateRequest.error
-
-    const pageRequest = useRequest(listPages)
-    // If used for anything else it is recommended to use a custom parser to map the pages to real page instances
-    const [pages] = useResponseState<Page[]>(pageRequest.response, [], res => res.data.map((it: any) => new Page(it)));
 
     return (
         <div>
@@ -257,7 +260,6 @@ function ServerSettingsForm() {
 
             <Dialog open={popupOpen}>
                 <DialogContent style={{ padding: '25px' }}>
-                    <CloseButton onClick={() => setPopupOpen(false)}/>
                     <Typography variant="h5" color="secondary">Your app is restarting...</Typography>
                     <p>This may take a few minutes.</p>
                 </DialogContent>
@@ -267,7 +269,7 @@ function ServerSettingsForm() {
             <Formik
                 initialValues={serverInfo?.response?.data}
                 validateOnBlur
-                validate={validate}
+                validate={validateForm}
                 onSubmit={(values, actions) => {
                     if (window.confirm('This will restart the server and you will not be able to anything for a moment.')) {
                         actions.setSubmitting(true)
@@ -281,7 +283,7 @@ function ServerSettingsForm() {
                         setPopupOpen(true)
                         updateRequest.performRequest(
                             () => updateServer(values),
-                            (res) => {
+                            () => {
                                 actions.setSubmitting(false)
                                 setPopupOpen(false)
                             },
@@ -294,7 +296,6 @@ function ServerSettingsForm() {
                                         actions.setSubmitting(false)
                                         setPopupOpen(false)
                                         setPingingServer(false)
-                                        error?.clearError && error.clearError()
                                     })
                                 } else {
                                     actions.setSubmitting(false)
@@ -309,6 +310,7 @@ function ServerSettingsForm() {
             >
                 {({ submitForm, isSubmitting }) => (
                     <Paper className={classes.paper}>
+                        <ServerStatusBar/>
                         <Form>
                             <p className={classes.info}>
                                 Create a new DNS <b>A record </b>

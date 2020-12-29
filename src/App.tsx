@@ -69,7 +69,7 @@ export default function () {
                     }
                 })
                 .catch(err => {
-                    console.log(err.response.data || err);
+                    console.log(err.response?.data || err);
                     const commonError = 'Something went wrong...\nPerhaps our servers are down :(' +
                         '\nPlease try refreshing the page or clearing cookies and logging in.'
 
