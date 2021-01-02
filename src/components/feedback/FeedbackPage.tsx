@@ -46,6 +46,18 @@ export default function () {
                 You can also email us <a className={classes.email} href={`mailto:${EMAIL}?subject=Feedback`}>{EMAIL}</a>
             </p>
 
+            <iframe
+                title="Feedback form"
+                src="https://docs.google.com/forms/d/e/1FAIpQLSfqMVzm-5Zim4Ly0NqKSKYMWr-oh39yDzn6Zx9-ogSrGPvKqg/viewform?embedded=true"
+                width="640"
+                height="720"
+                style={{
+                    backgroundColor: 'aliceblue',
+                    border: 'none'
+                }}
+            >Loading forms…
+            </iframe>
+
             <div className={`${classes.openSource} ${classes.text}`}>
                 <Link
                     className={classes.githubIcon}
@@ -57,14 +69,6 @@ export default function () {
                 </Link>
                 Some of the stuff is open source.
             </div>
-
-            <iframe
-                title="Feedback form"
-                src="https://docs.google.com/forms/d/e/1FAIpQLSfqMVzm-5Zim4Ly0NqKSKYMWr-oh39yDzn6Zx9-ogSrGPvKqg/viewform?embedded=true"
-                width="640"
-                height="895"
-            >Loading forms…
-            </iframe>
 
         </div>
     )
