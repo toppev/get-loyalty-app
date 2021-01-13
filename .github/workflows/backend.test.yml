@@ -21,15 +21,22 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+      working-directory: loyalty-backend
     - name: Authenticate with GitHub package registry
       run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.READ_ORG_PACKAGES }}" > ~/.npmrc
-    - run: npm ci
-    - run: npm run build --if-present
-    - run: npm test
+    - name: NPM CI
+      run: npm ci
+      working-directory: loyalty-backend
+    - name: Build
+      run: npm run build --if-present
+      working-directory: loyalty-backend
+    - name: Test
+      run: npm test
       env:
         CI: true
         # A random string for testing
         JWT_SECRET: "D943E42E91D22C87621BAB73F866EDAA0FA0178B25C98EC54C254F897A609F5C"
+      working-directory: loyalty-backend
     services:
       mongodb:
         image: mongo:4.2.3
