@@ -1,0 +1,25 @@
+{
+  "short_name": "%REACT_APP_NAME%",
+  "name": "%REACT_APP_NAME%",
+  "icons": [
+    {
+      "src": "%REACT_APP_API_URL%/business/icon?size=180",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "%REACT_APP_API_URL%/business/icon?size=192",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "%REACT_APP_API_URL%/business/icon?size=512",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}

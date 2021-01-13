@@ -1,0 +1,60 @@
+.App {
+  text-align: center;
+  margin-bottom: 58px;
+}
+
+.ErrorMessage {
+  margin: 40px 10px;
+  font-size: 24px;
+  text-align: center;
+  color: orangered;
+}
+
+.navbar {
+  display: table;
+  background-color: #333;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+.navbar a {
+  display: table-cell;
+  color: #E0E0E0;
+  text-align: center;
+  font-size: 16px;
+  text-decoration: none;
+}
+
+.navbar .active {
+  border-bottom: #1976D2 solid 4px !important;
+  color: black;
+}
+
+.navbar .active .pageIcon svg {
+  fill: #ffffff;
+}
+
+.navbar .pageIcon svg {
+  fill: #9e9e9e;
+}
+
+.navlink {
+  border: solid #212121 1px;
+  padding: 4px;
+}
+
+.pageIcon {
+  width: 28px;
+  margin: auto;
+  display: block;
+}
+
+.page-view {
+}
+
+.page-holder {
+  bottom: 58px;
+  width: 100%;
+  height: calc(100vh - 58px);
+}

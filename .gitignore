@@ -1,7 +1,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-node_modules/
+/node_modules
 /.pnp
 .pnp.js
 
@@ -13,7 +13,6 @@ node_modules/
 
 # misc
 .DS_Store
-loyalty-panel/.env
 .env.local
 .env.development.local
 .env.test.local
@@ -28,8 +27,10 @@ src/react-app-env.d.ts
 
 # IDE/Editor
 .idea
+*.iml
 
 # Custom stuff
 !loyalty-panel/.env
 logs/
 uploads/
+public/manifest.json
