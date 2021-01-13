@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const rewardSchema = require('./reward');
-const campaignTypes = require('@toppev/loyally-campaigns');
+const campaignTypes = require('@toppev/loyalty-campaigns');
 const { Schema } = mongoose;
 
 
@@ -15,17 +15,13 @@ const requirementSchema = new Schema({
     question: {
         type: String,
         default: function () {
-            return campaignTypes[this.type].question;
+            let campaignType = campaignTypes[this.type];
+            return campaignType ? campaignType.question : null;
         }
     }
 });
 
 const campaignSchema = new Schema({
-    business: {
-        type: mongoose.Types.ObjectId,
-        ref: 'Business',
-        index: true
-    },
     start: {
         type: Date,
         default: Date.now
@@ -76,7 +72,28 @@ const campaignSchema = new Schema({
         default: 0
     },
     endReward: [rewardSchema],
+}, {
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
 });
 
+campaignSchema.pre('save', async function (next) {
+    if (this.isModified('couponCode') && this.couponCode) {
+        this.couponCode = this.couponCode.toLowerCase()
+    }
+    next();
+});
+
+campaignSchema.methods.getCurrentStamps = function (customerData) {
+    const duringCampaign = (date) => date > this.start && (!this.end || date < this.end)
+    return customerData.purchases.filter(purchase => duringCampaign(new Date(purchase.createdAt)))
+};
+
+campaignSchema.virtual("totalStampsNeeded").get(function () {
+    const req = this.requirements.find(it => it.type === 'stamps')
+    if (!req || !req.values.length) return 0
+    return parseInt(req.values[0], 10)
+});
 
 module.exports = mongoose.model('Campaign', campaignSchema);

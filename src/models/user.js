@@ -1,29 +1,19 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
+const campaigns = require('@toppev/loyalty-campaigns');
 
 const rewardSchema = require('./reward');
+const productSchema = require('./product').schema;
 const { Schema } = mongoose;
 
 const purchaseSchema = new Schema({
-    category: {
+    categories: [{
         type: Schema.Types.ObjectId,
         ref: 'Category',
-    }
-    // Might add these back later(?)
-    // With current plan it won't be easy to get the exact product
-    /*
-    products: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Product'
     }],
-    price: {
-        type: mongoose.Decimal128,
-        validate: {
-            validator: function (v) { return v >= 0; },
-            message: '{VALUE} is negative'
-        }
-    },
-    */
+    products: [productSchema],
+}, {
+    timestamps: true,
 });
 
 const userSchema = new Schema({
@@ -35,21 +25,24 @@ const userSchema = new Schema({
                 if (!value) {
                     return true;
                 }
-                const users = await User.find({ email: value });
+                const users = await User.find({ email: value.toLowerCase() }).limit(2);
                 return !users.length || (users[0].id === this.id && users.length === 1);
             }, message: 'Email is already taken.',
         },
         index: true
     },
+    newsLetter: {
+        type: Boolean,
+        default: false
+    },
     password: {
         type: String,
     },
-    // Super user role
-    // e.g site admin
-    // Has permission to modify everything
-    superRole: {
+    role: {
         type: String,
-        enum: [null, 'admin']
+        // enum: Object.keys(role.roles),
+        enum: ['user', 'business'],
+        default: 'user'
     },
     lastVisit: {
         type: Date,
@@ -65,25 +58,46 @@ const userSchema = new Schema({
         },
         profile: {
             type: Object,
+        },
+        lastAttempt: {
+            type: Date
+        },
+        failStreak: {
+            type: Number
         }
     },
-    customerData: [{
-        // no _id field
-        _id: false,
-        // identify by business
-        business: {
-            type: Schema.Types.ObjectId,
-            ref: 'Business'
+    termsAccepted: {
+        type: Date,
+        validate: {
+            validator: (value) => !this.termsAccepted || value > this.termsAccepted,
+            message: 'termsAccepted date can not be before the old value',
         },
-        role: {
-            type: String,
-            // only user or business
-            // enum: Object.keys(role.roles),
-            enum: ['user', 'business'],
-            default: 'user'
+    },
+    privacyPolicyAccepted: {
+        type: Date,
+        validate: {
+            validator: (value) => !this.privacyPolicyAccepted || value > this.privacyPolicyAccepted,
+            message: 'privacyPolicyAccepted date can not be before the old value',
         },
+    },
+    customerData: {
         purchases: [purchaseSchema],
         rewards: [rewardSchema],
+        usedRewards: [{
+            dateUsed: {
+                type: Date,
+                default: Date.now
+            },
+            reward: {
+                type: rewardSchema,
+                required: true
+            }
+        }],
+        pushNotifications: {
+            token: { type: String },
+            auth: { type: String },
+            endpoint: { type: String },
+        },
         // Other customer properties that business can modify freely
         properties: {
             points: {
@@ -91,10 +105,15 @@ const userSchema = new Schema({
                 default: 0
             }
         }
-    }],
+    }
 }, {
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true }
+    timestamps: true,
+    toJSON: {
+        virtuals: true
+    },
+    toObject: {
+        virtuals: true
+    },
 });
 
 userSchema.virtual("hasPassword").get(function () {
@@ -105,26 +124,13 @@ purchaseSchema.methods.populateProducts = function () {
     return this.populate('Product');
 };
 
-userSchema.methods.customerDataByBusiness = async function (business) {
-    const id = business.id || business;
-    return this.customerData.find(data => data.business.equals(id));
-};
-
 /**
  * Check whether user can perform the specified operation.
  */
 userSchema.methods.hasPermission = async function (operation, params) {
-    // If superRole is set use it otherwise defaults to 'user
-    let userRole = this.superRole || 'user';
-    const businessId = params.reqParams.businessId;
-    // and check if they have a greater role in the given business
-    if (userRole == 'user' && businessId) {
-        const data = await this.customerDataByBusiness(businessId);
-        if (data && data.role) {
-            userRole = data.role;
-        }
-    }
-    const result = await role.can(userRole, operation, { businessId, ...params })
+    // If superRole is set use it otherwise defaults to 'user'
+    let userRole = this.role || 'user';
+    const result = await role.can(userRole, operation, params)
         .catch(err => {
             throw err;
         });
@@ -133,17 +139,27 @@ userSchema.methods.hasPermission = async function (operation, params) {
 
 userSchema.pre('save', async function (next) {
     // only hash if modified (or new)
-    if (this.isModified('password')) {
+    if (this.isModified('password') && this.password) {
+        if (this.password.length <= 6) {
+            throw new Error('Invalid password')
+        }
         this.password = await bcrypt.hash(this.password, 12);
+    }
+    if (this.isModified('email') && this.email) {
+        this.email = this.email.toLowerCase()
     }
     next();
 });
 
-userSchema.methods.comparePassword = function (password) {
-    return password && bcrypt.compareSync(password, this.password);
+userSchema.methods.comparePassword = async function (password) {
+    return password && await bcrypt.compare(password, this.password);
 };
 
-userSchema.methods.toJSON = function() {
+userSchema.methods.isBirthday = function () {
+    return campaigns.isBirthday.requirement({ user: this })
+}
+
+userSchema.methods.toJSON = function () {
     let obj = this.toObject();
     delete obj.password;
     return obj;
@@ -153,6 +169,6 @@ const User = mongoose.model('User', userSchema);
 
 module.exports = User;
 
-// Because circular dependencies
-// TODO: fix?
+// Because of circular dependencies
+// FIXME?
 var role = require('./role');

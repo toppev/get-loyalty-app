@@ -3,12 +3,6 @@ const { Schema } = mongoose;
 const validator = require('validator');
 
 const productSchema = new Schema({
-    business: {
-        type: mongoose.Types.ObjectId,
-        ref: 'Business',
-        required: true,
-        index: true
-    },
     name: {
         type: String,
         required: true
@@ -29,8 +23,12 @@ const productSchema = new Schema({
         },
     }],
     price: {
-        type: mongoose.Types.Decimal128
+        // Use string so it's possible to include the currency
+        type: String
     }
+}, {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
 });
 
 module.exports = mongoose.model('Product', productSchema);

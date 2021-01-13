@@ -1,7 +1,9 @@
 const User = require('../models/user');
-const emailPasswordReset = require('../helpers/mailer');
+const { emailPasswordReset } = require('../helpers/mailer');
 const ResetPassword = require('../models/passwordReset');
 const crypto = require('crypto');
+const customerService = require("./customerService");
+const Business = require("../models/business");
 
 module.exports = {
     getAll,
@@ -11,15 +13,17 @@ module.exports = {
     forgotPassword,
     resetPassword,
     deleteUser,
+    markLastVisit
 };
 
 /**
  * Finds a user by the given email address. If the user was found, random token is generated and saved (@see {@link ResetPassword}).
  * If the user was not found nothing will be done.
  * Throws and error if the user didn't use local authentication strategy.
- * @param {string} email the user's email address 
+ * @param {string} email the user's email address
+ * @param {string} [redirectUrl=process.env.FRONTEND_ORIGIN] the url where the user should be redirected to
  */
-async function forgotPassword(email) {
+async function forgotPassword(email, redirectUrl) {
     const user = await User.findOne({
         email: email
     });
@@ -36,8 +40,7 @@ async function forgotPassword(email) {
                 userId
             });
             await reset.save();
-            // TODO: enable
-            //emailPasswordReset(email, token);
+            await emailPasswordReset(email, token, redirectUrl);
         }
     }
 }
@@ -74,7 +77,7 @@ async function getAll() {
 }
 
 /**
- * Find a user by the given id. Returns the user without password field (password hash) 
+ * Find a user by the given id. Returns the user without password hash field
  * @param {any} id the user's _id field
  */
 async function getById(id) {
@@ -85,17 +88,34 @@ async function getById(id) {
         delete user.password;
         return user;
     }
-    // Just so tests wont' break
+    // Return null so tests won't break
     return null;
 }
 
 /**
+ * Set lastVisit property to current time
+ * @param user the user or the id of an user
+ */
+async function markLastVisit(user) {
+    if (!user.save) {
+        user = await User.findById(user.id || user);
+    }
+    user.lastVisit = Date.now()
+    await user.save()
+}
+
+/**
  * Create a new user with the values from the given object (e.g email, password)
- * @param {Object} userParam 
+ * @param {Object} userParam
  */
 async function create(userParam) {
     const user = new User(userParam);
-    return await user.save();
+    const business = await Business.findOne()
+    if (business) {
+        // Update levels so the user receives join rewards if the business exists (not the owner "joining")
+        await customerService.updateCustomerLevel(user, business)
+    }
+    return user.save();
 }
 
 /**
@@ -106,7 +126,7 @@ async function create(userParam) {
 async function update(id, updateParam) {
     const user = await User.findById(id);
     Object.assign(user, updateParam);
-    return await user.save();
+    return user.save();
 }
 
 /**

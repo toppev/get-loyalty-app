@@ -1,7 +1,9 @@
 const Product = require('../models/product');
+const Business = require('../models/business');
+const StatusError = require('../helpers/statusError');
 
 module.exports = {
-    getAllById,
+    getAllProducts: getAll,
     getById,
     create,
     update,
@@ -10,10 +12,13 @@ module.exports = {
 
 /**
  * Get all products created by this business
- * @param {any} businessId the business's _id field
  */
-async function getAllById(businessId) {
-    return await Product.find({ business: businessId });
+async function getAll(populate) {
+    const res = Product.find();
+    if (populate) {
+        res.populate('categories');
+    }
+    return await res;
 }
 
 /**
@@ -21,27 +26,31 @@ async function getAllById(businessId) {
  * @param {any} productId the product's _id field
  */
 async function getById(productId) {
-    return await Product.findById(productId);
+    return Product.findById(productId).populate('categories');
 }
 
 /**
  * Create a new product. The business is automatically assigned to the product.
- * @param {*} businessId the business's _id field
  * @param {*} product the product to save
  */
-async function create(businessId, product) {
-    product.business = businessId;
-    return await Product.create(product);
+async function create(product) {
+    const business = await Business.findOne();
+    const limit = business.plan.limits.productsTotal;
+    if (limit !== -1 && await Product.countDocuments() >= limit) {
+        throw new StatusError('Plan limit reached', 402)
+    }
+    return Product.create(product);
 }
 
 /**
  * Update an existing product. Returns the updated product
  * @param {any} productId the product's _id field
- * @param {Object} updatedProduct an object with the values to update 
+ * @param {Object} updatedProduct an object with the values to update
  */
 async function update(productId, updatedProduct) {
-    const product = await Product.findByIdAndUpdate(productId, updatedProduct, {new: true});
-    return product;
+    const product = await getById(productId);
+    Object.assign(product, updatedProduct);
+    return product.save();
 }
 
 /**

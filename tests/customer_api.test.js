@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const { initDatabase, closeDatabase } = require('./testUtils');
 const businessService = require('../src/services/businessService');
 const User = require('../src/models/user');
 const app = require('../app');
@@ -8,13 +8,10 @@ const businessParam = { email: "customer.test.business@email.com", public: { add
 const userParams = { email: "customer.test@email.com", password: "password123" };
 
 let cookie;
-let business;
 let userId;
 
 beforeAll(async () => {
-    const url = 'mongodb://127.0.0.1/kantis-customer-test';
-    await mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
-    await mongoose.connection.db.dropDatabase();
+    await initDatabase('customer');
     // Login
     userId = (await new User(userParams).save())._id;
     const res = await api
@@ -28,41 +25,7 @@ beforeAll(async () => {
         .post('/business/create')
         .send(businessParam)
         .set('Cookie', cookie);
-    business = await businessService.getBusiness(res2.body._id);
-});
-
-describe('Logged in user with permissions can modify customer purchases', () => {
-
-    let purchaseId;
-
-    it('create purchase', async () => {
-        const purchase = { category: '5e2708e560885bbf21fbb9de' };
-        const res = await api
-            .post(`/business/${business.id}/customer/${userId}/purchase`)
-            .set('Cookie', cookie)
-            .send(purchase)
-            .expect(200);
-        purchaseId = res.body.purchases[0]._id;
-        expect(res.body.purchases[0].category).toBe(purchase.category);
-    });
-
-    it('update purchase', async () => {
-        const patchData = { category: '5e2756df4d931c1fe5b9013f' };
-        const res = await api
-            .patch(`/business/${business.id}/customer/${userId}/purchase/${purchaseId}`)
-            .set('Cookie', cookie)
-            .send(patchData)
-            .expect(200);
-        expect(res.body.purchases[0].category).toBe(patchData.category);
-    });
-
-    it('delete purchase', async () => {
-        await api
-            .delete(`/business/${business.id}/customer/${userId}/purchase/${purchaseId}`)
-            .set('Cookie', cookie)
-            .expect(200);
-        // TODO check if it really was deleted
-    });
+    await businessService.getBusiness();
 });
 
 describe('Logged in user with permissions can modify customer rewards', () => {
@@ -72,7 +35,7 @@ describe('Logged in user with permissions can modify customer rewards', () => {
 
     it('add reward', async () => {
         const res = await api
-            .post(`/business/${business.id}/customer/${userId}/reward`)
+            .post(`/customer/${userId}/reward`)
             .send(firstReward)
             .set('Cookie', cookie)
             .expect(200);
@@ -83,7 +46,7 @@ describe('Logged in user with permissions can modify customer rewards', () => {
 
     it('add second reward', async () => {
         const res = await api
-            .post(`/business/${business.id}/customer/${userId}/reward`)
+            .post(`/customer/${userId}/reward`)
             .send(secondReward)
             .set('Cookie', cookie)
             .expect(200);
@@ -96,7 +59,7 @@ describe('Logged in user with permissions can modify customer rewards', () => {
 
     it('delete first reward', async () => {
         const res = await api
-            .delete(`/business/${business.id}/customer/${userId}/reward/${firstReward._id}`)
+            .delete(`/customer/${userId}/reward/${firstReward._id}`)
             .set('Cookie', cookie)
             .expect(200);
         expect(res.body.rewards.length).toBe(1)
@@ -105,11 +68,10 @@ describe('Logged in user with permissions can modify customer rewards', () => {
 
     it('update rewards', async () => {
         const res = await api
-            .post(`/business/${business.id}/customer/${userId}/rewards`)
+            .post(`/customer/${userId}/rewards`)
             .send([firstReward])
             .set('Cookie', cookie)
             .expect(200);
-        console.log(res.body)
         expect(res.body.rewards.length).toBe(1)
         expect(res.body.rewards[0].name).toBe(firstReward.name)
     });
@@ -120,10 +82,10 @@ describe('Logged in user with permissions can modify customer data', () => {
 
     it('get customer', async () => {
         const res = await api
-            .get(`/business/${business.id}/customer/${userId}`)
+            .get(`/customer/${userId}`)
             .set('Cookie', cookie)
             .expect(200);
-        expect(res.body.customerData.business).toBe(business.id)
+        expect(res.body.customerData.id).toBe(userId.toString())
     });
 
     it('update customer points (properties)', async () => {
@@ -131,7 +93,7 @@ describe('Logged in user with permissions can modify customer data', () => {
             points: 100
         };
         const res = await api
-            .patch(`/business/${business.id}/customer/${userId}/properties`)
+            .patch(`/customer/${userId}/properties`)
             .send(data)
             .set('Cookie', cookie)
             .expect(200);
@@ -140,5 +102,5 @@ describe('Logged in user with permissions can modify customer data', () => {
 });
 
 afterAll(() => {
-    mongoose.connection.close();
+    closeDatabase();
 });

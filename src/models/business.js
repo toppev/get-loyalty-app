@@ -1,85 +1,171 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
+const rewardSchema = require('./reward');
+const defaultCustomerLevels = require('../config/defaultLevels');
 
 const configSchema = new Schema({
-    pointsName: {
-        singular: {
-            type: String,
-            default: 'point'
+    translations: {
+        points: {
+            singular: {
+                type: String,
+                default: 'point'
+            },
+            plural: {
+                type: String,
+                default: 'points'
+            }
         },
-        plural: {
-            type: String,
-            default: 'points'
+        birthdayGreeting: {
+            singular: {
+                type: String,
+                default: 'Happy birthday!'
+            }
+        },
+        qrScanned: {
+            singular: {
+                type: String,
+                default: 'QR code scanned!'
+            }
+        },
+        rewardUsed: {
+            singular: {
+                type: String,
+                default: 'Reward used!'
+            }
+        },
+        scanRegistered: {
+            singular: {
+                type: String,
+                default: 'Done!' // change?
+            }
+        },
+        newReward: {
+            singular: {
+                type: String,
+                default: 'You got a new reward: {0}'
+            },
+            plural: {
+                type: String,
+                default: 'You got new rewards: {0}'
+            }
         }
-    },
-
+    }
 });
+
+const planSchema = new Schema({
+    // One word. e.g free, trial, custom
+    type: {
+        type: String,
+        default: 'free'
+    },
+    // Slightly more descriptive/custom name. e.g Early adopter, Moe's custom business plan
+    name: {
+        type: String,
+        default: 'Free plan'
+    },
+    // FIXME: not implemented/no value set
+    expires: {
+        type: Date
+    },
+    // Change free tier levels here (default values)
+    // -1 means unlimited
+    limits: {
+        campaignsActive: {
+            type: Number,
+            default: 2
+        },
+        campaignsTotal: {
+            type: Number,
+            default: 10
+        },
+        productsTotal: {
+            type: Number,
+            default: 20
+        },
+        // Not deleted pages
+        pagesActive: {
+            type: Number,
+            default: 3
+        },
+        pushNotificationsTotal: {
+            type: Number,
+            default: 5
+        },
+        pushNotificationsCooldownMinutes: {
+            type: Number,
+            default: 2880
+        }
+    }
+})
+
+const customerLevelSchema = new Schema({
+    name: {
+        type: String,
+        required: true,
+    },
+    requiredPoints: {
+        type: Schema.Types.Number,
+        default: 0,
+    },
+    // IDEA: background image?
+    color: {
+        type: String,
+    },
+    rewards: [rewardSchema]
+})
 
 const businessSchema = new Schema({
     email: {
         type: String,
     },
-    config: configSchema,
+    config: {
+        type: configSchema,
+        default: {}
+    },
+    plan: {
+        type: planSchema,
+        default: {}
+    },
     public: {
         name: {
             type: String,
+            default: ''
         },
         description: {
             type: String,
+            default: ''
         },
         address: {
             type: String,
+            default: ''
         },
+        // Any website
         website: {
             type: String,
+            default: ''
         },
-        openingHours: [{
-            dayOfWeek: {
-                type: String,
-                // From monday to sunday
-                // min: 1,
-                // max: 7
-            },
-            // String representing open hours (can be custom)
-            // e.g 8:00-12:00, 13:00-17:30 or 9-16 or 24/7, basically anything
-            hours: {
-                type: String,
-            },
-            validFrom: {
-                type: Date,
-                default: Date.now
-            },
-            validThrough: {
-                type: Date,
-            }
-        }],
+        language: {
+            type: String,
+            default: 'English'
+        },
+        // Business categories (pizzeria, barber, coffee shop etc)
         categories: [{
             type: mongoose.Types.ObjectId,
             ref: 'Category',
         }],
-        customerLevels: [{
-            name: {
-                type: String,
-                required: true,
-            },
-            requiredPoints: {
-                type: Schema.Types.Number,
-                default: 0,
-            }
-        }]
+        customerLevels: {
+            type: [customerLevelSchema],
+            default: defaultCustomerLevels
+        }
     }
+}, {
+    // Max collection size is 5MB and only one document is allowed
+    capped: true,
+    size: 5242880,
+    max: 1,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
 });
 
-businessSchema.virtual("campaigns", {
-    ref: "Campaign",
-    localField: "_id",
-    foreignField: "business",
-});
-
-businessSchema.virtual("products", {
-    ref: "Product",
-    localField: "_id",
-    foreignField: "business",
-});
-
-module.exports = mongoose.model('Business', businessSchema);
+const Business = mongoose.model('Business', businessSchema);
+module.exports = Business;

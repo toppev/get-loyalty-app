@@ -1,9 +1,10 @@
 const { createLogger, format, transports } = require('winston');
 const { combine, timestamp, printf } = format;
 
-const printfFormat = printf(({ level, message, timestamp }) => {
-    return `${timestamp} ${level}: ${message}`;
-});
+const printfFormat = printf(({ level, message, timestamp: ts }) => `${ts} ${level}: ${message}`);
+
+/** Toggle whether to log to the log files. */
+const LOG_FILES = false;
 
 const options = {
     file: {
@@ -29,8 +30,10 @@ const logger = createLogger({
         timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
         printfFormat
     ),
-    transports: [
+    transports: LOG_FILES ? [
         new transports.File(options.file),
+        new transports.Console(options.console)
+    ] : [
         new transports.Console(options.console)
     ],
     exitOnError: false,

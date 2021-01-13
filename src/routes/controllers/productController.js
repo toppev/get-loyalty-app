@@ -1,9 +1,12 @@
-const router = require('express').Router({ mergeParams: true });
+const router = require('express').Router();
 const productService = require('../../services/productService')
 const permit = require('../../middlewares/permitMiddleware');
 
-router.post('/', permit('product:create'), addProduct);
-router.patch('/:productId', permit('product:update'), updateProduct);
+const validation = require('../../helpers/bodyFilter');
+const productValidator = validation.validate(validation.productValidator);
+
+router.post('/', permit('product:create'), productValidator, addProduct);
+router.patch('/:productId', permit('product:update'), productValidator, updateProduct);
 router.delete('/:productId', permit('product:delete'), deleteProduct);
 router.get('/all', permit('product:list'), getAll);
 router.get('/:productId', permit('product:get'), getById);
@@ -11,8 +14,7 @@ router.get('/:productId', permit('product:get'), getById);
 module.exports = router;
 
 function addProduct(req, res, next) {
-    const businessId = req.params.businessId;
-    productService.create(businessId, req.body)
+    productService.create(req.body)
         .then(product => res.json(product))
         .catch(err => next(err));
 }
@@ -39,8 +41,8 @@ function getById(req, res, next) {
 }
 
 function getAll(req, res, next) {
-    const businessId = req.params.businessId;
-    productService.getAllById(businessId)
+    const { populate } = req.query;
+    productService.getAllProducts(populate !== undefined ? populate : true)
         .then(products => res.json(products))
         .catch(err => next(err));
 }

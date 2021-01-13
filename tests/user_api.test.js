@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const { initDatabase, closeDatabase } = require('./testUtils');
 const userService = require('../src/services/userService');
 const User = require('../src/models/user');
 const ResetPassword = require('../src/models/passwordReset');
@@ -9,20 +9,17 @@ const userParams = { email: "example@email.com", password: "password123" };
 let userId;
 
 beforeAll(async () => {
-    const url = 'mongodb://127.0.0.1/kantis-user-test';
-    await mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
-    await mongoose.connection.db.dropDatabase();
+    await initDatabase('user');
     userId = (await new User(userParams).save())._id;
 });
 
 describe('Not logged in user should', () => {
 
     it('register without password', async () => {
-        const secondUserParams = { email: 'example2@email.com' };
+        const secondUserParams = { email: 'example2@email.com', acceptAll: true };
         const res = await api
             .post('/user/register')
             .send(secondUserParams)
-            .set('Accept', 'application/json')
             .expect(200);
         const user = await userService.getById(res.body._id);
         expect(user.hasPassword).toBe(false);
@@ -30,11 +27,10 @@ describe('Not logged in user should', () => {
     });
 
     it('register with password', async () => {
-        const testUserParams = { email: 'example3@email.com', password: "asdasdasd" };
+        const testUserParams = { email: 'example3@email.com', password: "asdasdasd", acceptAll: true };
         const res = await api
             .post('/user/register')
             .send(testUserParams)
-            .set('Accept', 'application/json')
             .expect(200);
         const user = await userService.getById(res.body._id);
         expect(user.hasPassword).toBe(true);
@@ -44,7 +40,6 @@ describe('Not logged in user should', () => {
         await api
             .post('/user/forgotpassword')
             .send(userParams)
-            .set('Accept', 'application/json')
             .expect(200);
         const reset = await ResetPassword.findOne({})
         expect(reset.token).toEqual(expect.anything());
@@ -59,7 +54,7 @@ describe('Not logged in user should', () => {
         const res = await api
             .get('/user/resetPassword/' + token)
             .expect(200);
-        expect(res.body).toEqual({ success: true });
+        expect(res.body.success).toEqual(true);
     });
 
     it('login (local)', async () => {
@@ -107,11 +102,11 @@ describe('Logged in user should', () => {
 
     it('patch self', async () => {
         // random email
-        const email = `example${Math.random()*10000 || 0}@email.com`;
+        const email = `example${Math.random() * 10000 || 0}@email.com`;
         const res = await api
             .patch('/user/' + userId)
             .set('Cookie', cookie)
-            .send({ email: email })
+            .send({ email: email, acceptAll: true })
             .expect(200);
         expect(res.body.email).toEqual(email);
         // And was saved in database
@@ -120,10 +115,11 @@ describe('Logged in user should', () => {
     });
 
     it('logout', async () => {
-        await api
-            .get('/user/logout')
+        const res = await api
+            .post('/user/logout')
             .set('Cookie', cookie)
             .expect(200);
+        expect(res.headers['set-cookie'][0].startsWith('loyalty_session=;'))
     });
 
     it('delete self', async () => {
@@ -137,11 +133,24 @@ describe('Logged in user should', () => {
 
 });
 
+describe('userService', () => {
+
+    it('lastVisit updates', async () => {
+        const user = await userService.create({ lastVisit: (Date.now() - 1000) });
+        const old = user.lastVisit;
+        await userService.markLastVisit(user)
+        const now = (await userService.getById(user.id)).lastVisit;
+        expect(old).toBeTruthy()
+        expect(now).toBeTruthy()
+        expect(old).not.toEqual(now)
+    })
+})
+
 /*
 * Testing patching, deleting and getting other users is not currently tested.
 * Only site admins can do it anyway. Might implement later
 */
 
 afterAll(() => {
-    mongoose.connection.close();
+    closeDatabase();
 });

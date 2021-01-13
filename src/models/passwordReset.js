@@ -11,7 +11,11 @@ const resetModel = new Schema({
         ref: 'User',
         required: true
     }
-}, { timestamps: true });
+}, {
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+});
 
 resetModel.statics.findByToken = function (token, callback) {
     return this.findOne({ token }, callback);

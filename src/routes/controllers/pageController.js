@@ -1,34 +1,37 @@
 const router = require('express').Router({ mergeParams: true });
 const pageService = require('../../services/pageService');
 const permit = require('../../middlewares/permitMiddleware');
-
+const validation = require('../../helpers/bodyFilter');
+const pageValidator = validation.validate(validation.pageValidator);
 
 // Get templates (no html/css only other data)
 router.get('/templates', getTemplates);
 // List business's pages
 router.get('/list', permit('page:load'), listPages);
+// Returns public information of the published pages, no need for permissions
+// The customer app uses to list all pages, first should be the homepage
+router.get('/pages', listPublicPages);
 // Get any html, no perms needed
 router.get('/:pageId/html', getHtml);
 // GET for screenshot/thumbnail
 router.get('/:pageId/thumbnail', getThumbnail);
 // Loading the GJS data
 router.get('/:pageId', permit('page:load'), loadPage);
-// Uploading html pages
+// Uploading html/css (only mongoose validation)
 router.post('/:pageId/upload', permit('page:upload'), uploadPage);
 // Saving the GJS data
-// Even though it's a post (because it's easier with grapesjs in frontend) pageService uses Object.assign so it works like a PATCH
-router.post('/:pageId', permit('page:save'), savePage);
+// Even though it's a post (because it's easier with grapesjs in frontend) pageService uses Object.assign so partial updates work
+router.post('/:pageId', permit('page:save'), pageValidator, savePage);
 // Creating a new page
-router.post('/', permit('page:create'), createPage);
+router.post('/', permit('page:create'), pageValidator, createPage);
 
 module.exports = router;
 
 function createPage(req, res, next) {
-    pageService.createPage(req.params.businessId, req.body)
+    pageService.createPage(req.body)
         .then((data) => res.json(data))
         .catch(err => next(err));
 }
-
 
 function savePage(req, res, next) {
     // Whether we save the entire document or just what's under 'gjs' key
@@ -48,8 +51,14 @@ function loadPage(req, res, next) {
 }
 
 function listPages(req, res, next) {
-    pageService.getBusinessPageIds(req.params.businessId)
+    pageService.getBusinessPages()
         .then(data => data ? res.json(data) : res.sendStatus(404))
+        .catch(err => next(err));
+}
+
+function listPublicPages(req, res, next) {
+    pageService.getPublicPage()
+        .then(data => res.json(data))
         .catch(err => next(err));
 }
 
@@ -75,13 +84,30 @@ function getThumbnail(req, res, next) {
 
 async function getHtml(req, res, next) {
     try {
-        const { pageId, businessId } = req.params;
-        const user = req.user;
-        const [content, context] = await Promise.all([
-            pageService.getPageContent(pageId),
-            pageService.getPageContext(businessId, user)
-        ]);
-        const html = await pageService.renderPageView(content, context);
+        const { pageId } = req.params;
+
+        // Used in the screenshot/example
+        const exampleReward = {
+            name: 'Example Reward',
+            description: 'An example reward!',
+            itemDiscount: '100%',
+            customerPoints: 100,
+            expires: Date.now()
+        }
+        const exampleUser = {
+            isBirthday: true,
+            customerData: {
+                purchases: [],
+                rewards: [exampleReward],
+                usedRewards: [exampleReward],
+                properties: { points: 200 }
+            },
+            authentication: {}
+        }
+
+        const user = req.user || exampleUser;
+
+        const html = await pageService.renderPageView(pageId, user);
         res.send(html);
         next();
     } catch (error) {

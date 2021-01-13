@@ -1,20 +1,19 @@
-const mongoose = require('mongoose');
+const fs = require('fs');
 const businessService = require('../src/services/businessService');
-const Business = require('../src/models/business');
+const campaignService = require('../src/services/campaignService');
 const User = require('../src/models/user');
+const Category = require('../src/models/category');
+const Product = require('../src/models/product');
 const app = require('../app');
 const api = require('supertest')(app);
+const { initDatabase, closeDatabase, deleteUploadsDirectory } = require('./testUtils');
 
-const otherBusiness = { email: "example@email.com", public: { address: 'this is an address' } };
-let otherBusinessId;
 const userParams = { email: "example@email.com", password: "password123" };
 let userId;
+const testReward = { name: 'Test reward #123151', itemDiscount: 'free' }
 
 beforeAll(async () => {
-    const url = 'mongodb://127.0.0.1/kantis-business-test';
-    await mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
-    await mongoose.connection.db.dropDatabase();
-    otherBusinessId = (await new Business(otherBusiness).save())._id;
+    await initDatabase('business');
 });
 
 describe('Logged in user can', () => {
@@ -34,34 +33,37 @@ describe('Logged in user can', () => {
     });
 
     it('create business', async () => {
-        const secondBusinessParam = { email: 'example2@email.com' }
+        const businessParam = { email: 'example2@email.com' }
         const res = await api
             .post('/business/create')
-            .send(secondBusinessParam)
-            .set('Accept', 'application/json')
+            .send(businessParam)
             .set('Cookie', cookie)
             .expect(200);
-        business = await businessService.getBusiness(res.body._id);
-        expect(business.email).toBe(secondBusinessParam.email);
+        business = await businessService.getBusiness();
+        expect(business.email).toBe(businessParam.email);
         const user = await User.findById(userId);
-        const index = user.customerData.findIndex(_item => _item.business.equals(res.body._id));
-        expect(user.customerData[index].role).toBe('business');
+        expect(user.role).toBe('business');
     });
 
     it('get business public information', async () => {
+        const tempUserCredentials = { email: "example1231@email.com", password: "password123" };
+        await new User(tempUserCredentials).save();
         const res = await api
-            .get(`/business/${otherBusinessId}/public`)
-            .set('Accept', 'application/json')
-            .set('Cookie', cookie)
+            .post('/user/login/local')
+            .send(tempUserCredentials);
+        // Setting the cookie
+        let tempCookie = res.headers['set-cookie'];
+        const publicReq = await api
+            .get(`/business/public`)
+            .set('Cookie', tempCookie)
             .expect(200);
-        expect(res.body.email).toBeUndefined();
-        expect(res.body.public.address).toBe(otherBusiness.public.address);
+        expect(publicReq.body.email).toBeUndefined();
+        expect(publicReq.body.public.address).toBe(business.public.address);
     });
 
     it('get business self', async () => {
         const res = await api
-            .get(`/business/${business.id}`)
-            .set('Accept', 'application/json')
+            .get(`/business`)
             .set('Cookie', cookie)
             .expect(200);
         expect(res.body.email).toBe(business.email);
@@ -70,8 +72,7 @@ describe('Logged in user can', () => {
     it('patch business self', async () => {
         const newEmail = "example2@email.com"
         const res = await api
-            .patch(`/business/${business.id}`)
-            .set('Accept', 'application/json')
+            .patch(`/business`)
             .set('Cookie', cookie)
             .send({ email: newEmail })
             .expect(200);
@@ -80,8 +81,7 @@ describe('Logged in user can', () => {
 
     it('post business user role change', async () => {
         const res = await api
-            .post(`/business/${business.id}/role`)
-            .set('Accept', 'application/json')
+            .post(`/business/role`)
             .set('Cookie', cookie)
             .send({ userId: userId, role: 'business' })
             .expect(200);
@@ -89,45 +89,87 @@ describe('Logged in user can', () => {
         expect(res.body.business).toBe(business.id);
     });
 
-    it('post business user role change to admin', async () => {
+    it('list rewards', async () => {
+        const category = await (new Category({ name: 'testCategory' })).save()
+        const product = await (new Product({ name: 'testProduct' })).save()
+        await campaignService.create({
+            name: 'dasdawdasd',
+            endReward: [{
+                name: 'free stuff',
+                itemDiscount: 'free',
+                products: [product],
+                categories: [category]
+            }]
+        });
         const res = await api
-            .post(`/business/${business.id}/role`)
-            .set('Accept', 'application/json')
+            .get(`/business/reward/list`)
             .set('Cookie', cookie)
-            .send({ userId: userId, role: 'admin' })
-            .expect(400);
-    });
+            .expect(200)
+        expect(res.body[0].products[0].name).toBe('testProduct');
+        expect(res.body[0].categories[0].name).toBe('testCategory');
+        expect(res.body.length).toBe(1);
+        expect(res.body[0].name).toBe('free stuff');
+    })
 
-    // Should not have permission to edit other businesses
-    it('get business other', async () => {
-        await api
-            .get(`/business/${otherBusinessId}`)
-            .set('Accept', 'application/json')
+    it('reward all', async () => {
+        const res = await api
+            .post(`/business/reward/all`)
+            .send(testReward)
             .set('Cookie', cookie)
-            .expect(403);
-    });
+            .expect(200)
+        expect(res.body.rewarded).toBe(2)
+        const rewardedUser = await User.findById(userId)
+        expect(rewardedUser.customerData.rewards[0].name).toEqual(testReward.name)
+    })
 
-    it('patch business other', async () => {
-        const newEmail = "example2@email.com"
-        await api
-            .patch(`/business/${otherBusinessId}`)
-            .set('Accept', 'application/json')
-            .set('Cookie', cookie)
-            .send({ email: newEmail })
-            .expect(403);
-    });
 
-    it('post business user role change other', async () => {
-        await api
-            .post(`/business/${otherBusinessId}/role`)
-            .set('Accept', 'application/json')
+    it('get customers', async () => {
+        const res = await api
+            .get(`/business/customers`)
             .set('Cookie', cookie)
-            .send({ userId: userId, role: 'business' })
-            .expect(403);
-    });
+            .expect(200)
+        expect(res.body.customers.length).toBe(2);
+        expect(res.body.customers[0].email).toBe(userParams.email);
+        expect(res.body.customers[0].customerData.rewards.length).toBe(1);
+        expect(res.body.customers[0].customerData.rewards[0].name).toBe(testReward.name);
+    })
+
+    it('upload icon', async () => {
+        await api
+            .post(`/business/icon`)
+            .type('multipart/form-data')
+            .attach('file', 'testresources/icon-192x192.png')
+            .set('Cookie', cookie)
+            .expect(200)
+    })
+
+    it('get icon (favicon.ico) (not logged in)', async () => {
+        const res = await api
+            .get(`/business/icon`)
+            .expect(200)
+
+        expect(res.headers['content-type']).toBe('image/x-icon')
+
+        const buf = await fs.promises.readFile('testresources/converted-favicon.ico')
+        expect(res.body).toEqual(buf);
+
+    })
+
+    it('get icon 512x512', async () => {
+        const res = await api
+            .get(`/business/icon/?size=512`)
+            .set('Cookie', cookie)
+            .expect(200)
+
+        expect(res.headers['content-type']).toBe('image/png')
+
+        const buf = await fs.promises.readFile('testresources/converted-icon-512.png')
+        expect(res.body).toEqual(buf);
+    })
 
 });
 
 afterAll(() => {
-    mongoose.connection.close();
+    closeDatabase();
+    deleteUploadsDirectory()
 });

@@ -10,7 +10,7 @@ const rewardSchema = new Schema({
         type: String
     },
     // Either products or categories or both
-    // e.g -20% from normal tea and coffee or soft drinks
+    // e.g tea and coffee or soft drinks
     products: [{
         type: Schema.Types.ObjectId,
         ref: 'Product'
@@ -36,13 +36,22 @@ const rewardSchema = new Schema({
     },
     // The business decides
     // e.g "only if meal", "if more than 10€"
-    // TODO: change?
     requirement: {
         type: String,
     },
     expires: {
         type: Date
     },
+    // Because rewards are copies of one reward (e.g customer receives a copy of campaign rewards) and id changes,
+    // but "recognition" property won't change and we can use it to identify if it's really the same reward even if
+    // other properties such as name change or there are duplicates
+    recognition: {
+        type: Schema.Types.ObjectId,
+        default: mongoose.Types.ObjectId
+    }
+}, {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
 });
 
 module.exports = rewardSchema;
