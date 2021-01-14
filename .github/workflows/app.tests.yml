@@ -1,6 +1,6 @@
 # loyalty-app tests (the PWA app)
 
-name: Node.js CI
+name: loyalty-app (PWA) tests
 
 on: [push, pull_request]
 
@@ -15,7 +15,7 @@ jobs:
           node-version: 12
       - name: Install
         run: yarn install
-        working-directory: loyalty-panel
+        working-directory: loyalty-app
       - name: Test
         run: yarn test
-        working-directory: loyalty-panel
+        working-directory: loyalty-app

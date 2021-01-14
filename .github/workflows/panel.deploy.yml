@@ -1,4 +1,4 @@
-name: s3-deploy
+name: loyalty-panel s3-deploy
 
 on:
   push:

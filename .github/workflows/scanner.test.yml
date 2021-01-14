@@ -1,4 +1,4 @@
-name: CI
+name: scanner-app test
 
 on: [push, pull_request]
 
