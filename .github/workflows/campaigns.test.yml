@@ -3,7 +3,13 @@
 
 name: loyalty-campaigns test
 
-on: [push, pull_request]
+on:
+  pull_request:
+    paths:
+      - 'loyalty-campaigns/**'
+  push:
+    paths:
+      - 'loyalty-campaigns/**'
 
 jobs:
   build:

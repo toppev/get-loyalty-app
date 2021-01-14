@@ -1,6 +1,12 @@
 name: scanner-app test
 
-on: [push, pull_request]
+on:
+  pull_request:
+    paths:
+      - 'scanner-app/**'
+  push:
+    paths:
+      - 'scanner-app/**'
 
 jobs:
   build:

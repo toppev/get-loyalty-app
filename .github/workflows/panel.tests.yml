@@ -1,6 +1,12 @@
 name: loyalty-panel tests
 
-on: [push, pull_request]
+on:
+  pull_request:
+    paths:
+      - 'loyalty-panel/**'
+  push:
+    paths:
+      - 'loyalty-panel/**'
 
 jobs:
   build:

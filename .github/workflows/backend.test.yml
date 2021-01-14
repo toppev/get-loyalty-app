@@ -3,7 +3,13 @@
 
 name: Backend test
 
-on: [push]
+on:
+  pull_request:
+    paths:
+      - 'loyalty-backend/**'
+  push:
+    paths:
+      - 'loyalty-backend/**'
 
 jobs:
   build:
