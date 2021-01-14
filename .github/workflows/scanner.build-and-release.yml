@@ -13,7 +13,6 @@ jobs:
       - uses: actions/setup-java@v1
         with:
           java-version: '12.x'
-        working-directory: scanner-app
       - uses: subosito/flutter-action@v1
       - name: Pub get
         run: flutter pub get
@@ -27,6 +26,5 @@ jobs:
       - name: Create a Release APK
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "build/app/outputs/apk/release/*.apk"
+          artifacts: "scanner-app/build/app/outputs/apk/release/*.apk"
           token: ${{ secrets.GITHUB_TOKEN }}
-        working-directory: scanner-app
