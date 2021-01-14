@@ -10,7 +10,6 @@ jobs:
     - uses: actions/setup-java@v1
       with:
         java-version: '12.x'
-      working-directory: scanner-app
     - uses: subosito/flutter-action@v1
     - name: Pub get
       run: flutter pub get
