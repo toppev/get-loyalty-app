@@ -2,6 +2,8 @@ name: loyalty-panel s3-deploy
 
 on:
   push:
+    paths: 
+      - 'loyalty-panel/**'
     branches:
       - master
 
