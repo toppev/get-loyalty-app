@@ -13,7 +13,6 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12
-        working-directory: loyalty-panel
       - name: Install
         run: yarn install
         working-directory: loyalty-panel
