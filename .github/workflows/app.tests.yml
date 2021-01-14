@@ -2,7 +2,13 @@
 
 name: loyalty-app (PWA) tests
 
-on: [push, pull_request]
+on:
+  pull_request:
+    paths: 
+    - 'loyalty-app/**'
+  push:
+    paths:
+    - 'loyalty-app/**'
 
 jobs:
   build:
