@@ -11,6 +11,7 @@ COPY package*.json .npmrc ./
 RUN apk --update --no-cache add curl
 
 ARG NPM_TOKEN
+
 # ~/.npmrc is used to authenticate, different from the project level .npmrc
 RUN echo //npm.pkg.github.com/:_authToken=${NPM_TOKEN} > ~/.npmrc
 
@@ -19,4 +20,5 @@ RUN npm install --only=production
 RUN rm -f ~/.npmrc
 COPY . .
 EXPOSE 3001
+
 CMD [ "npm", "start"]

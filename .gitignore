@@ -1,3 +1,4 @@
 # IDE/Editor
 .idea
 *.iml
+.env

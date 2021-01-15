@@ -8,7 +8,7 @@ const User = require("../models/user");
 const CAPTCHA_MODES = ["DISABLED", "ALL", "IF_EMPTY"]
 const captchaMode = process.env.CAPTCHA_MODE || "IF_EMPTY" // current mode, default to "IF_EMPTY"
 if (!CAPTCHA_MODES.includes(captchaMode)) throw Error(`Invalid CAPTCHA_MODE: ${captchaMode}`)
-if (process.env.CAPTCHA_SECRET_KEY && process.env.NODE_ENV !== 'test') throw Error('CAPTCHA_SECRET_KEY is missing')
+if (!process.env.CAPTCHA_SECRET_KEY && process.env.NODE_ENV !== 'test') throw Error('CAPTCHA_SECRET_KEY is missing')
 
 let isEmptyServer;
 const checkEmpty = () => {

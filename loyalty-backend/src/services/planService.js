@@ -4,7 +4,7 @@ const request = require("request");
 const USER_PLAN_API = "https://api.getloyalty.app/user/plan"
 const SERVER_KEY = process.env.SERVER_KEY
 if (!SERVER_KEY && process.env.NODE_ENV !== 'test') {
-    console.log(`Invalid SERVER_KEY env var. Length: ${SERVER_KEY.length}`);
+    console.log(`Invalid SERVER_KEY env var.`);
 }
 
 module.exports = {
@@ -14,7 +14,9 @@ module.exports = {
 
 async function updateUserPlan() {
     try {
-        const { email } = await businessService.getBusinessOwnerUser();
+        const owner = await businessService.getBusinessOwnerUser();
+        if (!owner) throw new Error("no business owner");
+        const { email } = owner;
         if (!email) {
             console.log(`Invalid user email: ${email}`)
             return;

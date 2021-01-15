@@ -1,0 +1,49 @@
+version: '3.7'
+services:
+  backend:
+    container_name: loyalty_backend
+    restart: always
+    build:
+      context: ./loyalty-backend
+      args:
+        NPM_TOKEN: ${NPM_TOKEN}
+    volumes:
+      - 'backenddata:/usr/src/app/uploads'
+    ports:
+      - '3001:3001'
+    image: localhost:5000/loyalty_backend
+    env_file:
+      - loyalty-backend/dev.env
+  mongo:
+    container_name: mongo-loyalty-db
+    image: mongo
+    volumes:
+      - dbdata:/data/db
+  panel:
+    container_name: loyalty-panel
+    build:
+      context: ./loyalty-panel
+      dockerfile: dev.Dockerfile
+      args:
+        NPM_TOKEN: ${NPM_TOKEN}
+    ports:
+      - '3002:3002'
+    stdin_open: true
+    volumes:
+      - ./loyalty-panel:/usr/src/app
+  pwa-app:
+    container_name: loyalty-pwa-app
+    build:
+      context: ./loyalty-app
+      dockerfile: dev.Dockerfile
+    ports:
+      - '3000:3000'
+    stdin_open: true
+    volumes:
+    - ./loyalty-app:/usr/src/app
+  # TODO: the other services? long polling and image "db" services?
+
+
+volumes:
+  backenddata:
+  dbdata:

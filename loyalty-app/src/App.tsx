@@ -69,7 +69,7 @@ function App() {
             })
             .catch(err => {
                 console.log(err)
-                setError('Failed to load pages')
+                setError('Failed to load the pages')
             })
     }
 
