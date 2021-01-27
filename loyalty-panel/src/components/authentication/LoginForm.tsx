@@ -143,35 +143,44 @@ export default function LoginForm() {
         setMessage("Verifying...")
         const getToken = async () => creatingAccount ? await getCaptchaToken() : "" // token not required when logging in
         getToken().then(token => {
-            setMessage("Connecting...")
-            const { email } = values
-            getOrCreateServer({ email, token }, creatingAccount)
-                .then(async () => {
-                    if (creatingAccount) {
-                        // We need a new token for "loyalty-backend" as first one was used by the "loyalty-servers"
-                        // Kinda hacky
-                        values.token = await getCaptchaToken()
-                        createAccount(values, actions).then()
-                    } else {
-                        loginAccount(values, actions).then()
-                    }
-                })
-                .catch((e) => {
-                    actions.setSubmitting(false)
-                    const msg = e?.response?.data?.message
-                    if (msg) {
-                        setMessage(msg)
-                    } else if (e.response?.status === 404) {
+                setMessage("Connecting...")
+                const { email } = values
+                getOrCreateServer({ email, token }, creatingAccount)
+                    .then(async () => {
                         if (creatingAccount) {
-                            setMessage('No servers available. Please try again later.')
+                            // We need a new token for "loyalty-backend" as first one was used by the "loyalty-servers"
+                            // Kinda hacky
+                            values.token = await getCaptchaToken()
+                            createAccount(values, actions)
+                                .then()
+                                .catch(e => {
+                                    setMessage(e?.response?.data?.message || 'Account created but something went wrong when registering...')
+                                })
                         } else {
-                            setMessage('Account not found. Did you mean to register?')
+                            loginAccount(values, actions)
+                                .then()
+                                .catch(e => {
+                                    setMessage(e?.response?.data?.message || 'Account created but something went wrong when registering...')
+                                })
                         }
-                    } else {
-                        setMessage(e?.response?.data?.message || `Error code: ${e?.response?.status}` || e.toString())
-                    }
-                })
-        })
+                    })
+                    .catch((e) => {
+                        actions.setSubmitting(false)
+                        const msg = e?.response?.data?.message
+                        if (msg) {
+                            setMessage(msg)
+                        } else if (e.response?.status === 404) {
+                            if (creatingAccount) {
+                                setMessage('No servers available. Please try again later.')
+                            } else {
+                                setMessage('Account not found. Did you mean to register?')
+                            }
+                        } else {
+                            setMessage(e?.response?.data?.message || `Error code: ${e?.response?.status}` || e.toString())
+                        }
+                    })
+            }
+        )
     }
 
     const validate = (values: FormValues) => {
