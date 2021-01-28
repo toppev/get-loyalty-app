@@ -16,22 +16,22 @@ You can run each service manually as well. In that case, you must install requir
 ### loyalty-panel
 The control/management panel (https://panel.getloyalty.app). The place where you create the campaigns, pages etc.
 
-<p align="middle">
-    <img src="assets/overview-page.png" alt="Customers" width="49%"/>
-    <img src="assets/editing-campaign.jpg" alt="Customers" width="49%"/>
-</p>
+Default development port: [3002](http://localhost:3002) 
 
-Default development port: 3002 
+![Scanner App](./assets/overview-page.png)
+
+![Scanner App](./assets/editing-campaign.jpg)
+
 
 ### loyalty-app
 The web app (PWA) the users/customers will use. You can see the pages, on going campaigns, your rewards and more here.
 
-<p align="middle">
-    <img src="assets/editing-pages.png" alt="Customers" width="49%"/>
-    <img src="assets/example-pages-phone.jpg" alt="Customers" width="49%"/>
-</p>
+Default development port: [3000](http://localhost:3000) 
 
-Default development port: 3000
+![Scanner App](./assets/editing-pages.png)
+
+![Scanner App](./assets/example-pages-phone.jpg)
+
 
 ## scanner-app
 A simple app to scan customer QR codes and confirm purchases and rewards.
@@ -41,7 +41,7 @@ A simple app to scan customer QR codes and confirm purchases and rewards.
 ### loyalty-backend
 The backend of the loyalty app (one per app).
 
-Default development port: 3001
+Default development port: [3001](http://localhost:3001) 
 
 
 See [here](./assets) for more images.
