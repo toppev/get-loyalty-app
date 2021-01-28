@@ -30,7 +30,8 @@ Default development port: [3000](http://localhost:3000)
 
 ![Scanner App](./assets/editing-pages.png)
 
-![Scanner App](./assets/example-pages-phone.jpg)
+![Scanner App](./assets/example-pages-phone.jpg)* The screenshots are from the beta version. 
+The pages are already a lot better and you can easily edit them.
 
 
 ## scanner-app
