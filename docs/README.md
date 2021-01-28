@@ -1,5 +1,23 @@
 # easy-loyalty-app
+Loyalty app setup with (progressive web) app, backend, management panel and a scanner app.
 
+The solution for building versatile loyalty apps easier with a WYSIWYG editor.
+
+This documentation will be updated later. Also, the entire project is still under development.
+
+<p align="middle">
+    <img src="assets/overview-page.png" alt="Overview Page" width="32%"/>
+    <img src="assets/editing-campaign.jpg" alt="Customers" width="32%"/>
+    <img src="assets/editing-pages.png" alt="Customers" width="32%"/>
+</p>
+
+<p align="middle">
+    <img src="assets/sending-notification.png" alt="Customers" width="32%"/>
+    <img src="assets/scanner-feature.jpg" alt="Customers" width="32%"/>
+    <img src="assets/example-pages-phone.jpg" alt="Customers" width="32%"/>
+</p>
+
+See [here](./assets) for more images.
 
 ## Start development
 Prerequisites: [docker](https://docs.docker.com/engine/install/) and [docker-compose](https://docs.docker.com/compose/install/)
