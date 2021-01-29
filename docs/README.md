@@ -5,6 +5,19 @@ The solution for building versatile loyalty apps easier with a WYSIWYG editor ([
 
 This documentation will be updated later. Also, the entire project is still under development.
 
+## Features
+
+- Customizable pages ([grapesjs](https://grapesjs.com/) editor or raw HTML/CSS)
+- Customizable [app](../loyalty-app) and app settings
+- Versatile campaigns: stamps, birthday and custom campaigns and [more](../loyalty-campaigns)
+- Customer rewards
+- Customer levels with rewards
+- QR codes in the app to identify the customer and reward
+- QR code reader app ([scanner-app](../scanner-app))
+- Progressive web app (e.g add to home screen)
+- Push notifications
+
+...and more
 
 ## Start development
 Prerequisites: [docker](https://docs.docker.com/engine/install/) and [docker-compose](https://docs.docker.com/compose/install/)
@@ -40,7 +53,7 @@ A simple app to scan customer QR codes and confirm purchases and rewards.
 ![Scanner App](./assets/scanner-feature.jpg)
 
 ## loyalty-backend
-The backend of the loyalty app (one per app).
+The backend of the loyalty app (one per app). Uses MongoDB as the database for users, campaigns, pages etc.
 
 Default development port: [3001](http://localhost:3001) 
 
