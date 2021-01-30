@@ -27,7 +27,7 @@ You can run each service manually as well. In that case, you must install requir
 
 
 ## loyalty-panel
-The control/management panel (https://panel.getloyalty.app). The place where you create the campaigns, pages etc.
+The control/management panel where you create the campaigns, pages etc.
 
 Default development port: [3002](http://localhost:3002) 
 
@@ -56,6 +56,3 @@ A simple app to scan customer QR codes and confirm purchases and rewards.
 The backend of the loyalty app (one per app). Uses MongoDB as the database for users, campaigns, pages etc.
 
 Default development port: [3001](http://localhost:3001) 
-
-
-See [here](./assets) for more images.
