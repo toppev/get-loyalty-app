@@ -39,7 +39,7 @@ async function getOwnBusiness(user) {
 async function getBusinessOwnerUser() {
     const owners = await User.find({ role: 'business' });
     if (owners.length === 0) {
-        console.log(`Warning: no business owners found`);
+        console.log(`Warning: no business owners found. Nobody registered?`);
     }
     if (owners.length > 1) {
         console.log(`Warning: more business owners than expected: ${owners.length}`);

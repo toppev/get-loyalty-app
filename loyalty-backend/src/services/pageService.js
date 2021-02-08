@@ -161,7 +161,7 @@ async function getPageContext(user) {
     const business = await Business.findOne().lean();
     if (business) {
         //
-        // Add all page placeholders somewhere here
+        // Add all page placeholders somewhere below here
         //
         const dateOpts = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
 

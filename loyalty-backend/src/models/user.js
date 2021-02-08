@@ -31,9 +31,12 @@ const userSchema = new Schema({
         },
         index: true
     },
+    // The business's news letter subscription
     newsLetter: {
-        type: Boolean,
-        default: false
+        subscribed: {
+            type: Date,
+            default: undefined
+        }
     },
     password: {
         type: String,

@@ -1,21 +1,22 @@
 const businessService = require('./businessService')
 const request = require("request");
 
-const USER_PLAN_API = "https://api.getloyalty.app/user/plan"
-const SERVER_KEY = process.env.SERVER_KEY
-if (!SERVER_KEY && process.env.NODE_ENV !== 'test') {
-    console.log(`Invalid SERVER_KEY env var.`);
-}
+const SERVER_KEY = process.env.SERVER_KEY || 'testing'
+if (SERVER_KEY === 'testing') console.log(`Using test SERVER_KEY: ${SERVER_KEY}`)
+const USER_PLAN_API = `https://api.getloyalty.app/servers/plan/current?key=${SERVER_KEY}&fallback=default`
 
 module.exports = {
-    updateUserPlan // TODO use
+    updateUserPlan
 };
 
 
 async function updateUserPlan() {
     try {
         const owner = await businessService.getBusinessOwnerUser();
-        if (!owner) throw new Error("no business owner");
+        if (!owner) {
+            console.log("Unable to update plan: no owner found")
+            return;
+        }
         const { email } = owner;
         if (!email) {
             console.log(`Invalid user email: ${email}`)
@@ -45,11 +46,13 @@ async function getUserPlan(email) {
 }
 
 /**
- * Returns whether the plans are different (something has changed)
+ * Returns whether the plans are different (something has changed).
+ *
+ * Stringifies, parses the JSON and then compares them
  */
 function planHasChanged(oldPlan, newPlan) {
-    const oldJson = JSON.stringify(oldPlan)
-    const newJson = JSON.stringify(newPlan)
+    const oldJson = JSON.parse(JSON.stringify(oldPlan))
+    const newJson = JSON.parse(JSON.stringify(newPlan))
     if (oldJson !== newJson) {
         console.log("Plan updated from", oldJson, "to", newJson)
         return true;
