@@ -6,7 +6,7 @@ const PAGE_API_URL = 'https://demo.getloyalty.app/api/page';
 
 /** IDs of the template pages that will be saved initially */
 const DEFAULT_PAGES = (process.env.DEFAULT_PAGES || "").split(",")
-console.log(`Template IDs (${DEFAULT_PAGES.length}): ${DEFAULT_PAGES}`)
+console.log(`Template (default) page IDs (${DEFAULT_PAGES.length}): ${DEFAULT_PAGES}`)
 
 async function loadDefaultTemplates() {
     if (!DEFAULT_PAGES.length) return;
