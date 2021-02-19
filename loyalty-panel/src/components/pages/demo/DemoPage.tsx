@@ -59,7 +59,7 @@ export default function () {
 
     // FIXME: should we iframe the self hosted page or??
     // Probably good enough for now
-    const src = `${backendURL}`.replace('/api', '');
+    const src = process.env.NODE_ENV === "development" ? "http://localhost:3000" : `${backendURL}`.replace('/api', '');
 
     return (
         <Box display="flex" flexWrap="wrap" flexDirection="row" alignItems="center" className={classes.boxDesktop}>

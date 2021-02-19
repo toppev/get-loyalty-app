@@ -5,13 +5,13 @@ import Page, { ERROR_HTML } from "./model/Page";
 import PageView from "./components/PageView";
 import { profileRequest, registerRequest } from "./services/userService";
 import { BrowserRouter as Router, Redirect, Route, Switch } from "react-router-dom";
-import Navbar from "./components/Navbar";
 import { BASE_URL } from "./config/axios";
 import { AxiosResponse } from "axios";
 import { claimCoupon } from "./services/couponService";
 import { Helmet } from "react-helmet";
 import { AppContext, defaultAppContext } from './AppContext';
 import NotificationHandler from "./components/notification/NotificationHandler";
+import Navbar from "./components/Navbar";
 
 function App() {
 
@@ -66,6 +66,9 @@ function App() {
                 const pages = res.data
                 setPages(pages)
                 refreshHtmlPages(pages)
+                if (!pages.length) {
+                    window.alert("There are no pages available currently. Add or publish pages to get started.")
+                }
             })
             .catch(err => {
                 console.log(err)
@@ -111,6 +114,8 @@ function App() {
 
                     {error && <p className="ErrorMessage">Error: {error.response?.message || error.toString()}</p>}
 
+                    <Navbar pages={pages || []}/>
+
                     <Switch>
                         {pages.map(page => (
                             <Route exact path={`/${page.pathname}`} key={page._id}>
@@ -120,8 +125,6 @@ function App() {
                         {pages.length > 0 &&
                         <Redirect to={{ pathname: pages[0].pathname, search: window.location.search }}/>}
                     </Switch>
-
-                    <Navbar pages={pages || []}/>
 
                     <NotificationHandler onRefresh={refreshHtmlPages}/>
                 </div>

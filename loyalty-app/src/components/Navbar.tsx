@@ -1,7 +1,10 @@
 import React, { useEffect } from "react";
-import Page from "../model/Page";
 import { NavLink, useLocation } from "react-router-dom";
+import { useMediaQuery } from 'react-responsive'
+import Page from "../model/Page";
 import PageIcon from "./PageIcon";
+
+import './Navbar.css';
 
 interface NavbarProps {
     pages: Page[]
@@ -13,13 +16,29 @@ export default function (props: NavbarProps) {
     const location = useLocation();
     useEffect(() => window.scrollTo({ top: 0, behavior: 'smooth' }), [location])
 
-    return pages?.length > 1 ? (
-        <nav className="navbar">
+    const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
+
+    // Not enabled if only one page
+    if (pages?.length === 0) return null
+
+    return isTabletOrMobile ? (
+        <nav className="mobile-navbar">
             {pages?.map(page => (
-                <NavLink key={page._id} to={page.pathname + window.location.search} className="navlink">
-                    <PageIcon page={page}/>
+                <NavLink key={page._id} to={page.pathname + window.location.search} className="navlink-mobile">
+                    <PageIcon page={page} style={{ margin: 'auto' }}/>
                 </NavLink>
             ))}
         </nav>
-    ) : null
+    ) : (
+        <nav className="desktop-navbar">
+            {pages?.map(page => (
+                <NavLink key={page._id} to={page.pathname + window.location.search} className="navlink-desktop">
+                    <div style={{ display: 'flex' }}>
+                        <PageIcon page={page}/>
+                        <span>{page.pathname}</span>
+                    </div>
+                </NavLink>
+            ))}
+        </nav>
+    )
 }

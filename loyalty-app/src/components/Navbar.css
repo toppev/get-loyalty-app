@@ -1,0 +1,80 @@
+.mobile-navbar {
+  display: table;
+  background-color: #333;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+.mobile-navbar a {
+  display: table-cell;
+  color: #E0E0E0;
+  text-align: center;
+  font-size: 16px;
+  text-decoration: none;
+}
+
+.mobile-navbar .active {
+  border-bottom: #1976D2 solid 4px !important;
+  color: black;
+}
+
+.mobile-navbar .active .pageIcon svg {
+  fill: #ffffff;
+}
+
+.mobile-navbar .pageIcon svg {
+  fill: #9e9e9e;
+}
+
+.navlink-mobile {
+  border: solid #212121 1px;
+  padding: 4px;
+}
+
+
+/** Start of desktop UI */
+
+.desktop-navbar {
+  top: 50px;
+  left: 0;
+  margin: 100px 60px;
+  display: grid;
+  height: fit-content;
+  min-width: 270px;
+  font-weight: bolder;
+}
+
+.desktop-navbar .active {
+  border-radius: 5px 5px 0 0;
+  background-color: #eeeef3;
+}
+
+.desktop-navbar .active span {
+  color: #0b6fbf;
+}
+
+.desktop-navbar span {
+  display: table-cell;
+  text-decoration: inherit;
+  text-align: center;
+  font-size: 18px;
+  text-decoration: none;
+  margin-left: 12px;
+  color: #647fac;
+}
+
+.desktop-navbar .active .pageIcon svg {
+}
+
+.desktop-navbar .pageIcon svg {
+}
+
+.navlink-desktop {
+  display: flex;
+  text-decoration: none;
+  font-size: 22px;
+  margin: 10px;
+  padding: 20px 20px 0 0;
+  border-bottom: solid #959595 1px;
+}
