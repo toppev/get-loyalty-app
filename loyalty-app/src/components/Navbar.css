@@ -38,7 +38,7 @@
 .desktop-navbar {
   top: 50px;
   left: 0;
-  margin: 100px 60px;
+  margin: 60px 60px;
   display: grid;
   height: fit-content;
   min-width: 270px;
@@ -68,6 +68,11 @@
 }
 
 .desktop-navbar .pageIcon svg {
+}
+
+.navbar-logo {
+  margin: 0 auto 30px auto
+
 }
 
 .navlink-desktop {

@@ -43,7 +43,7 @@ function waitForServer(callback: () => any, onError?: (error: Error) => any) {
             .then(callback)
             .catch((err) => {
                 onError && onError(err)
-                setTimeout(sendRequest, 5000)
+                setTimeout(sendRequest, 10000)
             })
     }
 

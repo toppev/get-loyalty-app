@@ -5,6 +5,7 @@ import Page from "../model/Page";
 import PageIcon from "./PageIcon";
 
 import './Navbar.css';
+import { BASE_URL } from "../config/axios";
 
 interface NavbarProps {
     pages: Page[]
@@ -31,6 +32,9 @@ export default function (props: NavbarProps) {
         </nav>
     ) : (
         <nav className="desktop-navbar">
+            <a href={pages[0].pathname + window.location.search}>
+                <img src={`${BASE_URL}/business/icon?size=180`} width="180" alt="" className="navbar-logo"/>
+            </a>
             {pages?.map(page => (
                 <NavLink key={page._id} to={page.pathname + window.location.search} className="navlink-desktop">
                     <div style={{ display: 'flex' }}>
