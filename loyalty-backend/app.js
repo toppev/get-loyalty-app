@@ -1,4 +1,7 @@
-require('dotenv').config();
+require('dotenv').config({
+    path: process.env.NODE_ENV === "production" ? '.env' : 'dev.env'
+});
+
 const express = require('express');
 const app = express();
 const parser = require('body-parser');
@@ -73,7 +76,9 @@ app.use(cors(function (req, callback) {
 }));
 
 require('./src/config/passport');
-app.use(require('./src/config/sessionConfig'));
+const session = require('./src/config/sessionConfig');
+app.use(session.sessionHandler);
+app.use(session.customSessionConfig);
 app.use(passport.initialize());
 app.use(passport.session());
 
