@@ -1,8 +1,7 @@
 const cookieSession = require('cookie-session');
 
-
-const sessionName = process.env.DEMO_SERVER === "true" ? 'demo_sessions' : (process.env.SESSION_NAME || 'loyalty_session')
-console.log(`Session cookie name: ${sessionName}`)
+const sessionName = process.env.SESSION_NAME || 'loyalty_session'
+console.log(`Session cookie name: ${sessionName}`, "(env " + process.env.SESSION_NAME + ")")
 
 const sessionHandler = cookieSession({
     name: sessionName,

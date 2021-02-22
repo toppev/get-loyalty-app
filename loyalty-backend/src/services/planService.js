@@ -24,6 +24,7 @@ async function updateUserPlan() {
         }
         const business = await businessService.getBusiness()
         const plan = await getUserPlan(email);
+        if (plan.error) console.log("Requesting current plan returned error.", plan)
         if (plan && planHasChanged(business.plan, plan)) {
             business.plan = plan
             await businessService.update(business)
