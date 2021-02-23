@@ -36,7 +36,7 @@ async function updateUserPlan() {
 
 async function getUserPlan(email) {
     return new Promise((resolve, reject) => {
-        request.get(`${USER_PLAN_API}/?key=${SERVER_KEY}`, { email: email }, (err, _res, body) => {
+        request.get(USER_PLAN_API, { email: email }, (err, _res, body) => {
             if (err) {
                 reject(err)
             } else {

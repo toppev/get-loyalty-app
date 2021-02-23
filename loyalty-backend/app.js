@@ -49,12 +49,12 @@ app.use(parser.json({
     limit: limit,
 }));
 
-let frontendOrigin = process.env.FRONTEND_ORIGIN || process.env.PUBLIC_URL;
+let frontendOrigin = process.env.APP_ORIGIN || process.env.PUBLIC_URL;
 if (frontendOrigin && !frontendOrigin.startsWith("https://")) {
     frontendOrigin = `https://${frontendOrigin}`
 }
 const origins = [
-    ...(frontendOrigin ? frontendOrigin.split(',') : ['no_frontend_origin']),
+    ...(frontendOrigin ? frontendOrigin.split(',') : ['no_app_origin']),
     'https://panel.getloyalty.app',
     'http://localhost:3002',
     'http://localhost:3000' // Just so dev setups can access templates at api.getloyalty.app/...

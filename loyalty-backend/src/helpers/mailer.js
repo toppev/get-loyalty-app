@@ -18,7 +18,7 @@ const transporter = nodemailer.createTransport({
 async function emailPasswordReset(email, token, redirectUrl) {
     if (process.env.NODE_ENV === 'test') return;
 
-    const redirect = redirectUrl || process.env.FRONTEND_ORIGIN;
+    const redirect = redirectUrl || process.env.APP_ORIGIN.split(',')[0];
     const url = `${process.env.PUBLIC_URL}/user/resetpassword/${token}?redirect${redirect}`;
 
     const mailOptions = {
