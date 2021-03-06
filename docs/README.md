@@ -24,8 +24,8 @@ This documentation will be updated later. Also, the entire project is still unde
 
 Prerequisites: [docker](https://docs.docker.com/engine/install/) and [docker-compose](https://docs.docker.com/compose/install/)
 
-Run the `start-dev.sh` script to start the development environment.
-You can run each service manually as well. In that case, you must install requirements (such as NPM, Yarn and MongoDB) manually.
+Run the `start-dev.sh` script to start the development environment. You can run each service manually as well. In that case, you must
+install requirements (such as NPM, Yarn and MongoDB) manually.
 
 ## loyalty-panel
 

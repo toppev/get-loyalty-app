@@ -5,9 +5,6 @@ charset = utf-8
 end_of_line = lf
 insert_final_newline = true
 max_line_length = 140
-
-# not all because .md files
-[*.{js,ts,tsx,jsx}]
 trim_trailing_whitespace = true
 
 [*.py]
