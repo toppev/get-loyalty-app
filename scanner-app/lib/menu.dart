@@ -24,7 +24,8 @@ class MenuWidget extends StatelessWidget {
         sessionService.headers.clear();
         sessionService.values.clear();
         Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (context) => LoginPage(
+            builder: (context) =>
+                LoginPage(
                   title: APP_TITLE,
                 )));
       }

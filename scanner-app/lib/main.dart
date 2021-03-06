@@ -28,7 +28,7 @@ void main() async {
         ],
         child: MaterialApp(
             home: LoginPage(
-          title: APP_TITLE,
-        ))),
+              title: APP_TITLE,
+            ))),
   );
 }

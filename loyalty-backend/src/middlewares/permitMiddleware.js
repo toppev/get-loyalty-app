@@ -10,8 +10,7 @@ module.exports = function permit(operation, params) {
             }).then(allowed => {
                 if (allowed) {
                     next();
-                }
-                else {
+                } else {
                     res.status(403).json({ message: "Forbidden: no permission" });
                 }
             }).catch(err => next(err));

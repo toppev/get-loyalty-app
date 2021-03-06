@@ -2,9 +2,8 @@
 
 Flutter app for scanning customer QR codes (user codes and rewards codes).
 
-**You can download the app for android [here](https://github.com/toppev/loyalty-scanner-app/releases)** (it's not yet on
- Google Play Store or App Store). Download the `app-release.apk` and open it to install. You must allow installing from other sources
-  when your device asks.
+**You can download the app for android [here](https://github.com/toppev/loyalty-scanner-app/releases)** (it's not yet on Google Play Store
+or App Store). Download the `app-release.apk` and open it to install. You must allow installing from other sources when your device asks.
 
 ## Instructions (developers)
 

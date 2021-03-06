@@ -28,7 +28,7 @@ class _QuestionDialogWidgetState extends State<QuestionDialogWidget> {
   void initState() {
     super.initState();
     answers =
-        new Map.fromIterable(widget.questions, key: (v) => v, value: (v) => new List<String>());
+    new Map.fromIterable(widget.questions, key: (v) => v, value: (v) => new List<String>());
   }
 
   @override
@@ -73,10 +73,10 @@ class _QuestionDialogWidgetState extends State<QuestionDialogWidget> {
             children: <Widget>[
               Flexible(
                   child: Text(
-                question.question,
-                overflow: TextOverflow.fade,
-                style: TextStyle(fontSize: 36),
-              )),
+                    question.question,
+                    overflow: TextOverflow.fade,
+                    style: TextStyle(fontSize: 36),
+                  )),
             ],
           ),
           Row(

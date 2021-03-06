@@ -87,7 +87,7 @@ export default function (props: ProductFormProps) {
                         onCategoriesUpdate={setCategories}
                     />
                     {(isSubmitting || loading) && <LinearProgress/>}
-                   <RetryButton error={error}/>
+                    <RetryButton error={error}/>
                     <div className={classes.submitDiv}>
                         <Button
                             className={classes.submitButton}

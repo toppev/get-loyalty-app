@@ -49,42 +49,42 @@ export default function ({ onSelect }: PlaceholderSelectorProps) {
                         <Typography variant="h6" className={classes.categoryName}>{value.name}</Typography>
                         <Table>
                             <TableBody>
-                            {Object.entries(value.placeholders).map(([property, placeholder]) => {
+                                {Object.entries(value.placeholders).map(([property, placeholder]) => {
 
-                                    const available = !placeholder.available || placeholder.available(placeholderContext)
-                                    const text = `{{${value.identifier}.${property}}}`;
+                                        const available = !placeholder.available || placeholder.available(placeholderContext)
+                                        const text = `{{${value.identifier}.${property}}}`;
 
-                                    return (
-                                        <TableRow key={placeholder.name}>
-                                            <TableCell align="left">{placeholder.name}</TableCell>
-                                            <TableCell align="center">{placeholder.description}</TableCell>
-                                            <TableCell align="right">
-                                                <Tooltip
-                                                    enterDelay={300}
-                                                    title={available === true ? (
-                                                        <Typography>Select <i>{text}</i> placeholder</Typography>
-                                                    ) : (
-                                                        <>
-                                                            <Typography>Unavailable</Typography>
-                                                            {typeof available === 'string' && available}
-                                                        </>
-                                                    )}
-                                                >
-                                                    <div>
-                                                        <Button
-                                                            disabled={available !== true}
-                                                            variant="contained"
-                                                            color={available ? "primary" : "inherit"}
-                                                            size="small"
-                                                            onClick={() => onSelect(text)}
-                                                        >Select</Button>
-                                                    </div>
-                                                </Tooltip>
-                                            </TableCell>
-                                        </TableRow>
-                                    )
-                                }
-                            )}
+                                        return (
+                                            <TableRow key={placeholder.name}>
+                                                <TableCell align="left">{placeholder.name}</TableCell>
+                                                <TableCell align="center">{placeholder.description}</TableCell>
+                                                <TableCell align="right">
+                                                    <Tooltip
+                                                        enterDelay={300}
+                                                        title={available === true ? (
+                                                            <Typography>Select <i>{text}</i> placeholder</Typography>
+                                                        ) : (
+                                                            <>
+                                                                <Typography>Unavailable</Typography>
+                                                                {typeof available === 'string' && available}
+                                                            </>
+                                                        )}
+                                                    >
+                                                        <div>
+                                                            <Button
+                                                                disabled={available !== true}
+                                                                variant="contained"
+                                                                color={available ? "primary" : "inherit"}
+                                                                size="small"
+                                                                onClick={() => onSelect(text)}
+                                                            >Select</Button>
+                                                        </div>
+                                                    </Tooltip>
+                                                </TableCell>
+                                            </TableRow>
+                                        )
+                                    }
+                                )}
                             </TableBody>
                         </Table>
                     </TableContainer>

@@ -60,7 +60,9 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _buildTextFields() {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery
+        .of(context)
+        .size;
 
     final paddingLR = size.width > 480 ? size.width * 0.25 : size.width * 0.1;
     final paddingTop = size.height * 0.25;
@@ -103,23 +105,23 @@ class _LoginPageState extends State<LoginPage> {
             onPressed: buttonDisabled
                 ? null
                 : () async {
-                    setState(() => buttonDisabled = true);
-                    try {
-                      await userService.login(UserCredentials(_email.trim(), _password));
-                      setState(() {
-                        _email = "";
-                        _password = "";
-                      });
-                      Navigator.of(context)
-                          .pushReplacement(MaterialPageRoute(builder: (context) => ScannerPage()));
-                    } catch (e) {
-                      showError(context,
-                          message: 'Failed to login. Check credentials and network connection',
-                          error: e.toString());
-                    } finally {
-                      setState(() => buttonDisabled = false);
-                    }
-                  },
+              setState(() => buttonDisabled = true);
+              try {
+                await userService.login(UserCredentials(_email.trim(), _password));
+                setState(() {
+                  _email = "";
+                  _password = "";
+                });
+                Navigator.of(context)
+                    .pushReplacement(MaterialPageRoute(builder: (context) => ScannerPage()));
+              } catch (e) {
+                showError(context,
+                    message: 'Failed to login. Check credentials and network connection',
+                    error: e.toString());
+              } finally {
+                setState(() => buttonDisabled = false);
+              }
+            },
           ),
         ],
       ),

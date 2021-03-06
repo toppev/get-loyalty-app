@@ -306,7 +306,7 @@ function ProductPreview({ open, onClickClose, initialProducts }: PreviewProps) {
                     }}/>
 
                 <div className={classes.submitDiv}>
-                   <RetryButton error={error}/>
+                    <RetryButton error={error}/>
                     <Button
                         className={classes.submitButton}
                         aria-haspopup="true"

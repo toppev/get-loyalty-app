@@ -12,19 +12,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup Node.js
-      uses: actions/setup-node@v1
-      with:
-        node-version: 12
-      working-directory: loyalty-panel
-    - name: Authenticate with GitHub package registry
-      run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.READ_ORG_PACKAGES }}" > ~/.npmrc
-    - name: NPM CI
-      run: npm ci
-      working-directory: loyalty-panel
-    - name: Test
-      run: npm test
-      env:
-        CI: true
-      working-directory: loyalty-panel
+      - uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+        working-directory: loyalty-panel
+      - name: Authenticate with GitHub package registry
+        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.READ_ORG_PACKAGES }}" > ~/.npmrc
+      - name: NPM CI
+        run: npm ci
+        working-directory: loyalty-panel
+      - name: Test
+        run: npm test
+        env:
+          CI: true
+        working-directory: loyalty-panel

@@ -1,11 +1,9 @@
-
 # loyalty-panel
+
 The loyalty app control panel.
 
 You can, for example, create and modify campaigns, products, business information and pages, send notifications and reward users in this
- app.
-
-
+app.
 
 ## Available Scripts
 

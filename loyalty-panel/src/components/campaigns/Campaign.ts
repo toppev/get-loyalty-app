@@ -69,6 +69,7 @@ class Requirement {
     ) {
     }
 }
+
 /** Util to get the human readable name of the requirement as it's not stored in campaigns etc */
 function getRequirementName(requirement: Requirement) {
     return allRequirements[requirement.type].name;

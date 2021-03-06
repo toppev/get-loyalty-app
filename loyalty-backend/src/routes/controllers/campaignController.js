@@ -41,7 +41,7 @@ function getById(req, res, next) {
 
 function getAll(req, res, next) {
     const { populate } = req.query;
-    campaignService.getAllCampaigns( populate !== undefined ? populate : true)
+    campaignService.getAllCampaigns(populate !== undefined ? populate : true)
         .then(campaigns => res.json(campaigns))
         .catch(err => next(err));
 }

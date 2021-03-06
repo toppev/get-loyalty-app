@@ -83,7 +83,7 @@ export default function (props: RewardSelectorProps) {
             <CloseButton onClick={props.onClose}/>
             <DialogContent className={classes.dialogContent}>
                 {loading && <LinearProgress/>}
-               <RetryButton error={error}/>
+                <RetryButton error={error}/>
                 <div className={classes.paper}>
                     <SearchField
                         textColor="black"

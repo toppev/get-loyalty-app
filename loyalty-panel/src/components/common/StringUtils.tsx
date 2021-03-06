@@ -56,7 +56,7 @@ export function format(text: string | undefined, args: any[] = []) {
 }
 
 export function ellipsis(str: string, maxLength: number) {
-    if(str.length > maxLength) {
+    if (str.length > maxLength) {
         return `${str.slice(0, maxLength)}...`
     }
     return str;

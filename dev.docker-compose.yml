@@ -40,7 +40,7 @@ services:
       - '3000:3000'
     stdin_open: true
     volumes:
-    - ./loyalty-app:/usr/src/app
+      - ./loyalty-app:/usr/src/app
   # TODO: the other services? long polling and image "db" services?
 
 
