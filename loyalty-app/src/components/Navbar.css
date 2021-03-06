@@ -10,7 +10,6 @@
   display: table-cell;
   color: #E0E0E0;
   text-align: center;
-  font-size: 16px;
   text-decoration: none;
 }
 
@@ -36,9 +35,7 @@
 /** Start of desktop UI */
 
 .desktop-navbar {
-  top: 50px;
-  left: 0;
-  margin: 60px 60px;
+  margin: 5%;
   display: grid;
   height: fit-content;
   min-width: 270px;
@@ -72,7 +69,14 @@
 
 .navbar-logo {
   margin: 0 auto 30px auto
+}
 
+.navbar-hr {
+  height: 1px;
+  width: 100%;
+  color: #dbdbdb;
+  background-color: #dbdbdb;
+  border: none;
 }
 
 .navlink-desktop {
@@ -82,4 +86,8 @@
   margin: 10px;
   padding: 20px 20px 0 0;
   border-bottom: solid #959595 1px;
+}
+
+.navlink-page-name {
+  text-transform: capitalize;
 }

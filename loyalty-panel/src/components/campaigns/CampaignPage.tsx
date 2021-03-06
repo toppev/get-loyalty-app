@@ -57,8 +57,7 @@ export default function () {
             />
             {(loading || otherRequests.loading) && <LinearProgress/>}
             <Grid className={classes.container} spacing={4} container direction="row" alignItems="flex-start">
-
-                {campaigns.length === 0 &&
+                {campaigns.length === 0 && !loading &&
                 <p className={classes.noCampaigns}>You don't have any campaigns. Create one by clicking the button
                     above.</p>}
 

@@ -35,11 +35,14 @@ export default function (props: NavbarProps) {
             <a href={pages[0].pathname + window.location.search}>
                 <img src={`${BASE_URL}/business/icon?size=180`} width="180" alt="" className="navbar-logo"/>
             </a>
+            <hr className="navbar-hr"/>
             {pages?.map(page => (
                 <NavLink key={page._id} to={page.pathname + window.location.search} className="navlink-desktop">
                     <div style={{ display: 'flex' }}>
                         <PageIcon page={page}/>
-                        <span>{page.pathname}</span>
+                        <span className="navlink-page-name">
+                            {page.pathname.replace("-", " ")}
+                        </span>
                     </div>
                 </NavLink>
             ))}

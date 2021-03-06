@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) =>
             textAlign: 'center',
             color: theme.palette.grey[700],
             fontSize: '16px',
-            height: '30px',
+            maxHeight: '70px',
             wordBreak: 'break-word',
             overflow: 'overlay',
             marginBlockStart: '0.5em',

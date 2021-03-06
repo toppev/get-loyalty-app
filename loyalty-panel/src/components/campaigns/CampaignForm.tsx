@@ -153,7 +153,7 @@ export default function ({ initialCampaign, onSubmitted }: CampaignFormProps) {
                         name="maxRewards.total"
                         type="number"
                         label="Total number of rewards"
-                        placeholder="Maximum number of rewards to give"
+                        placeholder="Maximum number of rewards to give. (Leave empty for unlimited)"
                     />
                     <TextField
                         className={classes.field}
@@ -166,7 +166,7 @@ export default function ({ initialCampaign, onSubmitted }: CampaignFormProps) {
                         className={classes.field}
                         name="couponCode"
                         type="text"
-                        label="Coupon code (customers can use to gain rewards) (Under development, not working yet)"
+                        label="Coupon code (customers can use to gain rewards) (Under development, not working yet!)"
                         placeholder="e.g SUMMER2020, STUDENT20 or name of an event. Leave empty for none"
                     />
 

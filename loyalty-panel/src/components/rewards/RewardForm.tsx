@@ -93,7 +93,7 @@ export default function (props: RewardFormProps) {
                         name="description"
                         type="text"
                         label="Description"
-                        placeholder="A softdrink with 50% discount!"
+                        placeholder="A soft drink with 50% discount!"
                     />
                     <TextField
                         className={classes.field}
