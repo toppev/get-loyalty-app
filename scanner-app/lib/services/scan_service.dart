@@ -12,8 +12,7 @@ class GetScan {
   GetScan(this.reward, this.campaigns, this.questions, {this.scannedString, this.user});
 
   factory GetScan.fromJson(Map<String, dynamic> json, {scannedString}) {
-    List<Question> questions =
-    json['questions'].map<Question>((e) => Question.fromJson(e)).toList();
+    List<Question> questions = json['questions'].map<Question>((e) => Question.fromJson(e)).toList();
 
     return GetScan(
       json['rewards'],
@@ -24,8 +23,7 @@ class GetScan {
     );
   }
 
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         'reward': reward,
         'campaigns': campaigns,
         'questions': questions.map((e) => e.toJson()),
@@ -51,8 +49,7 @@ class Question {
     );
   }
 
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         'id': id,
         'question': question,
         'options': options,
@@ -74,8 +71,7 @@ class UseScan {
     );
   }
 
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         'message': message,
         'newRewards': newRewards,
         'usedReward': usedReward,

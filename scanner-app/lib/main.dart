@@ -19,16 +19,12 @@ void main() async {
     MultiProvider(
         providers: [
           Provider(create: (context) => sessionService),
-          Provider(
-              create: (context) =>
-                  UserService(Provider.of<SessionService>(context, listen: false))),
-          Provider(
-              create: (context) =>
-                  ScanService(Provider.of<SessionService>(context, listen: false))),
+          Provider(create: (context) => UserService(Provider.of<SessionService>(context, listen: false))),
+          Provider(create: (context) => ScanService(Provider.of<SessionService>(context, listen: false))),
         ],
         child: MaterialApp(
             home: LoginPage(
-              title: APP_TITLE,
-            ))),
+          title: APP_TITLE,
+        ))),
   );
 }

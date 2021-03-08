@@ -34,6 +34,7 @@ class _ScannerPageState extends State<ScannerPage> {
       body: Column(
         children: <Widget>[
           Expanded(
+            flex: 1,
             child: Transform.scale(
                 scale: 0.8,
                 child: ScannerWidget(
@@ -41,9 +42,9 @@ class _ScannerPageState extends State<ScannerPage> {
                   onScan: _onScan,
                   onScanToggle: _updateToggleButton,
                 )),
-            flex: 1,
           ),
           Expanded(
+            flex: 1,
             child: FittedBox(
               fit: BoxFit.contain,
               child: Column(
@@ -71,7 +72,6 @@ class _ScannerPageState extends State<ScannerPage> {
                 ],
               ),
             ),
-            flex: 1,
           )
         ],
       ),
@@ -89,20 +89,19 @@ class _ScannerPageState extends State<ScannerPage> {
     print('Scan get result: $data');
     showDialog(
       context: context,
-      builder: (BuildContext context) =>
-          QuestionDialogWidget(
-              onSubmit: (res) {
-                scanService.useScan(data.scannedString, res).then((result) {
-                  print('Scan used. Response: ${result.toJson()}');
-                  Navigator.of(context).pop();
-                  _onScanSubmitted(result);
-                }).catchError((e) {
-                  print(e);
-                  showError(context, message: "Please check connection", error: e.toString());
-                });
-              },
-              questions: data.questions,
-              data: data.toJson()),
+      builder: (BuildContext context) => QuestionDialogWidget(
+          onSubmit: (res) {
+            scanService.useScan(data.scannedString, res).then((result) {
+              print('Scan used. Response: ${result.toJson()}');
+              Navigator.of(context).pop();
+              _onScanSubmitted(result);
+            }).catchError((e) {
+              print(e);
+              showError(context, message: "Please check connection", error: e.toString());
+            });
+          },
+          questions: data.questions,
+          data: data.toJson()),
     );
   }
 
@@ -116,14 +115,8 @@ class _ScannerPageState extends State<ScannerPage> {
       showDialog(
           context: context,
           builder: (BuildContext context) {
-            final height = MediaQuery
-                .of(context)
-                .size
-                .height;
-            final width = MediaQuery
-                .of(context)
-                .size
-                .width;
+            final height = MediaQuery.of(context).size.height;
+            final width = MediaQuery.of(context).size.width;
 
             return AlertDialog(
                 title: Text(
@@ -131,8 +124,7 @@ class _ScannerPageState extends State<ScannerPage> {
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 24, color: Colors.black54),
                 ),
-                shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
                 content: DefaultTextStyle(
                   style: TextStyle(fontSize: 28, color: Colors.black87),
                   child: Container(
@@ -144,9 +136,7 @@ class _ScannerPageState extends State<ScannerPage> {
                         children: <Widget>[
                           Text("Name: ${reward['name']}"),
                           Text("Discount: ${reward['description']}"),
-                          Text(reward['requirement'] != null
-                              ? "Note: ${reward['requirement']}"
-                              : ""),
+                          Text(reward['requirement'] != null ? "Note: ${reward['requirement']}" : ""),
                           Text(reward['description']),
                         ],
                       ),

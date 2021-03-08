@@ -25,3 +25,8 @@ A few useful resources to get you started:
 - [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
 - [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
 - [Flutter online documentation](https://flutter.dev/docs)
+
+
+**Note**: .editorconfig does not override dart plugin/dartfmt line length.
+Please set it to 140 ([IDEA](jetbrains://idea/settings?name=Editor--Code+Style--Dart), File -> Settings -> Editor -> Code Style -> Dart)
+

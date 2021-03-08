@@ -9,12 +9,12 @@ void showError(context, {String message, String error}) {
           error == null
               ? null
               : new FlatButton(
-            child: Text("Show Error"),
-            onPressed: () {
-              Navigator.of(context).pop();
-              showError(context, message: error);
-            },
-          ),
+                  child: Text("Show Error"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    showError(context, message: error);
+                  },
+                ),
           new FlatButton(
             child: Text("Close"),
             onPressed: () {

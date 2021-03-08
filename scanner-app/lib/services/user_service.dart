@@ -10,8 +10,7 @@ class UserCredentials {
 
   UserCredentials(this.email, this.password);
 
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         'email': email,
         'password': password,
       };
@@ -34,8 +33,7 @@ class UserService {
 
   _getServer(String email) async {
     print('#getServer() called. Getting the backend URL from $SERVER_API_URL');
-    final res = await sessionService.post(
-        "$SERVER_API_URL/server/get_or_create/?create=false", json.encode({'email': email}));
+    final res = await sessionService.post("$SERVER_API_URL/server/get_or_create/?create=false", json.encode({'email': email}));
     if (res.statusCode != 200) {
       throw "HTTP status code: ${res.statusCode}. Body: ${res.body}";
     }

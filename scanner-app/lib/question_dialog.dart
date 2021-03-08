@@ -27,8 +27,7 @@ class _QuestionDialogWidgetState extends State<QuestionDialogWidget> {
   @override
   void initState() {
     super.initState();
-    answers =
-    new Map.fromIterable(widget.questions, key: (v) => v, value: (v) => new List<String>());
+    answers = new Map.fromIterable(widget.questions, key: (v) => v, value: (v) => new List<String>());
   }
 
   @override
@@ -59,8 +58,7 @@ class _QuestionDialogWidgetState extends State<QuestionDialogWidget> {
     List<Widget> children = [userInfoEl];
     children.addAll(widget.questions.map((e) => renderQuestion(e)).toList());
 
-    return SingleChildScrollView(
-        child: Column(mainAxisAlignment: MainAxisAlignment.start, children: children));
+    return SingleChildScrollView(child: Column(mainAxisAlignment: MainAxisAlignment.start, children: children));
   }
 
   Widget renderQuestion(Question question) {
@@ -73,10 +71,10 @@ class _QuestionDialogWidgetState extends State<QuestionDialogWidget> {
             children: <Widget>[
               Flexible(
                   child: Text(
-                    question.question,
-                    overflow: TextOverflow.fade,
-                    style: TextStyle(fontSize: 36),
-                  )),
+                question.question,
+                overflow: TextOverflow.fade,
+                style: TextStyle(fontSize: 36),
+              )),
             ],
           ),
           Row(
@@ -99,7 +97,11 @@ class _QuestionDialogWidgetState extends State<QuestionDialogWidget> {
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: RaisedButton(
-        color: isAnswer ? negativeAnswer ? Colors.redAccent : Colors.green : Colors.white70,
+        color: isAnswer
+            ? negativeAnswer
+                ? Colors.redAccent
+                : Colors.green
+            : Colors.white70,
         onPressed: () {
           setState(() {
             if (isAnswer) {
@@ -108,9 +110,7 @@ class _QuestionDialogWidgetState extends State<QuestionDialogWidget> {
               answers[question].add(option);
             }
             if (question == widget.questions.last) {
-              var res = answers.entries
-                  .map((entry) => Question(entry.key.id, entry.key.question, entry.value))
-                  .toList();
+              var res = answers.entries.map((entry) => Question(entry.key.id, entry.key.question, entry.value)).toList();
               widget.onSubmit(res);
             }
           });

@@ -93,7 +93,6 @@ class ScannerWidgetState extends State<ScannerWidget> {
     });
   }
 
-
   void setScanning(bool scanning, {startCooldown}) {
     if (startCooldown == true) {
       lastScanned = new DateTime.now().millisecondsSinceEpoch;
@@ -111,8 +110,7 @@ class ScannerWidgetState extends State<ScannerWidget> {
 
   bool checkCooldown(str) {
     final now = new DateTime.now().millisecondsSinceEpoch;
-    if (now - SCAN_COOLDOWN > lastScanned &&
-        (now - SCAN_COOLDOWN_SAME_STRING > lastScanned || str != lastScannedString)) {
+    if (now - SCAN_COOLDOWN > lastScanned && (now - SCAN_COOLDOWN_SAME_STRING > lastScanned || str != lastScannedString)) {
       lastScanned = now;
       lastScannedString = str;
       return true;
