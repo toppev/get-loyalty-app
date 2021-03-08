@@ -1,9 +1,10 @@
 import { makeStyles } from "@material-ui/core/styles";
-import { createStyles, TextField, Theme } from "@material-ui/core";
+import { Checkbox, createStyles, InputLabel, ListItemText, Select, TextField, Theme } from "@material-ui/core";
 import { getRequirementName, Requirement } from "./Campaign";
 import React from "react";
 import allRequirements from "@toppev/loyalty-campaigns";
 import { format } from "../common/StringUtils";
+import MenuItem from "@material-ui/core/MenuItem";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -22,44 +23,27 @@ interface RequirementEditorProps {
     onChange: (requirement: Requirement) => any
 }
 
+const placeholderText = `Value used in the question or the system uses when calculating whether the requirement is met (e.g purchase amount or time).`;
+
 export function RequirementEditor(props: RequirementEditorProps) {
 
     const classes = useStyles()
-
-
     const { requirement } = props;
 
     const valueDescriptions = allRequirements[requirement.type]?.valueDescriptions || [];
     const question = requirement.question ? format(requirement.question, requirement.values) : undefined;
 
+    const onChange = (index: number, val: any) => {
+        const copy = { ...requirement };
+        copy.values[index] = val;
+        props.onChange(copy)
+    }
+
     return (
         <>
             <div>
-                {valueDescriptions.map((valueDesc, index) => {
-                    const { name, type } = valueDesc;
-
-                    // Textfield type, either "text" or "number"
-                    const fieldType = (type === "number" || typeof type === "number") ? "number" : "text";
-                    const defaultValue = requirement.values[index] || (type === "number" ? undefined : type);
-
-                    return (
-                        <TextField
-                            key={`val_${index}`}
-                            className={classes.textField}
-                            name={name}
-                            defaultValue={defaultValue}
-                            type={fieldType}
-                            label={`${name} (${fieldType})`}
-                            multiline // so the placeholder shows correctly
-                            placeholder={`Value used in the question or the system uses when calculating whether the requirement is met (e.g purchase amount or time).`}
-                            onChange={(e) => {
-                                const copy = { ...requirement };
-                                copy.values[index] = e.target.value;
-                                props.onChange(copy)
-                            }}
-                        />
-                    )
-                })}
+                {valueDescriptions.map((valueDesc, index) =>
+                    ValueSelector(valueDesc, onChange, index, requirement))}
             </div>
             {question && <div>
                 <TextField
@@ -70,12 +54,62 @@ export function RequirementEditor(props: RequirementEditorProps) {
                     value={question}
                     placeholder={`Question that the cashier must answer (e.g ${question})`}
                     onChange={(e) => {
-                        let copy = { ...requirement };
+                        const copy = { ...requirement };
                         copy.question = e.target.value;
                         props.onChange(copy)
                     }}
                 />
             </div>}
         </>
+    )
+}
+
+
+function ValueSelector(valueDescription: { name: string, type: any }, onChange: (index: number, val: any) => void, index: number, requirement: Requirement) {
+    const classes = useStyles()
+    const { name, type } = valueDescription;
+
+    const isArray = Array.isArray(type);
+    const currentValue = requirement.values[index];
+    // Either "text", "number", string array or initial value
+    const initValue = currentValue || (["number", "string"].includes(type) ? undefined : isArray ? type[0] : type);
+    if (currentValue !== initValue) {
+        onChange(index, initValue) // make sure the default value is updated
+    }
+
+    if (isArray) {
+        return (
+            <>
+                <InputLabel id="requirement-value-select">{placeholderText}</InputLabel>
+                <Select
+                    labelId="requirement-value-select"
+                    defaultValue={type[0]} // init with first value
+                    onChange={e => onChange(index, e.target.value)}
+                >
+                    {type.map((key: string) => {
+                        return (
+                            <MenuItem value={key} key={`item_${key}`}>
+                                <Checkbox checked={currentValue === key}/>
+                                <ListItemText primary={name} secondary={key}/>
+                            </MenuItem>
+                        )
+                    })}
+                </Select>
+            </>
+        )
+    }
+    const fieldType = (type === "number" || typeof type === "number") ? "number" : "text";
+    return (
+        <TextField
+            key={`val_${index}`}
+            className={classes.textField}
+            name={name}
+            defaultValue={initValue}
+            type={fieldType}
+            label={`${name} (${fieldType})`}
+            multiline // so the placeholder shows correctly
+            placeholder={placeholderText}
+            onChange={e => onChange(index, e.target.value)}
+        />
     )
 }

@@ -48,6 +48,14 @@ module.exports = {
             return currentStamps.length + 1 === maxStamps
         }
     },
+    referral: {
+        name: 'Referral',
+        description: 'Users can refer others to use the app. Either the referrer user, referred user or both can be rewarded.',
+        valueDescriptions: [{
+            name: 'rewarded',
+            type: ["referrer", "referred", "both"]
+        }]
+    },
     customQuestion: {
         name: 'Custom Question',
         description: 'Add a Yes/No question the cashier will answer. ' +

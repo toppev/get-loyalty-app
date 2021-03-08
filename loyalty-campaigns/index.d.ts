@@ -7,7 +7,16 @@ declare const index: {
     isBirthday: CampaignType
     stamps: CampaignType
     customQuestion: CampaignType
+    referral: CampaignType
 }
+
+type RequirementContext = {
+    values: string[],
+    user: User,
+    purchase: Purchase,
+    customerData: CustomerData,
+    campaign: Campaign
+};
 
 declare interface CampaignType {
     name: string
@@ -16,13 +25,15 @@ declare interface CampaignType {
     note?: string
     question?: string
     valueDescriptions?: ValueDescription[]
-    requirement?: (context: { values: string[], user: User, purchase: Purchase, customerData: CustomerData, campaign: Campaign }) => boolean
+    requirement?: (context: RequirementContext) => boolean
 }
 
 declare interface ValueDescription {
     name: string
-    /** Type or the default value */
-    type: "text" | "number" | string | number
+    /**
+     * Type of the value or the default/initial value. If array the first element is the default/initial value.
+     */
+    type: "text" | "number" | string | number | string[]
 }
 
 declare interface User {
