@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/toppev/loyalty-campaigns.git"
+    "url": "git://github.com/toppev/easy-loyalty-app.git"
   },
   "author": "toppev",
   "license": "SEE LICENSE IN LICENSE",
@@ -17,9 +17,9 @@
     "index.d.ts"
   ],
   "bugs": {
-    "url": "https://github.com/toppev/loyalty-campaigns/issues"
+    "url": "https://github.com/toppev/easy-loyalty-app/issues"
   },
-  "homepage": "https://github.com/toppev/loyalty-campaigns#readme",
+  "homepage": "https://github.com/toppev/easy-loyalty-app/tree/master/loyalty-campaigns",
   "devDependencies": {
     "jest": "^25.4.0",
     "eslint": "^6.8.0",
