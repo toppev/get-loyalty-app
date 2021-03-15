@@ -6,7 +6,7 @@ import { format, plural } from "../common/StringUtils";
 import Tooltip from "@material-ui/core/Tooltip";
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import { RenderList } from "../common/RenderList";
-import allRequirements from "@toppev/loyalty-campaigns";
+import allRequirements from "@toppev/getloyalty-campaigns";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

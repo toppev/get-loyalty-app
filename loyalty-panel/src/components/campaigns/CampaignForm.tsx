@@ -1,4 +1,4 @@
-import allRequirements from "@toppev/loyalty-campaigns";
+import allRequirements from "@toppev/getloyalty-campaigns";
 import { Campaign, Requirement } from "./Campaign";
 import React, { useState } from "react";
 import {

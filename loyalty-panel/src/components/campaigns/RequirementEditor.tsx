@@ -2,7 +2,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Checkbox, createStyles, InputLabel, ListItemText, Select, TextField, Theme } from "@material-ui/core";
 import { getRequirementName, Requirement } from "./Campaign";
 import React from "react";
-import allRequirements from "@toppev/loyalty-campaigns";
+import allRequirements from "@toppev/getloyalty-campaigns";
 import { format } from "../common/StringUtils";
 import MenuItem from "@material-ui/core/MenuItem";
 

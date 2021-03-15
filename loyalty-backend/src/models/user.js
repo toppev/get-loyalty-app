@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-const campaigns = require('@toppev/loyalty-campaigns');
+const campaigns = require('@toppev/getloyalty-campaigns');
 
 const rewardSchema = require('./reward');
 const productSchema = require('./product').schema;

@@ -2,7 +2,7 @@ const Campaign = require('../models/campaign');
 const Business = require('../models/business');
 const StatusError = require('../helpers/statusError');
 const userService = require('./userService');
-const campaignTypes = require('@toppev/loyalty-campaigns');
+const campaignTypes = require('@toppev/getloyalty-campaigns');
 
 module.exports = {
     getAllCampaigns,

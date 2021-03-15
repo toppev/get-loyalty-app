@@ -2,7 +2,7 @@ import { Checkbox, createStyles, Input, ListItemText, Select, Theme } from "@mat
 import MenuItem from '@material-ui/core/MenuItem';
 import React, { useEffect, useState } from "react";
 import { Requirement } from "./Campaign";
-import allRequirements from "@toppev/loyalty-campaigns";
+import allRequirements from "@toppev/getloyalty-campaigns";
 import { RequirementEditor } from "./RequirementEditor";
 import { makeStyles } from "@material-ui/core/styles";
 
