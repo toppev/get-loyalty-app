@@ -1,6 +1,6 @@
 {
-  "name": "@toppev/loyalty-campaigns",
-  "version": "1.0.4",
+  "name": "@toppev/getloyalty-campaigns",
+  "version": "1.0.5",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/toppev/easy-loyalty-app.git"
+    "url": "git://github.com/toppev/easy-loyalty-app.git",
+    "directory": "loyalty-campaigns"
   },
   "author": "toppev",
   "license": "SEE LICENSE IN LICENSE",

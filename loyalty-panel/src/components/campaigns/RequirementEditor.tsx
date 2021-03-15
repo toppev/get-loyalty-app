@@ -30,7 +30,7 @@ export function RequirementEditor(props: RequirementEditorProps) {
     const classes = useStyles()
     const { requirement } = props;
 
-    const valueDescriptions = allRequirements[requirement.type]?.valueDescriptions || [];
+    const valueDescriptions: ValueDescription = allRequirements[requirement.type]?.valueDescriptions || [];
     const question = requirement.question ? format(requirement.question, requirement.values) : undefined;
 
     const onChange = (index: number, val: any) => {
@@ -42,7 +42,7 @@ export function RequirementEditor(props: RequirementEditorProps) {
     return (
         <>
             <div>
-                {valueDescriptions.map((valueDesc, index) =>
+                {valueDescriptions.map((valueDesc, index: number) =>
                     ValueSelector(valueDesc, onChange, index, requirement))}
             </div>
             {question && <div>
@@ -101,7 +101,7 @@ function ValueSelector(valueDescription: { name: string, type: any }, onChange: 
     const fieldType = (type === "number" || typeof type === "number") ? "number" : "text";
     return (
         <TextField
-            key={`val_${index}`}
+            key={`val_${index}_${name}`}
             className={classes.textField}
             name={name}
             defaultValue={initValue}
