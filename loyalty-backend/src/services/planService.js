@@ -24,9 +24,10 @@ async function updateUserPlan() {
         }
         const business = await businessService.getBusiness()
         const plan = await getUserPlan(email);
-        if (plan.error) console.log("Requesting current plan returned error.", plan)
-        if (plan && planHasChanged(business.plan, plan)) {
-            business.plan = plan
+        if (!plan || plan.error) {
+            console.log("Requesting current plan returned error.", plan)
+        } else if (planHasChanged(business.plan, plan)) {
+            business.plan = Object.assign(business.plan, plan)
             await businessService.update(business)
         }
     } catch (err) {
@@ -40,7 +41,7 @@ async function getUserPlan(email) {
             if (err) {
                 reject(err)
             } else {
-                resolve(body)
+                resolve(JSON.parse(body))
             }
         });
     })
