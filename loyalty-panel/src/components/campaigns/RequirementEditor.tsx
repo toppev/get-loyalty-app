@@ -30,7 +30,7 @@ export function RequirementEditor(props: RequirementEditorProps) {
     const classes = useStyles()
     const { requirement } = props;
 
-    const valueDescriptions: ValueDescription = allRequirements[requirement.type]?.valueDescriptions || [];
+    const valueDescriptions = allRequirements[requirement.type]?.valueDescriptions || [];
     const question = requirement.question ? format(requirement.question, requirement.values) : undefined;
 
     const onChange = (index: number, val: any) => {

@@ -1,14 +1,9 @@
-# Production Dockerfile
-#
-# Example usage:
-# docker build . -t loyalty_backend --build-arg NPM_TOKEN=ajd12ydliauwdt
-# docker run loyalty_backend
-FROM node:12.16-alpine
+# Dev Dockerfile
+
+FROM node:12.16
 
 WORKDIR /usr/src/app
 COPY package*.json .npmrc ./
-
-RUN apk --update --no-cache add curl
 
 ARG NPM_TOKEN
 
@@ -16,9 +11,9 @@ ARG NPM_TOKEN
 RUN echo //npm.pkg.github.com/:_authToken=${NPM_TOKEN} > ~/.npmrc
 
 # Don't install devDependencies
-RUN npm install --only=production
+RUN npm install
 RUN rm -f ~/.npmrc
 COPY . .
 EXPOSE 3001
 
-CMD [ "npm", "start"]
+CMD [ "npm", "run-script", "dev"]

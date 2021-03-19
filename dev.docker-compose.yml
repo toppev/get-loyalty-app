@@ -5,10 +5,12 @@ services:
     restart: always
     build:
       context: ./loyalty-backend
+      dockerfile: Dockerfile.dev
       args:
         NPM_TOKEN: ${NPM_TOKEN}
     volumes:
-      - 'backenddata:/usr/src/app/uploads'
+      - ./loyalty-backend:/usr/src/app
+      - backenddata:/usr/src/app/uploads
     ports:
       - '3001:3001'
     image: localhost:5000/loyalty_backend
