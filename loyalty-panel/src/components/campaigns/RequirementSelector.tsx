@@ -76,19 +76,22 @@ export default function (props: RequirementSelectorProps) {
                 </Select>
             </div>
             <div>
-                {requirements.map(req => (
-                    <RequirementEditor
-                        key={`edit_${req.type}`}
-                        requirement={req}
-                        onChange={updatedReq => {
-                            const newRequirements = [...requirements]
-                            const index = requirements.findIndex(old => old.type === updatedReq.type)
-                            if (index !== -1) newRequirements[index] = updatedReq
-                            else newRequirements.push(updatedReq)
-                            setRequirements(newRequirements)
-                        }}
-                    />
-                ))}
+                {requirements.map(req => {
+                    console.log(`edit_${req.type}`)
+                    return (
+                        <RequirementEditor
+                            key={`edit_${req.type}`}
+                            requirement={req}
+                            onChange={updatedReq => {
+                                const newRequirements = [...requirements]
+                                const index = requirements.findIndex(old => old.type === updatedReq.type)
+                                if (index !== -1) newRequirements[index] = updatedReq
+                                else newRequirements.push(updatedReq)
+                                setRequirements(newRequirements)
+                            }}
+                        />
+                    )
+                })}
             </div>
         </div>
     )

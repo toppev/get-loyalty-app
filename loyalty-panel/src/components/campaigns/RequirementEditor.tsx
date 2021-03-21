@@ -1,16 +1,18 @@
 import { makeStyles } from "@material-ui/core/styles";
-import { Checkbox, createStyles, InputLabel, ListItemText, Select, TextField, Theme } from "@material-ui/core";
+import { createStyles, FormControlLabel, Radio, RadioGroup, TextField, Theme } from "@material-ui/core";
 import { getRequirementName, Requirement } from "./Campaign";
-import React from "react";
+import React, { useEffect } from "react";
 import allRequirements from "@toppev/getloyalty-campaigns";
 import { format } from "../common/StringUtils";
-import MenuItem from "@material-ui/core/MenuItem";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         textField: {
             width: '100%',
             margin: '10px 0px'
+        },
+        valueLabel: {
+            textTransform: 'capitalize'
         }
     }));
 
@@ -73,29 +75,34 @@ function ValueSelector(valueDescription: { name: string, type: any }, onChange: 
     const currentValue = requirement.values[index];
     // Either "text", "number", string array or initial value
     const initValue = currentValue || (["number", "string"].includes(type) ? undefined : isArray ? type[0] : type);
-    if (currentValue !== initValue) {
-        onChange(index, initValue) // make sure the default value is updated
-    }
+
+    useEffect(() => {
+        // make sure the default value is updated
+        if (currentValue !== initValue) onChange(index, initValue)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     if (isArray) {
         return (
-            <>
-                <InputLabel id="requirement-value-select">{placeholderText}</InputLabel>
-                <Select
-                    labelId="requirement-value-select"
+            <div key={`val_${index}_${name}`}>
+                <p>{placeholderText}</p>
+                <RadioGroup
                     defaultValue={type[0]} // init with first value
                     onChange={e => onChange(index, e.target.value)}
                 >
                     {type.map((key: string) => {
                         return (
-                            <MenuItem value={key} key={`item_${key}`}>
-                                <Checkbox checked={currentValue === key}/>
-                                <ListItemText primary={name} secondary={key}/>
-                            </MenuItem>
+                            <FormControlLabel
+                                key={`item_${key}`}
+                                control={<Radio value={key} checked={currentValue === key}/>}
+                                label={(
+                                    <span className={classes.valueLabel}>{key}</span>
+                                )}
+                            />
                         )
                     })}
-                </Select>
-            </>
+                </RadioGroup>
+            </div>
         )
     }
     const fieldType = (type === "number" || typeof type === "number") ? "number" : "text";
