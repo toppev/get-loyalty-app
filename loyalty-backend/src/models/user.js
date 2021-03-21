@@ -69,6 +69,12 @@ const userSchema = new Schema({
             type: Number
         }
     },
+    referrer: {
+        type: mongoose.Types.ObjectId,
+    },
+    referrerFor: [{
+        type: mongoose.Types.ObjectId,
+    }],
     termsAccepted: {
         type: Date,
         validate: {

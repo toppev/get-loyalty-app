@@ -58,6 +58,7 @@ async function getById(campaignId) {
 /**
  * Create a new campaign. The business is automatically assigned to the campaign.
  * @param {Object} campaign the campaign to create
+ * @return the campaign
  */
 async function create(campaign) {
     const business = await Business.findOne();

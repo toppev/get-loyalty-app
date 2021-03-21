@@ -52,8 +52,11 @@ module.exports = {
         name: 'Referral',
         description: 'Users can refer others to use the app. Either the referrer user, referred user or both can be rewarded.',
         valueDescriptions: [{
-            name: 'rewarded',
+            name: 'Rewarded user',
             type: ["referrer", "referred", "both"]
+        }, {
+            name: 'Referrer validation level',
+            type: ["has-purchase", "none"]
         }]
     },
     customQuestion: {

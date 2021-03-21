@@ -1,3 +1,4 @@
+/** Error with a message and a status code */
 class StatusError extends Error {
 
     constructor(message, status) {
