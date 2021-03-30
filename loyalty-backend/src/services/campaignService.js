@@ -106,6 +106,7 @@ function checkReferralOnEdit(campaign) {
  * @return {boolean}
  */
 function isRequirement(campaign, campaignType) {
+    if (!campaign || !campaign.requirements || !campaignType) return false;
     return campaign.requirements.some(req => campaignTypes[req.type] === campaignType);
 
 }

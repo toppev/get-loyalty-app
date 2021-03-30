@@ -1,4 +1,4 @@
-.dialog {
+.referral__dialog {
   position: fixed;
   left: 0;
   right: 0;
@@ -12,7 +12,7 @@
   color: #4b4b4b;
 }
 
-.dialog-close {
+.referral__dialog-close {
   padding: 4px 8px;
   border: none;
   background-color: transparent;
@@ -23,11 +23,11 @@
   color: #6c6c6c;
 }
 
-.dialog-description {
+.referral__dialog-description {
   color: gray;
 }
 
-.copy-clipboard {
+.referral__copy-clipboard {
   padding: 3px;
   border: solid #c6c6c6 1px;
   border-radius: 4px;
@@ -36,7 +36,7 @@
   font-weight: bolder;
 }
 
-.tooltip {
+.referral__tooltip {
   max-width: fit-content;
   background-color: ghostwhite;
   border-radius: 10px;

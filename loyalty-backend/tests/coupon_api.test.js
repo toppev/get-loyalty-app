@@ -11,10 +11,8 @@ const userParams = { email: "coupon.test@email.com", password: "password123" };
 const secondUserParams = { email: "referrer.test@example.com", password: "password123" };
 
 let cookie;
-let business;
 let userId;
 let endReward;
-let campaign;
 
 let referrerUserId;
 
@@ -31,18 +29,23 @@ beforeAll(async () => {
         .send(userParams);
     // Setting the cookie
     cookie = res.headers['set-cookie'];
-    business = await businessService.createBusiness({}, userId)
+    await businessService.createBusiness({}, userId)
     endReward = { name: "Test Reward", itemDiscount: "20% OFF" }
-    const campaignParam = {
+    const basicCouponCampaign = {
         name: "Test Campaign",
         couponCode: couponCode,
+        endReward: [endReward],
+    }
+    await campaignService.create(basicCouponCampaign);
+    const referralCampaign = {
+        name: "Referral Campaign",
         endReward: [endReward],
         requirements: [{
             type: 'referral',
             values: ['both', 'has-purchase']
         }]
     }
-    campaign = await campaignService.create(campaignParam);
+    await campaignService.create(referralCampaign);
 });
 
 describe('Logged in user coupons', () => {
@@ -71,7 +74,7 @@ describe('Referral coupons', () => {
 
     it('must have purchased before', async () => {
         const res = await api
-            .post(`/coupon/${campaign.id}?referrer=${referrerUserId}`)
+            .post(`/coupon/referral?referrer=${referrerUserId}`)
             .set('Cookie', cookie)
             .expect(403)
         expect(res.body.message).toContain("purchased")
@@ -79,15 +82,15 @@ describe('Referral coupons', () => {
 
     it('can refer after purchase', async () => {
         await customerService.addPurchase(referrerUserId, {}) // fake a purchase
+        await customerService.updateRewards(userId, []) // ensure rewards are cleared
         const res = await api
-            .post(`/coupon/${campaign.id}?referrer=${referrerUserId}`)
+            .post(`/coupon/referral?referrer=${referrerUserId}`)
             .set('Cookie', cookie)
             .expect(200)
         expect(res.body).toBeDefined()
         expect(res.body.rewards.length).toBe(1)
         const user = await User.findById(userId)
         expect(user.referrer).toEqual(referrerUserId)
-        console.log(user.customerData.rewards)
         expect(user.customerData.rewards.length).toBe(1)
         const referrer = await User.findById(referrerUserId)
         expect(referrer.customerData.rewards.length).toBe(1)
@@ -97,7 +100,7 @@ describe('Referral coupons', () => {
     it('already referred (or received all)', async () => {
         // Should fail because the user was already referred
         await api
-            .post(`/coupon/${campaign.id}?referrer=${referrerUserId}`)
+            .post(`/coupon/referral?referrer=${referrerUserId}`)
             .set('Cookie', cookie)
             .expect(403)
     })
@@ -112,7 +115,7 @@ describe('Referral coupons', () => {
             .send(newUserParams);
         const newCookie = login.headers['set-cookie'];
         const res = await api
-            .post(`/coupon/${campaign.id}?referrer=${referrerUserId}`)
+            .post(`/coupon/referral?referrer=${referrerUserId}`)
             .set('Cookie', newCookie)
             .expect(403)
         expect(res.body.message).toContain("reached the limit")
@@ -124,9 +127,14 @@ describe('Referral coupons', () => {
 describe('refer', () => {
 
     it('can not refer self', async () => {
+        const user = await User.findById(userId)
+        user.customerData.rewards = []
+        user.referrer = undefined
+        await user.save()
+
         await customerService.addPurchase(userId, {}) // fake a purchase
         const res = await api
-            .post(`/coupon/${campaign.id}?referrer=${userId}`)
+            .post(`/coupon/referral?referrer=${userId}`)
             .set('Cookie', cookie)
             .expect(403)
         expect(res.body.message).toContain("yourself")

@@ -22,7 +22,7 @@ async function getCoupon(req, res, next) {
         const referrer = req.query.referrer
         const campaign = await campaignService.byCouponCode(coupon);
         if (!campaign) {
-            throw new StatusError("Coupon not found", 404);
+            throw new StatusError(`Coupon ${coupon} not found`, 404);
         } else {
             if (await campaignService.canReceiveCampaignRewards(userId, campaign)) {
                 const user = await User.findById(userId)
@@ -82,7 +82,6 @@ async function handleReferralCode(user, campaign, referrer) {
 
         const rewardScanner = rewardUsers === "referred" || rewardUsers === "both"
         const rewardReferrer = rewardUsers === "referrer" || rewardUsers === "both"
-        console.log("rewardScanner: " + rewardScanner, "rewardReferrer: " + rewardReferrer)
         let userRewards = rewardScanner ? await customerService.addCampaignRewards(user, campaign) : []
         let referrerRewards = rewardReferrer ? await customerService.addCampaignRewards(referrerUser, campaign) : []
 

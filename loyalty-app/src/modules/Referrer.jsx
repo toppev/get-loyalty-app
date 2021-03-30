@@ -16,7 +16,7 @@ export function ReferrerDialog({ user, referUrl }) {
             // Open when clicking the button. Close if clicking outside
             if (someParentHasClassname(e.target, REFERRAL_BUTTON_CLASS)) {
                 setOpen(true)
-            } else if (!someParentHasClassname(e.target, "dialog")) {
+            } else if (!someParentHasClassname(e.target, "referral__dialog")) {
                 setOpen(false)
             }
         }, { passive: true })
@@ -31,21 +31,21 @@ export function ReferrerDialog({ user, referUrl }) {
     const maxRefers = user?.maxRefers
 
     return open ? (
-        <div className="dialog">
-            <button className="dialog-close" onClick={() => setOpen(false)}>✖</button>
-            <h2 className="dialog-title">Your referral code</h2>
+        <div className="referral__dialog">
+            <button className="referral__dialog-close" onClick={() => setOpen(false)}>✖</button>
+            <h2 className="referral__dialog-title">Your referral code</h2>
 
             <div data-qrcode={referUrl}/>
 
-            <p className="dialog-description">Tell your friend to scan the code for new rewards.</p>
+            <p className="referral__dialog-description">Tell your friend to scan the code for new rewards.</p>
 
             {refers !== undefined && <p>{refers}{maxRefers ? `/${maxRefers}` : ""} refers used</p>}
 
-            {tooltip?.length > 0 && <div className="tooltip">
+            {tooltip?.length > 0 && <div className="referral__tooltip">
                 <span>{tooltip}</span>
             </div>}
             <button
-                className="copy-clipboard"
+                className="referral__copy-clipboard"
                 onClick={() => {
                     copyToClipboard(referUrl)
                         .then(() => {
