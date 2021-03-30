@@ -66,6 +66,7 @@ async function create(campaign) {
     if (limit !== -1 && await Campaign.countDocuments({}) >= limit) {
         throw new StatusError('Plan limit reached', 402)
     }
+    checkReferralOnEdit(campaign);
     return Campaign.create(campaign);
 }
 
@@ -82,7 +83,31 @@ async function update(campaignId, updatedCampaign) {
     }
     const campaign = await getById(campaignId);
     Object.assign(campaign, updatedCampaign);
+    checkReferralOnEdit(campaign);
     return campaign.save();
+}
+
+/**
+ * Ensures the referral campaign has correct couponCode
+ * @param campaign {Campaign}
+ */
+function checkReferralOnEdit(campaign) {
+    if (isRequirement(campaign, campaignTypes.referral)) {
+        campaign.couponCode = "referral";
+    } else if (campaign.couponCode === "referral") {
+        campaign.couponCode = undefined
+    }
+}
+
+/**
+ *
+ * @param campaign {Campaign}
+ * @param campaignType {campaignType}
+ * @return {boolean}
+ */
+function isRequirement(campaign, campaignType) {
+    return campaign.requirements.some(req => campaignTypes[req.type] === campaignType);
+
 }
 
 /**

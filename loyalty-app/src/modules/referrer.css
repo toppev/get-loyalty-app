@@ -1,0 +1,51 @@
+.dialog {
+  position: fixed;
+  left: 0;
+  right: 0;
+  margin: 100px auto;
+  width: 300px;
+  text-align: center;
+  padding: 30px;
+  border: 1px solid #bababa;
+  border-radius: 5px;
+  background-color: ghostwhite;
+  color: #4b4b4b;
+}
+
+.dialog-close {
+  padding: 4px 8px;
+  border: none;
+  background-color: transparent;
+  font-size: 20px;
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  color: #6c6c6c;
+}
+
+.dialog-description {
+  color: gray;
+}
+
+.copy-clipboard {
+  padding: 3px;
+  border: solid #c6c6c6 1px;
+  border-radius: 4px;
+  font-size: 16px;
+  color: #424242;
+  font-weight: bolder;
+}
+
+.tooltip {
+  max-width: fit-content;
+  background-color: ghostwhite;
+  border-radius: 10px;
+  border: solid #b8b8b8 1px;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 150px;
+  margin: 0 auto;
+  padding: 10px;
+  color: #343434;
+}

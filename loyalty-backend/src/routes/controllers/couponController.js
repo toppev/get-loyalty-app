@@ -10,7 +10,7 @@ const campaignTypes = require('@toppev/getloyalty-campaigns');
 
 // Claim a coupon reward
 // Simple coupon: /coupon/<coupon>
-// or referral: /coupon/<campaignId>?referrer=<userId>
+// or referral: /coupon/referral?referrer=<userId>
 router.post('/:coupon', getCoupon);
 
 module.exports = router;
@@ -20,7 +20,7 @@ async function getCoupon(req, res, next) {
         const { coupon } = req.params;
         const userId = req.user.id;
         const referrer = req.query.referrer
-        const campaign = await (referrer ? campaignService.getById(coupon) : campaignService.byCouponCode(coupon));
+        const campaign = await campaignService.byCouponCode(coupon);
         if (!campaign) {
             throw new StatusError("Coupon not found", 404);
         } else {
@@ -69,6 +69,7 @@ async function handleReferralCode(user, campaign, referrer) {
         console.log(`Invalid referral validation method in ${campaign.id}/${campaign.name}: ${validationMethod}`)
     }
     if (user.referrer) throw new StatusError("You have already be referred by someone", 403)
+    if (referrer === user.id) throw new StatusError("Can not refer yourself", 403)
     user.referrer = referrer
     if (referrerUser) {
         const referralLimit = 1

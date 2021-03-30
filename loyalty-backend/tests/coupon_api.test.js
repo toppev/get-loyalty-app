@@ -121,6 +121,17 @@ describe('Referral coupons', () => {
 
 })
 
+describe('refer', () => {
+
+    it('can not refer self', async () => {
+        await customerService.addPurchase(userId, {}) // fake a purchase
+        const res = await api
+            .post(`/coupon/${campaign.id}?referrer=${userId}`)
+            .set('Cookie', cookie)
+            .expect(403)
+        expect(res.body.message).toContain("yourself")
+    })
+})
 
 afterAll(() => {
     closeDatabase();

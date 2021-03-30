@@ -27,11 +27,11 @@ export function startSubscribeTask() {
         .catch(() => hideIfNotSupported && hideNotificationClasses())
 
     // Click a button to enable notifications (IMO better UX)
-    window.onclick = e => {
+    window.addEventListener("click", e => {
         if (someParentHasClassname(e.target, enableNotificationsClass)) {
             subscribeUser().then()
         }
-    }
+    }, { passive: true })
 
     // Timers/pages
     let settingValue = process.env.REACT_APP_ASK_NOTIFICATIONS

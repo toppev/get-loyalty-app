@@ -9,15 +9,16 @@ import { BASE_URL } from "./config/axios";
 import { AxiosResponse } from "axios";
 import { claimCoupon } from "./services/couponService";
 import { Helmet } from "react-helmet";
-import { AppContext, defaultAppContext } from './AppContext';
+import { AppContext, AppContextInterface, defaultAppContext } from './AppContext';
 import NotificationHandler from "./components/notification/NotificationHandler";
 import Navbar from "./components/Navbar";
+import { ReferrerDialog } from "./modules/Referrer";
 
 function App() {
 
-    const [contextState, setContextState] = useState(defaultAppContext)
+    const [contextState, setContextState] = useState<AppContextInterface>(defaultAppContext)
 
-    const [error, setError] = useState<any>()
+    const [error, setError] = useState<string|undefined>()
     const [pages, setPages] = useState<Page[]>([])
 
     const updatePage = (page: Page) => setPages(prev => {
@@ -53,20 +54,21 @@ function App() {
         setContextState({ ...contextState, user: res.data })
         const query = new URLSearchParams(window.location.search)
         const couponCode = query.get('coupon') || query.get('code')
-        const checkCoupon = async () => couponCode && claimCoupon(couponCode)
+        const referrer = query.get('referrer')
+        const checkCoupon = async () => couponCode && claimCoupon(couponCode, referrer)
         checkCoupon()
             .then(loadPages)
-            .catch(err => setError(err?.response.body?.message || err.toString))
+            .catch(err => setError(err?.response.body?.message || err.toString()))
     }
 
     // Load pages
     const loadPages = () => {
         getPages()
             .then(res => {
-                const pages = res.data
-                setPages(pages)
-                refreshHtmlPages(pages)
-                if (!pages.length) {
+                const newPages = res.data
+                setPages(newPages)
+                refreshHtmlPages(newPages)
+                if (!newPages.length) {
                     window.alert("There are no pages available currently. Add or publish pages to get started.")
                 }
             })
@@ -79,7 +81,7 @@ function App() {
     const refreshHtmlPages = (refreshPages = pages) => {
         if (refreshPages.length) {
             const fetchRest = (excludeId?: string) => refreshPages.forEach(it => it._id !== excludeId && fetchHtml(it))
-            // Fetch the current page first for better performance
+            // Attempt fetching only the current page first for better performance
             const path = window.location.pathname.substring(1) // e.g "/home" -> "home"
             const current = refreshPages.find(page => page.pathname === path) || refreshPages[0]
             if (current) {
@@ -102,6 +104,8 @@ function App() {
         }
     }
 
+    const firstPagePath = window.location.origin + "/" + (pages.length ? pages[0].pathname : "")
+
     return (
         <Router>
 
@@ -112,9 +116,10 @@ function App() {
                         <link id="favicon" rel="icon" href={`${BASE_URL}/business/icon`} type="image/x-icon"/>
                     </Helmet>
 
-                    {error && <p className="ErrorMessage">Error: {error.response?.message || error.toString()}</p>}
+                    {error && <p className="ErrorMessage">Error: {error}</p>}
 
                     <Navbar pages={pages || []}/>
+                    <ReferrerDialog user={contextState.user} referUrl={`${firstPagePath}?coupon=referral?referrer=${contextState.user?.id}`}/>
 
                     <Switch>
                         {pages.map(page => (

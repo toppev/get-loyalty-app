@@ -17,7 +17,7 @@ export function replaceQRCodes() {
             el.innerHTML = qr.createSvgTag(undefined, 2)
 
             const svgSize = "100%"
-            const svgMaxSize = "360px"
+            const svgMaxSize = "320px"
             Array.from(el.children).forEach(child => {
                 child.setAttribute("height", svgSize)
                 child.setAttribute("width", svgSize)

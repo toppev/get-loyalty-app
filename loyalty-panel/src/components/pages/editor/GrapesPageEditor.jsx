@@ -20,6 +20,7 @@ import { addUserQRBlock } from "./blocks/userQRCode";
 import { addRewardQRBlock } from "./blocks/rewardQRCode";
 import { addUserFormBlock } from "./blocks/userFormBlock";
 import codeEditor from "./codeeditor/codeEditor";
+import { addReferralButton } from "./blocks/referralButton";
 
 // So the editor is not rendered every time if the page id didn't change
 export default React.memo(GrapesPageEditor, propsAreEqual);
@@ -75,8 +76,8 @@ function GrapesPageEditor(props) {
             uploadHtmlCss(props.page, editor.getHtml(), editor.getCss())
                 .then(() => props.setError())
                 .catch(err => {
-                    props.setError(err?.response?.message || `Oops... Something went wrong. 
-                    ${`Status code: ${err?.response?.status}` || err}. 
+                    props.setError(err?.response?.message || `Oops... Something went wrong.
+                    ${`Status code: ${err?.response?.status}` || err}.
                     This may be caused by invalid placeholders.`, editor.store)
                 });
         });
@@ -98,6 +99,7 @@ function GrapesPageEditor(props) {
 
         addPlaceholderBlock(bm);
         addEnableNotificationsButton(bm);
+        addReferralButton(bm)
 
         addUserFormBlock(bm);
 

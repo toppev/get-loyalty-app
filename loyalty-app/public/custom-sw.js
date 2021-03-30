@@ -17,4 +17,4 @@ self.addEventListener('notificationclick', function (event) {
             );
         }
     }
-})
+}, { passive: true })
