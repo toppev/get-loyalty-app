@@ -4,7 +4,7 @@ import grapesjsTabs from 'grapesjs-tabs';
 import grapesjsTouch from 'grapesjs-touch';
 import grapesjsTuiImageEditor from 'grapesjs-tui-image-editor';
 import 'grapesjs/dist/css/grapes.min.css';
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { addPlaceholderBlock, registerListener } from "./blocks/placeholderBlock";
 import { addCampaignsBlock } from "./blocks/campaignsBlock";
 import { addUserRewardsBlock } from "./blocks/userRewardsBlock";
@@ -21,6 +21,7 @@ import { addRewardQRBlock } from "./blocks/rewardQRCode";
 import { addUserFormBlock } from "./blocks/userFormBlock";
 import codeEditor from "./codeeditor/codeEditor";
 import { addReferralButton } from "./blocks/referralButton";
+import AppContext from "../../../context/AppContext";
 
 // So the editor is not rendered every time if the page id didn't change
 export default React.memo(GrapesPageEditor, propsAreEqual);
@@ -29,12 +30,14 @@ function propsAreEqual(prev, next) {
     return prev.page._id === next.page._id;
 }
 
+const UPLOAD_URL = `https://api.getloyalty.app/content/upload`;
+
 function GrapesPageEditor(props) {
 
     const url = `${backendURL}/page`;
     const placeholderContext = usePlaceholderContext()
+    const { user } = useContext(AppContext)
 
-    const uploadUrl = `https://api.getloyalty.app/content/upload`;
 
     useEffect(() => {
         const editor = GrapesJS.init({
@@ -60,10 +63,13 @@ function GrapesPageEditor(props) {
                 urlLoad: `${url}/${props.page._id}/?gjsOnly=true`,
             },
             assetManager: {
-                upload: uploadUrl,
+                upload: UPLOAD_URL,
                 multiUpload: false,
                 // The server should respond with { data: ["https://...image.png] }
-                autoAdd: true
+                autoAdd: true,
+                headers: {
+                    "X-Loyalty-User": user.id
+                }
             }
         });
 
