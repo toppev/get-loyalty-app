@@ -15,6 +15,10 @@
     "ecmaVersion": 2018
   },
   "rules": {
+    "semi": [
+      "warn",
+      "never"
+    ]
   },
   "plugins": [
     "jest"
