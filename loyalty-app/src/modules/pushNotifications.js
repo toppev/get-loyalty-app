@@ -1,6 +1,9 @@
 import { post } from "../config/axios"
 import { someParentHasClassname } from "../util/classUtils"
 
+export {
+  startSubscribeTask
+}
 
 /** Class that triggers push notification prompt when clicked */
 const enableNotificationsClass = 'enable-notifications'
@@ -15,7 +18,7 @@ const hideIfNotSupported = true
  * Asks the user to enable push notifications as (and if) specified in the settings.
  * Either after a timeout or on a specific page.
  */
-export function startSubscribeTask() {
+function startSubscribeTask() {
   getPushManager()
     .then((pm) => {
       // Hide if granted/denied

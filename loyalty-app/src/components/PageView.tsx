@@ -1,7 +1,7 @@
 import React, { useEffect } from "react"
 import Page, { LOADING_HTML } from "../model/Page"
-import { replaceQRCodes } from "../modules/QRCode"
 import { useUserFormInitialValues } from "../modules/userForm"
+import { ON_PAGE_RENDER_MODULES } from "../modules";
 
 interface PageViewProps {
   page: Page
@@ -14,7 +14,7 @@ export default function (props: PageViewProps) {
 
   const html = page.html || LOADING_HTML
 
-  useEffect(replaceQRCodes, [html])
+  useEffect(() => ON_PAGE_RENDER_MODULES.forEach(it => it({ page })), [html])
   useUserFormInitialValues()
 
   return externalURL ? (
