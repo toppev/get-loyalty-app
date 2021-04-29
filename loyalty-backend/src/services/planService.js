@@ -53,10 +53,12 @@ async function getUserPlan(email) {
  * Stringifies, parses the JSON and then compares them
  */
 function planHasChanged(oldPlan, newPlan) {
-    const oldJson = JSON.parse(JSON.stringify(oldPlan))
-    const newJson = JSON.parse(JSON.stringify(newPlan))
-    if (oldJson !== newJson) {
-        console.log("Plan updated from", oldJson, "to", newJson)
+    // eslint-disable-next-line no-unused-vars
+    const { _id, ...oldObj } = JSON.parse(JSON.stringify(oldPlan))
+    // eslint-disable-next-line no-unused-vars
+    const { id, ...newObj } = JSON.parse(JSON.stringify(newPlan))
+    if (oldObj !== newObj) {
+        console.log("Plan updated from", oldObj, "to", newObj)
         return true;
     }
     return false;
