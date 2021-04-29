@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { Button, createStyles, Dialog, DialogContent, InputAdornment, makeStyles, TextField, Theme, Typography } from "@material-ui/core";
-import CloseButton from "../common/button/CloseButton";
-import EmailIcon from '@material-ui/icons/Email';
-import { post, validBackendURL } from "../../config/axios";
-import { isEmail } from "../../util/validate";
-import { ensureServerAPI } from "../../services/serverService";
+import React, { useEffect, useState } from "react"
+import { Button, createStyles, Dialog, DialogContent, InputAdornment, makeStyles, TextField, Theme, Typography } from "@material-ui/core"
+import CloseButton from "../common/button/CloseButton"
+import EmailIcon from '@material-ui/icons/Email'
+import { post, validBackendURL } from "../../config/axios"
+import { isEmail } from "../../util/validate"
+import { ensureServerAPI } from "../../services/serverService"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {
       margin: '40px'
     }
-  }));
+  }))
 
 interface PasswordResetRequestDialogProps {
   open: boolean
@@ -33,12 +33,12 @@ interface PasswordResetRequestDialogProps {
 
 export default function (props: PasswordResetRequestDialogProps) {
 
-  const classes = useStyles();
+  const classes = useStyles()
 
-  const [email, setEmail] = useState(props.initialEmail || '');
-  const [message, setMessage] = useState<string | undefined>();
-  const [buttonText, setButtonText] = useState('Email reset link');
-  const [buttonDisabled, setButtonDisabled] = useState(false);
+  const [email, setEmail] = useState(props.initialEmail || '')
+  const [message, setMessage] = useState<string | undefined>()
+  const [buttonText, setButtonText] = useState('Email reset link')
+  const [buttonDisabled, setButtonDisabled] = useState(false)
 
   useEffect(() => setButtonDisabled(!isEmail(email)), [email])
 
@@ -76,7 +76,7 @@ export default function (props: PasswordResetRequestDialogProps) {
               setButtonDisabled(true)
 
               const onError = (err: any, errMsg: string = '') => {
-                setMessage(`An error occurred. ${errMsg}. ${err?.response?.data?.message || `(Code ${err?.response?.status || -1}`})`);
+                setMessage(`An error occurred. ${errMsg}. ${err?.response?.data?.message || `(Code ${err?.response?.status || -1}`})`)
                 setButtonText('Try again')
                 setButtonDisabled(false)
               }

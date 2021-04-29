@@ -1,15 +1,15 @@
-import React, { useState } from "react";
-import RewardItem, { RemoveEditRewardActions } from "../rewards/RewardItem";
-import Customer from "./Customer";
-import Reward from "../rewards/Reward";
-import { Button, createStyles, Divider, Grid, LinearProgress, Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import { YesNo } from "../common/StringUtils";
-import RetryButton from "../common/button/RetryButton";
-import { addCustomerReward, revokeCustomerReward, updateCustomerReward } from "../../services/customerService";
-import RewardSelector from "../rewards/RewardSelector";
-import useRequest from "../../hooks/useRequest";
-import RewardFormDialog from "../rewards/RewardFormDialog";
+import React, { useState } from "react"
+import RewardItem, { RemoveEditRewardActions } from "../rewards/RewardItem"
+import Customer from "./Customer"
+import Reward from "../rewards/Reward"
+import { Button, createStyles, Divider, Grid, LinearProgress, Typography } from "@material-ui/core"
+import { makeStyles } from "@material-ui/core/styles"
+import { YesNo } from "../common/StringUtils"
+import RetryButton from "../common/button/RetryButton"
+import { addCustomerReward, revokeCustomerReward, updateCustomerReward } from "../../services/customerService"
+import RewardSelector from "../rewards/RewardSelector"
+import useRequest from "../../hooks/useRequest"
+import RewardFormDialog from "../rewards/RewardFormDialog"
 
 
 const useStyles = makeStyles(() =>
@@ -30,7 +30,7 @@ const useStyles = makeStyles(() =>
     actionBtn: {
       margin: '7px',
     }
-  }));
+  }))
 
 
 interface CustomerDetailsProps {
@@ -39,12 +39,12 @@ interface CustomerDetailsProps {
 
 export default function ({ initialCustomer }: CustomerDetailsProps) {
 
-  const classes = useStyles();
-  const [customer, setCustomer] = useState(initialCustomer);
-  const { rewards } = customer.customerData;
-  const [newRewardOpen, setNewRewardOpen] = useState(false);
+  const classes = useStyles()
+  const [customer, setCustomer] = useState(initialCustomer)
+  const { rewards } = customer.customerData
+  const [newRewardOpen, setNewRewardOpen] = useState(false)
 
-  const { error, loading, performRequest } = useRequest();
+  const { error, loading, performRequest } = useRequest()
 
   return error ? (
     <RetryButton error={error}/>
@@ -94,9 +94,9 @@ export default function ({ initialCustomer }: CustomerDetailsProps) {
           performRequest(
             () => addCustomerReward(customer, newReward),
             (res) => {
-              const clone = Object.assign({}, customer);
-              clone.customerData.rewards = res.data.rewards;
-              setCustomer(clone);
+              const clone = Object.assign({}, customer)
+              clone.customerData.rewards = res.data.rewards
+              setCustomer(clone)
             }
           )
         }}
@@ -113,9 +113,9 @@ interface CustomerRewardProps {
 
 function CustomerReward({ reward, customer, onUpdate }: CustomerRewardProps) {
 
-  const [editing, setEditing] = useState(false);
+  const [editing, setEditing] = useState(false)
 
-  const { error, loading, performRequest } = useRequest();
+  const { error, loading, performRequest } = useRequest()
 
   return error ? (
     <RetryButton error={error}/>
@@ -132,11 +132,11 @@ function CustomerReward({ reward, customer, onUpdate }: CustomerRewardProps) {
                 performRequest(
                   () => revokeCustomerReward(customer, reward),
                   () => {
-                    const clone: Customer = Object.assign({}, customer);
-                    clone.customerData.rewards = customer.customerData.rewards.filter(r => r.id !== reward.id);
-                    onUpdate(clone);
+                    const clone: Customer = Object.assign({}, customer)
+                    clone.customerData.rewards = customer.customerData.rewards.filter(r => r.id !== reward.id)
+                    onUpdate(clone)
                   }
-                );
+                )
               }
             }}
             removeText="Revoke"
@@ -149,17 +149,17 @@ function CustomerReward({ reward, customer, onUpdate }: CustomerRewardProps) {
         initialReward={reward}
         onClose={() => setEditing(false)}
         onSubmitted={updatedReward => {
-          setEditing(false);
-          const updatedRewards = [...customer.customerData.rewards.filter(r => r.id !== updatedReward.id), updatedReward];
+          setEditing(false)
+          const updatedRewards = [...customer.customerData.rewards.filter(r => r.id !== updatedReward.id), updatedReward]
           performRequest(
             // Update only. Will never add new rewards using this RewardFormDialog
             () => updateCustomerReward(customer, updatedRewards),
             () => {
-              const clone: Customer = Object.assign({}, customer);
-              clone.customerData.rewards = updatedRewards;
-              onUpdate(clone);
+              const clone: Customer = Object.assign({}, customer)
+              clone.customerData.rewards = updatedRewards
+              onUpdate(clone)
             }
-          );
+          )
         }}
       />}
 

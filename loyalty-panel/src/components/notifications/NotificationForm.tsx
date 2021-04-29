@@ -1,13 +1,13 @@
-import { Button, createStyles, LinearProgress, Paper, Theme, Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import { Form, Formik, FormikErrors } from "formik";
-import RetryButton from "../common/button/RetryButton";
-import SendIcon from "@material-ui/icons/Send";
-import React from "react";
-import { PushNotification } from "./PushNotification";
-import useRequest from "../../hooks/useRequest";
-import { sendPushNotification } from "../../services/pushNotificationService";
-import { TextField } from "formik-material-ui";
+import { Button, createStyles, LinearProgress, Paper, Theme, Typography } from "@material-ui/core"
+import { makeStyles } from "@material-ui/core/styles"
+import { Form, Formik, FormikErrors } from "formik"
+import RetryButton from "../common/button/RetryButton"
+import SendIcon from "@material-ui/icons/Send"
+import React from "react"
+import { PushNotification } from "./PushNotification"
+import useRequest from "../../hooks/useRequest"
+import { sendPushNotification } from "../../services/pushNotificationService"
+import { TextField } from "formik-material-ui"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) =>
       fontSize: '12px'
     }
 
-  }));
+  }))
 
 interface NotificationFormProps {
   notification: PushNotification
@@ -55,10 +55,10 @@ interface NotificationFormProps {
 
 export default function (props: NotificationFormProps) {
 
-  const { setCooldownExpires, onSubmitted, notification, cooldownExpires } = props;
+  const { setCooldownExpires, onSubmitted, notification, cooldownExpires } = props
 
-  const classes = useStyles();
-  const { loading, error, performRequest } = useRequest();
+  const classes = useStyles()
+  const { loading, error, performRequest } = useRequest()
 
   const subsRounded = Math.round(props.usersSubscribed / 10) * 10
 
@@ -77,7 +77,7 @@ export default function (props: NotificationFormProps) {
                 actions.setSubmitting(false)
                 setCooldownExpires(new Date(res.data.cooldownExpires))
                 if (onSubmitted) {
-                  onSubmitted(newNotification);
+                  onSubmitted(newNotification)
                 }
               },
               () => actions.setSubmitting(false)
@@ -85,40 +85,40 @@ export default function (props: NotificationFormProps) {
           }
         }}
       >{({ submitForm, isSubmitting }) => (
-        <Form className={classes.form}>
-          <TextField
-            className={classes.field}
-            name="title"
-            type="text"
-            label="Title"
-            placeholder="It's pizza friday!"
-          />
-          <TextField
-            className={classes.field}
-            name="message"
-            type="text"
-            label="Message"
-            placeholder="Get your pizza from us."
-          />
-          <TextField
-            className={classes.field}
-            name="link"
-            type="text"
-            label="Notification link (optional)"
-            placeholder="Your website or link to anything else (e.g a feedback form)"
-          />
-          {loading && <LinearProgress/>}
-          <RetryButton error={error}/>
-          <div className={classes.submitDiv}>
-            <Button
-              className={classes.submitButton}
-              variant="contained"
-              color="primary"
-              disabled={isSubmitting || !!cooldownExpires}
-              startIcon={(<SendIcon/>)}
-              onClick={submitForm}
-            >Send Notification</Button>
-            {cooldownExpires &&
+          <Form className={classes.form}>
+            <TextField
+              className={classes.field}
+              name="title"
+              type="text"
+              label="Title"
+              placeholder="It's pizza friday!"
+            />
+            <TextField
+              className={classes.field}
+              name="message"
+              type="text"
+              label="Message"
+              placeholder="Get your pizza from us."
+            />
+            <TextField
+              className={classes.field}
+              name="link"
+              type="text"
+              label="Notification link (optional)"
+              placeholder="Your website or link to anything else (e.g a feedback form)"
+            />
+            {loading && <LinearProgress/>}
+            <RetryButton error={error}/>
+            <div className={classes.submitDiv}>
+              <Button
+                className={classes.submitButton}
+                variant="contained"
+                color="primary"
+                disabled={isSubmitting || !!cooldownExpires}
+                startIcon={(<SendIcon/>)}
+                onClick={submitForm}
+              >Send Notification</Button>
+              {cooldownExpires &&
             <div className={classes.cooldownDiv}>
               <Typography
                 color="secondary"
@@ -128,22 +128,22 @@ export default function (props: NotificationFormProps) {
               <p className={classes.cooldownText}>You are still on cooldown and can not send push
                 notifications until it expires.</p>
             </div>
-            }
-          </div>
-        </Form>
-      )}
+              }
+            </div>
+          </Form>
+        )}
       </Formik>
     </Paper>
   )
 }
 
 function validate(values: PushNotification) {
-  const errors: FormikErrors<PushNotification> = {};
+  const errors: FormikErrors<PushNotification> = {}
   if (!values.title.trim().length) {
     errors.title = 'Title can not be empty'
   }
   if (!values.message.trim().length) {
     errors.message = 'Message can not be empty'
   }
-  return errors;
+  return errors
 }

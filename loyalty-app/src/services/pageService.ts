@@ -1,4 +1,4 @@
-import { get } from "../config/axios";
+import { get } from "../config/axios"
 
 /**
  * Only returns public data of the published pages.

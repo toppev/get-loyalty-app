@@ -30,7 +30,7 @@ export default class Category {
     // id is just a displayed id
     // if the category was fetched from the server (exists) it will have "_id" attribute
     // backend uses it to identify whether a new category should be created
-    const { id, ...result } = this;
-    return result;
+    const { id, ...result } = this
+    return result
   }
 }

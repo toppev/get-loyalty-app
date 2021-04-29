@@ -1,7 +1,7 @@
-import { waitForServer } from "../../services/serverService";
-import { Alert } from "@material-ui/lab";
-import React, { useEffect, useState } from "react";
-import { createStyles, makeStyles, Theme } from "@material-ui/core";
+import { waitForServer } from "../../services/serverService"
+import { Alert } from "@material-ui/lab"
+import React, { useEffect, useState } from "react"
+import { createStyles, makeStyles, Theme } from "@material-ui/core"
 
 type ServerStatusBar = { severity: 'success' | 'info' | 'warning' | 'error', message: string }
 
@@ -10,15 +10,15 @@ const useStyles = makeStyles((theme: Theme) =>
     statusBar: {
       marginTop: '10px'
     },
-  }));
+  }))
 
 let incrementDelay = 0 // increment delay every time so afk wont spam it
 
 export function ServerStatusBar() {
 
-  const classes = useStyles();
+  const classes = useStyles()
 
-  const [serverState, setServerState] = useState<ServerStatusBar>({ severity: 'info', message: 'Loading status...' });
+  const [serverState, setServerState] = useState<ServerStatusBar>({ severity: 'info', message: 'Loading status...' })
 
   // In the future we can return some data from the /ping endpoint, e.g server condition
   const checkStatus = () => {

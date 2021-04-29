@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import './App.css';
-import { getPageHtml, getPages } from "./services/pageService";
-import Page, { ERROR_HTML } from "./model/Page";
-import PageView from "./components/PageView";
-import { profileRequest, registerRequest } from "./services/userService";
-import { BrowserRouter as Router, Redirect, Route, Switch } from "react-router-dom";
-import { BASE_URL } from "./config/axios";
-import { AxiosResponse } from "axios";
-import { claimCoupon } from "./services/couponService";
-import { Helmet } from "react-helmet";
-import { AppContext, AppContextInterface, defaultAppContext } from './AppContext';
-import NotificationHandler from "./components/notification/NotificationHandler";
-import Navbar from "./components/Navbar";
-import { ReferrerDialog } from "./modules/Referrer";
+import React, { useEffect, useState } from 'react'
+import './App.css'
+import { getPageHtml, getPages } from "./services/pageService"
+import Page, { ERROR_HTML } from "./model/Page"
+import PageView from "./components/PageView"
+import { profileRequest, registerRequest } from "./services/userService"
+import { BrowserRouter as Router, Redirect, Route, Switch } from "react-router-dom"
+import { BASE_URL } from "./config/axios"
+import { AxiosResponse } from "axios"
+import { claimCoupon } from "./services/couponService"
+import { Helmet } from "react-helmet"
+import { AppContext, AppContextInterface, defaultAppContext } from './AppContext'
+import NotificationHandler from "./components/notification/NotificationHandler"
+import Navbar from "./components/Navbar"
+import { ReferrerDialog } from "./modules/Referrer"
 
 function App() {
 
@@ -38,7 +38,7 @@ function App() {
       .then(onLogin)
       .catch(err => {
         // TODO: Option to login on other responses?
-        const status = err?.response?.status;
+        const status = err?.response?.status
         if (status === 401 || status === 403 || status === 404) {
           registerRequest()
             .then(onLogin)
@@ -138,4 +138,4 @@ function App() {
   )
 }
 
-export default App;
+export default App

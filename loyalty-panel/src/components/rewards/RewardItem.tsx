@@ -1,9 +1,9 @@
-import { Button, createStyles, makeStyles, Theme } from '@material-ui/core';
-import Grid from '@material-ui/core/Grid';
-import React from 'react';
-import Reward from './Reward';
-import { DateExpired } from "../common/StringUtils";
-import EditIcon from "@material-ui/icons/Edit";
+import { Button, createStyles, makeStyles, Theme } from '@material-ui/core'
+import Grid from '@material-ui/core/Grid'
+import React from 'react'
+import Reward from './Reward'
+import { DateExpired } from "../common/StringUtils"
+import EditIcon from "@material-ui/icons/Edit"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) =>
     actionBtn: {
       margin: '7px',
     }
-  }));
+  }))
 
 interface RewardRowProps {
   reward: Reward,
@@ -40,9 +40,9 @@ interface RewardRowProps {
 
 export default function (props: RewardRowProps) {
 
-  const classes = useStyles();
+  const classes = useStyles()
 
-  const { actions, reward } = props;
+  const { actions, reward } = props
 
   return (
     <div className={classes.rowDiv}>
@@ -90,7 +90,7 @@ interface RemoveEditRewardActionsProps {
 
 export function RemoveEditRewardActions({ onEdit, onRemove, editText, removeText }: RemoveEditRewardActionsProps) {
 
-  const classes = useStyles();
+  const classes = useStyles()
 
   return (
     <>

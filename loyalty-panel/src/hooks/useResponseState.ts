@@ -1,5 +1,5 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { AxiosResponse } from "axios";
+import { Dispatch, SetStateAction, useEffect, useState } from "react"
+import { AxiosResponse } from "axios"
 
 /**
  * Hook that will set the state to the response.data if it exists
@@ -13,7 +13,7 @@ export default function useResponseState<T>(
   parser?: (response: AxiosResponse) => T
 ): [T, Dispatch<SetStateAction<T>>] {
 
-  const [state, setState] = useState<T>(initialState);
+  const [state, setState] = useState<T>(initialState)
 
   useEffect(() => {
     if (response) {

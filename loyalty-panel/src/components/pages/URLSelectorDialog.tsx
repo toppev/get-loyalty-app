@@ -1,8 +1,8 @@
-import { Button, createStyles, Dialog, DialogContent, TextField, Theme } from "@material-ui/core";
-import CloseButton from "../common/button/CloseButton";
-import { makeStyles } from "@material-ui/core/styles";
-import React, { useState } from "react";
-import { isDomain } from "../../util/validate";
+import { Button, createStyles, Dialog, DialogContent, TextField, Theme } from "@material-ui/core"
+import CloseButton from "../common/button/CloseButton"
+import { makeStyles } from "@material-ui/core/styles"
+import React, { useState } from "react"
+import { isDomain } from "../../util/validate"
 
 interface URLSelectorDialogProps {
   open: boolean,
@@ -23,14 +23,14 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: '25px 15px',
       textAlign: 'center',
     }
-  }));
+  }))
 
 
 export default function (props: URLSelectorDialogProps) {
 
-  const [url, setUrl] = useState('');
+  const [url, setUrl] = useState('')
 
-  const classes = useStyles();
+  const classes = useStyles()
 
   return (
     <Dialog open={props.open} onClose={props.onClose}>

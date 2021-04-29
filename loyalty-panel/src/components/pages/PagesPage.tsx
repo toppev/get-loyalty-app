@@ -21,26 +21,26 @@ import {
   Typography,
   useMediaQuery,
   useTheme
-} from '@material-ui/core';
-import EditIcon from '@material-ui/icons/Edit';
-import WebIcon from '@material-ui/icons/Web';
-import React, { useEffect, useState } from 'react';
-import { backendURL, post } from '../../config/axios';
-import CloseButton from '../common/button/CloseButton';
-import IdText from '../common/IdText';
-import RetryButton from '../common/button/RetryButton';
-import { Page, PUBLISHED } from './Page';
-import PageEditor from './editor/PageEditor';
-import useRequest from "../../hooks/useRequest";
-import useResponseState from "../../hooks/useResponseState";
-import { createPage, deletePage, listPages, listTemplates, updatePage } from "../../services/pageService";
-import StageSelector from "./StageSelector";
-import PreviewPage from "./PreviewPage";
-import IconSelector from "./editor/IconSelector";
-import URLSelectorDialog from "./URLSelectorDialog";
-import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
-import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
-import PageIcon from "./PageIcon";
+} from '@material-ui/core'
+import EditIcon from '@material-ui/icons/Edit'
+import WebIcon from '@material-ui/icons/Web'
+import React, { useEffect, useState } from 'react'
+import { backendURL, post } from '../../config/axios'
+import CloseButton from '../common/button/CloseButton'
+import IdText from '../common/IdText'
+import RetryButton from '../common/button/RetryButton'
+import { Page, PUBLISHED } from './Page'
+import PageEditor from './editor/PageEditor'
+import useRequest from "../../hooks/useRequest"
+import useResponseState from "../../hooks/useResponseState"
+import { createPage, deletePage, listPages, listTemplates, updatePage } from "../../services/pageService"
+import StageSelector from "./StageSelector"
+import PreviewPage from "./PreviewPage"
+import IconSelector from "./editor/IconSelector"
+import URLSelectorDialog from "./URLSelectorDialog"
+import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft'
+import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight'
+import PageIcon from "./PageIcon"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -142,31 +142,31 @@ const useStyles = makeStyles((theme: Theme) =>
       height: '100%',
       opacity: 0.6,
     }
-  }));
+  }))
 
 export default function () {
 
-  const classes = useStyles();
-  const theme = useTheme();
-  const bigScreen = useMediaQuery(theme.breakpoints.up('md'));
+  const classes = useStyles()
+  const theme = useTheme()
+  const bigScreen = useMediaQuery(theme.breakpoints.up('md'))
 
-  const [pageOpen, setPageOpen] = useState<Page | null>(null);
-  const [templateSelectorOpen, setTemplateSelectorOpen] = useState(false);
-  const [urlSelectorOpen, setUrlSelectorOpen] = useState(false);
+  const [pageOpen, setPageOpen] = useState<Page | null>(null)
+  const [templateSelectorOpen, setTemplateSelectorOpen] = useState(false)
+  const [urlSelectorOpen, setUrlSelectorOpen] = useState(false)
 
-  const { error: listError, loading: listLoading, response } = useRequest(listPages);
-  const [pages, setPages] = useResponseState<Page[]>(response, [], res => res.data.map((it: any) => new Page(it)));
+  const { error: listError, loading: listLoading, response } = useRequest(listPages)
+  const [pages, setPages] = useResponseState<Page[]>(response, [], res => res.data.map((it: any) => new Page(it)))
 
   const sortedPages = [...pages].sort(((a, b) => {
     return (a.pageIndex || 0) - (b.pageIndex || 0)
   }))
 
-  const otherRequests = useRequest();
-  const error = listError || otherRequests.error;
-  const loading = listLoading; // Showing load on otherRequests looks annoying
+  const otherRequests = useRequest()
+  const error = listError || otherRequests.error
+  const loading = listLoading // Showing load on otherRequests looks annoying
 
   const movePage = (page: Page, direction: "right" | "left") => {
-    const modifier = direction === "right" ? 1 : -1;
+    const modifier = direction === "right" ? 1 : -1
     const other = sortedPages[sortedPages.indexOf(page) + modifier]
     let newSlot = other.pageIndex
     // FIXME
@@ -211,10 +211,10 @@ export default function () {
               otherRequests.performRequest(
                 () => createPage(page),
                 (res) => {
-                  setTemplateSelectorOpen(false);
+                  setTemplateSelectorOpen(false)
                   setPages([...pages, new Page(res.data)])
                 }
-              );
+              )
             }}
           />
 
@@ -246,10 +246,10 @@ export default function () {
               otherRequests.performRequest(
                 () => createPage(new Page({ name: 'New page', id: 'new_page', externalURL: url })),
                 (res) => {
-                  setUrlSelectorOpen(false);
+                  setUrlSelectorOpen(false)
                   setPages([...pages, new Page(res.data)])
                 }
-              );
+              )
             }}
           />
         </Box>
@@ -325,13 +325,13 @@ export default function () {
                     if (value !== PUBLISHED || window.confirm(`Confirm publishing "${pageOpen.name}". Anyone can see this page.`)) {
                       otherRequests.performRequest(
                         () => {
-                          pageOpen.stage = value;
+                          pageOpen.stage = value
                           return updatePage(pageOpen, false)
                         }
                       )
-                      return true;
+                      return true
                     }
-                    return false;
+                    return false
                   }}/>
               </div>
               <p className={classes.info}>Published sites are visible to anyone vising the site</p>
@@ -346,7 +346,7 @@ export default function () {
                 onSubmit={(icon) => {
                   otherRequests.performRequest(
                     () => {
-                      pageOpen.icon = icon;
+                      pageOpen.icon = icon
                       return updatePage(pageOpen, false)
                     }
                   )
@@ -362,7 +362,7 @@ export default function () {
                 onSubmit={(pathname) => {
                   otherRequests.performRequest(
                     () => {
-                      pageOpen.pathname = pathname;
+                      pageOpen.pathname = pathname
                       return updatePage(pageOpen, false)
                     }
                   )
@@ -386,10 +386,10 @@ interface PathnameFieldProps {
 function PathnameField({ onSubmit, value }: PathnameFieldProps) {
 
   if (!value.startsWith('/')) {
-    value = `/${value}`;
+    value = `/${value}`
   }
 
-  const classes = useStyles();
+  const classes = useStyles()
 
   return (
     <div className={classes.pathnameDiv}>
@@ -417,15 +417,15 @@ interface PageCardProps extends CardProps {
 
 function PageCard(props: PageCardProps) {
 
-  const { editableName, page, actions, displayId = true, displayStage = true, image, ...otherProps } = props;
+  const { editableName, page, actions, displayId = true, displayStage = true, image, ...otherProps } = props
 
-  const classes = useStyles();
+  const classes = useStyles()
 
   const [editing, setEditing] = useState(false)
 
   const submitNameChange = () => {
     setEditing(false)
-    const url = `${backendURL}/page/${page._id}`;
+    const url = `${backendURL}/page/${page._id}`
     post(url, { name: page.name }, true)
       .catch(err => {
         // Show notification?
@@ -466,7 +466,7 @@ function PageCard(props: PageCardProps) {
                 >
                   <div>
                     <IconButton className={classes.editPageNameBtn}
-                                onClick={() => editing ? submitNameChange() : setEditing(true)}>
+                      onClick={() => editing ? submitNameChange() : setEditing(true)}>
                       <EditIcon/>
                     </IconButton>
                   </div>
@@ -477,8 +477,8 @@ function PageCard(props: PageCardProps) {
             onBlur={() => submitNameChange()}
             onKeyPress={(ev) => {
               if (ev.key === 'Enter') {
-                ev.preventDefault();
-                submitNameChange();
+                ev.preventDefault()
+                submitNameChange()
               }
             }}
           />
@@ -508,14 +508,14 @@ interface TemplateSelectorDialogProps {
 
 function TemplateSelectorDialog({ open, onClose, onSelect }: TemplateSelectorDialogProps) {
 
-  const classes = useStyles();
+  const classes = useStyles()
 
-  const [previewPage, setPreviewPage] = useState<Page | undefined>();
+  const [previewPage, setPreviewPage] = useState<Page | undefined>()
 
   const { error, loading, response, execute: loadTemplates } = useRequest(listTemplates, {
     performInitially: false,
     errorMessage: 'Failed to load template pages'
-  });
+  })
   useEffect(loadTemplates, [open])
   const [templates] = useResponseState<Page[]>(response, [], res => res.data.map((d: any) => new Page(d)))
 
@@ -536,11 +536,11 @@ function TemplateSelectorDialog({ open, onClose, onSelect }: TemplateSelectorDia
         onClick={() => setPreviewPage(page)}
       >Preview Template</Button>
       <SelectTemplateButton onClick={() => {
-        onSelect(page);
-        setPreviewPage(undefined);
+        onSelect(page)
+        setPreviewPage(undefined)
       }}/>
     </>
-  );
+  )
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md" className={classes.templateDialog}>
@@ -576,7 +576,7 @@ function TemplateSelectorDialog({ open, onClose, onSelect }: TemplateSelectorDia
 
 function SelectTemplateButton(props: ButtonProps) {
 
-  const classes = useStyles();
+  const classes = useStyles()
 
   return (
     <Button

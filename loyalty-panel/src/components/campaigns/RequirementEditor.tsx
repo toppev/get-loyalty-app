@@ -1,9 +1,9 @@
-import { makeStyles } from "@material-ui/core/styles";
-import { createStyles, FormControlLabel, Radio, RadioGroup, TextField, Theme } from "@material-ui/core";
-import { getRequirementName, Requirement } from "./Campaign";
-import React, { useEffect } from "react";
-import allRequirements from "@toppev/getloyalty-campaigns";
-import { format } from "../common/StringUtils";
+import { makeStyles } from "@material-ui/core/styles"
+import { createStyles, FormControlLabel, Radio, RadioGroup, TextField, Theme } from "@material-ui/core"
+import { getRequirementName, Requirement } from "./Campaign"
+import React, { useEffect } from "react"
+import allRequirements from "@toppev/getloyalty-campaigns"
+import { format } from "../common/StringUtils"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) =>
     valueLabel: {
       textTransform: 'capitalize'
     }
-  }));
+  }))
 
 interface RequirementEditorProps {
   requirement: Requirement
@@ -25,19 +25,19 @@ interface RequirementEditorProps {
   onChange: (requirement: Requirement) => any
 }
 
-const placeholderText = `Value used in the question or the system uses when calculating whether the requirement is met (e.g purchase amount or time).`;
+const placeholderText = `Value used in the question or the system uses when calculating whether the requirement is met (e.g purchase amount or time).`
 
 export function RequirementEditor(props: RequirementEditorProps) {
 
   const classes = useStyles()
-  const { requirement } = props;
+  const { requirement } = props
 
-  const valueDescriptions = allRequirements[requirement.type]?.valueDescriptions || [];
-  const question = requirement.question ? format(requirement.question, requirement.values) : undefined;
+  const valueDescriptions = allRequirements[requirement.type]?.valueDescriptions || []
+  const question = requirement.question ? format(requirement.question, requirement.values) : undefined
 
   const onChange = (index: number, val: any) => {
-    const copy = { ...requirement };
-    copy.values[index] = val;
+    const copy = { ...requirement }
+    copy.values[index] = val
     props.onChange(copy)
   }
 
@@ -56,8 +56,8 @@ export function RequirementEditor(props: RequirementEditorProps) {
           value={question}
           placeholder={`Question that the cashier must answer (e.g ${question})`}
           onChange={(e) => {
-            const copy = { ...requirement };
-            copy.question = e.target.value;
+            const copy = { ...requirement }
+            copy.question = e.target.value
             props.onChange(copy)
           }}
         />
@@ -69,12 +69,12 @@ export function RequirementEditor(props: RequirementEditorProps) {
 
 function ValueSelector(valueDescription: { name: string, type: any }, onChange: (index: number, val: any) => void, index: number, requirement: Requirement) {
   const classes = useStyles()
-  const { name, type } = valueDescription;
+  const { name, type } = valueDescription
 
-  const isArray = Array.isArray(type);
-  const currentValue = requirement.values[index];
+  const isArray = Array.isArray(type)
+  const currentValue = requirement.values[index]
   // Either "text", "number", string array or initial value
-  const initValue = currentValue || (["number", "string"].includes(type) ? undefined : isArray ? type[0] : type);
+  const initValue = currentValue || (["number", "string"].includes(type) ? undefined : isArray ? type[0] : type)
 
   useEffect(() => {
     // make sure the default value is updated
@@ -105,7 +105,7 @@ function ValueSelector(valueDescription: { name: string, type: any }, onChange: 
       </div>
     )
   }
-  const fieldType = (type === "number" || typeof type === "number") ? "number" : "text";
+  const fieldType = (type === "number" || typeof type === "number") ? "number" : "text"
   return (
     <TextField
       key={`val_${index}_${name}`}

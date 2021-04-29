@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { setBusinessIcon } from '../../services/businessService';
-import { Button, createStyles, makeStyles, Theme } from "@material-ui/core";
-import { backendURL } from "../../config/axios";
-import { Alert } from "@material-ui/lab";
+import React, { useState } from "react"
+import { setBusinessIcon } from '../../services/businessService'
+import { Button, createStyles, makeStyles, Theme } from "@material-ui/core"
+import { backendURL } from "../../config/axios"
+import { Alert } from "@material-ui/lab"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -16,23 +16,23 @@ const useStyles = makeStyles((theme: Theme) =>
     upload: {
       marginTop: '10px'
     }
-  }));
+  }))
 
 export default function () {
 
-  const [icon, setIcon] = useState<File | undefined>();
-  const [uploading, setUploading] = useState(false);
+  const [icon, setIcon] = useState<File | undefined>()
+  const [uploading, setUploading] = useState(false)
 
-  const [uploaded, setUploaded] = useState(false);
+  const [uploaded, setUploaded] = useState(false)
 
-  const classes = useStyles();
+  const classes = useStyles()
 
   return (
     <div>
       <div className={classes.selectDiv}>
         <p className={classes.text}>Upload your icon</p>
         <img src={icon ? URL.createObjectURL(icon) : `${backendURL}/business/icon`} alt="(no icon)"
-             width="100px"/>
+          width="100px"/>
       </div>
       <form
         onSubmit={e => e.preventDefault()}>

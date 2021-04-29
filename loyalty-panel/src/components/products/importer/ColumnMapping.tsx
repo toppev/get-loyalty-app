@@ -1,7 +1,7 @@
-import { Button, createStyles, Grid, LinearProgress, makeStyles, MenuItem, Select, Theme, Typography } from "@material-ui/core";
-import { Field, Form, Formik, FormikHelpers } from "formik";
-import React from "react";
-import ViewHeadlineIcon from '@material-ui/icons/ViewHeadline';
+import { Button, createStyles, Grid, LinearProgress, makeStyles, MenuItem, Select, Theme, Typography } from "@material-ui/core"
+import { Field, Form, Formik, FormikHelpers } from "formik"
+import React from "react"
+import ViewHeadlineIcon from '@material-ui/icons/ViewHeadline'
 
 interface Props {
   initialFields: KeyValue,
@@ -38,11 +38,11 @@ const useStyles = makeStyles((theme: Theme) =>
     submitDiv: {
       textAlign: 'center',
     },
-  }));
+  }))
 
 export default function (props: Props) {
 
-  const classes = useStyles();
+  const classes = useStyles()
 
   return (
     <div className={classes.content}>
@@ -55,58 +55,58 @@ export default function (props: Props) {
         initialValues={props.initialFields}
         onSubmit={props.onSubmit}
       >{({ submitForm, isSubmitting, handleChange }) => (
-        <Form>
-          {Object.keys(props.initialFields).map(key => {
-            const value = props.initialFields[key];
-            return (
-              <Grid
-                className={classes.row}
-                container
-                spacing={3}
-                direction="row"
-                justify="center"
-                alignItems="center"
-                key={key}
-              >
-                <Grid item xs={12} sm={5}>
-                  <Typography className={classes.columnName} align="justify">{key}</Typography>
+          <Form>
+            {Object.keys(props.initialFields).map(key => {
+              const value = props.initialFields[key]
+              return (
+                <Grid
+                  className={classes.row}
+                  container
+                  spacing={3}
+                  direction="row"
+                  justify="center"
+                  alignItems="center"
+                  key={key}
+                >
+                  <Grid item xs={12} sm={5}>
+                    <Typography className={classes.columnName} align="justify">{key}</Typography>
+                  </Grid>
+                  <Grid item xs={12} sm={5}>
+                    < Field
+                      className={classes.field}
+                      component={Select}
+                      type="text"
+                      name={key}
+                      defaultValue={value}
+                      onChange={(event: any) => {
+                        handleChange(key)(event)
+                      }}
+                    >
+                      {props.options.map(option => {
+                        return (
+                          <MenuItem className={classes.option} key={option} value={option}>
+                            {option}
+                          </MenuItem>
+                        )
+                      })}
+                    </Field>
+                  </Grid>
                 </Grid>
-                <Grid item xs={12} sm={5}>
-                  < Field
-                    className={classes.field}
-                    component={Select}
-                    type="text"
-                    name={key}
-                    defaultValue={value}
-                    onChange={(event: any) => {
-                      handleChange(key)(event)
-                    }}
-                  >
-                    {props.options.map(option => {
-                      return (
-                        <MenuItem className={classes.option} key={option} value={option}>
-                          {option}
-                        </MenuItem>
-                      )
-                    })}
-                  </Field>
-                </Grid>
-              </Grid>
-            )
-          })}
-          <div className={classes.submitDiv}>
-            <Button
-              className={classes.submitButton}
-              variant="contained"
-              color="primary"
-              disabled={isSubmitting}
-              startIcon={(<ViewHeadlineIcon/>)}
-              onClick={submitForm}>Preview Products</Button>
+              )
+            })}
+            <div className={classes.submitDiv}>
+              <Button
+                className={classes.submitButton}
+                variant="contained"
+                color="primary"
+                disabled={isSubmitting}
+                startIcon={(<ViewHeadlineIcon/>)}
+                onClick={submitForm}>Preview Products</Button>
 
-            {isSubmitting && <LinearProgress/>}
-          </div>
-        </Form>
-      )}
+              {isSubmitting && <LinearProgress/>}
+            </div>
+          </Form>
+        )}
       </Formik>
     </div>
   )

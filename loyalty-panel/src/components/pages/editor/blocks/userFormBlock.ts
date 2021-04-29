@@ -26,7 +26,7 @@ function addUserFormBlock(blockManager: any) {
                 </form>
             </div>
         `),
-  });
+  })
 }
 
 export {

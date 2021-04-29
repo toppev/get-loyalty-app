@@ -1,13 +1,13 @@
 import { SketchPicker } from "react-color"
-import React, { useState } from "react";
-import { createStyles, Dialog, DialogContent, makeStyles } from "@material-ui/core";
-import CloseButton from "./button/CloseButton";
+import React, { useState } from "react"
+import { createStyles, Dialog, DialogContent, makeStyles } from "@material-ui/core"
+import CloseButton from "./button/CloseButton"
 
 
 const useStyles = makeStyles(() =>
   createStyles({
     dialog: {},
-  }));
+  }))
 
 interface ColorPickerProps {
   open: boolean
@@ -17,9 +17,9 @@ interface ColorPickerProps {
 
 export default function (props: ColorPickerProps) {
 
-  const [color, setColor] = useState(props.initialColor);
+  const [color, setColor] = useState(props.initialColor)
 
-  const classes = useStyles();
+  const classes = useStyles()
 
   return (
     <Dialog open={props.open} onBackdropClick={() => props.onChange(color)} className={classes.dialog}>

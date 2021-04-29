@@ -9,23 +9,23 @@ import {
   makeStyles,
   Theme,
   Typography,
-} from '@material-ui/core';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import { Formik, FormikErrors, FormikHelpers } from 'formik';
-import { Checkbox, TextField } from 'formik-material-ui';
-import React, { useContext, useRef, useState } from 'react';
+} from '@material-ui/core'
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
+import { Formik, FormikErrors, FormikHelpers } from 'formik'
+import { Checkbox, TextField } from 'formik-material-ui'
+import React, { useContext, useRef, useState } from 'react'
 
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import AddIcon from '@material-ui/icons/Add';
-import PasswordResetRequestDialog from "./PasswordResetRequestDialog";
-import AppContext from "../../context/AppContext";
-import { loginRequest, onLoginOrAccountCreate, registerRequest } from '../../services/authenticationService';
-import usePasswordReset from "./usePasswordReset";
-import { getOrCreateServer } from "../../services/serverService";
-import { AxiosResponse } from 'axios';
-import { isEmail } from "../../util/validate";
-import ReCAPTCHA from 'react-google-recaptcha';
-import { privacyLink, termsLink } from "../Navigator";
+import NavigateNextIcon from '@material-ui/icons/NavigateNext'
+import AddIcon from '@material-ui/icons/Add'
+import PasswordResetRequestDialog from "./PasswordResetRequestDialog"
+import AppContext from "../../context/AppContext"
+import { loginRequest, onLoginOrAccountCreate, registerRequest } from '../../services/authenticationService'
+import usePasswordReset from "./usePasswordReset"
+import { getOrCreateServer } from "../../services/serverService"
+import { AxiosResponse } from 'axios'
+import { isEmail } from "../../util/validate"
+import ReCAPTCHA from 'react-google-recaptcha'
+import { privacyLink, termsLink } from "../Navigator"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme: Theme) =>
       fontSize: '14px',
       color: theme.palette.grey[700]
     },
-  }));
+  }))
 
 interface FormValues {
   email: string,
@@ -81,10 +81,10 @@ const initialValues: FormValues = { email: "", password: "", token: "", acceptAl
 
 export default function LoginForm() {
 
-  const classes = useStyles();
-  const context = useContext(AppContext);
+  const classes = useStyles()
+  const context = useContext(AppContext)
 
-  const recaptchaRef = useRef(null);
+  const recaptchaRef = useRef(null)
 
   const getCaptchaToken = (): Promise<string> => {
     // @ts-ignore
@@ -93,16 +93,16 @@ export default function LoginForm() {
     return recaptchaRef.current.executeAsync()
   }
 
-  const [passwordResetOpen, setPasswordResetOpen] = useState(false);
-  const [email, setEmail] = useState(initialValues.email);
+  const [passwordResetOpen, setPasswordResetOpen] = useState(false)
+  const [email, setEmail] = useState(initialValues.email)
   // Whether we are logging or creating a new account
   // Not really clean solution but does the job
-  const [creatingAccount, setCreatingAccount] = useState(false);
-  const [message, setMessage] = useState('');
+  const [creatingAccount, setCreatingAccount] = useState(false)
+  const [message, setMessage] = useState('')
 
   const onSuccess = (res: AxiosResponse<any>) => {
     try {
-      onLoginOrAccountCreate(context, res);
+      onLoginOrAccountCreate(context, res)
     } catch (e) {
       console.log(e)
       setMessage(`Oops. Something went wrong. ${e}`)
@@ -122,7 +122,7 @@ export default function LoginForm() {
       .finally(() => {
         setMessage('')
         setSubmitting(false)
-      });
+      })
   }
 
   const createAccount = async (values: FormValues, { setSubmitting, setErrors }: any) => {
@@ -130,69 +130,69 @@ export default function LoginForm() {
     registerRequest(values)
       .then(onSuccess)
       .catch(err => {
-        console.log("Error creating an account: " + err);
-        setErrors({ password: `${err?.response?.data?.message || err}. Please try again.` });
+        console.log("Error creating an account: " + err)
+        setErrors({ password: `${err?.response?.data?.message || err}. Please try again.` })
       })
       .finally(() => {
         setMessage('')
         setSubmitting(false)
-      });
+      })
   }
 
   const onFormSubmit = (values: FormValues, actions: FormikHelpers<FormValues>) => {
     setMessage("Verifying...")
     const getToken = async () => creatingAccount ? await getCaptchaToken() : "" // token not required when logging in
     getToken().then(token => {
-        setMessage("Connecting...")
-        const { email } = values
-        getOrCreateServer({ email, token }, creatingAccount)
-          .then(async () => {
+      setMessage("Connecting...")
+      const { email } = values
+      getOrCreateServer({ email, token }, creatingAccount)
+        .then(async () => {
+          if (creatingAccount) {
+            // We need a new token for "loyalty-backend" as first one was used by the "loyalty-servers"
+            // Kinda hacky
+            values.token = await getCaptchaToken()
+            createAccount(values, actions)
+              .then()
+              .catch(e => {
+                setMessage(e?.response?.data?.message || 'Account created but something went wrong when registering...')
+              })
+          } else {
+            loginAccount(values, actions)
+              .then()
+              .catch(e => {
+                setMessage(e?.response?.data?.message || 'Account created but something went wrong when registering...')
+              })
+          }
+        })
+        .catch((e) => {
+          actions.setSubmitting(false)
+          const msg = e?.response?.data?.message
+          if (msg) {
+            setMessage(msg)
+          } else if (e.response?.status === 404) {
             if (creatingAccount) {
-              // We need a new token for "loyalty-backend" as first one was used by the "loyalty-servers"
-              // Kinda hacky
-              values.token = await getCaptchaToken()
-              createAccount(values, actions)
-                .then()
-                .catch(e => {
-                  setMessage(e?.response?.data?.message || 'Account created but something went wrong when registering...')
-                })
+              setMessage('No servers available. Please try again later.')
             } else {
-              loginAccount(values, actions)
-                .then()
-                .catch(e => {
-                  setMessage(e?.response?.data?.message || 'Account created but something went wrong when registering...')
-                })
+              setMessage('Account not found. Did you mean to register?')
             }
-          })
-          .catch((e) => {
-            actions.setSubmitting(false)
-            const msg = e?.response?.data?.message
-            if (msg) {
-              setMessage(msg)
-            } else if (e.response?.status === 404) {
-              if (creatingAccount) {
-                setMessage('No servers available. Please try again later.')
-              } else {
-                setMessage('Account not found. Did you mean to register?')
-              }
-            } else {
-              setMessage(e?.response?.data?.message || `Error code: ${e?.response?.status}` || e.toString())
-            }
-          })
-      }
+          } else {
+            setMessage(e?.response?.data?.message || `Error code: ${e?.response?.status}` || e.toString())
+          }
+        })
+    }
     )
   }
 
   const validate = (values: FormValues) => {
-    const errors: FormikErrors<FormValues> = {};
-    setEmail(values.email);
+    const errors: FormikErrors<FormValues> = {}
+    setEmail(values.email)
     if (!isEmail(values.email)) {
-      errors.email = 'Invalid email address :/';
+      errors.email = 'Invalid email address :/'
     }
     if (values.password.length <= 6) {
-      errors.password = "That doesn't look like a strong password";
+      errors.password = "That doesn't look like a strong password"
     }
-    return errors;
+    return errors
   }
 
   return passwordResetOpen ? (
@@ -215,7 +215,7 @@ export default function LoginForm() {
           validate={validate}
         >
           {props => {
-            const { isSubmitting, submitForm, handleSubmit, values } = props;
+            const { isSubmitting, submitForm, handleSubmit, values } = props
             return (
               <>
                 <form className={classes.form} onSubmit={handleSubmit}>
@@ -259,7 +259,7 @@ export default function LoginForm() {
                   </div>
 
                   <Typography variant="h6" align="center"
-                              className={classes.message}>{message}</Typography>
+                    className={classes.message}>{message}</Typography>
                   {isSubmitting && <LinearProgress/>}
 
                   <br/>

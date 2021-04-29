@@ -1,13 +1,13 @@
-import React, { useContext, useState } from "react";
-import { Box, createStyles, Theme, Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import NotificationForm from "./NotificationForm";
-import { PushNotification } from "./PushNotification";
-import AppContext from "../../context/AppContext";
-import NotificationHistory from "./NotificationHistory";
-import useRequest from "../../hooks/useRequest";
-import { listNotificationHistory } from "../../services/pushNotificationService";
-import useResponseState from "../../hooks/useResponseState";
+import React, { useContext, useState } from "react"
+import { Box, createStyles, Theme, Typography } from "@material-ui/core"
+import { makeStyles } from "@material-ui/core/styles"
+import NotificationForm from "./NotificationForm"
+import { PushNotification } from "./PushNotification"
+import AppContext from "../../context/AppContext"
+import NotificationHistory from "./NotificationHistory"
+import useRequest from "../../hooks/useRequest"
+import { listNotificationHistory } from "../../services/pushNotificationService"
+import useResponseState from "../../hooks/useResponseState"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -29,29 +29,29 @@ const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.grey[400],
       marginLeft: '25px'
     }
-  }));
+  }))
 
 export default function () {
 
-  const classes = useStyles();
+  const classes = useStyles()
 
-  const context = useContext(AppContext);
+  const context = useContext(AppContext)
 
-  const [cooldownExpires, setCooldownExpires] = useState<Date | undefined>();
-  const [newNotifications, setNewNotifications] = useState<PushNotification[]>([]);
-  const [usersSubscribed, setUsersSubscribed] = useState<number>(0);
+  const [cooldownExpires, setCooldownExpires] = useState<Date | undefined>()
+  const [newNotifications, setNewNotifications] = useState<PushNotification[]>([])
+  const [usersSubscribed, setUsersSubscribed] = useState<number>(0)
 
-  const { loading, error, response } = useRequest(listNotificationHistory);
+  const { loading, error, response } = useRequest(listNotificationHistory)
 
   const [history] = useResponseState<PushNotification[]>(response, [], res => {
     const {
       cooldownExpires: expires,
       usersSubscribed: subscribed
-    } = res.data;
+    } = res.data
     setCooldownExpires(expires ? new Date(expires) : undefined)
     setUsersSubscribed(subscribed)
     return res.data.notifications.map((it: any) => new PushNotification(it))
-  });
+  })
 
   // IDEA: maybe a google maps link if website doesn't exist but the address does?
   const initialNotification = new PushNotification({
@@ -59,9 +59,9 @@ export default function () {
     message: '',
     link: context.business.public.website,
     date: new Date()
-  });
+  })
 
-  const notificationSubmitted = (notification: PushNotification) => setNewNotifications([...newNotifications, notification]);
+  const notificationSubmitted = (notification: PushNotification) => setNewNotifications([...newNotifications, notification])
 
   return (
     <div>
@@ -70,7 +70,7 @@ export default function () {
         className={classes.typography}
       >Send a notification to your customers about your latest deals!*</Typography>
       <Box display="flex" flexWrap="wrap"
-           className={classes.box}>
+        className={classes.box}>
         <NotificationForm
           onSubmitted={notificationSubmitted}
           notification={initialNotification}

@@ -14,25 +14,25 @@ import {
   Typography,
   useMediaQuery,
   useTheme
-} from "@material-ui/core";
-import React, { useContext, useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { Form, Formik, FormikErrors } from "formik";
-import AppContext, { Business } from "../../context/AppContext";
-import _ from "lodash";
-import { TextField } from "formik-material-ui";
-import { updateBusiness } from "../../services/businessService";
-import { Alert } from "@material-ui/lab";
-import { backendURL } from "../../config/axios";
-import useRequest from "../../hooks/useRequest";
-import SaveChangesSnackbar from "../common/SaveChangesSnackbar";
-import { getOrCreateServer, updateServer, waitForServer } from "../../services/serverService";
-import RetryButton from "../common/button/RetryButton";
-import { isURL } from "../../util/validate";
-import { listPages } from "../../services/pageService";
-import useResponseState from "../../hooks/useResponseState";
-import { Page } from "../pages/Page";
-import { ServerStatusBar } from "../common/ServerStatusBar";
+} from "@material-ui/core"
+import React, { useContext, useState } from "react"
+import { makeStyles } from "@material-ui/core/styles"
+import { Form, Formik, FormikErrors } from "formik"
+import AppContext, { Business } from "../../context/AppContext"
+import _ from "lodash"
+import { TextField } from "formik-material-ui"
+import { updateBusiness } from "../../services/businessService"
+import { Alert } from "@material-ui/lab"
+import { backendURL } from "../../config/axios"
+import useRequest from "../../hooks/useRequest"
+import SaveChangesSnackbar from "../common/SaveChangesSnackbar"
+import { getOrCreateServer, updateServer, waitForServer } from "../../services/serverService"
+import RetryButton from "../common/button/RetryButton"
+import { isURL } from "../../util/validate"
+import { listPages } from "../../services/pageService"
+import useResponseState from "../../hooks/useResponseState"
+import { Page } from "../pages/Page"
+import { ServerStatusBar } from "../common/ServerStatusBar"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -80,33 +80,33 @@ const useStyles = makeStyles((theme: Theme) =>
     info: {
       margin: '15px 7px'
     }
-  }));
+  }))
 
 export default function () {
 
-  const classes = useStyles();
+  const classes = useStyles()
 
-  const context = useContext(AppContext);
+  const context = useContext(AppContext)
 
-  const [saved, setSaved] = useState(true);
+  const [saved, setSaved] = useState(true)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [error, setError] = useState(''); // For future use
+  const [error, setError] = useState('') // For future use
 
-  const theme = useTheme();
+  const theme = useTheme()
   const request = useRequest()
 
-  const { business } = context;
-  const { translations } = business.config;
-  const bigScreen = useMediaQuery(theme.breakpoints.up('md'));
+  const { business } = context
+  const { translations } = business.config
+  const bigScreen = useMediaQuery(theme.breakpoints.up('md'))
 
   // If changed will update the state so the snackbar opens
   const validateAndSnackbar = (value: Business) => {
-    const errors: FormikErrors<Business> = {};
+    const errors: FormikErrors<Business> = {}
     if (!_.isEqual(value, business)) {
-      setSaved(false);
+      setSaved(false)
       console.log(value, business)
     }
-    return errors;
+    return errors
   }
 
   return (
@@ -134,39 +134,39 @@ export default function () {
               request.performRequest(
                 () => updateBusiness(updatedBusiness),
                 (res) => {
-                  setSaved(true);
-                  context.setBusiness(res.data);
-                  actions.setSubmitting(false);
+                  setSaved(true)
+                  context.setBusiness(res.data)
+                  actions.setSubmitting(false)
                 },
                 () => actions.setSubmitting(false)
-              );
+              )
             }}
           >
             {({ submitForm, isSubmitting }) => (
               <Form>
                 <div className={classes.fieldDiv}>
                   {Object.keys(translations).map(k => {
-                      const { plural, singular, placeholder } = translations[k];
-                      const both = plural && singular;
-                      return (
-                        <div key={k}>
-                          {plural && <TextField
-                            className={classes.field}
-                            name={`config.translations.${k}.plural`}
-                            type="text"
-                            label={`"${k}" translation ${both ? "(plural)" : ""}`}
-                            placeholder={placeholder}
-                          />}
-                          {singular && <TextField
-                            className={classes.field}
-                            name={`config.translations.${k}.singular`}
-                            type="text"
-                            label={`"${k}" translation ${both ? "(singular)" : ""}`}
-                            placeholder={placeholder}
-                          />}
-                        </div>
-                      )
-                    }
+                    const { plural, singular, placeholder } = translations[k]
+                    const both = plural && singular
+                    return (
+                      <div key={k}>
+                        {plural && <TextField
+                          className={classes.field}
+                          name={`config.translations.${k}.plural`}
+                          type="text"
+                          label={`"${k}" translation ${both ? "(plural)" : ""}`}
+                          placeholder={placeholder}
+                        />}
+                        {singular && <TextField
+                          className={classes.field}
+                          name={`config.translations.${k}.singular`}
+                          type="text"
+                          label={`"${k}" translation ${both ? "(singular)" : ""}`}
+                          placeholder={placeholder}
+                        />}
+                      </div>
+                    )
+                  }
                   )}
                 </div>
                 <SaveChangesSnackbar
@@ -212,23 +212,23 @@ const askNotificationOptions: NotificationValues = {
 }
 
 function ServerSettingsForm() {
-  const classes = useStyles();
+  const classes = useStyles()
   const context = useContext(AppContext)
 
   const updateRequest = useRequest(undefined, {
     errorMessage: 'Update request might have failed. ' +
       'If something broke, please wait a few minutes and contact support if the problems continue!'
-  });
+  })
   // Select components don't want to work well with formik :(
-  const [askNotifications, setAskNotifications] = useState<string>('disabled');
+  const [askNotifications, setAskNotifications] = useState<string>('disabled')
   const serverInfo = useRequest(
     () => getOrCreateServer({ email: context.user.email }, false),
     {},
     (res) => setAskNotifications(res.data?.website?.askNotifications)
   )
 
-  const [popupOpen, setPopupOpen] = useState(false);
-  const [pingingServer, setPingingServer] = useState(false);
+  const [popupOpen, setPopupOpen] = useState(false)
+  const [pingingServer, setPingingServer] = useState(false)
 
   const loading = serverInfo.loading || updateRequest.loading || pingingServer
   const error = serverInfo.error || updateRequest.error
@@ -237,14 +237,14 @@ function ServerSettingsForm() {
   const pageRequest = useRequest(listPages)
 
   // If used for anything else it is recommended to use a custom parser to map the pages to real page instances (it's ok here)
-  const [pages] = useResponseState<Page[]>(pageRequest.response, [], res => res.data.map((it: any) => new Page(it)));
+  const [pages] = useResponseState<Page[]>(pageRequest.response, [], res => res.data.map((it: any) => new Page(it)))
 
   const validateForm = (settings: ServerSettings) => {
-    const errors: FormikErrors<ServerSettings> = {};
+    const errors: FormikErrors<ServerSettings> = {}
     if (settings.appAddress && !isURL(settings.appAddress)) {
       errors.appAddress = 'Invalid URL'
     }
-    return errors;
+    return errors
   }
 
   return (
@@ -302,7 +302,7 @@ function ServerSettingsForm() {
                   setPopupOpen(false)
                 }
               }
-            );
+            )
           } else {
             actions.setSubmitting(false)
           }

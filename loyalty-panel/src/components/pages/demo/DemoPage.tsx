@@ -1,10 +1,10 @@
-import { Box, Button, createStyles, Link, makeStyles, Theme, Typography, useMediaQuery, useTheme } from "@material-ui/core";
-import LinkIcon from "@material-ui/icons/Link";
-import QRCode from "qrcode.react";
-import React from "react";
-import CopyToClipboard from '../../common/CopyToClipboarad';
-import { backendURL } from "../../../config/axios";
-import PreviewIframe from "../../common/PreviewIframe";
+import { Box, Button, createStyles, Link, makeStyles, Theme, Typography, useMediaQuery, useTheme } from "@material-ui/core"
+import LinkIcon from "@material-ui/icons/Link"
+import QRCode from "qrcode.react"
+import React from "react"
+import CopyToClipboard from '../../common/CopyToClipboarad'
+import { backendURL } from "../../../config/axios"
+import PreviewIframe from "../../common/PreviewIframe"
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -50,16 +50,16 @@ const useStyles = makeStyles((theme: Theme) =>
       borderRightWidth: '15px',
       borderRadius: '20px'
     }
-  }));
+  }))
 
 export default function () {
 
-  const classes = useStyles();
-  const notMobile = useMediaQuery(useTheme().breakpoints.up('sm'));
+  const classes = useStyles()
+  const notMobile = useMediaQuery(useTheme().breakpoints.up('sm'))
 
   // FIXME: should we iframe the self hosted page or??
   // Probably good enough for now
-  const src = process.env.NODE_ENV === "development" ? "http://localhost:3000" : `${backendURL}`.replace('/api', '');
+  const src = process.env.NODE_ENV === "development" ? "http://localhost:3000" : `${backendURL}`.replace('/api', '')
 
   return (
     <Box display="flex" flexWrap="wrap" flexDirection="row" alignItems="center" className={classes.boxDesktop}>
@@ -93,17 +93,17 @@ export default function () {
           <div className={classes.linkItem}>
             <Link href={src} color="inherit" target="_blank" rel="noopener"><u>{src}</u></Link>
             <span className={classes.copyBtn}>
-                    <CopyToClipboard>
-                        {({ copy }) => (
-                          <Button
-                            size="small"
-                            color="secondary"
-                            onClick={() => copy(src)}
-                            endIcon={<LinkIcon/>}
-                          >Copy</Button>
-                        )}
-                    </CopyToClipboard>
-                    </span>
+              <CopyToClipboard>
+                {({ copy }) => (
+                  <Button
+                    size="small"
+                    color="secondary"
+                    onClick={() => copy(src)}
+                    endIcon={<LinkIcon/>}
+                  >Copy</Button>
+                )}
+              </CopyToClipboard>
+            </span>
           </div>
         </div>
         <p>The app is not working? Restart it on the <Link href='/settings'>settings page</Link>.</p>

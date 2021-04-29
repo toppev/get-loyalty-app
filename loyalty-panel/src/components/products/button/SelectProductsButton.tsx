@@ -1,8 +1,8 @@
-import { Button, ButtonProps } from "@material-ui/core";
-import FastfoodIcon from "@material-ui/icons/Fastfood";
-import React from "react";
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import Product from "../Product";
+import { Button, ButtonProps } from "@material-ui/core"
+import FastfoodIcon from "@material-ui/icons/Fastfood"
+import React from "react"
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
+import Product from "../Product"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginLeft: '5px', // is this ok?
       color: theme.palette.grey[700],
     }
-  }));
+  }))
 
 
 interface SelectProductsButtonProps {
@@ -23,7 +23,7 @@ interface SelectProductsButtonProps {
 
 export default function ({ buttonProps, products }: SelectProductsButtonProps) {
 
-  const classes = useStyles();
+  const classes = useStyles()
 
   return (
     <Button

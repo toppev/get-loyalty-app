@@ -9,16 +9,16 @@ export default class Product {
   public categories: Category[] = []
 
   constructor(data: any) {
-    this.id = data.id;
-    this.name = data.name;
-    this.description = data.description;
-    this.price = data.price;
-    this.categories = data.categories || [];
+    this.id = data.id
+    this.name = data.name
+    this.description = data.description
+    this.price = data.price
+    this.categories = data.categories || []
   }
 
   toRequestObject() {
-    const res = { ...this, categories: this.categories.map(c => c.id) };
-    delete res.id;
-    return res;
+    const res = { ...this, categories: this.categories.map(c => c.id) }
+    delete res.id
+    return res
   }
 }

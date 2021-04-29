@@ -1,7 +1,7 @@
-import { Button, createStyles, makeStyles, Theme } from "@material-ui/core";
-import RefreshIcon from '@material-ui/icons/Refresh';
-import React from "react";
-import RequestError from "../../../util/requestError";
+import { Button, createStyles, makeStyles, Theme } from "@material-ui/core"
+import RefreshIcon from '@material-ui/icons/Refresh'
+import React from "react"
+import RequestError from "../../../util/requestError"
 
 interface ButtonProps {
   error?: RequestError
@@ -23,15 +23,15 @@ const useStyles = makeStyles((theme: Theme) =>
     errorName: {
       color: 'lightcoral'
     }
-  }));
+  }))
 
 export default function ({ error: errorObject }: ButtonProps) {
 
-  const classes = useStyles();
+  const classes = useStyles()
 
-  const { message, error, retry, clearError } = errorObject || {};
+  const { message, error, retry, clearError } = errorObject || {}
 
-  const errorString = error?.response?.data?.message || error?.toString() || 'unknown error';
+  const errorString = error?.response?.data?.message || error?.toString() || 'unknown error'
 
   return !!errorObject ? (
     <div className={classes.errorDiv}>
@@ -44,7 +44,7 @@ export default function ({ error: errorObject }: ButtonProps) {
         onClick={() => {
           retry()
           if (clearError) {
-            clearError();
+            clearError()
           }
         }}
         startIcon={<RefreshIcon/>}
@@ -52,5 +52,5 @@ export default function ({ error: errorObject }: ButtonProps) {
       >Retry</Button>
       }
     </div>
-  ) : null;
+  ) : null
 }

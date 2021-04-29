@@ -1,6 +1,6 @@
-import { DATA_IDENTIFIER, loyaltyQRCode } from "./qrCodeBlock";
+import { DATA_IDENTIFIER, loyaltyQRCode } from "./qrCodeBlock"
 
-const rewardQRCode = "loyalty-reward-qr-code";
+const rewardQRCode = "loyalty-reward-qr-code"
 
 function addRewardQRBlock(blockManager: any) {
   blockManager.add(rewardQRCode, {
@@ -11,7 +11,7 @@ function addRewardQRBlock(blockManager: any) {
         [DATA_IDENTIFIER]: '{{scanCode}}'
       }
     }
-  });
+  })
 }
 
 export {

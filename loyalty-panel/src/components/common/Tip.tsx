@@ -1,5 +1,5 @@
-import { createStyles, makeStyles, Theme } from "@material-ui/core";
-import React from "react";
+import { createStyles, makeStyles, Theme } from "@material-ui/core"
+import React from "react"
 
 interface TipProps {
   children: React.ReactNode
@@ -23,11 +23,11 @@ const useStyles = makeStyles((theme: Theme) =>
       fontWeight: 'bold',
       fontSize: '14px'
     }
-  }));
+  }))
 
 export default function (props: TipProps) {
 
-  const classes = useStyles();
+  const classes = useStyles()
 
   return (
     <div className={classes.paper}>

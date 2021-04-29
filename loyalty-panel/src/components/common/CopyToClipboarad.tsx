@@ -1,6 +1,6 @@
-import Tooltip, { TooltipProps } from "@material-ui/core/Tooltip";
-import copy from "clipboard-copy";
-import React, { useState } from "react";
+import Tooltip, { TooltipProps } from "@material-ui/core/Tooltip"
+import copy from "clipboard-copy"
+import React, { useState } from "react"
 
 interface ChildProps {
   copy: (content: any) => void;
@@ -13,12 +13,12 @@ interface CopyToClipboardProps {
 
 export default function (props: CopyToClipboardProps) {
 
-  const [tooltip, setTooltip] = useState(false);
+  const [tooltip, setTooltip] = useState(false)
 
   const onCopy = async (content: any) => {
-    await copy(content);
+    await copy(content)
     setTooltip(true)
-  };
+  }
 
   return <Tooltip
     open={tooltip}
@@ -28,5 +28,5 @@ export default function (props: CopyToClipboardProps) {
     {...props.TooltipProps || {}}
   >
     {props.children({ copy: onCopy })}
-  </Tooltip>;
+  </Tooltip>
 }

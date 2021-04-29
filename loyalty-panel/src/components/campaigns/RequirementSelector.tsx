@@ -1,10 +1,10 @@
-import { Checkbox, createStyles, Input, ListItemText, Select, Theme } from "@material-ui/core";
-import MenuItem from '@material-ui/core/MenuItem';
-import React, { useEffect, useState } from "react";
-import { Requirement } from "./Campaign";
-import allRequirements from "@toppev/getloyalty-campaigns";
-import { RequirementEditor } from "./RequirementEditor";
-import { makeStyles } from "@material-ui/core/styles";
+import { Checkbox, createStyles, Input, ListItemText, Select, Theme } from "@material-ui/core"
+import MenuItem from '@material-ui/core/MenuItem'
+import React, { useEffect, useState } from "react"
+import { Requirement } from "./Campaign"
+import allRequirements from "@toppev/getloyalty-campaigns"
+import { RequirementEditor } from "./RequirementEditor"
+import { makeStyles } from "@material-ui/core/styles"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '100%',
       margin: '4px 0px'
     },
-  }));
+  }))
 
 interface RequirementSelectorProps {
   initialRequirements: Requirement[] | undefined
@@ -24,27 +24,27 @@ interface RequirementSelectorProps {
 
 export default function (props: RequirementSelectorProps) {
 
-  const classes = useStyles();
+  const classes = useStyles()
 
-  const [requirements, setRequirements] = useState<Requirement[]>(props.initialRequirements || []);
-  const [open, setOpen] = useState(false);
+  const [requirements, setRequirements] = useState<Requirement[]>(props.initialRequirements || [])
+  const [open, setOpen] = useState(false)
 
   useEffect(() => props.onChange(requirements), [props, requirements])
 
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    const selected = event.target.value as string[];
-    setOpen(false);
-    const values: Requirement[] = [];
+    const selected = event.target.value as string[]
+    setOpen(false)
+    const values: Requirement[] = []
     selected.forEach(str => {
-      const type = allRequirements[str];
+      const type = allRequirements[str]
       if (type) {
         // Create a Requirement from the RequirementType
-        const newRequirement = new Requirement(str, [], type.question);
-        values.push(newRequirement);
+        const newRequirement = new Requirement(str, [], type.question)
+        values.push(newRequirement)
       }
     })
-    setRequirements(values);
-  };
+    setRequirements(values)
+  }
 
   return (
     <div className={classes.paper}>
@@ -65,7 +65,7 @@ export default function (props: RequirementSelectorProps) {
           }}
         >
           {Object.entries(allRequirements).map(([key, value]) => {
-            const { name, description } = value;
+            const { name, description } = value
             return (
               <MenuItem value={key} key={`item_${key}`}>
                 <Checkbox checked={requirements.some(r => r.type === key)}/>

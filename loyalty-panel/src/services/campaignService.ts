@@ -1,17 +1,17 @@
-import { get, patch, post, remove } from "../config/axios";
-import { Campaign } from "../components/campaigns/Campaign";
+import { get, patch, post, remove } from "../config/axios"
+import { Campaign } from "../components/campaigns/Campaign"
 
 
 function listCampaigns() {
-  return get(`/campaign/all`);
+  return get(`/campaign/all`)
 }
 
 function createCampaign(campaign: Campaign) {
-  return post(`/campaign`, campaign);
+  return post(`/campaign`, campaign)
 }
 
 function updateCampaign(campaign: Campaign) {
-  return patch(`/campaign/${campaign?.id}`, campaign);
+  return patch(`/campaign/${campaign?.id}`, campaign)
 }
 
 function deleteCampaign(campaign: Campaign) {
@@ -19,7 +19,7 @@ function deleteCampaign(campaign: Campaign) {
 }
 
 function loadCampaign(campaignId: string) {
-  return get(`/campaign/${campaignId}`);
+  return get(`/campaign/${campaignId}`)
 }
 
 

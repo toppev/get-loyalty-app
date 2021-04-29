@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { Button, Collapse } from "@material-ui/core";
-import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
-import VisibilityIcon from "@material-ui/icons/Visibility";
+import React, { useState } from "react"
+import { Button, Collapse } from "@material-ui/core"
+import VisibilityOffIcon from "@material-ui/icons/VisibilityOff"
+import VisibilityIcon from "@material-ui/icons/Visibility"
 
 interface RenderListProps<T> {
   title?: string
@@ -20,8 +20,8 @@ interface RenderListProps<T> {
  */
 export function RenderList(props: RenderListProps<any>) {
 
-  const [show, setShow] = useState(props.show || false);
-  const { list, title, renderAll } = props;
+  const [show, setShow] = useState(props.show || false)
+  const { list, title, renderAll } = props
 
   return (
     <div>

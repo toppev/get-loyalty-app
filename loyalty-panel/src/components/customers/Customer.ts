@@ -1,4 +1,4 @@
-import Reward from "../rewards/Reward";
+import Reward from "../rewards/Reward"
 
 export default class Customer {
   id!: string;
@@ -11,14 +11,14 @@ export default class Customer {
   customerData!: CustomerData
 
   constructor(data: any) {
-    this.id = data.id;
-    this.email = data.email;
-    this.role = data.role;
-    this.birthday = data.birthday ? new Date(data.birthday) : undefined;
-    this.lastVisit = data.lastVisit ? new Date(data.lastVisit) : undefined;
-    this.hasPassword = data.hasPassword;
-    this.authentication = data.authentication;
-    this.customerData = data.customerData;
+    this.id = data.id
+    this.email = data.email
+    this.role = data.role
+    this.birthday = data.birthday ? new Date(data.birthday) : undefined
+    this.lastVisit = data.lastVisit ? new Date(data.lastVisit) : undefined
+    this.hasPassword = data.hasPassword
+    this.authentication = data.authentication
+    this.customerData = data.customerData
   }
 }
 

@@ -50,7 +50,7 @@ function addCampaignsBlock(blockManager: any) {
             </div>
             `
     ),
-  });
+  })
 }
 
 export {

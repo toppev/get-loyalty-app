@@ -1,5 +1,5 @@
-import { createStyles, makeStyles, Theme } from "@material-ui/core";
-import React from "react";
+import { createStyles, makeStyles, Theme } from "@material-ui/core"
+import React from "react"
 
 interface IdTextProps {
   id: string
@@ -17,11 +17,11 @@ const useStyles = makeStyles((theme: Theme) =>
       margin: '3px 0px 0px 0px',
       textAlign: 'right',
     },
-  }));
+  }))
 
 export default function ({ id, text }: IdTextProps) {
 
-  const classes = useStyles();
+  const classes = useStyles()
 
   return (<p className={classes.itemId}>{text === false ? "" : text || "ID:"} {id}</p>)
 }

@@ -10,28 +10,28 @@ import {
   makeStyles,
   Theme,
   Typography
-} from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-import GetAppIcon from '@material-ui/icons/GetApp';
-import React, { ReactElement, useState } from 'react';
-import { post, uploadFile } from '../../../config/axios';
-import RequestError from '../../../util/requestError';
-import Product from '../Product';
-import ProductFormDialog from '../ProductFormDialog';
-import ProductRow from '../ProductRow';
-import ColumnMapping, { KeyValue } from './ColumnMapping';
-import ProductsDropzone from './ImportDropzone';
-import { fromReadableName, toReadableNames } from './importNameUtil';
-import useRequest from "../../../hooks/useRequest";
-import { addProduct } from "../../../services/productService";
-import RetryButton from "../../common/button/RetryButton";
+} from '@material-ui/core'
+import CloseIcon from '@material-ui/icons/Close'
+import CloudUploadIcon from '@material-ui/icons/CloudUpload'
+import GetAppIcon from '@material-ui/icons/GetApp'
+import React, { ReactElement, useState } from 'react'
+import { post, uploadFile } from '../../../config/axios'
+import RequestError from '../../../util/requestError'
+import Product from '../Product'
+import ProductFormDialog from '../ProductFormDialog'
+import ProductRow from '../ProductRow'
+import ColumnMapping, { KeyValue } from './ColumnMapping'
+import ProductsDropzone from './ImportDropzone'
+import { fromReadableName, toReadableNames } from './importNameUtil'
+import useRequest from "../../../hooks/useRequest"
+import { addProduct } from "../../../services/productService"
+import RetryButton from "../../common/button/RetryButton"
 
 const URL_PREFIX = 'http://localhost:8080'
 
-let fileId: string | null = null;
+let fileId: string | null = null
 
-const readableColumnOptions = ['Product Name', 'Product Description', 'Product Price', 'None (exclude column)'];
+const readableColumnOptions = ['Product Name', 'Product Description', 'Product Price', 'None (exclude column)']
 
 interface ImportProductsProps extends ButtonProps {
 }
@@ -65,29 +65,29 @@ const useStyles = makeStyles((theme: Theme) =>
     center: {
       textAlign: 'center',
     }
-  }));
+  }))
 
 
 export default function ImportProducts(props: ImportProductsProps): ReactElement {
 
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [previewOpen, setPreviewOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false)
+  const [previewOpen, setPreviewOpen] = useState(false)
 
-  const [file, setFile] = useState<File | null>(null);
-  const [submitting, setSubmitting] = useState(false);
-  const [mappingFields, setMappingFields] = useState<KeyValue>({});
+  const [file, setFile] = useState<File | null>(null)
+  const [submitting, setSubmitting] = useState(false)
+  const [mappingFields, setMappingFields] = useState<KeyValue>({})
 
-  const [error, setError] = useState<RequestError | undefined>();
-  const [previewProducts, setPreviewProducts] = useState<Product[]>([]);
+  const [error, setError] = useState<RequestError | undefined>()
+  const [previewProducts, setPreviewProducts] = useState<Product[]>([])
 
-  const classes = useStyles();
+  const classes = useStyles()
 
   const setErrorMessage = (message: string) => {
     setError({ message: message, retry: undefined })
   }
 
   const toggleDialogOpen = () => {
-    setDialogOpen(!dialogOpen);
+    setDialogOpen(!dialogOpen)
     setError({})
   }
 
@@ -108,7 +108,7 @@ export default function ImportProducts(props: ImportProductsProps): ReactElement
           initialFields={toReadableNames(mappingFields)}
           options={readableColumnOptions}
           onSubmit={(values, { setSubmitting, setErrors }) => {
-            const newMapping = fromReadableName(values);
+            const newMapping = fromReadableName(values)
             setMappingFields(newMapping)
             setSubmitting(true)
             post(`${URL_PREFIX}/products`, {
@@ -119,21 +119,21 @@ export default function ImportProducts(props: ImportProductsProps): ReactElement
                 if (res.status !== 200) {
                   setErrorMessage('Sorry, we failed to parse the products. Is the file a valid CSV file?')
                 } else {
-                  setError({});
+                  setError({})
                   setPreviewOpen(true)
-                  const products: Product[] = res.data.products;
+                  const products: Product[] = res.data.products
                   // (currently) does not have categories and id
                   products.forEach(p => {
                     if (!p.categories) {
                       p.categories = []
                     }
                     p.id = `import_${Math.random()}`
-                  });
-                  setPreviewProducts(products);
+                  })
+                  setPreviewProducts(products)
                 }
               }).catch(_err => {
-              setErrorMessage(`Failed to parse products. Is the file a valid CSV file?`);
-            }).finally(() => setSubmitting(false));
+                setErrorMessage(`Failed to parse products. Is the file a valid CSV file?`)
+              }).finally(() => setSubmitting(false))
           }}/>
         <ProductPreview
           open={previewOpen}
@@ -190,22 +190,22 @@ export default function ImportProducts(props: ImportProductsProps): ReactElement
           <Button
             onClick={
               () => {
-                setSubmitting(true);
+                setSubmitting(true)
                 uploadFile(`${URL_PREFIX}/columns`, file!!, true)
                   .then(res => {
                     if (res.status !== 200) {
                       setErrorMessage('Sorry, we failed to parse the products. Is the file a valid CSV file?')
                     } else {
-                      const data: ColumnResponse = res.data;
-                      fileId = data.fileId;
+                      const data: ColumnResponse = res.data
+                      fileId = data.fileId
                       setMappingFields(data.columns)
-                      setError({});
+                      setError({})
                     }
                   }).catch(err => {
-                  setErrorMessage(`Failed to send the file. ${err}`);
-                }).finally(() => {
-                  setSubmitting(false);
-                });
+                    setErrorMessage(`Failed to send the file. ${err}`)
+                  }).finally(() => {
+                    setSubmitting(false)
+                  })
               }}
             className={classes.submitButton}
             color="secondary"
@@ -228,7 +228,7 @@ type FileProps = { file: File | null }
 
 function FileInfo({ file }: FileProps) {
 
-  const classes = useStyles();
+  const classes = useStyles()
 
   return !!file ? (
     <b className={classes.center}>{file.name} - {(file.size / 1000).toFixed(2)} Kb</b>
@@ -244,30 +244,30 @@ interface PreviewProps {
 
 function ProductPreview({ open, onClickClose, initialProducts }: PreviewProps) {
 
-  const classes = useStyles();
+  const classes = useStyles()
 
-  const [formOpen, setFormOpen] = useState(false);
-  const [editingProduct, setEditingProduct] = useState<Product | undefined>();
+  const [formOpen, setFormOpen] = useState(false)
+  const [editingProduct, setEditingProduct] = useState<Product | undefined>()
 
-  const [products, setProducts] = useState<Product[]>(initialProducts);
+  const [products, setProducts] = useState<Product[]>(initialProducts)
 
-  const { error, loading, performRequest } = useRequest();
+  const { error, loading, performRequest } = useRequest()
 
   const submitProducts = () => {
     // FIXME: we can only send one at a time (not sure if useRequest can handle multiple simultaneous requests)
     // Perhaps backend could accept multiple?
     const sendOneRecursive = () => {
       if (products.length) {
-        let product = products[0];
+        let product = products[0]
         performRequest(
           () => addProduct(product),
           () => {
-            setProducts(products.slice(1));
-            sendOneRecursive();
-          });
+            setProducts(products.slice(1))
+            sendOneRecursive()
+          })
       }
     }
-    sendOneRecursive();
+    sendOneRecursive()
   }
 
   return (
@@ -283,15 +283,15 @@ function ProductPreview({ open, onClickClose, initialProducts }: PreviewProps) {
 
         {products.map((item, index) => (
           <ProductRow key={index} product={item}
-                      startEditing={(product) => setEditingProduct(product)}/>
+            startEditing={(product) => setEditingProduct(product)}/>
         ))}
 
         <ProductFormDialog
           open={formOpen || !!editingProduct}
           initialProduct={editingProduct}
           onClose={() => {
-            setFormOpen(false);
-            setEditingProduct(undefined);
+            setFormOpen(false)
+            setEditingProduct(undefined)
           }}
           onProductSubmitted={(product: Product) => {
             // Editing or adding a new product to the preview
@@ -301,8 +301,8 @@ function ProductPreview({ open, onClickClose, initialProducts }: PreviewProps) {
             } else {
               setProducts([product, ...products.filter(p => p.id !== product.id)])
             }
-            setFormOpen(false);
-            setEditingProduct(undefined);
+            setFormOpen(false)
+            setEditingProduct(undefined)
           }}/>
 
         <div className={classes.submitDiv}>

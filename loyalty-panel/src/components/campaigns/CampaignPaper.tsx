@@ -1,12 +1,12 @@
-import { Button, createStyles, Divider, makeStyles, Paper, Theme, Typography } from "@material-ui/core";
-import React from "react";
-import { Campaign } from "./Campaign";
-import RewardItem from "../rewards/RewardItem";
-import { format, plural } from "../common/StringUtils";
-import Tooltip from "@material-ui/core/Tooltip";
-import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
-import { RenderList } from "../common/RenderList";
-import allRequirements from "@toppev/getloyalty-campaigns";
+import { Button, createStyles, Divider, makeStyles, Paper, Theme, Typography } from "@material-ui/core"
+import React from "react"
+import { Campaign } from "./Campaign"
+import RewardItem from "../rewards/RewardItem"
+import { format, plural } from "../common/StringUtils"
+import Tooltip from "@material-ui/core/Tooltip"
+import HelpOutlineIcon from '@material-ui/icons/HelpOutline'
+import { RenderList } from "../common/RenderList"
+import allRequirements from "@toppev/getloyalty-campaigns"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -45,15 +45,15 @@ const useStyles = makeStyles((theme: Theme) =>
     button: {
       margin: '15px 12px 0px 12px'
     }
-  }));
+  }))
 
 
-const MS_PER_DAY = 1000 * 60 * 60 * 24;
+const MS_PER_DAY = 1000 * 60 * 60 * 24
 
 function dateDiffInDays(from: Date, to: Date): number {
-  const utc1 = Date.UTC(from.getFullYear(), from.getMonth(), from.getDate());
-  const utc2 = Date.UTC(to.getFullYear(), to.getMonth(), to.getDate());
-  return Math.floor((utc2 - utc1) / MS_PER_DAY);
+  const utc1 = Date.UTC(from.getFullYear(), from.getMonth(), from.getDate())
+  const utc2 = Date.UTC(to.getFullYear(), to.getMonth(), to.getDate())
+  return Math.floor((utc2 - utc1) / MS_PER_DAY)
 }
 
 interface CampaignPaperProps {
@@ -65,10 +65,10 @@ interface CampaignPaperProps {
 
 export default function (props: CampaignPaperProps) {
 
-  const classes = useStyles();
+  const classes = useStyles()
 
-  const { campaign } = props;
-  const { start, end, requirements, maxRewards, endReward, categories, products } = campaign;
+  const { campaign } = props
+  const { start, end, requirements, maxRewards, endReward, categories, products } = campaign
 
   // Days from/till campaign start/end date
   const diffString = (date?: Date) => {
@@ -102,11 +102,11 @@ export default function (props: CampaignPaperProps) {
                 {req.values.length !== 0 &&
                 <div>
                   {req.values.map((val, index) => {
-                      const valueTypes = allRequirements[req.type].valueDescriptions || []
-                      return (
-                        <p key={val}>{valueTypes[index]?.name || 'unknown'}: <b>{val}</b></p>
-                      )
-                    }
+                    const valueTypes = allRequirements[req.type].valueDescriptions || []
+                    return (
+                      <p key={val}>{valueTypes[index]?.name || 'unknown'}: <b>{val}</b></p>
+                    )
+                  }
                   )}
                 </div>}
               </li>
@@ -127,7 +127,7 @@ export default function (props: CampaignPaperProps) {
         <br/>
         <span className={classes.detail}>
                     (max <b>{maxRewards.user}</b> {plural('reward', maxRewards.user)} per user)
-                </span>
+        </span>
       </p>
       <br/>
       <p>Per purchase points: <b>{campaign.transactionPoints}</b>

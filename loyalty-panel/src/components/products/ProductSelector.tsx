@@ -1,13 +1,13 @@
-import { Button, createStyles, Dialog, DialogContent, DialogContentText, LinearProgress, Theme, Typography } from "@material-ui/core";
-import React, { useState } from "react";
-import ProductRow from "./ProductRow";
-import Product from "./Product";
-import { makeStyles } from "@material-ui/core/styles";
-import CloseButton from "../common/button/CloseButton";
-import useRequest from "../../hooks/useRequest";
-import { listProducts } from "../../services/productService";
-import RetryButton from "../common/button/RetryButton";
-import useResponseState from "../../hooks/useResponseState";
+import { Button, createStyles, Dialog, DialogContent, DialogContentText, LinearProgress, Theme, Typography } from "@material-ui/core"
+import React, { useState } from "react"
+import ProductRow from "./ProductRow"
+import Product from "./Product"
+import { makeStyles } from "@material-ui/core/styles"
+import CloseButton from "../common/button/CloseButton"
+import useRequest from "../../hooks/useRequest"
+import { listProducts } from "../../services/productService"
+import RetryButton from "../common/button/RetryButton"
+import useResponseState from "../../hooks/useResponseState"
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) =>
       margin: '12px',
       color: theme.palette.grey[800]
     }
-  }));
+  }))
 
 interface ProductSelectorProps {
   open: boolean
@@ -48,12 +48,12 @@ interface ProductSelectorProps {
 
 export default function ({ open, text, onClickClose, onSubmit, limitNotification }: ProductSelectorProps) {
 
-  const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
+  const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
 
-  const { error, loading, response } = useRequest(() => listProducts());
-  const [products] = useResponseState<Product[]>(response, [], res => res.data.map((it: any) => new Product(it)));
+  const { error, loading, response } = useRequest(() => listProducts())
+  const [products] = useResponseState<Product[]>(response, [], res => res.data.map((it: any) => new Product(it)))
 
-  const classes = useStyles();
+  const classes = useStyles()
 
   return error ? (
     <RetryButton error={error}/>

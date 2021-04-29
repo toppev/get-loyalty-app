@@ -1,19 +1,19 @@
-import { Box, createStyles, LinearProgress, makeStyles, Paper, Theme, Typography, useMediaQuery, useTheme } from "@material-ui/core";
-import { Form, Formik, FormikErrors } from "formik";
-import _ from 'lodash';
-import React, { useContext, useState } from "react";
-import AppContext, { Business } from "../../context/AppContext";
-import SaveChangesSnackbar from "../common/SaveChangesSnackbar";
-import { TextField } from "formik-material-ui";
-import HelpIcon from "@material-ui/icons/Help";
-import Tooltip from "@material-ui/core/Tooltip";
-import { updateBusiness } from "../../services/businessService";
-import useRequest from "../../hooks/useRequest";
-import RetryButton from "../common/button/RetryButton";
-import { isEmail } from "../../util/validate";
-import IdText from "../common/IdText";
-import CustomerLevelView from "./levels/CustomerLevelView";
-import IconUploadForm from "./IconUploadForm";
+import { Box, createStyles, LinearProgress, makeStyles, Paper, Theme, Typography, useMediaQuery, useTheme } from "@material-ui/core"
+import { Form, Formik, FormikErrors } from "formik"
+import _ from 'lodash'
+import React, { useContext, useState } from "react"
+import AppContext, { Business } from "../../context/AppContext"
+import SaveChangesSnackbar from "../common/SaveChangesSnackbar"
+import { TextField } from "formik-material-ui"
+import HelpIcon from "@material-ui/icons/Help"
+import Tooltip from "@material-ui/core/Tooltip"
+import { updateBusiness } from "../../services/businessService"
+import useRequest from "../../hooks/useRequest"
+import RetryButton from "../common/button/RetryButton"
+import { isEmail } from "../../util/validate"
+import IdText from "../common/IdText"
+import CustomerLevelView from "./levels/CustomerLevelView"
+import IconUploadForm from "./IconUploadForm"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -58,27 +58,27 @@ const useStyles = makeStyles((theme: Theme) =>
       margin: '35px 0px',
       backgroundColor: theme.palette.grey[600]
     }
-  }));
+  }))
 
 export default function () {
-  const classes = useStyles();
-  const context = useContext(AppContext);
+  const classes = useStyles()
+  const context = useContext(AppContext)
 
-  const theme = useTheme();
-  const bigScreen = useMediaQuery(theme.breakpoints.up('md'));
+  const theme = useTheme()
+  const bigScreen = useMediaQuery(theme.breakpoints.up('md'))
 
-  const [saved, setSaved] = useState(true);
+  const [saved, setSaved] = useState(true)
 
   const request = useRequest()
-  const { error } = request;
+  const { error } = request
 
   const validateAndSnackbar = (value: Business) => {
-    const errors: FormikErrors<Business> = {};
+    const errors: FormikErrors<Business> = {}
     if (value.email && !isEmail(value.email)) {
       errors.email = 'Invalid email address'
     }
-    setSaved(_.isEqual(value, context.business));
-    return errors;
+    setSaved(_.isEqual(value, context.business))
+    return errors
   }
 
   return (
@@ -105,12 +105,12 @@ export default function () {
               request.performRequest(
                 () => updateBusiness(business),
                 (res) => {
-                  setSaved(true);
-                  context.setBusiness(res.data);
-                  actions.setSubmitting(false);
+                  setSaved(true)
+                  context.setBusiness(res.data)
+                  actions.setSubmitting(false)
                 },
                 () => actions.setSubmitting(false)
-              );
+              )
 
             }}
           >

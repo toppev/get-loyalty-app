@@ -1,7 +1,7 @@
-import { Button, ButtonProps, createStyles, Theme } from "@material-ui/core";
-import AddIcon from "@material-ui/icons/Add";
-import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { Button, ButtonProps, createStyles, Theme } from "@material-ui/core"
+import AddIcon from "@material-ui/icons/Add"
+import React from "react"
+import { makeStyles } from "@material-ui/core/styles"
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme: Theme) =>
     newBtn: {
       backgroundColor: theme.palette.success.main,
     },
-  }));
+  }))
 
 interface NewButtonProps {
   name: string
@@ -18,7 +18,7 @@ interface NewButtonProps {
 
 export default function (props: NewButtonProps) {
 
-  const classes = useStyles();
+  const classes = useStyles()
 
   return (
     <div>

@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useState } from "react";
-import RequestError from "../util/requestError";
-import { AxiosResponse } from "axios";
+import { useCallback, useEffect, useState } from "react"
+import RequestError from "../util/requestError"
+import { AxiosResponse } from "axios"
 
 type Request = () => Promise<any>
 type Callback = (response: AxiosResponse) => any
@@ -51,11 +51,11 @@ export default function useRequest(
     request: initialRequest,
     callback: initialCallback,
     onError: opts.options?.onError
-  });
+  })
 
-  const [loading, setLoading] = useState<undefined | boolean>(undefined);
-  const [error, setError] = useState<RequestError | undefined>();
-  const [response, setResponse] = useState<AxiosResponse | undefined>();
+  const [loading, setLoading] = useState<undefined | boolean>(undefined)
+  const [error, setError] = useState<RequestError | undefined>()
+  const [response, setResponse] = useState<AxiosResponse | undefined>()
 
   const execute = useCallback(() => {
     if (requestContext.request) {
@@ -66,13 +66,13 @@ export default function useRequest(
           requestContext.callback && requestContext.callback(res)
         })
         .catch((err: any) => {
-          console.error(err);
+          console.error(err)
           setError({
             message: opts.errorMessage || parseError(err),
             error: err,
             retry: canRetry(err) ? () => execute() : undefined,
             clearError: () => setError(undefined)
-          });
+          })
           requestContext.onError && requestContext.onError(err)
         }).finally(() => setLoading(false))
     }

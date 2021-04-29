@@ -21,6 +21,14 @@
         "args": "none",
         "ignoreRestSiblings": false
       }
+    ],
+    "indent": [
+      "warn",
+      2
+    ],
+    "semi": [
+      "warn",
+      "never"
     ]
   },
   "plugins": [

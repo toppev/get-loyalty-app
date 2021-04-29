@@ -1,7 +1,7 @@
-import { Dialog, DialogContent } from "@material-ui/core";
-import React from "react";
-import ProductForm, { ProductFormProps } from "./ProductForm";
-import CloseButton from "../common/button/CloseButton";
+import { Dialog, DialogContent } from "@material-ui/core"
+import React from "react"
+import ProductForm, { ProductFormProps } from "./ProductForm"
+import CloseButton from "../common/button/CloseButton"
 
 
 export interface ProductFormDialogProps extends ProductFormProps {
@@ -20,5 +20,5 @@ export default function (props: ProductFormDialogProps) {
         </DialogContent>
       </Dialog>
     </div>
-  );
+  )
 }

@@ -17,7 +17,7 @@ function addEnableNotificationsButton(blockManager: any) {
                     text-decoration: none;"
             >Enable Notifications</button>`
     ),
-  });
+  })
 }
 
 export {

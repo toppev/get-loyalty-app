@@ -12,7 +12,7 @@ export class PushNotification {
     this.message = data.message
     this.link = data.link
     this.sent = data.sent ? new Date(data.sent) : undefined
-    this.receivers = data.receivers;
+    this.receivers = data.receivers
   }
 
   toRequestObject() {
@@ -20,6 +20,6 @@ export class PushNotification {
     delete res.id
     delete res.sent
     delete res.receivers
-    return res;
+    return res
   }
 }

@@ -1,7 +1,7 @@
-import { Dialog, DialogContent } from "@material-ui/core";
-import React from "react";
-import RewardForm, { RewardFormProps } from "./RewardForm";
-import CloseButton from "../common/button/CloseButton";
+import { Dialog, DialogContent } from "@material-ui/core"
+import React from "react"
+import RewardForm, { RewardFormProps } from "./RewardForm"
+import CloseButton from "../common/button/CloseButton"
 
 
 export interface RewardFormDialogProps extends RewardFormProps {
@@ -20,5 +20,5 @@ export default function (props: RewardFormDialogProps) {
         </DialogContent>
       </Dialog>
     </div>
-  );
+  )
 }

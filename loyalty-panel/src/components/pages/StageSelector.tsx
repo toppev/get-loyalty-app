@@ -1,7 +1,7 @@
-import { createStyles, FormControl, FormControlLabel, Radio, RadioGroup, Theme, Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import React from "react";
-import { PUBLISHED, UNPUBLISHED } from "./Page";
+import { createStyles, FormControl, FormControlLabel, Radio, RadioGroup, Theme, Typography } from "@material-ui/core"
+import { makeStyles } from "@material-ui/core/styles"
+import React from "react"
+import { PUBLISHED, UNPUBLISHED } from "./Page"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme: Theme) =>
     select: {
       paddingTop: '10px'
     }
-  }));
+  }))
 
 interface StageSelectorProps {
   stage?: string
@@ -21,7 +21,7 @@ interface StageSelectorProps {
 
 export default function ({ stage = UNPUBLISHED, onChange }: StageSelectorProps) {
 
-  const classes = useStyles();
+  const classes = useStyles()
 
   return (
     <FormControl>

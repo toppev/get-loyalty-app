@@ -1,5 +1,5 @@
-import React from "react";
-import { createStyles, makeStyles, Theme, Typography } from "@material-ui/core";
+import React from "react"
+import { createStyles, makeStyles, Theme, Typography } from "@material-ui/core"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme: Theme) =>
       fontSize: '20px',
       color: theme.palette.grey[500]
     },
-  }));
+  }))
 
 export default function () {
 

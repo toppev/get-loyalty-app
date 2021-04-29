@@ -1,5 +1,5 @@
-import { get, post } from "../config/axios";
-import Category from "../components/categories/Category";
+import { get, post } from "../config/axios"
+import Category from "../components/categories/Category"
 
 function getAllCategories() {
   return get(`/category/`)

@@ -1,6 +1,6 @@
-import { createStyles, IconButton, IconButtonProps, makeStyles, Theme } from "@material-ui/core";
-import CloseIcon from '@material-ui/icons/Close';
-import React from "react";
+import { createStyles, IconButton, IconButtonProps, makeStyles, Theme } from "@material-ui/core"
+import CloseIcon from '@material-ui/icons/Close'
+import React from "react"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -10,12 +10,12 @@ const useStyles = makeStyles((theme: Theme) =>
       right: 0,
       color: theme.palette.grey[500],
     },
-  }));
+  }))
 
 
 export default function (props: IconButtonProps) {
 
-  const classes = useStyles();
+  const classes = useStyles()
 
   return (
     <IconButton
@@ -24,5 +24,5 @@ export default function (props: IconButtonProps) {
       aria-label="close">
       <CloseIcon/>
     </IconButton>
-  );
+  )
 }

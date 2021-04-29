@@ -1,10 +1,10 @@
-import { Badge, createStyles, IconButton, Link, makeStyles, Menu, MenuItem, Theme } from "@material-ui/core";
-import React, { useState } from "react";
-import { AccountNotificationValues } from "./AccountNotifications";
-import AccountBox from '@material-ui/icons/AccountBox';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import { logout } from "../../services/authenticationService";
+import { Badge, createStyles, IconButton, Link, makeStyles, Menu, MenuItem, Theme } from "@material-ui/core"
+import React, { useState } from "react"
+import { AccountNotificationValues } from "./AccountNotifications"
+import AccountBox from '@material-ui/icons/AccountBox'
+import AccountCircleIcon from '@material-ui/icons/AccountCircle'
+import ExitToAppIcon from '@material-ui/icons/ExitToApp'
+import { logout } from "../../services/authenticationService"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingRight: '6px',
       marginTop: "-12px",
     }
-  }));
+  }))
 
 interface AccountButtonProps {
   notifications: AccountNotificationValues
@@ -39,11 +39,11 @@ interface AccountButtonProps {
 
 export default function (props: AccountButtonProps) {
 
-  const classes = useStyles();
+  const classes = useStyles()
 
-  const [anchorEl, setAnchorEl] = useState<any | undefined>(undefined);
+  const [anchorEl, setAnchorEl] = useState<any | undefined>(undefined)
 
-  const myAccountNotifications = props.notifications['My Account'];
+  const myAccountNotifications = props.notifications['My Account']
   const allNotifications = myAccountNotifications // Append other notifications here
 
   return (

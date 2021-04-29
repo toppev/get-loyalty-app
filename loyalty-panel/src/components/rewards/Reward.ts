@@ -16,16 +16,16 @@ export default class Reward {
 
 
   constructor(data: any) {
-    this.id = data.id;
-    this.recognition = data.recognition;
-    this.name = data.name;
-    this.itemDiscount = data.itemDiscount;
-    this.description = data.description || '';
-    this.customerPoints = data.customerPoints;
-    this.requirement = data.requirement;
-    this.expires = data.expires;
-    this.products = data.products || [];
-    this.categories = data.categories || [];
+    this.id = data.id
+    this.recognition = data.recognition
+    this.name = data.name
+    this.itemDiscount = data.itemDiscount
+    this.description = data.description || ''
+    this.customerPoints = data.customerPoints
+    this.requirement = data.requirement
+    this.expires = data.expires
+    this.products = data.products || []
+    this.categories = data.categories || []
   }
 
   toRequestObject() {
@@ -33,8 +33,8 @@ export default class Reward {
       ...this,
       categories: this.categories.map(i => i.id),
       products: this.products.map(i => i.id)
-    };
-    const { id, ...result } = all;
-    return result;
+    }
+    const { id, ...result } = all
+    return result
   }
 }

@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import GrapesPageEditor from "./GrapesPageEditor";
-import { createStyles, Dialog, DialogContent, Link, makeStyles, Theme, Typography, useMediaQuery, useTheme } from "@material-ui/core";
-import Button from "@material-ui/core/Button";
-import { Page } from "../Page";
-import { SelectPlaceholderCallback } from "./blocks/placeholderBlock";
-import PlaceholderSelector from "./PlaceholderSelector";
-import CloseButton from "../../common/button/CloseButton";
-import Alert from "@material-ui/lab/Alert";
-import Tip from "../../common/Tip";
+import React, { useState } from "react"
+import GrapesPageEditor from "./GrapesPageEditor"
+import { createStyles, Dialog, DialogContent, Link, makeStyles, Theme, Typography, useMediaQuery, useTheme } from "@material-ui/core"
+import Button from "@material-ui/core/Button"
+import { Page } from "../Page"
+import { SelectPlaceholderCallback } from "./blocks/placeholderBlock"
+import PlaceholderSelector from "./PlaceholderSelector"
+import CloseButton from "../../common/button/CloseButton"
+import Alert from "@material-ui/lab/Alert"
+import Tip from "../../common/Tip"
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginTop: '20px',
       textAlign: 'center'
     }
-  }));
+  }))
 
 interface PageEditorProps {
   page: Page
@@ -48,19 +48,19 @@ interface PageEditorProps {
 
 export default function ({ page }: PageEditorProps) {
 
-  const classes = useStyles();
+  const classes = useStyles()
 
-  const theme = useTheme();
-  const notMobile = useMediaQuery(theme.breakpoints.up('sm'));
+  const theme = useTheme()
+  const notMobile = useMediaQuery(theme.breakpoints.up('sm'))
 
-  const [error, setError] = useState<string | undefined>();
-  const [forceMobileEditor, setForceMobileEditor] = useState(false);
+  const [error, setError] = useState<string | undefined>()
+  const [forceMobileEditor, setForceMobileEditor] = useState(false)
 
   // I don't know but don't touch this
-  const [selectPlaceholderCallback, setSelectPlaceholderCallback] = useState<(str?: string) => any>();
+  const [selectPlaceholderCallback, setSelectPlaceholderCallback] = useState<(str?: string) => any>()
   const selectPlaceholder = (callback: SelectPlaceholderCallback) => {
     // the surrounding function needed or otherwise it will call the callback??
-    setSelectPlaceholderCallback(() => ((val: string) => callback(val)));
+    setSelectPlaceholderCallback(() => ((val: string) => callback(val)))
   }
 
   return !notMobile && !forceMobileEditor ? (

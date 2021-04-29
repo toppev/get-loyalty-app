@@ -1,9 +1,9 @@
-import { createStyles, Dialog, DialogContent, Link, makeStyles } from "@material-ui/core";
-import React from "react";
-import CloseButton from "../common/button/CloseButton";
-import { Page } from "./Page";
-import PreviewIframe from "../common/PreviewIframe";
-import { DEMO_URL } from "../../config/axios";
+import { createStyles, Dialog, DialogContent, Link, makeStyles } from "@material-ui/core"
+import React from "react"
+import CloseButton from "../common/button/CloseButton"
+import { Page } from "./Page"
+import PreviewIframe from "../common/PreviewIframe"
+import { DEMO_URL } from "../../config/axios"
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -13,7 +13,7 @@ const useStyles = makeStyles(theme =>
     explanation: {
       color: theme.palette.grey[700]
     }
-  }));
+  }))
 
 
 interface PreviewPageProps {
@@ -25,7 +25,7 @@ interface PreviewPageProps {
 
 export default function PreviewPage({ page, onClose, actions, open = true }: PreviewPageProps) {
 
-  const classes = useStyles();
+  const classes = useStyles()
 
   return !page ? null : (
     <Dialog onClose={onClose} open={open} maxWidth="sm">

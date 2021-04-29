@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import CloseButton from "../../common/button/CloseButton";
-import { Button, Collapse, createStyles, Dialog, Divider, Grid, Paper, TextField, Theme } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import SVGIcons from "./SVGIcons";
-import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
-import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
-import PageIcon from "../PageIcon";
+import React, { useState } from "react"
+import CloseButton from "../../common/button/CloseButton"
+import { Button, Collapse, createStyles, Dialog, Divider, Grid, Paper, TextField, Theme } from "@material-ui/core"
+import { makeStyles } from "@material-ui/core/styles"
+import SVGIcons from "./SVGIcons"
+import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp"
+import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown"
+import PageIcon from "../PageIcon"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '140px',
       margin: 'auto'
     }
-  }));
+  }))
 
 interface IconSelectorProps {
   /**
@@ -54,15 +54,15 @@ interface IconSelectorProps {
 
 export default function (props: IconSelectorProps) {
 
-  const classes = useStyles();
-  const icons = SVGIcons;
+  const classes = useStyles()
+  const icons = SVGIcons
 
-  const { onSubmit, initialIcon } = props;
+  const { onSubmit, initialIcon } = props
 
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
 
-  const [customOpen, setCustomOpen] = useState(false);
-  const [html, setHtml] = useState(icons.includes(initialIcon) ? '' : initialIcon);
+  const [customOpen, setCustomOpen] = useState(false)
+  const [html, setHtml] = useState(icons.includes(initialIcon) ? '' : initialIcon)
 
   return (
     <div>
@@ -137,7 +137,7 @@ interface SelectableIconProps {
 
 function SeletableIcon({ icon, onSelect }: SelectableIconProps) {
 
-  const classes = useStyles();
+  const classes = useStyles()
 
   return (
     <div className={classes.iconDiv}>

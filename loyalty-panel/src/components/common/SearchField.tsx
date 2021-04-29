@@ -1,8 +1,8 @@
-import { createStyles, InputAdornment, TextField, Theme } from "@material-ui/core";
-import SearchIcon from "@material-ui/icons/Search";
-import React from "react";
-import { StandardTextFieldProps } from "@material-ui/core/TextField/TextField";
-import { makeStyles } from "@material-ui/core/styles";
+import { createStyles, InputAdornment, TextField, Theme } from "@material-ui/core"
+import SearchIcon from "@material-ui/icons/Search"
+import React from "react"
+import { StandardTextFieldProps } from "@material-ui/core/TextField/TextField"
+import { makeStyles } from "@material-ui/core/styles"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme: Theme) =>
     inputLabel: {
       color: theme.palette.grey[400],
     },
-  }));
+  }))
 
 
 interface SearchFieldProps extends StandardTextFieldProps {
@@ -25,7 +25,7 @@ interface SearchFieldProps extends StandardTextFieldProps {
 
 export default function ({ setSearch, textColor, ...otherProps }: SearchFieldProps) {
 
-  const classes = useStyles();
+  const classes = useStyles()
 
 
   return (

@@ -1,15 +1,15 @@
-import { get, patch, post, remove } from "../config/axios";
-import Product from "../components/products/Product";
+import { get, patch, post, remove } from "../config/axios"
+import Product from "../components/products/Product"
 
 
 function listProducts() {
   const subUrl = `/product`
-  return get(`${subUrl}/all`);
+  return get(`${subUrl}/all`)
 }
 
 function addProduct(product: Product) {
   const subUrl = `/product`
-  return post(subUrl, product);
+  return post(subUrl, product)
 }
 
 function deleteProduct(product: Product) {
@@ -27,4 +27,4 @@ export {
   addProduct,
   deleteProduct,
   updateProduct
-};
+}

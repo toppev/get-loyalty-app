@@ -1,12 +1,12 @@
-import { CustomerLevel } from "../../../context/AppContext";
-import { Button, createStyles, Dialog, DialogContent, makeStyles, Theme, Typography } from "@material-ui/core";
-import React, { useState } from "react";
-import CloseButton from "../../common/button/CloseButton";
-import { Formik, FormikErrors } from "formik";
-import { TextField } from "formik-material-ui";
-import Reward from "../../rewards/Reward";
-import RewardManager from "../../rewards/RewardManager";
-import ColorPicker from "../../common/ColorPicker";
+import { CustomerLevel } from "../../../context/AppContext"
+import { Button, createStyles, Dialog, DialogContent, makeStyles, Theme, Typography } from "@material-ui/core"
+import React, { useState } from "react"
+import CloseButton from "../../common/button/CloseButton"
+import { Formik, FormikErrors } from "formik"
+import { TextField } from "formik-material-ui"
+import Reward from "../../rewards/Reward"
+import RewardManager from "../../rewards/RewardManager"
+import ColorPicker from "../../common/ColorPicker"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) =>
     typography: {
       color: theme.palette.grey[700]
     }
-  }));
+  }))
 
 interface CustomerLevelProps {
   open: boolean
@@ -40,14 +40,14 @@ interface CustomerLevelProps {
 
 export default function ({ initialLevel, onSubmit, onClose, currentLevels }: CustomerLevelProps) {
 
-  const [colorPickerOpen, setColorPickerOpen] = useState(false);
-  const [levelColor, setLevelColor] = useState(initialLevel.color || '#aaaaaa');
-  const [rewards, setRewards] = useState<Reward[]>(initialLevel.rewards || []);
+  const [colorPickerOpen, setColorPickerOpen] = useState(false)
+  const [levelColor, setLevelColor] = useState(initialLevel.color || '#aaaaaa')
+  const [rewards, setRewards] = useState<Reward[]>(initialLevel.rewards || [])
 
   const classes = useStyles()
 
   const validate = (value: CustomerLevel) => {
-    const errors: FormikErrors<CustomerLevel> = {};
+    const errors: FormikErrors<CustomerLevel> = {}
     if (!value.name) {
       errors.name = 'Name must be specified'
     }
@@ -56,7 +56,7 @@ export default function ({ initialLevel, onSubmit, onClose, currentLevels }: Cus
     } else if (currentLevels.some(it => it.requiredPoints === value.requiredPoints && it._id !== initialLevel._id)) {
       errors.requiredPoints = `A level with ${value.requiredPoints} points already exists!`
     }
-    return errors;
+    return errors
   }
 
   return (

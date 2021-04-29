@@ -1,11 +1,11 @@
-import React, { useEffect } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import React, { useEffect } from "react"
+import { NavLink, useLocation } from "react-router-dom"
 import { useMediaQuery } from 'react-responsive'
-import Page from "../model/Page";
-import PageIcon from "./PageIcon";
+import Page from "../model/Page"
+import PageIcon from "./PageIcon"
 
-import './Navbar.css';
-import { BASE_URL } from "../config/axios";
+import './Navbar.css'
+import { BASE_URL } from "../config/axios"
 
 interface NavbarProps {
   pages: Page[]
@@ -14,7 +14,7 @@ interface NavbarProps {
 export default function (props: NavbarProps) {
   const { pages } = props
 
-  const location = useLocation();
+  const location = useLocation()
   useEffect(() => window.scrollTo({ top: 0, behavior: 'smooth' }), [location])
 
   const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
@@ -41,8 +41,8 @@ export default function (props: NavbarProps) {
           <div style={{ display: 'flex' }}>
             <PageIcon page={page}/>
             <span className="navlink-page-name">
-                            {page.pathname.replace("-", " ")}
-                        </span>
+              {page.pathname.replace("-", " ")}
+            </span>
           </div>
         </NavLink>
       ))}

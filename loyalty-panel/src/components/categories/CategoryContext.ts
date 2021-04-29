@@ -1,5 +1,5 @@
-import React from "react";
-import Category from "./Category";
+import React from "react"
+import Category from "./Category"
 
 export interface CategoryContextInterface {
   categories: Category[]
@@ -12,4 +12,4 @@ export const defaultCategoryContext: CategoryContextInterface = {
   },
 }
 
-export default React.createContext<CategoryContextInterface>(defaultCategoryContext);
+export default React.createContext<CategoryContextInterface>(defaultCategoryContext)

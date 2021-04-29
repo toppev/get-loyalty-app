@@ -1,6 +1,6 @@
-import { useSubscribe } from "../../services/messageService";
-import PopupNotification from "./PopupNotification";
-import React from "react";
+import { useSubscribe } from "../../services/messageService"
+import PopupNotification from "./PopupNotification"
+import React from "react"
 
 interface NotificationHandlerProps {
   onRefresh: (id: any) => any

@@ -9,20 +9,20 @@ import {
   Typography,
   useMediaQuery,
   useTheme
-} from "@material-ui/core";
-import LockIcon from '@material-ui/icons/Lock';
-import MailOutlineIcon from '@material-ui/icons/MailOutline';
-import clsx from 'clsx';
-import { Form, Formik, FormikErrors } from "formik";
-import { TextField } from "formik-material-ui";
-import React, { useContext, useState } from "react";
-import AppContext, { User } from "../../context/AppContext";
-import { isEmail } from "../../util/validate";
-import { updateUser } from "../../services/userService";
-import useRequest from "../../hooks/useRequest";
-import RetryButton from "../common/button/RetryButton";
-import { updateServerOwner } from "../../services/serverService";
-import Alert from '@material-ui/lab/Alert';
+} from "@material-ui/core"
+import LockIcon from '@material-ui/icons/Lock'
+import MailOutlineIcon from '@material-ui/icons/MailOutline'
+import clsx from 'clsx'
+import { Form, Formik, FormikErrors } from "formik"
+import { TextField } from "formik-material-ui"
+import React, { useContext, useState } from "react"
+import AppContext, { User } from "../../context/AppContext"
+import { isEmail } from "../../util/validate"
+import { updateUser } from "../../services/userService"
+import useRequest from "../../hooks/useRequest"
+import RetryButton from "../common/button/RetryButton"
+import { updateServerOwner } from "../../services/serverService"
+import Alert from '@material-ui/lab/Alert'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -46,14 +46,14 @@ const useStyles = makeStyles((theme: Theme) =>
     progressErrorDiv: {
       margin: '20px 10px'
     }
-  }));
+  }))
 
 export default function () {
 
-  const { user } = useContext(AppContext);
+  const { user } = useContext(AppContext)
 
-  const theme = useTheme();
-  const bigScreen = useMediaQuery(theme.breakpoints.up('md'));
+  const theme = useTheme()
+  const bigScreen = useMediaQuery(theme.breakpoints.up('md'))
 
   return (
     <div>
@@ -79,24 +79,24 @@ interface EmailFormProps {
 
 function EmailForm({ user }: EmailFormProps) {
 
-  const classes = useStyles();
+  const classes = useStyles()
 
-  const [canSubmit, setCanSubmit] = useState(false);
+  const [canSubmit, setCanSubmit] = useState(false)
 
-  const context = useContext(AppContext);
+  const context = useContext(AppContext)
 
   type EmailValues = { email: string };
 
   const validate = ({ email }: EmailValues) => {
-    const errors: FormikErrors<User> = {};
+    const errors: FormikErrors<User> = {}
     if (!isEmail(email)) {
-      errors.email = "That doesn't look like an email address.";
+      errors.email = "That doesn't look like an email address."
     }
-    setCanSubmit(!errors.email && email !== user.email);
-    return errors;
+    setCanSubmit(!errors.email && email !== user.email)
+    return errors
   }
 
-  const initials: EmailValues = { email: user.email };
+  const initials: EmailValues = { email: user.email }
 
   const { error, performRequest, loading } = useRequest()
 
@@ -143,7 +143,7 @@ function EmailForm({ user }: EmailFormProps) {
         </Paper>
       )}
     </Formik>
-  );
+  )
 }
 
 interface ResetPasswordProps {
@@ -161,21 +161,21 @@ interface PasswordReset {
 function ResetPassword({ user, title, highlight }: ResetPasswordProps) {
 
   const validate = (value: PasswordReset) => {
-    const errors: FormikErrors<PasswordReset> = {};
+    const errors: FormikErrors<PasswordReset> = {}
     if (value.password && value.password.length <= 6) {
       errors.password = "Password is too weak!"
     } else if (value.repeatPassword && value.repeatPassword !== value.password) {
       errors.repeatPassword = "Passwords do not match!"
     }
-    setCanSubmit(!!value.password && !!value.repeatPassword && !errors.password && !errors.repeatPassword);
-    return errors;
+    setCanSubmit(!!value.password && !!value.repeatPassword && !errors.password && !errors.repeatPassword)
+    return errors
   }
 
-  const [canSubmit, setCanSubmit] = useState(false);
-  const [success, setSuccess] = useState<boolean | undefined>();
+  const [canSubmit, setCanSubmit] = useState(false)
+  const [success, setSuccess] = useState<boolean | undefined>()
 
-  const classes = useStyles();
-  const context = useContext(AppContext);
+  const classes = useStyles()
+  const context = useContext(AppContext)
 
   const { loading, error, performRequest } = useRequest()
 
@@ -233,7 +233,7 @@ function ResetPassword({ user, title, highlight }: ResetPasswordProps) {
               {loading && <LinearProgress/>}
             </div>
           </Paper>
-        );
+        )
       }}
     </Formik>
   )

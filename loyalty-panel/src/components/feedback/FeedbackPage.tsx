@@ -1,6 +1,6 @@
-import React from "react";
-import { createStyles, Link, makeStyles, Theme, Typography } from "@material-ui/core";
-import GitHubIcon from '@material-ui/icons/GitHub';
+import React from "react"
+import { createStyles, Link, makeStyles, Theme, Typography } from "@material-ui/core"
+import GitHubIcon from '@material-ui/icons/GitHub'
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -25,14 +25,14 @@ const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.info.dark,
       textDecoration: 'none'
     }
-  }));
+  }))
 
 
 const EMAIL = "support@getloyalty.app"
 
 export default function () {
 
-  const classes = useStyles();
+  const classes = useStyles()
 
   return (
     <div>

@@ -1,16 +1,16 @@
-import { get, multipartPost, patch, post } from "../config/axios";
-import { Business } from "../context/AppContext";
+import { get, multipartPost, patch, post } from "../config/axios"
+import { Business } from "../context/AppContext"
 
 function createBusiness(params?: any) {
-  return post('/business/create', params);
+  return post('/business/create', params)
 }
 
 function getBusiness(businessId: string) {
-  return get(`/business`);
+  return get(`/business`)
 }
 
 function updateBusiness(business: Business) {
-  return patch(`/business`, business);
+  return patch(`/business`, business)
 }
 
 function setBusinessRole(userId: string, role: string) {

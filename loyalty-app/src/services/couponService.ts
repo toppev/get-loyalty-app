@@ -1,4 +1,4 @@
-import { get } from "../config/axios";
+import { get } from "../config/axios"
 
 async function claimCoupon(coupon: string, referrer?: string | null) {
   if (referrer) {

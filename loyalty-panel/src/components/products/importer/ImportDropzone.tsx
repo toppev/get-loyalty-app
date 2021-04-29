@@ -1,7 +1,7 @@
-import { createStyles, makeStyles, Theme } from '@material-ui/core';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-import React from 'react';
-import { DropzoneOptions, useDropzone } from 'react-dropzone';
+import { createStyles, makeStyles, Theme } from '@material-ui/core'
+import CloudUploadIcon from '@material-ui/icons/CloudUpload'
+import React from 'react'
+import { DropzoneOptions, useDropzone } from 'react-dropzone'
 
 
 interface Props {
@@ -17,16 +17,16 @@ const useStyles = makeStyles((theme: Theme) =>
       textAlign: 'center',
       padding: '30px'
     }
-  }));
+  }))
 
 
 export default function (props: Props) {
 
   const { getRootProps, getInputProps } = useDropzone({
     ...props.dropzoneOptions
-  });
+  })
 
-  const classes = useStyles();
+  const classes = useStyles()
 
   return (
     <section className={classes.container}>

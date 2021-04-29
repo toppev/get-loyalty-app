@@ -1,7 +1,7 @@
-import Product from "../products/Product";
-import Category from "../categories/Category";
-import Reward from "../rewards/Reward";
-import allRequirements from "@toppev/getloyalty-campaigns";
+import Product from "../products/Product"
+import Category from "../categories/Category"
+import Reward from "../rewards/Reward"
+import allRequirements from "@toppev/getloyalty-campaigns"
 
 class Campaign {
 
@@ -20,19 +20,19 @@ class Campaign {
   end?: Date
 
   constructor(data: any) {
-    this.id = data.id;
-    this.name = data.name;
-    this.description = data.description;
-    this.products = data.products || [];
-    this.categories = data.categories || [];
-    this.requirements = data.requirements || [];
-    this.rewardedCount = data.rewardedCount;
-    this.maxRewards = data.maxRewards || { user: 1 };
-    this.transactionPoints = data.transactionPoints;
-    this.endReward = data.endReward || [];
-    this.couponCode = data.couponCode;
-    this.start = data.start && new Date(data.start);
-    this.end = data.end && new Date(data.end);
+    this.id = data.id
+    this.name = data.name
+    this.description = data.description
+    this.products = data.products || []
+    this.categories = data.categories || []
+    this.requirements = data.requirements || []
+    this.rewardedCount = data.rewardedCount
+    this.maxRewards = data.maxRewards || { user: 1 }
+    this.transactionPoints = data.transactionPoints
+    this.endReward = data.endReward || []
+    this.couponCode = data.couponCode
+    this.start = data.start && new Date(data.start)
+    this.end = data.end && new Date(data.end)
   }
 
   toRequestObject() {
@@ -44,11 +44,11 @@ class Campaign {
         if (!req.question) {
           delete req.question
         }
-        return req;
+        return req
       })
-    };
-    delete res.id;
-    return res;
+    }
+    delete res.id
+    return res
   }
 }
 
@@ -72,7 +72,7 @@ class Requirement {
 
 /** Util to get the human readable name of the requirement as it's not stored in campaigns etc */
 function getRequirementName(requirement: Requirement) {
-  return allRequirements[requirement.type].name;
+  return allRequirements[requirement.type].name
 }
 
 

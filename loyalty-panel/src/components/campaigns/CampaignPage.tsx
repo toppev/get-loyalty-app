@@ -1,15 +1,15 @@
-import React, { useState } from "react";
-import { createStyles, Dialog, DialogContent, Grid, LinearProgress, Theme } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import { Campaign } from "./Campaign";
-import CampaignPaper from "./CampaignPaper";
-import NewButton from "../common/button/NewButton";
-import CloseButton from "../common/button/CloseButton";
-import CampaignForm, { CampaignFormProps } from "./CampaignForm";
-import { deleteCampaign, listCampaigns } from "../../services/campaignService";
-import RetryButton from "../common/button/RetryButton";
-import useRequest from "../../hooks/useRequest";
-import useResponseState from "../../hooks/useResponseState";
+import React, { useState } from "react"
+import { createStyles, Dialog, DialogContent, Grid, LinearProgress, Theme } from "@material-ui/core"
+import { makeStyles } from "@material-ui/core/styles"
+import { Campaign } from "./Campaign"
+import CampaignPaper from "./CampaignPaper"
+import NewButton from "../common/button/NewButton"
+import CloseButton from "../common/button/CloseButton"
+import CampaignForm, { CampaignFormProps } from "./CampaignForm"
+import { deleteCampaign, listCampaigns } from "../../services/campaignService"
+import RetryButton from "../common/button/RetryButton"
+import useRequest from "../../hooks/useRequest"
+import useResponseState from "../../hooks/useResponseState"
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -28,18 +28,18 @@ const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.grey[400],
       margin: '20px'
     }
-  }));
+  }))
 
 export default function () {
 
-  const classes = useStyles();
+  const classes = useStyles()
 
-  const [formCampaign, setFormCampaign] = useState<Campaign | undefined>();
-  const [formOpen, setFormOpen] = useState(false);
+  const [formCampaign, setFormCampaign] = useState<Campaign | undefined>()
+  const [formOpen, setFormOpen] = useState(false)
 
-  const { error, loading, response, execute: fetchCampaigns } = useRequest(listCampaigns, {});
-  const [campaigns] = useResponseState<Campaign[]>(response, [], res => res.data.map((it: any) => new Campaign(it)));
-  const otherRequests = useRequest();
+  const { error, loading, response, execute: fetchCampaigns } = useRequest(listCampaigns, {})
+  const [campaigns] = useResponseState<Campaign[]>(response, [], res => res.data.map((it: any) => new Campaign(it)))
+  const otherRequests = useRequest()
 
   return error ? (
     <RetryButton error={error}/>
@@ -100,7 +100,7 @@ interface CampaignFormDialogProps extends CampaignFormProps {
 
 function CampaignFormDialog(props: CampaignFormDialogProps) {
 
-  const classes = useStyles();
+  const classes = useStyles()
 
   return (
     <Dialog open={props.open} maxWidth="md">

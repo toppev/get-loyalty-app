@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react"
 
 
 export default function useSearch<T>(initialSearchString?: string) {
 
-  const [search, setSearch] = useState(initialSearchString);
+  const [search, setSearch] = useState(initialSearchString)
 
   useEffect(() => {
     let tmp = search?.toLocaleLowerCase()
@@ -12,7 +12,7 @@ export default function useSearch<T>(initialSearchString?: string) {
     }
   }, [search])
 
-  const searchFilter = (item: any) => search?.length ? JSON.stringify(item).toLowerCase().includes(search) : true;
+  const searchFilter = (item: any) => search?.length ? JSON.stringify(item).toLowerCase().includes(search) : true
 
   return { search, setSearch, searchFilter }
 }

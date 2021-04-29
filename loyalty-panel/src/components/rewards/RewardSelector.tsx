@@ -1,17 +1,17 @@
-import { Button, createStyles, Dialog, DialogContent, LinearProgress, ListItem, makeStyles, Theme } from "@material-ui/core";
-import AddIcon from "@material-ui/icons/Add";
-import _ from "lodash";
-import React, { useState } from "react";
-import RetryButton from "../common/button/RetryButton";
-import Reward from "./Reward";
-import RewardFormDialog from "./RewardFormDialog";
-import RewardItem from "./RewardItem";
-import SelectRewardButton from "./SelectRewardButton";
-import SearchField from "../common/SearchField";
-import useRequest from "../../hooks/useRequest";
-import useResponseState from "../../hooks/useResponseState";
-import { listRewards } from "../../services/rewardService";
-import CloseButton from "../common/button/CloseButton";
+import { Button, createStyles, Dialog, DialogContent, LinearProgress, ListItem, makeStyles, Theme } from "@material-ui/core"
+import AddIcon from "@material-ui/icons/Add"
+import _ from "lodash"
+import React, { useState } from "react"
+import RetryButton from "../common/button/RetryButton"
+import Reward from "./Reward"
+import RewardFormDialog from "./RewardFormDialog"
+import RewardItem from "./RewardItem"
+import SelectRewardButton from "./SelectRewardButton"
+import SearchField from "../common/SearchField"
+import useRequest from "../../hooks/useRequest"
+import useResponseState from "../../hooks/useResponseState"
+import { listRewards } from "../../services/rewardService"
+import CloseButton from "../common/button/CloseButton"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) =>
     noRewards: {
       color: theme.palette.grey[600]
     }
-  }));
+  }))
 
 interface RewardSelectorProps {
   onClose: () => any
@@ -55,17 +55,17 @@ interface RewardSelectorProps {
  */
 export default function (props: RewardSelectorProps) {
 
-  const classes = useStyles();
+  const classes = useStyles()
 
-  const [formOpen, setFormOpen] = useState(false);
-  const [editingReward, setEditingReward] = useState<Reward | undefined>();
-  const [search, setSearch] = useState("");
+  const [formOpen, setFormOpen] = useState(false)
+  const [editingReward, setEditingReward] = useState<Reward | undefined>()
+  const [search, setSearch] = useState("")
 
-  const { loading, error, response } = useRequest(listRewards);
+  const { loading, error, response } = useRequest(listRewards)
 
-  const [rewards] = useResponseState<Reward[]>(response, []);
+  const [rewards] = useResponseState<Reward[]>(response, [])
 
-  const searchFilter = (reward: Reward) => search.length ? JSON.stringify(reward).toLowerCase().includes(search) : true;
+  const searchFilter = (reward: Reward) => search.length ? JSON.stringify(reward).toLowerCase().includes(search) : true
 
   const filteredRewards = rewards.filter(searchFilter)
 
@@ -109,20 +109,20 @@ export default function (props: RewardSelectorProps) {
             open={formOpen || !!editingReward}
             initialReward={editingReward}
             onClose={() => {
-              setFormOpen(false);
-              setEditingReward(undefined);
+              setFormOpen(false)
+              setEditingReward(undefined)
             }}
             onSubmitted={(reward: Reward) => {
               // If it was edited we will clone it, otherwise just use it (as it was not updated)
               if (!_.isEqual(reward, editingReward)) {
                 // FIXME
                 // A workaround to make sure nothing breaks
-                reward.id = `new_reward_${Math.random() * 1000 | 0}`;
+                reward.id = `new_reward_${Math.random() * 1000 | 0}`
               }
-              setFormOpen(false);
-              setEditingReward(undefined);
-              props.onSelect(reward);
-              props.onClose();
+              setFormOpen(false)
+              setEditingReward(undefined)
+              props.onSelect(reward)
+              props.onClose()
             }}/>
         </div>
       </DialogContent>

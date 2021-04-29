@@ -1,14 +1,14 @@
-import axios from "axios";
+import axios from "axios"
 
 /** Public/Shared API */
-export const API_URL = 'https://api.getloyalty.app/v1';
-export const DEMO_URL = 'https://demo.getloyalty.app';
-export const SERVER_API_URL = `${API_URL}/servers`;
+export const API_URL = 'https://api.getloyalty.app/v1'
+export const DEMO_URL = 'https://demo.getloyalty.app'
+export const SERVER_API_URL = `${API_URL}/servers`
 
 /** The current server instances URL */
 export let backendURL = window.localStorage.getItem('API_URL')
   || (process.env.NODE_ENV === "development" && 'http://localhost:3001')
-  || 'https://invalid_url_should_not_be_used.adadawda';
+  || 'https://invalid_url_should_not_be_used.adadawda'
 
 export function setBackendUrl(url: string) {
   backendURL = url
@@ -22,7 +22,7 @@ export function validBackendURL() {
 export const instance = axios.create({
   baseURL: backendURL,
   withCredentials: true,
-});
+})
 
 const headers = {}
 
@@ -31,7 +31,7 @@ export async function get(path: string, fullPath: boolean = false) {
     method: 'GET',
     url: fullPath ? path : backendURL + path,
     headers: headers
-  });
+  })
 }
 
 /**
@@ -42,7 +42,7 @@ export async function remove(path: string, fullPath: boolean = false) {
     method: 'DELETE',
     url: fullPath ? path : backendURL + path,
     headers: headers
-  });
+  })
 }
 
 export async function post(path: string, data: Object, fullPath: boolean = false) {
@@ -54,7 +54,7 @@ export async function post(path: string, data: Object, fullPath: boolean = false
       'Content-Type': 'application/json',
       ...headers
     }
-  });
+  })
 }
 
 export async function multipartPost(path: string, data: Object, fullPath: boolean = false) {
@@ -66,7 +66,7 @@ export async function multipartPost(path: string, data: Object, fullPath: boolea
       'Content-Type': 'multipart/form-data',
       ...headers
     }
-  });
+  })
 }
 
 export async function patch(path: string, data: Object, fullPath: boolean = false) {
@@ -78,11 +78,11 @@ export async function patch(path: string, data: Object, fullPath: boolean = fals
       'Content-Type': 'application/json',
       ...headers
     }
-  });
+  })
 }
 
 export async function uploadFile(path: string, file: File, fullPath: boolean = false) {
-  const formData = new FormData();
+  const formData = new FormData()
   formData.append('file', file)
   return instance({
     method: 'POST',
@@ -92,7 +92,7 @@ export async function uploadFile(path: string, file: File, fullPath: boolean = f
       'Content-Type': 'multipart/form-data',
       ...headers
     }
-  });
+  })
 }
 
 /**
@@ -101,10 +101,10 @@ export async function uploadFile(path: string, file: File, fullPath: boolean = f
  */
 function transformDataObjects(data: any) {
   if (data?.toRequestObject) {
-    return data.toRequestObject();
+    return data.toRequestObject()
   }
   if (Array.isArray(data)) {
-    return data.map(item => item.toRequestObject ? item.toRequestObject() : item);
+    return data.map(item => item.toRequestObject ? item.toRequestObject() : item)
   }
-  return data;
+  return data
 }

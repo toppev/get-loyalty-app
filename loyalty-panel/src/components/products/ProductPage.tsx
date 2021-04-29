@@ -10,20 +10,20 @@ import {
   TableHead,
   TableRow,
   Theme
-} from '@material-ui/core';
-import React, { useState } from 'react';
-import RetryButton from '../common/button/RetryButton';
-import ImportProducts from './importer/ImportProducts';
-import Product from './Product';
-import ProductFormDialog from './ProductFormDialog';
-import ProductRow from './ProductRow';
-import SearchField from "../common/SearchField";
-import NewButton from "../common/button/NewButton";
-import { listProducts } from "../../services/productService";
-import useRequest from "../../hooks/useRequest";
-import useResponseState from "../../hooks/useResponseState";
-import useSearch from "../../hooks/useSearch";
-import Tip from "../common/Tip";
+} from '@material-ui/core'
+import React, { useState } from 'react'
+import RetryButton from '../common/button/RetryButton'
+import ImportProducts from './importer/ImportProducts'
+import Product from './Product'
+import ProductFormDialog from './ProductFormDialog'
+import ProductRow from './ProductRow'
+import SearchField from "../common/SearchField"
+import NewButton from "../common/button/NewButton"
+import { listProducts } from "../../services/productService"
+import useRequest from "../../hooks/useRequest"
+import useResponseState from "../../hooks/useResponseState"
+import useSearch from "../../hooks/useSearch"
+import Tip from "../common/Tip"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -51,22 +51,22 @@ const useStyles = makeStyles((theme: Theme) =>
     head: {
       backgroundColor: '#c9d2d4'
     },
-  }));
+  }))
 
 export default function () {
 
-  const [formOpen, setFormOpen] = useState(false);
-  const [editingProduct, setEditingProduct] = useState<Product | undefined>();
+  const [formOpen, setFormOpen] = useState(false)
+  const [editingProduct, setEditingProduct] = useState<Product | undefined>()
 
   const { setSearch, searchFilter } = useSearch()
 
-  const { error: errorListing, loading: listing, response, execute: reloadProducts } = useRequest(listProducts);
-  const [products, setProducts] = useResponseState<Product[]>(response, [], res => res.data.map((it: any) => new Product(it)));
-  const otherRequest = useRequest();
+  const { error: errorListing, loading: listing, response, execute: reloadProducts } = useRequest(listProducts)
+  const [products, setProducts] = useResponseState<Product[]>(response, [], res => res.data.map((it: any) => new Product(it)))
+  const otherRequest = useRequest()
 
-  const classes = useStyles();
-  const error = errorListing || otherRequest.error;
-  const loading = listing || otherRequest.loading;
+  const classes = useStyles()
+  const error = errorListing || otherRequest.error
+  const loading = listing || otherRequest.loading
 
   const filteredProducts = products.filter(searchFilter)
 
@@ -132,8 +132,8 @@ export default function () {
 
           <p className={classes.noProducts}>
             {filteredProducts.length === 0 && (products.length === 0
-                ? "You don't have any products"
-                : "No products found"
+              ? "You don't have any products"
+              : "No products found"
             )}
           </p>
 
@@ -141,13 +141,13 @@ export default function () {
             open={formOpen || !!editingProduct}
             initialProduct={editingProduct}
             onClose={() => {
-              setFormOpen(false);
-              setEditingProduct(undefined);
+              setFormOpen(false)
+              setEditingProduct(undefined)
             }}
             onProductSubmitted={() => {
               reloadProducts()
-              setFormOpen(false);
-              setEditingProduct(undefined);
+              setFormOpen(false)
+              setEditingProduct(undefined)
             }}/>
 
         </div>

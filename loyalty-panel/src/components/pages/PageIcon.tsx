@@ -1,6 +1,6 @@
-import React from "react";
-import { createStyles, makeStyles, Theme } from "@material-ui/core";
-import DOMPurify from 'dompurify';
+import React from "react"
+import { createStyles, makeStyles, Theme } from "@material-ui/core"
+import DOMPurify from 'dompurify'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme: Theme) =>
         height: '40px'
       }
     },
-  }));
+  }))
 
 interface PageIconProps {
   icon: string
@@ -17,10 +17,10 @@ interface PageIconProps {
 
 export default function ({ icon: dirtyIcon }: PageIconProps) {
 
-  const classes = useStyles();
+  const classes = useStyles()
 
   // Sanitize to protect admins viewing the page
-  const icon = DOMPurify.sanitize(dirtyIcon);
+  const icon = DOMPurify.sanitize(dirtyIcon)
 
   return (
     <p className={classes.iconPreview} dangerouslySetInnerHTML={{ __html: icon }}/>

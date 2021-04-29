@@ -1,4 +1,4 @@
-import { createContext } from "react";
+import { createContext } from "react"
 
 export interface AppContextInterface {
   user?: any
@@ -6,6 +6,6 @@ export interface AppContextInterface {
 
 export const defaultAppContext = {
   user: undefined
-};
+}
 
-export const AppContext = createContext<AppContextInterface>(defaultAppContext);
+export const AppContext = createContext<AppContextInterface>(defaultAppContext)

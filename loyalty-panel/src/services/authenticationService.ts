@@ -1,7 +1,7 @@
-import { get, post } from "../config/axios";
-import { AppContextInterface } from "../context/AppContext";
-import { createBusiness, getBusiness } from "./businessService";
-import { AxiosResponse } from "axios";
+import { get, post } from "../config/axios"
+import { AppContextInterface } from "../context/AppContext"
+import { createBusiness, getBusiness } from "./businessService"
+import { AxiosResponse } from "axios"
 
 type LoginCredentials = {
   email?: string,
@@ -13,15 +13,15 @@ type LoginCredentials = {
 }
 
 function loginRequest(data: LoginCredentials) {
-  return post('/user/login', data);
+  return post('/user/login', data)
 }
 
 function profileRequest() {
-  return get('/user/profile');
+  return get('/user/profile')
 }
 
 function registerRequest(data: LoginCredentials) {
-  return post('/user/register', data);
+  return post('/user/register', data)
 }
 
 /**
@@ -31,7 +31,7 @@ function registerRequest(data: LoginCredentials) {
 function onLoginOrAccountCreate(context: AppContextInterface, res: AxiosResponse) {
   context.setUser(res.data)
   const setBusiness = (business: any) => {
-    context.setBusiness(business);
+    context.setBusiness(business)
   }
   const create = () => {
     createBusiness()
@@ -40,14 +40,14 @@ function onLoginOrAccountCreate(context: AppContextInterface, res: AxiosResponse
   }
   // Either create or fetch the business (and if 404 then create)
   if (!res.data.businessOwner) {
-    create();
+    create()
   } else {
     getBusiness(res.data.businessOwner)
       .then(businessResponse => setBusiness(businessResponse.data))
       .catch(err => {
         console.log(err)
         if (err.response && err.response.status === 404) {
-          create();
+          create()
         }
       })
   }

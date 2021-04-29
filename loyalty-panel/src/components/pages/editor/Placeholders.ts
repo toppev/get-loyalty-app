@@ -1,4 +1,4 @@
-import { AppContextInterface } from "../../../context/AppContext";
+import { AppContextInterface } from "../../../context/AppContext"
 
 type Context = { appContext: AppContextInterface }
 

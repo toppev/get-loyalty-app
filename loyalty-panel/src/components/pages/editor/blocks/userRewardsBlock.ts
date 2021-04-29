@@ -1,4 +1,4 @@
-import { DATA_IDENTIFIER, loyaltyQRCode } from "./qrCodeBlock";
+import { DATA_IDENTIFIER, loyaltyQRCode } from "./qrCodeBlock"
 
 const userRewardsClass = "loyalty-user-rewards"
 const userRewardItemClass = "loyalty-user-reward"
@@ -32,7 +32,7 @@ function addUserRewardsBlock(blockManager: any) {
             </div>
             `
     ),
-  });
+  })
 }
 
 export {

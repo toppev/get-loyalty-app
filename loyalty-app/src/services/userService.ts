@@ -1,4 +1,4 @@
-import { deleteRequest, get, patch, post } from "../config/axios";
+import { deleteRequest, get, patch, post } from "../config/axios"
 
 type LoginCredentials = {
   email?: string

@@ -1,8 +1,8 @@
-import { CustomerLevel } from "../../../context/AppContext";
-import { Button, createStyles, makeStyles, Paper, Theme, Typography } from "@material-ui/core";
-import React from "react";
-import { RenderList } from "../../common/RenderList";
-import RewardItem from "../../rewards/RewardItem";
+import { CustomerLevel } from "../../../context/AppContext"
+import { Button, createStyles, makeStyles, Paper, Theme, Typography } from "@material-ui/core"
+import React from "react"
+import { RenderList } from "../../common/RenderList"
+import RewardItem from "../../rewards/RewardItem"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) =>
     button: {
       margin: '2px 8px'
     }
-  }));
+  }))
 
 interface CustomerLevelProps {
   level: CustomerLevel
@@ -27,7 +27,7 @@ interface CustomerLevelProps {
 
 export default function ({ level, startEditing, onDelete }: CustomerLevelProps) {
 
-  const classes = useStyles();
+  const classes = useStyles()
 
   return (
     <Paper className={classes.paper} style={{ backgroundColor: level.color || "" }}>

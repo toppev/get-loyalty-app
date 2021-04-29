@@ -17,7 +17,7 @@ function addReferralButton(blockManager: any) {
                     text-decoration: none;"
             >Refer a friend</button>`
     ),
-  });
+  })
 }
 
 export {

@@ -1,12 +1,12 @@
-import { Button, Collapse, createStyles, IconButton, makeStyles, TableCell, TableRow, Theme } from '@material-ui/core';
-import EditIcon from '@material-ui/icons/Edit';
-import React, { useState } from 'react';
-import Product from './Product';
-import useRequest from "../../hooks/useRequest";
-import { deleteProduct } from "../../services/productService";
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import IdText from "../common/IdText";
+import { Button, Collapse, createStyles, IconButton, makeStyles, TableCell, TableRow, Theme } from '@material-ui/core'
+import EditIcon from '@material-ui/icons/Edit'
+import React, { useState } from 'react'
+import Product from './Product'
+import useRequest from "../../hooks/useRequest"
+import { deleteProduct } from "../../services/productService"
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown'
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
+import IdText from "../common/IdText"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) =>
         borderBottom: 'unset',
       }
     }
-  }));
+  }))
 
 interface ProductRowProps {
   product: Product,
@@ -59,7 +59,7 @@ interface ProductRowProps {
 
 export default function (props: ProductRowProps) {
 
-  const classes = useStyles();
+  const classes = useStyles()
 
   const { product } = props
 
@@ -110,9 +110,9 @@ export default function (props: ProductRowProps) {
 
 function EditDeleteActions(props: ProductRowProps) {
 
-  const classes = useStyles();
+  const classes = useStyles()
 
-  const { performRequest } = useRequest();
+  const { performRequest } = useRequest()
 
   return (
     <>
@@ -129,7 +129,7 @@ function EditDeleteActions(props: ProductRowProps) {
             performRequest(
               () => deleteProduct(props.product),
               props.onDelete
-            );
+            )
           }
         }}
       >Delete</Button>

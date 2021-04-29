@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react"
 
 interface ErrorBoundaryState {
   hasError: boolean
@@ -7,13 +7,13 @@ interface ErrorBoundaryState {
 export class ErrorBoundary extends React.Component<{}, ErrorBoundaryState> {
 
   constructor(props: any) {
-    super(props);
-    this.state = { hasError: false };
+    super(props)
+    this.state = { hasError: false }
   }
 
   static getDerivedStateFromError(_error: any) {
     // Update state so the next render will show the fallback UI.
-    return { hasError: true };
+    return { hasError: true }
   }
 
   componentDidCatch(error: any, errorInfo: any) {
@@ -22,8 +22,8 @@ export class ErrorBoundary extends React.Component<{}, ErrorBoundaryState> {
 
   render() {
     if (this.state.hasError) {
-      return <h1 style={{ color: "orangered", fontSize: '24px' }}>Something went wrong. Try refreshing the page.</h1>;
+      return <h1 style={{ color: "orangered", fontSize: '24px' }}>Something went wrong. Try refreshing the page.</h1>
     }
-    return this.props.children;
+    return this.props.children
   }
 }

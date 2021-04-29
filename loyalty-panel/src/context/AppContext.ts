@@ -1,6 +1,6 @@
-import React from "react";
-import Category from "../components/categories/Category";
-import Reward from "../components/rewards/Reward";
+import React from "react"
+import Category from "../components/categories/Category"
+import Reward from "../components/rewards/Reward"
 
 export interface AppContextInterface {
   business: Business
@@ -103,4 +103,4 @@ export const defaultAppContext: AppContextInterface = {
   loggedIn: false,
 }
 
-export default React.createContext<AppContextInterface>(defaultAppContext);
+export default React.createContext<AppContextInterface>(defaultAppContext)

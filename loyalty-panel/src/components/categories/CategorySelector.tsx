@@ -1,8 +1,8 @@
-import { StandardTextFieldProps, TextField } from "@material-ui/core";
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import React, { useEffect, useState } from "react";
-import Category from "./Category";
-import { createCategories, getAllCategories } from "../../services/categoryService";
+import { StandardTextFieldProps, TextField } from "@material-ui/core"
+import Autocomplete from '@material-ui/lab/Autocomplete'
+import React, { useEffect, useState } from "react"
+import Category from "./Category"
+import { createCategories, getAllCategories } from "../../services/categoryService"
 
 interface CategorySelectorProps extends StandardTextFieldProps {
   initialCategories: Category[],
@@ -12,11 +12,11 @@ interface CategorySelectorProps extends StandardTextFieldProps {
 
 export default function (props: CategorySelectorProps) {
 
-  const [categories, setCategories] = useState<Category[]>(props.initialCategories);
-  const [allCategories, setAllCategories] = useState<Category[] | undefined>();
+  const [categories, setCategories] = useState<Category[]>(props.initialCategories)
+  const [allCategories, setAllCategories] = useState<Category[] | undefined>()
 
   useEffect(() => {
-    props.onCategoriesUpdate(categories);
+    props.onCategoriesUpdate(categories)
   }, [categories, props])
 
   return (
@@ -33,15 +33,15 @@ export default function (props: CategorySelectorProps) {
         if (allCategories === undefined) {
           getAllCategories().then(res => {
             if (res.status === 200) {
-              setAllCategories(res.data);
+              setAllCategories(res.data)
             }
           })
         }
       }}
       onChange={(event, values: any[]) => {
-        console.log(values);
+        console.log(values)
         const newValues = values.map(value => {
-          return typeof value === 'string' ? new Category({ id: `${Math.random()}`, name: value }) : value;
+          return typeof value === 'string' ? new Category({ id: `${Math.random()}`, name: value }) : value
         })
         createCategories(newValues).then(setCategories)
       }}

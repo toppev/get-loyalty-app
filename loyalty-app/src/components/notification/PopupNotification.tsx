@@ -1,6 +1,6 @@
-import React from "react";
+import React from "react"
 
-import './PopupNotification.css';
+import './PopupNotification.css'
 
 export interface Notification {
   message: string

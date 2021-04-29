@@ -1,7 +1,7 @@
 import React from 'react'
-import { AppBar, Hidden, IconButton, Toolbar, Typography, withWidth } from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
-import { DOMAIN_HOME_PAGE } from "./Navigator";
+import { AppBar, Hidden, IconButton, Toolbar, Typography, withWidth } from '@material-ui/core'
+import MenuIcon from '@material-ui/icons/Menu'
+import { DOMAIN_HOME_PAGE } from "./Navigator"
 
 interface HeaderProps {
   handleDrawerToggle: () => any,
@@ -9,7 +9,7 @@ interface HeaderProps {
 
 function Header(props: HeaderProps) {
 
-  const { handleDrawerToggle } = props;
+  const { handleDrawerToggle } = props
 
 
   return (

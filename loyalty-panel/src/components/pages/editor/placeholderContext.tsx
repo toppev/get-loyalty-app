@@ -1,9 +1,9 @@
-import { useContext } from "react";
-import AppContext from "../../../context/AppContext";
+import { useContext } from "react"
+import AppContext from "../../../context/AppContext"
 
 function usePlaceholderContext() {
 
-  const appContext = useContext(AppContext);
+  const appContext = useContext(AppContext)
 
   const values = {
     business: appContext.business.public

@@ -1,9 +1,9 @@
-import React from "react";
-import { PushNotification } from "./PushNotification";
-import { Card, CardProps, createStyles, LinearProgress, Paper, Theme, Typography } from "@material-ui/core";
-import RetryButton from "../common/button/RetryButton";
-import { makeStyles } from "@material-ui/core/styles";
-import RequestError from "../../util/requestError";
+import React from "react"
+import { PushNotification } from "./PushNotification"
+import { Card, CardProps, createStyles, LinearProgress, Paper, Theme, Typography } from "@material-ui/core"
+import RetryButton from "../common/button/RetryButton"
+import { makeStyles } from "@material-ui/core/styles"
+import RequestError from "../../util/requestError"
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) =>
       fontSize: '12px',
       color: theme.palette.grey[500]
     }
-  }));
+  }))
 
 interface NotificationHistoryProps {
   history: PushNotification[]
@@ -54,9 +54,9 @@ interface NotificationHistoryProps {
 
 export default function (props: NotificationHistoryProps) {
 
-  const { error, history, loading, newNotifications } = props;
-  const empty = !history.length && !newNotifications?.length;
-  const classes = useStyles();
+  const { error, history, loading, newNotifications } = props
+  const empty = !history.length && !newNotifications?.length
+  const classes = useStyles()
 
   return (
     <Paper className={classes.paper}>
@@ -80,8 +80,8 @@ interface NotificationCardProps extends CardProps {
 }
 
 function NotificationCard({ notification, ...cardProps }: NotificationCardProps) {
-  const classes = useStyles();
-  const { sent, title, message, receivers } = notification;
+  const classes = useStyles()
+  const { sent, title, message, receivers } = notification
   return (
     <Card {...cardProps}>
       <p className={classes.sentDate}>{sent?.toLocaleString()}</p>

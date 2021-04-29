@@ -1,16 +1,16 @@
-import { Button, createStyles, LinearProgress, makeStyles, Theme, Typography } from '@material-ui/core';
-import SaveIcon from '@material-ui/icons/Save';
-import { Form, Formik, FormikErrors } from 'formik';
-import { TextField } from 'formik-material-ui';
-import React, { useState } from 'react';
-import CategorySelector from '../categories/CategorySelector';
-import IdText from '../common/IdText';
-import Product from './Product';
-import { addProduct, updateProduct } from "../../services/productService";
-import useRequest from "../../hooks/useRequest";
-import RetryButton from "../common/button/RetryButton";
+import { Button, createStyles, LinearProgress, makeStyles, Theme, Typography } from '@material-ui/core'
+import SaveIcon from '@material-ui/icons/Save'
+import { Form, Formik, FormikErrors } from 'formik'
+import { TextField } from 'formik-material-ui'
+import React, { useState } from 'react'
+import CategorySelector from '../categories/CategorySelector'
+import IdText from '../common/IdText'
+import Product from './Product'
+import { addProduct, updateProduct } from "../../services/productService"
+import useRequest from "../../hooks/useRequest"
+import RetryButton from "../common/button/RetryButton"
 
-const emptyProduct = new Product({ id: `new_product_${Math.random() * 1000 | 0}`, name: '' });
+const emptyProduct = new Product({ id: `new_product_${Math.random() * 1000 | 0}`, name: '' })
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) =>
     submitButton: {
       margin: theme.spacing(3, 0, 2),
     },
-  }));
+  }))
 
 
 export interface ProductFormProps {
@@ -48,14 +48,14 @@ export interface ProductFormProps {
 
 export default function (props: ProductFormProps) {
 
-  const classes = useStyles();
+  const classes = useStyles()
 
-  const product = props.initialProduct || emptyProduct;
+  const product = props.initialProduct || emptyProduct
   // CategoryChangeField is not formik field so keep track of categories here
-  const [categories, setCategories] = useState(product.categories);
+  const [categories, setCategories] = useState(product.categories)
 
-  const { error, loading, performRequest } = useRequest();
-  const editing = !!props.initialProduct;
+  const { error, loading, performRequest } = useRequest()
+  const editing = !!props.initialProduct
 
   return (
     <div className={classes.paper}>
@@ -65,55 +65,55 @@ export default function (props: ProductFormProps) {
         validate={validate}
         onSubmit={(product, actions) => {
           // Update categories here
-          product.categories = categories;
+          product.categories = categories
           actions.setSubmitting(false)
           performRequest(
             () => editing ? updateProduct(product) : addProduct(product),
             (res) => props.onProductSubmitted(new Product(res.data))
-          );
+          )
         }}
       >{({ submitForm, isSubmitting }) => (
-        <Form className={classes.form}>
+          <Form className={classes.form}>
 
-          <TextField className={classes.field} name="name" type="text" label="Name" placeholder="Pizza"/>
-          <TextField className={classes.field} name="description" type="text" label="Description"
-                     placeholder="A delicious pineapple pizza!"/>
-          <TextField className={classes.field} name="price" type="text" label="Price"
-                     placeholder="10€ take it or leave it"/>
+            <TextField className={classes.field} name="name" type="text" label="Name" placeholder="Pizza"/>
+            <TextField className={classes.field} name="description" type="text" label="Description"
+              placeholder="A delicious pineapple pizza!"/>
+            <TextField className={classes.field} name="price" type="text" label="Price"
+              placeholder="10€ take it or leave it"/>
 
-          <CategorySelector
-            className={classes.field}
-            initialCategories={product.categories}
-            onCategoriesUpdate={setCategories}
-          />
-          {(isSubmitting || loading) && <LinearProgress/>}
-          <RetryButton error={error}/>
-          <div className={classes.submitDiv}>
-            <Button
-              className={classes.submitButton}
-              variant="contained"
-              color="primary"
-              disabled={isSubmitting}
-              startIcon={(<SaveIcon/>)}
-              onClick={submitForm}
-            >Save</Button>
-          </div>
-          <IdText id={product.id}/>
-        </Form>
-      )}
+            <CategorySelector
+              className={classes.field}
+              initialCategories={product.categories}
+              onCategoriesUpdate={setCategories}
+            />
+            {(isSubmitting || loading) && <LinearProgress/>}
+            <RetryButton error={error}/>
+            <div className={classes.submitDiv}>
+              <Button
+                className={classes.submitButton}
+                variant="contained"
+                color="primary"
+                disabled={isSubmitting}
+                startIcon={(<SaveIcon/>)}
+                onClick={submitForm}
+              >Save</Button>
+            </div>
+            <IdText id={product.id}/>
+          </Form>
+        )}
       </Formik>
     </div>
   )
 }
 
 function validate(value: Product): FormikErrors<Product> {
-  const errors: FormikErrors<Product> = {};
+  const errors: FormikErrors<Product> = {}
   if (value.name?.trim().length < 3) {
     errors.name = 'Invalid name'
   }
-  const categoryLimit = 5;
+  const categoryLimit = 5
   if (value.categories.length > categoryLimit) {
     errors.categories = `Too many categories. You can specify up to ${categoryLimit} categories`
   }
-  return errors;
+  return errors
 }

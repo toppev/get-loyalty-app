@@ -1,8 +1,8 @@
-import { Button, createStyles, Grid, makeStyles, Snackbar, SnackbarContent, Theme } from '@material-ui/core';
-import SaveIcon from '@material-ui/icons/Save';
-import WarningIcon from '@material-ui/icons/Warning';
-import React from 'react';
-import { Prompt } from 'react-router-dom';
+import { Button, createStyles, Grid, makeStyles, Snackbar, SnackbarContent, Theme } from '@material-ui/core'
+import SaveIcon from '@material-ui/icons/Save'
+import WarningIcon from '@material-ui/icons/Warning'
+import React from 'react'
+import { Prompt } from 'react-router-dom'
 
 interface SaveChangesProps {
   open: boolean,
@@ -21,13 +21,13 @@ const useStyles = makeStyles((theme: Theme) =>
       marginRight: 'auto',
       marginLeft: 0,
     },
-  }));
+  }))
 
 export default function (props: SaveChangesProps) {
 
-  const classes = useStyles();
+  const classes = useStyles()
 
-  const blockLeaving = props.open && !props.buttonDisabled; // Allow leaving if the button is disabled, e.g if it gets stuck because I suck
+  const blockLeaving = props.open && !props.buttonDisabled // Allow leaving if the button is disabled, e.g if it gets stuck because I suck
   // Blocks leaving the site
   window.onbeforeunload = blockLeaving ? () => true : null
 
@@ -60,7 +60,7 @@ export default function (props: SaveChangesProps) {
                 color="primary"
                 startIcon={(<SaveIcon/>)}
                 onClick={() => {
-                  props.onSave();
+                  props.onSave()
                 }}
                 className={classes.saveButton}
               > Save</Button>

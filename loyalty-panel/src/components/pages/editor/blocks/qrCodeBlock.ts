@@ -21,13 +21,13 @@ function addQRCodeType(editor: any) {
     },
     view: {
       onRender({ el }: any) {
-        const img = document.createElement('img');
-        img.src = './images/qrPlaceholder.png';
+        const img = document.createElement('img')
+        img.src = './images/qrPlaceholder.png'
         img.alt = 'QR Code Placeholder'
-        el.appendChild(img);
+        el.appendChild(img)
       },
     }
-  });
+  })
 }
 
 function addQRCodeBlock(blockManager: any) {
@@ -35,7 +35,7 @@ function addQRCodeBlock(blockManager: any) {
     label: `Custom QR Code`,
     content: `<span data-gjs-type=${loyaltyQRCode}/>`,
     render: ({ model }: any) => `<div class="gjs-block-label" style="margin-top: 30px;">${model.get('label')}</div></div>`,
-  });
+  })
 }
 
 export {

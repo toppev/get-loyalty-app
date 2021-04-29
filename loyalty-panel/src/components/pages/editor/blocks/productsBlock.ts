@@ -25,7 +25,7 @@ function addProductsBlock(blockManager: any) {
             </div>
             `
     ),
-  });
+  })
 }
 
 export {

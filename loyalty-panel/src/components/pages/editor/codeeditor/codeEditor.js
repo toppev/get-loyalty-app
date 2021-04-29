@@ -74,12 +74,12 @@ export default function (editor) {
   })
 
   editor.Panels.addButton('options', [{
-      id: 'edit',
-      className: 'fa fa-edit',
-      command: 'html-edit',
-      attributes: {
-        title: 'Edit Code'
-      }
-    }]
+    id: 'edit',
+    className: 'fa fa-edit',
+    command: 'html-edit',
+    attributes: {
+      title: 'Edit Code'
+    }
+  }]
   )
 }

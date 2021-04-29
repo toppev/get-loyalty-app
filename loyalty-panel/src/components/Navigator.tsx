@@ -1,34 +1,34 @@
-import { Badge, Link } from '@material-ui/core';
-import Drawer from '@material-ui/core/Drawer';
-import Hidden from '@material-ui/core/Hidden';
-import IconButton from '@material-ui/core/IconButton';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import AppsIcon from '@material-ui/icons/Apps';
-import CloseIcon from '@material-ui/icons/Close';
-import HomeIcon from '@material-ui/icons/Home';
-import PhoneIcon from '@material-ui/icons/MobileFriendly';
-import PagesIcon from '@material-ui/icons/Pages';
-import PeopleIcon from '@material-ui/icons/People';
-import PermMediaOutlinedIcon from '@material-ui/icons/PhotoSizeSelectActual';
-import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
-import RedeemIcon from '@material-ui/icons/Redeem';
-import SettingsIcon from '@material-ui/icons/Settings';
-import FeedbackIcon from '@material-ui/icons/Feedback';
-import HelpIcon from '@material-ui/icons/Help';
-import OpenInNewIcon from '@material-ui/icons/OpenInNew';
-import clsx from 'clsx';
-import React from 'react';
-import { NavLink } from "react-router-dom";
-import { AccountNotificationValues } from './account/AccountNotifications';
+import { Badge, Link } from '@material-ui/core'
+import Drawer from '@material-ui/core/Drawer'
+import Hidden from '@material-ui/core/Hidden'
+import IconButton from '@material-ui/core/IconButton'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
+import ListItemText from '@material-ui/core/ListItemText'
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
+import AppsIcon from '@material-ui/icons/Apps'
+import CloseIcon from '@material-ui/icons/Close'
+import HomeIcon from '@material-ui/icons/Home'
+import PhoneIcon from '@material-ui/icons/MobileFriendly'
+import PagesIcon from '@material-ui/icons/Pages'
+import PeopleIcon from '@material-ui/icons/People'
+import PermMediaOutlinedIcon from '@material-ui/icons/PhotoSizeSelectActual'
+import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive'
+import RedeemIcon from '@material-ui/icons/Redeem'
+import SettingsIcon from '@material-ui/icons/Settings'
+import FeedbackIcon from '@material-ui/icons/Feedback'
+import HelpIcon from '@material-ui/icons/Help'
+import OpenInNewIcon from '@material-ui/icons/OpenInNew'
+import clsx from 'clsx'
+import React from 'react'
+import { NavLink } from "react-router-dom"
+import { AccountNotificationValues } from './account/AccountNotifications'
 
-const drawerWidth = 240;
+const drawerWidth = 240
 export const DOMAIN_HOME_PAGE = "GetLoyalty.App"
-export const privacyLink = `https://${DOMAIN_HOME_PAGE}/privacy`;
-export const termsLink = `https://${DOMAIN_HOME_PAGE}/terms`;
+export const privacyLink = `https://${DOMAIN_HOME_PAGE}/privacy`
+export const termsLink = `https://${DOMAIN_HOME_PAGE}/terms`
 
 
 const categories = [
@@ -57,7 +57,7 @@ const categories = [
       { id: 'Help & Support', icon: <HelpIcon/>, to: `https://support.${DOMAIN_HOME_PAGE}` },
     ],
   },
-];
+]
 
 const otherLinks = [
   {
@@ -149,7 +149,7 @@ const useStyles = makeStyles((theme: Theme) =>
     otherLinks: {
       position: 'relative',
     }
-  }));
+  }))
 
 interface NavigatorProps {
   handleDrawerToggle: () => any
@@ -158,7 +158,7 @@ interface NavigatorProps {
 }
 
 export default function Navigator(props: NavigatorProps) {
-  const classes = useStyles();
+  const classes = useStyles()
 
   const drawer = (
     <>
@@ -200,8 +200,8 @@ export default function Navigator(props: NavigatorProps) {
             </ListItem>
             {children.map(({ id: childId, icon, to }) => {
 
-              const external = to.startsWith('http');
-              const component = external ? Link : NavLink;
+              const external = to.startsWith('http')
+              const component = external ? Link : NavLink
               const otherProps = external ? {
                 href: to,
                 target: "_blank",
@@ -223,7 +223,7 @@ export default function Navigator(props: NavigatorProps) {
                 >
                   <ListItemIcon className={classes.itemIcon}>
                     <Badge badgeContent={props.notifications[childId]}
-                           color="secondary">{icon}</Badge>
+                      color="secondary">{icon}</Badge>
                   </ListItemIcon>
                   <ListItemText classes={{ primary: classes.itemPrimary }}>{childId}</ListItemText>
                   {external &&
@@ -249,7 +249,7 @@ export default function Navigator(props: NavigatorProps) {
         ))}
       </List>
     </>
-  );
+  )
 
   return (
     <div className={classes.root}>
@@ -281,5 +281,5 @@ export default function Navigator(props: NavigatorProps) {
         </Hidden>
       </nav>
     </div>
-  );
+  )
 }
