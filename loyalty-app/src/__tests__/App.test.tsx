@@ -4,9 +4,9 @@ import { render } from 'react-dom';
 
 describe('(Component) App', () => {
 
-    it('renders without exploding', () => {
-        const div = document.createElement('div')
-        render(<App/>, div)
-    })
+  it('renders without exploding', () => {
+    const div = document.createElement('div')
+    render(<App/>, div)
+  })
 
 })

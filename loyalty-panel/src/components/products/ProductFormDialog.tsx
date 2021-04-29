@@ -5,20 +5,20 @@ import CloseButton from "../common/button/CloseButton";
 
 
 export interface ProductFormDialogProps extends ProductFormProps {
-    open: boolean,
-    onClose: (event: React.MouseEvent<HTMLElement>) => void,
+  open: boolean,
+  onClose: (event: React.MouseEvent<HTMLElement>) => void,
 }
 
 export default function (props: ProductFormDialogProps) {
 
-    return (
-        <div>
-            <Dialog open={props.open}>
-                <CloseButton onClick={props.onClose}/>
-                <DialogContent>
-                    <ProductForm {...props} />
-                </DialogContent>
-            </Dialog>
-        </div>
-    );
+  return (
+    <div>
+      <Dialog open={props.open}>
+        <CloseButton onClick={props.onClose}/>
+        <DialogContent>
+          <ProductForm {...props} />
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
 }

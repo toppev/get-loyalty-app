@@ -1,10 +1,10 @@
 const referralButtonClass = "referrer-button"
 
 function addReferralButton(blockManager: any) {
-    blockManager.add(referralButtonClass, {
-        label: `Referral Button`,
-        content: (
-            `<button
+  blockManager.add(referralButtonClass, {
+    label: `Referral Button`,
+    content: (
+      `<button
                 class="${referralButtonClass}"
                 style="
                     background-color: mediumturquoise;
@@ -16,10 +16,10 @@ function addReferralButton(blockManager: any) {
                     overflow: visible;
                     text-decoration: none;"
             >Refer a friend</button>`
-        ),
-    });
+    ),
+  });
 }
 
 export {
-    addReferralButton
+  addReferralButton
 }

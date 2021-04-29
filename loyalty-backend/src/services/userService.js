@@ -1,20 +1,20 @@
-const User = require('../models/user');
-const { emailPasswordReset } = require('../helpers/mailer');
-const ResetPassword = require('../models/passwordReset');
-const crypto = require('crypto');
-const customerService = require("./customerService");
-const Business = require("../models/business");
+const User = require('../models/user')
+const { emailPasswordReset } = require('../helpers/mailer')
+const ResetPassword = require('../models/passwordReset')
+const crypto = require('crypto')
+const customerService = require("./customerService")
+const Business = require("../models/business")
 
 module.exports = {
-    getAll,
-    getById,
-    create,
-    update,
-    forgotPassword,
-    resetPassword,
-    deleteUser,
-    markLastVisit
-};
+  getAll,
+  getById,
+  create,
+  update,
+  forgotPassword,
+  resetPassword,
+  deleteUser,
+  markLastVisit
+}
 
 /**
  * Finds a user by the given email address. If the user was found, random token is generated and saved (@see {@link ResetPassword}).
@@ -24,25 +24,25 @@ module.exports = {
  * @param {string} [redirectUrl=process.env.APP_ORIGIN] the url where the user should be redirected to
  */
 async function forgotPassword(email, redirectUrl) {
-    const user = await User.findOne({
-        email: email
-    });
-    if (user) {
-        if (user.authentication.service && user.authentication.service !== 'local') {
-            throw new Error('Only users using local authentication can reset their password');
-        }
-        const userId = user.id;
-        if (userId) {
-            const buffer = crypto.randomBytes(16);
-            const token = buffer.toString('hex');
-            const reset = new ResetPassword({
-                token,
-                userId
-            });
-            await reset.save();
-            await emailPasswordReset(email, token, redirectUrl);
-        }
+  const user = await User.findOne({
+    email: email
+  })
+  if (user) {
+    if (user.authentication.service && user.authentication.service !== 'local') {
+      throw new Error('Only users using local authentication can reset their password')
     }
+    const userId = user.id
+    if (userId) {
+      const buffer = crypto.randomBytes(16)
+      const token = buffer.toString('hex')
+      const reset = new ResetPassword({
+        token,
+        userId
+      })
+      await reset.save()
+      await emailPasswordReset(email, token, redirectUrl)
+    }
+  }
 }
 
 /**
@@ -52,28 +52,28 @@ async function forgotPassword(email, redirectUrl) {
  * @param {string} token the password reset request token
  */
 async function resetPassword(token) {
-    if (!token) {
-        throw 'No token parameter specified.';
-    }
-    const request = await ResetPassword.findByToken(token);
-    if (!request) {
-        throw 'Invalid password reset request link.';
-    }
-    const minutes = 60;
-    if (request.updatedAt < Date.now() - minutes * 60 * 1000) {
-        throw 'Password reset request expired.';
-    }
-    ResetPassword.deleteOne({ id: request.id });
-    return await User.findById(request.userId);
+  if (!token) {
+    throw 'No token parameter specified.'
+  }
+  const request = await ResetPassword.findByToken(token)
+  if (!request) {
+    throw 'Invalid password reset request link.'
+  }
+  const minutes = 60
+  if (request.updatedAt < Date.now() - minutes * 60 * 1000) {
+    throw 'Password reset request expired.'
+  }
+  ResetPassword.deleteOne({ id: request.id })
+  return await User.findById(request.userId)
 }
 
 /**
  * Returns all users (without password hashes)
  */
 async function getAll() {
-    const users = await User.find();
-    users.forEach(user => delete user.password);
-    return users;
+  const users = await User.find()
+  users.forEach(user => delete user.password)
+  return users
 }
 
 /**
@@ -81,15 +81,15 @@ async function getAll() {
  * @param {any} id the user's _id field
  */
 async function getById(id) {
-    // If we use select(-password) hasPassword virtual will break
-    const user = await User.findById(id);
-    if (user) {
-        // so just remove the password here
-        delete user.password;
-        return user;
-    }
-    // Return null so tests won't break
-    return null;
+  // If we use select(-password) hasPassword virtual will break
+  const user = await User.findById(id)
+  if (user) {
+    // so just remove the password here
+    delete user.password
+    return user
+  }
+  // Return null so tests won't break
+  return null
 }
 
 /**
@@ -97,11 +97,11 @@ async function getById(id) {
  * @param user the user or the id of an user
  */
 async function markLastVisit(user) {
-    if (!user.save) {
-        user = await User.findById(user.id || user);
-    }
-    user.lastVisit = Date.now()
-    await user.save()
+  if (!user.save) {
+    user = await User.findById(user.id || user)
+  }
+  user.lastVisit = Date.now()
+  await user.save()
 }
 
 /**
@@ -109,13 +109,13 @@ async function markLastVisit(user) {
  * @param {Object} userParam
  */
 async function create(userParam) {
-    const user = new User(userParam);
-    const business = await Business.findOne()
-    if (business) {
-        // Update levels so the user receives join rewards if the business exists (not the owner "joining")
-        await customerService.updateCustomerLevel(user, business)
-    }
-    return user.save();
+  const user = new User(userParam)
+  const business = await Business.findOne()
+  if (business) {
+    // Update levels so the user receives join rewards if the business exists (not the owner "joining")
+    await customerService.updateCustomerLevel(user, business)
+  }
+  return user.save()
 }
 
 /**
@@ -124,9 +124,9 @@ async function create(userParam) {
  * @param {Object} updateParam the object with the values to update
  */
 async function update(id, updateParam) {
-    const user = await User.findById(id);
-    Object.assign(user, updateParam);
-    return user.save();
+  const user = await User.findById(id)
+  Object.assign(user, updateParam)
+  return user.save()
 }
 
 /**
@@ -134,5 +134,5 @@ async function update(id, updateParam) {
  * @param {any} id the user's _id field
  */
 async function deleteUser(id) {
-    await User.findByIdAndRemove(id);
+  await User.findByIdAndRemove(id)
 }

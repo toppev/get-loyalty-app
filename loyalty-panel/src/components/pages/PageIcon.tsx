@@ -3,26 +3,26 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core";
 import DOMPurify from 'dompurify';
 
 const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        iconPreview: {
-            '& *': {
-                height: '40px'
-            }
-        },
-    }));
+  createStyles({
+    iconPreview: {
+      '& *': {
+        height: '40px'
+      }
+    },
+  }));
 
 interface PageIconProps {
-    icon: string
+  icon: string
 }
 
 export default function ({ icon: dirtyIcon }: PageIconProps) {
 
-    const classes = useStyles();
+  const classes = useStyles();
 
-    // Sanitize to protect admins viewing the page
-    const icon = DOMPurify.sanitize(dirtyIcon);
+  // Sanitize to protect admins viewing the page
+  const icon = DOMPurify.sanitize(dirtyIcon);
 
-    return (
-        <p className={classes.iconPreview} dangerouslySetInnerHTML={{ __html: icon }}/>
-    )
+  return (
+    <p className={classes.iconPreview} dangerouslySetInnerHTML={{ __html: icon }}/>
+  )
 }

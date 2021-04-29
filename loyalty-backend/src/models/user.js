@@ -1,183 +1,183 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
-const campaigns = require('@toppev/getloyalty-campaigns');
+const mongoose = require('mongoose')
+const bcrypt = require('bcrypt')
+const campaigns = require('@toppev/getloyalty-campaigns')
 
-const rewardSchema = require('./reward');
-const productSchema = require('./product').schema;
-const { Schema } = mongoose;
+const rewardSchema = require('./reward')
+const productSchema = require('./product').schema
+const { Schema } = mongoose
 
 const purchaseSchema = new Schema({
-    categories: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Category',
-    }],
-    products: [productSchema],
+  categories: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Category',
+  }],
+  products: [productSchema],
 }, {
-    timestamps: true,
-});
+  timestamps: true,
+})
 
 const userSchema = new Schema({
-    email: {
-        type: String,
-        validate: {
-            validator: async function (value) {
-                // Allow undefined
-                if (!value) {
-                    return true;
-                }
-                const users = await User.find({ email: value.toLowerCase() }).limit(2);
-                return !users.length || (users[0].id === this.id && users.length === 1);
-            }, message: 'Email is already taken.',
-        },
-        index: true
-    },
-    // The business's news letter subscription
-    newsLetter: {
-        subscribed: {
-            type: Date,
-            default: undefined
+  email: {
+    type: String,
+    validate: {
+      validator: async function (value) {
+        // Allow undefined
+        if (!value) {
+          return true
         }
+        const users = await User.find({ email: value.toLowerCase() }).limit(2)
+        return !users.length || (users[0].id === this.id && users.length === 1)
+      }, message: 'Email is already taken.',
     },
-    password: {
-        type: String,
+    index: true
+  },
+  // The business's news letter subscription
+  newsLetter: {
+    subscribed: {
+      type: Date,
+      default: undefined
+    }
+  },
+  password: {
+    type: String,
+  },
+  role: {
+    type: String,
+    // enum: Object.keys(role.roles),
+    enum: ['user', 'business'],
+    default: 'user'
+  },
+  lastVisit: {
+    type: Date,
+    default: Date.now
+  },
+  birthday: {
+    type: Date
+  },
+  authentication: {
+    // The service used
+    service: {
+      type: String,
     },
-    role: {
-        type: String,
-        // enum: Object.keys(role.roles),
-        enum: ['user', 'business'],
-        default: 'user'
+    profile: {
+      type: Object,
     },
-    lastVisit: {
+    lastAttempt: {
+      type: Date
+    },
+    failStreak: {
+      type: Number
+    }
+  },
+  referrer: {
+    type: mongoose.Types.ObjectId,
+  },
+  referrerFor: [{
+    type: mongoose.Types.ObjectId,
+  }],
+  termsAccepted: {
+    type: Date,
+    validate: {
+      validator: (value) => !this.termsAccepted || value > this.termsAccepted,
+      message: 'termsAccepted date can not be before the old value',
+    },
+  },
+  privacyPolicyAccepted: {
+    type: Date,
+    validate: {
+      validator: (value) => !this.privacyPolicyAccepted || value > this.privacyPolicyAccepted,
+      message: 'privacyPolicyAccepted date can not be before the old value',
+    },
+  },
+  customerData: {
+    purchases: [purchaseSchema],
+    rewards: [rewardSchema],
+    usedRewards: [{
+      dateUsed: {
         type: Date,
         default: Date.now
-    },
-    birthday: {
-        type: Date
-    },
-    authentication: {
-        // The service used
-        service: {
-            type: String,
-        },
-        profile: {
-            type: Object,
-        },
-        lastAttempt: {
-            type: Date
-        },
-        failStreak: {
-            type: Number
-        }
-    },
-    referrer: {
-        type: mongoose.Types.ObjectId,
-    },
-    referrerFor: [{
-        type: mongoose.Types.ObjectId,
+      },
+      reward: {
+        type: rewardSchema,
+        required: true
+      }
     }],
-    termsAccepted: {
-        type: Date,
-        validate: {
-            validator: (value) => !this.termsAccepted || value > this.termsAccepted,
-            message: 'termsAccepted date can not be before the old value',
-        },
+    pushNotifications: {
+      token: { type: String },
+      auth: { type: String },
+      endpoint: { type: String },
     },
-    privacyPolicyAccepted: {
-        type: Date,
-        validate: {
-            validator: (value) => !this.privacyPolicyAccepted || value > this.privacyPolicyAccepted,
-            message: 'privacyPolicyAccepted date can not be before the old value',
-        },
-    },
-    customerData: {
-        purchases: [purchaseSchema],
-        rewards: [rewardSchema],
-        usedRewards: [{
-            dateUsed: {
-                type: Date,
-                default: Date.now
-            },
-            reward: {
-                type: rewardSchema,
-                required: true
-            }
-        }],
-        pushNotifications: {
-            token: { type: String },
-            auth: { type: String },
-            endpoint: { type: String },
-        },
-        // Other customer properties that business can modify freely
-        properties: {
-            points: {
-                type: Number,
-                default: 0
-            }
-        }
+    // Other customer properties that business can modify freely
+    properties: {
+      points: {
+        type: Number,
+        default: 0
+      }
     }
+  }
 }, {
-    timestamps: true,
-    toJSON: {
-        virtuals: true
-    },
-    toObject: {
-        virtuals: true
-    },
-});
+  timestamps: true,
+  toJSON: {
+    virtuals: true
+  },
+  toObject: {
+    virtuals: true
+  },
+})
 
 userSchema.virtual("hasPassword").get(function () {
-    return !!this.password;
-});
+  return !!this.password
+})
 
 purchaseSchema.methods.populateProducts = function () {
-    return this.populate('Product');
-};
+  return this.populate('Product')
+}
 
 /**
  * Check whether user can perform the specified operation.
  */
 userSchema.methods.hasPermission = async function (operation, params) {
-    // If superRole is set use it otherwise defaults to 'user'
-    let userRole = this.role || 'user';
-    const result = await role.can(userRole, operation, params)
-        .catch(err => {
-            throw err;
-        });
-    return result;
-};
+  // If superRole is set use it otherwise defaults to 'user'
+  let userRole = this.role || 'user'
+  const result = await role.can(userRole, operation, params)
+    .catch(err => {
+      throw err
+    })
+  return result
+}
 
 userSchema.pre('save', async function (next) {
-    // only hash if modified (or new)
-    if (this.isModified('password') && this.password) {
-        if (this.password.length <= 6) {
-            throw new Error('Invalid password')
-        }
-        this.password = await bcrypt.hash(this.password, 12);
+  // only hash if modified (or new)
+  if (this.isModified('password') && this.password) {
+    if (this.password.length <= 6) {
+      throw new Error('Invalid password')
     }
-    if (this.isModified('email') && this.email) {
-        this.email = this.email.toLowerCase()
-    }
-    next();
-});
+    this.password = await bcrypt.hash(this.password, 12)
+  }
+  if (this.isModified('email') && this.email) {
+    this.email = this.email.toLowerCase()
+  }
+  next()
+})
 
 userSchema.methods.comparePassword = async function (password) {
-    return password && await bcrypt.compare(password, this.password);
-};
+  return password && await bcrypt.compare(password, this.password)
+}
 
 userSchema.methods.isBirthday = function () {
-    return campaigns.isBirthday.requirement({ user: this })
+  return campaigns.isBirthday.requirement({ user: this })
 }
 
 userSchema.methods.toJSON = function () {
-    let obj = this.toObject();
-    delete obj.password;
-    return obj;
-};
+  let obj = this.toObject()
+  delete obj.password
+  return obj
+}
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model('User', userSchema)
 
-module.exports = User;
+module.exports = User
 
 // Because of circular dependencies
 // FIXME?
-var role = require('./role');
+var role = require('./role')

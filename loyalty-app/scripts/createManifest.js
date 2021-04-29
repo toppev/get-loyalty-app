@@ -5,14 +5,14 @@
  */
 
 require('dotenv').config()
-const fs = require("fs");
+const fs = require("fs")
 
-let text = fs.readFileSync('./scripts/template_manifest.json').toString('utf-8');
+let text = fs.readFileSync('./scripts/template_manifest.json').toString('utf-8')
 
 Object.entries(process.env).forEach(([k, v]) => {
-    text = text.replace(new RegExp(`%${k}%`, 'g'), v)
+  text = text.replace(new RegExp(`%${k}%`, 'g'), v)
 })
 
-fs.writeFileSync('./public/manifest.json', text);
+fs.writeFileSync('./public/manifest.json', text)
 
 console.log('Copied template_manifest.json to public/manifest.json and replaced environment variables.')

@@ -11,9 +11,9 @@ const POINTS_NEEDED_ICON = `💰💰💰&#128230;` // Package icon (for testing)
  * Block to list on going campaigns
  */
 function addCampaignsBlock(blockManager: any) {
-    blockManager.add(campaignsClass, {
-        label: `Campaigns`,
-        content: (`
+  blockManager.add(campaignsClass, {
+    label: `Campaigns`,
+    content: (`
             <div class="${campaignsClass}">
                 <h2><b>Campaigns</b> ({{campaigns.length}})</h2>
                 <p>{{#each campaigns}}</p>
@@ -49,12 +49,12 @@ function addCampaignsBlock(blockManager: any) {
                 <p>{{/each}}</p>
             </div>
             `
-        ),
-    });
+    ),
+  });
 }
 
 export {
-    campaignsClass,
-    campaignItemClass,
-    addCampaignsBlock,
+  campaignsClass,
+  campaignItemClass,
+  addCampaignsBlock,
 }

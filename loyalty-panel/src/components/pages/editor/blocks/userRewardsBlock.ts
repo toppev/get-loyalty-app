@@ -7,17 +7,17 @@ const userRewardItemClass = "loyalty-user-reward"
  * Block to list user rewards
  */
 function addUserRewardsBlock(blockManager: any) {
-    blockManager.add(userRewardsClass, {
-        label: `User Rewards`,
-        content: (`
+  blockManager.add(userRewardsClass, {
+    label: `User Rewards`,
+    content: (`
             <div class="${userRewardsClass}" style="text-align: center">
                 <h2>Rewards {{user.rewards.length}}</h2>
                 <p>{{#each user.rewards}}</p>
                 <div class="${userRewardItemClass}">
                     <p>{{name}}</p>
-                    
+
                     <div data-gjs-type="${loyaltyQRCode}" ${DATA_IDENTIFIER}="{{scanCode}}"/>
-                    
+
                     <p>{{description}}</p>
                     <p>{{itemDiscount}}</p>
                     <p>{{requirement}}</p>
@@ -31,11 +31,11 @@ function addUserRewardsBlock(blockManager: any) {
                 <p>{{/each}}</p>
             </div>
             `
-        ),
-    });
+    ),
+  });
 }
 
 export {
-    userRewardsClass,
-    addUserRewardsBlock
+  userRewardsClass,
+  addUserRewardsBlock
 }

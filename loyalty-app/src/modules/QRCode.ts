@@ -7,24 +7,24 @@ const QR_DATA_IDENTIFIER = 'data-qrcode'
  */
 export function replaceQRCodes() {
 
-    const elements = document.querySelectorAll(`[${QR_DATA_IDENTIFIER}]`)
-    elements.forEach(el => {
-        const code = el.attributes.getNamedItem(QR_DATA_IDENTIFIER)?.value
-        if (code) {
-            const qr = qrcode(0, 'L')
-            qr.addData(code)
-            qr.make()
-            el.innerHTML = qr.createSvgTag(undefined, 2)
+  const elements = document.querySelectorAll(`[${QR_DATA_IDENTIFIER}]`)
+  elements.forEach(el => {
+    const code = el.attributes.getNamedItem(QR_DATA_IDENTIFIER)?.value
+    if (code) {
+      const qr = qrcode(0, 'L')
+      qr.addData(code)
+      qr.make()
+      el.innerHTML = qr.createSvgTag(undefined, 2)
 
-            const svgSize = "100%"
-            const svgMaxSize = "320px"
-            Array.from(el.children).forEach(child => {
-                child.setAttribute("height", svgSize)
-                child.setAttribute("width", svgSize)
-                // @ts-ignore
-                if (child.style) child.style.maxWidth = svgMaxSize
-            })
-        }
-    })
+      const svgSize = "100%"
+      const svgMaxSize = "320px"
+      Array.from(el.children).forEach(child => {
+        child.setAttribute("height", svgSize)
+        child.setAttribute("width", svgSize)
+        // @ts-ignore
+        if (child.style) child.style.maxWidth = svgMaxSize
+      })
+    }
+  })
 
 }

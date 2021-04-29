@@ -1,10 +1,10 @@
 const enableNotificationsClass = "enable-notifications"
 
 function addEnableNotificationsButton(blockManager: any) {
-    blockManager.add(enableNotificationsClass, {
-        label: `Enable Notifications`,
-        content: (
-            `<button
+  blockManager.add(enableNotificationsClass, {
+    label: `Enable Notifications`,
+    content: (
+      `<button
                 class="${enableNotificationsClass}"
                 style="
                     background-color: mediumturquoise;
@@ -16,10 +16,10 @@ function addEnableNotificationsButton(blockManager: any) {
                     overflow: visible;
                     text-decoration: none;"
             >Enable Notifications</button>`
-        ),
-    });
+    ),
+  });
 }
 
 export {
-    addEnableNotificationsButton
+  addEnableNotificationsButton
 }

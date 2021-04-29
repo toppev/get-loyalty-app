@@ -16,126 +16,126 @@ import { ReferrerDialog } from "./modules/Referrer";
 
 function App() {
 
-    const [contextState, setContextState] = useState<AppContextInterface>(defaultAppContext)
+  const [contextState, setContextState] = useState<AppContextInterface>(defaultAppContext)
 
-    const [error, setError] = useState<string|undefined>()
-    const [pages, setPages] = useState<Page[]>([])
+  const [error, setError] = useState<string | undefined>()
+  const [pages, setPages] = useState<Page[]>([])
 
-    const updatePage = (page: Page) => setPages(prev => {
-        let newPages = [...prev]
-        let index = prev.findIndex(old => old._id === page._id)
-        if (index !== -1) {
-            newPages[index] = page
-        } else {
-            newPages.push(page)
-        }
-        return newPages
-    })
+  const updatePage = (page: Page) => setPages(prev => {
+    let newPages = [...prev]
+    let index = prev.findIndex(old => old._id === page._id)
+    if (index !== -1) {
+      newPages[index] = page
+    } else {
+      newPages.push(page)
+    }
+    return newPages
+  })
 
-    // Authentication
-    useEffect(() => {
-        profileRequest()
+  // Authentication
+  useEffect(() => {
+    profileRequest()
+      .then(onLogin)
+      .catch(err => {
+        // TODO: Option to login on other responses?
+        const status = err?.response?.status;
+        if (status === 401 || status === 403 || status === 404) {
+          registerRequest()
             .then(onLogin)
-            .catch(err => {
-                // TODO: Option to login on other responses?
-                const status = err?.response?.status;
-                if (status === 401 || status === 403 || status === 404) {
-                    registerRequest()
-                        .then(onLogin)
-                        .catch(_err => setError('Could not register a new account. Something went wrong :('))
-                } else {
-                    setError(`Something went wrong :(\n${err.response?.body || err.toString()}`)
-                }
-            })
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
-
-    const onLogin = (res: AxiosResponse) => {
-        setContextState({ ...contextState, user: res.data })
-        const query = new URLSearchParams(window.location.search)
-        const couponCode = query.get('coupon') || query.get('code')
-        const referrer = query.get('referrer')
-        const checkCoupon = async () => couponCode && claimCoupon(couponCode, referrer)
-        checkCoupon()
-            .then(loadPages)
-            .catch(err => setError(err?.response.body?.message || err.toString()))
-    }
-
-    // Load pages
-    const loadPages = () => {
-        getPages()
-            .then(res => {
-                const newPages = res.data
-                setPages(newPages)
-                refreshHtmlPages(newPages)
-                if (!newPages.length) {
-                    window.alert("There are no pages available currently. Add or publish pages to get started.")
-                }
-            })
-            .catch(err => {
-                console.log(err)
-                setError('Failed to load the pages')
-            })
-    }
-
-    const refreshHtmlPages = (refreshPages = pages) => {
-        if (refreshPages.length) {
-            const fetchRest = (excludeId?: string) => refreshPages.forEach(it => it._id !== excludeId && fetchHtml(it))
-            // Attempt fetching only the current page first for better performance
-            const path = window.location.pathname.substring(1) // e.g "/home" -> "home"
-            const current = refreshPages.find(page => page.pathname === path) || refreshPages[0]
-            if (current) {
-                fetchHtml(current).then(() => fetchRest(current._id))
-            } else {
-                fetchRest()
-            }
+            .catch(_err => setError('Could not register a new account. Something went wrong :('))
+        } else {
+          setError(`Something went wrong :(\n${err.response?.body || err.toString()}`)
         }
-    }
+      })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
-    const fetchHtml = async (page: Page) => {
-        try {
-            const res = await getPageHtml(page._id)
-            page.html = res.data
-        } catch (err) {
-            console.log(err)
-            page.html = ERROR_HTML
-        } finally {
-            updatePage(page)
+  const onLogin = (res: AxiosResponse) => {
+    setContextState({ ...contextState, user: res.data })
+    const query = new URLSearchParams(window.location.search)
+    const couponCode = query.get('coupon') || query.get('code')
+    const referrer = query.get('referrer')
+    const checkCoupon = async () => couponCode && claimCoupon(couponCode, referrer)
+    checkCoupon()
+      .then(loadPages)
+      .catch(err => setError(err?.response.body?.message || err.toString()))
+  }
+
+  // Load pages
+  const loadPages = () => {
+    getPages()
+      .then(res => {
+        const newPages = res.data
+        setPages(newPages)
+        refreshHtmlPages(newPages)
+        if (!newPages.length) {
+          window.alert("There are no pages available currently. Add or publish pages to get started.")
         }
+      })
+      .catch(err => {
+        console.log(err)
+        setError('Failed to load the pages')
+      })
+  }
+
+  const refreshHtmlPages = (refreshPages = pages) => {
+    if (refreshPages.length) {
+      const fetchRest = (excludeId?: string) => refreshPages.forEach(it => it._id !== excludeId && fetchHtml(it))
+      // Attempt fetching only the current page first for better performance
+      const path = window.location.pathname.substring(1) // e.g "/home" -> "home"
+      const current = refreshPages.find(page => page.pathname === path) || refreshPages[0]
+      if (current) {
+        fetchHtml(current).then(() => fetchRest(current._id))
+      } else {
+        fetchRest()
+      }
     }
+  }
 
-    const firstPagePath = window.location.origin + "/" + (pages.length ? pages[0].pathname : "")
+  const fetchHtml = async (page: Page) => {
+    try {
+      const res = await getPageHtml(page._id)
+      page.html = res.data
+    } catch (err) {
+      console.log(err)
+      page.html = ERROR_HTML
+    } finally {
+      updatePage(page)
+    }
+  }
 
-    return (
-        <Router>
+  const firstPagePath = window.location.origin + "/" + (pages.length ? pages[0].pathname : "")
 
-            <AppContext.Provider value={contextState}>
-                <div className="App">
+  return (
+    <Router>
 
-                    <Helmet>
-                        <link id="favicon" rel="icon" href={`${BASE_URL}/business/icon`} type="image/x-icon"/>
-                    </Helmet>
+      <AppContext.Provider value={contextState}>
+        <div className="App">
 
-                    {error && <p className="ErrorMessage">Error: {error}</p>}
+          <Helmet>
+            <link id="favicon" rel="icon" href={`${BASE_URL}/business/icon`} type="image/x-icon"/>
+          </Helmet>
 
-                    <Navbar pages={pages || []}/>
-                    <ReferrerDialog user={contextState.user} referUrl={`${firstPagePath}?coupon=referral?referrer=${contextState.user?.id}`}/>
+          {error && <p className="ErrorMessage">Error: {error}</p>}
 
-                    <Switch>
-                        {pages.map(page => (
-                            <Route exact path={`/${page.pathname}`} key={page._id}>
-                                <PageView page={page}/>
-                            </Route>
-                        ))}
-                        {pages.length > 0 &&
-                        <Redirect to={{ pathname: pages[0].pathname, search: window.location.search }}/>}
-                    </Switch>
+          <Navbar pages={pages || []}/>
+          <ReferrerDialog user={contextState.user} referUrl={`${firstPagePath}?coupon=referral?referrer=${contextState.user?.id}`}/>
 
-                    <NotificationHandler onRefresh={refreshHtmlPages}/>
-                </div>
-            </AppContext.Provider>
-        </Router>
-    )
+          <Switch>
+            {pages.map(page => (
+              <Route exact path={`/${page.pathname}`} key={page._id}>
+                <PageView page={page}/>
+              </Route>
+            ))}
+            {pages.length > 0 &&
+            <Redirect to={{ pathname: pages[0].pathname, search: window.location.search }}/>}
+          </Switch>
+
+          <NotificationHandler onRefresh={refreshHtmlPages}/>
+        </div>
+      </AppContext.Provider>
+    </Router>
+  )
 }
 
 export default App;

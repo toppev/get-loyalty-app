@@ -1,23 +1,23 @@
-const Business = require('../models/business');
-const User = require('../models/user');
-const uploader = require('../helpers/uploader');
-const fs = require('fs');
-const StatusError = require('../helpers/statusError');
-const templateService = require('./templateService');
-const iconService = require('./iconService');
+const Business = require('../models/business')
+const User = require('../models/user')
+const uploader = require('../helpers/uploader')
+const fs = require('fs')
+const StatusError = require('../helpers/statusError')
+const templateService = require('./templateService')
+const iconService = require('./iconService')
 
 
 module.exports = {
-    getOwnBusiness,
-    getBusinessOwnerUser,
-    createBusiness,
-    getBusiness,
-    update,
-    setUserRole,
-    getPublicInformation,
-    getIcon,
-    uploadIcon
-};
+  getOwnBusiness,
+  getBusinessOwnerUser,
+  createBusiness,
+  getBusiness,
+  update,
+  setUserRole,
+  getPublicInformation,
+  getIcon,
+  uploadIcon
+}
 
 /**
  * Get the id of the business the given user owns.
@@ -27,24 +27,24 @@ module.exports = {
  * @deprecated Mainly for legacy stuff only.
  */
 async function getOwnBusiness(user) {
-    if (user.role === 'business') {
-        return (await Business.findOne()).id
-    }
-    return undefined
+  if (user.role === 'business') {
+    return (await Business.findOne()).id
+  }
+  return undefined
 }
 
 /**
  * Get the user who owns the business
  */
 async function getBusinessOwnerUser() {
-    const owners = await User.find({ role: 'business' });
-    if (owners.length === 0) {
-        console.log(`Warning: no business owners found. Nobody registered?`);
-    }
-    if (owners.length > 1) {
-        console.log(`Warning: more business owners than expected: ${owners.length}`);
-    }
-    return owners[0]
+  const owners = await User.find({ role: 'business' })
+  if (owners.length === 0) {
+    console.log(`Warning: no business owners found. Nobody registered?`)
+  }
+  if (owners.length > 1) {
+    console.log(`Warning: more business owners than expected: ${owners.length}`)
+  }
+  return owners[0]
 }
 
 /**
@@ -53,29 +53,29 @@ async function getBusinessOwnerUser() {
  * @param {any} userId the owner's _id field. This user will be given 'business' rank
  */
 async function createBusiness(businessParam, userId) {
-    if (await Business.countDocuments() > 0) {
-        throw new StatusError('Business already exists', 403)
-    }
-    const business = new Business(businessParam);
-    await business.save();
-    await setUserRole(userId, 'business');
-    templateService.loadDefaultTemplates().then();
-    return business;
+  if (await Business.countDocuments() > 0) {
+    throw new StatusError('Business already exists', 403)
+  }
+  const business = new Business(businessParam)
+  await business.save()
+  await setUserRole(userId, 'business')
+  templateService.loadDefaultTemplates().then()
+  return business
 }
 
 /**
  * Find a business by its id
  */
 async function getBusiness() {
-    return Business.findOne().populate({
-        path: 'public.customerLevels', populate: [{
-            path: 'rewards.categories',
-            model: 'Category',
-        }, {
-            path: 'rewards.products',
-            model: 'Product',
-        }]
-    })
+  return Business.findOne().populate({
+    path: 'public.customerLevels', populate: [{
+      path: 'rewards.categories',
+      model: 'Category',
+    }, {
+      path: 'rewards.products',
+      model: 'Product',
+    }]
+  })
 }
 
 /**
@@ -83,9 +83,9 @@ async function getBusiness() {
  * @param {Object} updateParam the object whose fields will be copied to business.
  */
 async function update(updateParam) {
-    const business = await Business.findOne();
-    Object.assign(business, updateParam);
-    return business.save();
+  const business = await Business.findOne()
+  Object.assign(business, updateParam)
+  return business.save()
 }
 
 /**
@@ -96,38 +96,38 @@ async function update(updateParam) {
  * @param {string} role the role as a string
  */
 async function setUserRole(userId, role) {
-    const user = await User.findById(userId);
-    if (!user) {
-        throw new Error(`User ${userId} was not found`);
-    }
-    user.role = role;
-    await user.save();
-    // For legacy stuff return role and business separately too
-    return { role: user.role, business: (await Business.findOne()).id, customerData: user.customerData };
+  const user = await User.findById(userId)
+  if (!user) {
+    throw new Error(`User ${userId} was not found`)
+  }
+  user.role = role
+  await user.save()
+  // For legacy stuff return role and business separately too
+  return { role: user.role, business: (await Business.findOne()).id, customerData: user.customerData }
 }
 
 /**
  * Get the public available information, anything in the business's ´public´ field
  */
 async function getPublicInformation() {
-    return Business.findOne().select('public');
+  return Business.findOne().select('public')
 }
 
 async function getIcon(size) {
-    let file;
-    if (size) {
-        file = uploader.toPath(`icons/icon-${size}.png`)
-        if (fs.existsSync(file)) return file;
-        file = uploader.toPath(`icons/icon.png`)
-    } else {
-        file = uploader.toPath(`icons/favicon.ico`)
-    }
-    return fs.existsSync(file) ? file : undefined
+  let file
+  if (size) {
+    file = uploader.toPath(`icons/icon-${size}.png`)
+    if (fs.existsSync(file)) return file
+    file = uploader.toPath(`icons/icon.png`)
+  } else {
+    file = uploader.toPath(`icons/favicon.ico`)
+  }
+  return fs.existsSync(file) ? file : undefined
 }
 
 async function uploadIcon(icon) {
-    const path = await uploader.upload('icons', 'icon.png', icon)
-    await iconService.resizeToPNG(icon, [180, 192, 512], uploader.toPath('icons'), 'icon')
-    await iconService.generateFavicon(uploader.toPath('icons/icon-192.png'), uploader.toPath('icons/favicon.ico'))
-    return { path }
+  const path = await uploader.upload('icons', 'icon.png', icon)
+  await iconService.resizeToPNG(icon, [180, 192, 512], uploader.toPath('icons'), 'icon')
+  await iconService.generateFavicon(uploader.toPath('icons/icon-192.png'), uploader.toPath('icons/favicon.ico'))
+  return { path }
 }

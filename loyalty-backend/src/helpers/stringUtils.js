@@ -1,7 +1,7 @@
 function format(text, args = []) {
-    return text.replace(/{(\d+)}/g, (match, number) => args[number] ? args[number] : match);
+  return text.replace(/{(\d+)}/g, (match, number) => args[number] ? args[number] : match)
 }
 
 module.exports = {
-    format
+  format
 }

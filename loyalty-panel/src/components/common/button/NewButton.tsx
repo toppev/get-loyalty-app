@@ -5,29 +5,29 @@ import { makeStyles } from "@material-ui/core/styles";
 
 
 const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        newBtn: {
-            backgroundColor: theme.palette.success.main,
-        },
-    }));
+  createStyles({
+    newBtn: {
+      backgroundColor: theme.palette.success.main,
+    },
+  }));
 
 interface NewButtonProps {
-    name: string
-    buttonProps: ButtonProps
+  name: string
+  buttonProps: ButtonProps
 }
 
 export default function (props: NewButtonProps) {
 
-    const classes = useStyles();
+  const classes = useStyles();
 
-    return (
-        <div>
-            <Button
-                variant="contained"
-                startIcon={(<AddIcon/>)}
-                {...props.buttonProps}
-                className={`${classes.newBtn} ${props.buttonProps.className || ""}`}
-            >{props.name}</Button>
-        </div>
-    )
+  return (
+    <div>
+      <Button
+        variant="contained"
+        startIcon={(<AddIcon/>)}
+        {...props.buttonProps}
+        className={`${classes.newBtn} ${props.buttonProps.className || ""}`}
+      >{props.name}</Button>
+    </div>
+  )
 }

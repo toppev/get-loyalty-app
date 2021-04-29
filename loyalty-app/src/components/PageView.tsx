@@ -4,24 +4,24 @@ import { replaceQRCodes } from "../modules/QRCode";
 import { useUserFormInitialValues } from "../modules/userForm";
 
 interface PageViewProps {
-    page: Page
+  page: Page
 }
 
 export default function (props: PageViewProps) {
 
-    const { page } = props
-    const { externalURL, pathname: title } = page
+  const { page } = props
+  const { externalURL, pathname: title } = page
 
-    const html = page.html || LOADING_HTML
+  const html = page.html || LOADING_HTML
 
-    useEffect(replaceQRCodes, [html]);
-    useUserFormInitialValues()
+  useEffect(replaceQRCodes, [html]);
+  useUserFormInitialValues()
 
-    return externalURL ? (
-        <div className="page-holder">
-            <iframe title={title} height="100%" width="100%" frameBorder="0" src={externalURL}/>
-        </div>
-    ) : (
-        <div className="page-view" dangerouslySetInnerHTML={{ __html: html }}/>
-    )
+  return externalURL ? (
+    <div className="page-holder">
+      <iframe title={title} height="100%" width="100%" frameBorder="0" src={externalURL}/>
+    </div>
+  ) : (
+    <div className="page-view" dangerouslySetInnerHTML={{ __html: html }}/>
+  )
 }

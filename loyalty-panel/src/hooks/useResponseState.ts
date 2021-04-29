@@ -8,24 +8,24 @@ import { AxiosResponse } from "axios";
  * @param parser optional custom request parser. Function that takes the response and returns T
  */
 export default function useResponseState<T>(
-    response: AxiosResponse | undefined,
-    initialState: T,
-    parser?: (response: AxiosResponse) => T
+  response: AxiosResponse | undefined,
+  initialState: T,
+  parser?: (response: AxiosResponse) => T
 ): [T, Dispatch<SetStateAction<T>>] {
 
-    const [state, setState] = useState<T>(initialState);
+  const [state, setState] = useState<T>(initialState);
 
-    useEffect(() => {
-        if (response) {
-            // TODO: better type check?
-            setState(parser ? parser(response) : response.data)
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [response])
+  useEffect(() => {
+    if (response) {
+      // TODO: better type check?
+      setState(parser ? parser(response) : response.data)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [response])
 
-    return [
-        state,
-        setState
-    ]
+  return [
+    state,
+    setState
+  ]
 
 }

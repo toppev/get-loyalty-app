@@ -29,152 +29,152 @@ const NotFoundPage = lazy(() => import('./components/NotFoundPage'));
 
 export default function () {
 
-    const [navDrawerOpen, setNavDrawerOpen] = useState(false);
-    const [notifications, setNotifications] = useState<AccountNotificationValues>({});
-    const [loginDialog, setLoginDialog] = useState(!validBackendURL());
-    // Don't close dialog before everything has loaded so it won't try loading invalid stuff (undefined business id etc)
-    const [showContent, setShowContent] = useState(false);
+  const [navDrawerOpen, setNavDrawerOpen] = useState(false);
+  const [notifications, setNotifications] = useState<AccountNotificationValues>({});
+  const [loginDialog, setLoginDialog] = useState(!validBackendURL());
+  // Don't close dialog before everything has loaded so it won't try loading invalid stuff (undefined business id etc)
+  const [showContent, setShowContent] = useState(false);
 
-    const context = defaultAppContext;
-    context.setUser = user => {
-        setAppContext(prev => ({ ...prev, user }));
-    }
-    context.setBusiness = business => {
-        setAppContext(prev => ({ ...prev, business }));
-        setShowContent(true);
-        setLoginDialog(false);
-    }
-    const [appContext, setAppContext] = useState<AppContextInterface>(context);
+  const context = defaultAppContext;
+  context.setUser = user => {
+    setAppContext(prev => ({ ...prev, user }));
+  }
+  context.setBusiness = business => {
+    setAppContext(prev => ({ ...prev, business }));
+    setShowContent(true);
+    setLoginDialog(false);
+  }
+  const [appContext, setAppContext] = useState<AppContextInterface>(context);
 
-    useEffect(() => {
-        const { user, loggedIn } = appContext;
-        setNotifications(prev => {
-            return {
-                ...prev,
-                'My Account': loggedIn ? (+!user.email) + (+!user.hasPassword) : 0
-            }
+  useEffect(() => {
+    const { user, loggedIn } = appContext;
+    setNotifications(prev => {
+      return {
+        ...prev,
+        'My Account': loggedIn ? (+!user.email) + (+!user.hasPassword) : 0
+      }
+    })
+  }, [appContext]);
+
+  useEffect(() => {
+    // Login -> fetch business or create one
+    if (validBackendURL()) {
+      profileRequest()
+        .then(res => {
+          if (res.data.businessOwner) {
+            onLoginOrAccountCreate(context, res)
+          } else {
+            console.log('Can not login to panel: not a business owner')
+            setLoginDialog(true)
+          }
         })
-    }, [appContext]);
+        .catch(err => {
+          console.log(err.response?.data || err);
+          const commonError = 'Something went wrong...\nPerhaps our servers are down :(' +
+            '\nPlease try refreshing the page or clearing cookies and logging in.'
 
-    useEffect(() => {
-        // Login -> fetch business or create one
-        if (validBackendURL()) {
-            profileRequest()
-                .then(res => {
-                    if (res.data.businessOwner) {
-                        onLoginOrAccountCreate(context, res)
-                    } else {
-                        console.log('Can not login to panel: not a business owner')
-                        setLoginDialog(true)
-                    }
-                })
-                .catch(err => {
-                    console.log(err.response?.data || err);
-                    const commonError = 'Something went wrong...\nPerhaps our servers are down :(' +
-                        '\nPlease try refreshing the page or clearing cookies and logging in.'
+          const alertAndOpenLogin = (data: any) => {
+            window.alert(data?.message || commonError)
+            setLoginDialog(true);
+          }
+          // Check if the plan expired
+          // FIXME: email is empty, not saved in local storage or anywhere so no personalized messages .-.
+          getOrCreateServer({ email: context.user.email }, false)
+            // @ts-ignore
+            .then(({ data }) => alertAndOpenLogin(data))
+            .catch(({ response }) => alertAndOpenLogin(response.data))
+        });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
-                    const alertAndOpenLogin = (data: any) => {
-                        window.alert(data?.message || commonError)
-                        setLoginDialog(true);
-                    }
-                    // Check if the plan expired
-                    // FIXME: email is empty, not saved in local storage or anywhere so no personalized messages .-.
-                    getOrCreateServer({ email: context.user.email }, false)
-                        // @ts-ignore
-                        .then(({ data }) => alertAndOpenLogin(data))
-                        .catch(({ response }) => alertAndOpenLogin(response.data))
-                });
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+  const handleDrawerToggle = () => setNavDrawerOpen(!navDrawerOpen);
 
-    const handleDrawerToggle = () => setNavDrawerOpen(!navDrawerOpen);
+  const theme = useTheme();
+  const notMobile = useMediaQuery(theme.breakpoints.up('sm'));
 
-    const theme = useTheme();
-    const notMobile = useMediaQuery(theme.breakpoints.up('sm'));
+  const paddingLeftDrawerOpen = 209;
+  const leftRightPadding = notMobile ? 25 : 10
 
-    const paddingLeftDrawerOpen = 209;
-    const leftRightPadding = notMobile ? 25 : 10
+  const styles = {
+    header: {
+      paddingRight: notMobile && navDrawerOpen ? paddingLeftDrawerOpen : 0
+    },
+    bodyDiv: {
+      margin: `65px ${leftRightPadding}px 20px ${leftRightPadding}px`,
+      paddingLeft: notMobile ? paddingLeftDrawerOpen : 0,
+    },
+    content: {},
+    loadingDiv: {
+      color: 'grey',
+    },
+  };
 
-    const styles = {
-        header: {
-            paddingRight: notMobile && navDrawerOpen ? paddingLeftDrawerOpen : 0
-        },
-        bodyDiv: {
-            margin: `65px ${leftRightPadding}px 20px ${leftRightPadding}px`,
-            paddingLeft: notMobile ? paddingLeftDrawerOpen : 0,
-        },
-        content: {},
-        loadingDiv: {
-            color: 'grey',
-        },
-    };
-
-    return (<div style={styles.bodyDiv}>
-        <CssBaseline/>
-        <Router>
-            <AppContext.Provider value={appContext}>
-                <Header handleDrawerToggle={handleDrawerToggle}/>
-                <div>
-                    <div onClick={() => !notMobile && handleDrawerToggle()}>
-                        <Navigator
-                            notifications={notifications}
-                            handleDrawerToggle={handleDrawerToggle}
-                            open={navDrawerOpen}
-                        />
-                    </div>
-                    <AccountButton notifications={notifications}/>
+  return (<div style={styles.bodyDiv}>
+    <CssBaseline/>
+    <Router>
+      <AppContext.Provider value={appContext}>
+        <Header handleDrawerToggle={handleDrawerToggle}/>
+        <div>
+          <div onClick={() => !notMobile && handleDrawerToggle()}>
+            <Navigator
+              notifications={notifications}
+              handleDrawerToggle={handleDrawerToggle}
+              open={navDrawerOpen}
+            />
+          </div>
+          <AccountButton notifications={notifications}/>
+        </div>
+        {loginDialog && <LoginDialog open={loginDialog}/>}
+        {showContent &&
+        <ErrorBoundary>
+          <div style={styles.content}>
+            <Suspense
+              fallback={(
+                <div style={styles.loadingDiv}>
+                  <h2>Loading...</h2>
                 </div>
-                {loginDialog && <LoginDialog open={loginDialog}/>}
-                {showContent &&
-                <ErrorBoundary>
-                    <div style={styles.content}>
-                        <Suspense
-                            fallback={(
-                                <div style={styles.loadingDiv}>
-                                    <h2>Loading...</h2>
-                                </div>
-                            )}>
-                            <Switch>
-                                <Route exact path="/">
-                                    <OverviewPage/>
-                                </Route>
-                                <Route path="/products">
-                                    <ProductPage/>
-                                </Route>
-                                <Route path="/campaigns">
-                                    <CampaignPage/>
-                                </Route>
-                                <Route path="/customers">
-                                    <CustomerPage/>
-                                </Route>
-                                <Route path="/Notifications">
-                                    <NotificationsPage/>
-                                </Route>
-                                <Route path="/pages">
-                                    <PagesPage/>
-                                </Route>
-                                <Route path="/demo">
-                                    <DemoPage/>
-                                </Route>
-                                <Route path="/settings">
-                                    <SettingsPage/>
-                                </Route>
-                                <Route path="/account">
-                                    <AccountPage/>
-                                </Route>
-                                <Route path="/feedback">
-                                    <FeedbackPage/>
-                                </Route>
+              )}>
+              <Switch>
+                <Route exact path="/">
+                  <OverviewPage/>
+                </Route>
+                <Route path="/products">
+                  <ProductPage/>
+                </Route>
+                <Route path="/campaigns">
+                  <CampaignPage/>
+                </Route>
+                <Route path="/customers">
+                  <CustomerPage/>
+                </Route>
+                <Route path="/Notifications">
+                  <NotificationsPage/>
+                </Route>
+                <Route path="/pages">
+                  <PagesPage/>
+                </Route>
+                <Route path="/demo">
+                  <DemoPage/>
+                </Route>
+                <Route path="/settings">
+                  <SettingsPage/>
+                </Route>
+                <Route path="/account">
+                  <AccountPage/>
+                </Route>
+                <Route path="/feedback">
+                  <FeedbackPage/>
+                </Route>
 
-                                <Route>
-                                    <NotFoundPage/>
-                                </Route>
-                            </Switch>
-                        </Suspense>
-                    </div>
-                </ErrorBoundary>}
-            </AppContext.Provider>
-        </Router>
-    </div>);
+                <Route>
+                  <NotFoundPage/>
+                </Route>
+              </Switch>
+            </Suspense>
+          </div>
+        </ErrorBoundary>}
+      </AppContext.Provider>
+    </Router>
+  </div>);
 }

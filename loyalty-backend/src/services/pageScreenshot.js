@@ -1,12 +1,12 @@
-const fs = require('fs');
+const fs = require('fs')
 // deprecated but will still use as it just works
-const request = require('request');
+const request = require('request')
 
-const BASE_URL = process.env.SS_BASE_URL || 'http://localhost:3001';
-const SERVICE_URL = process.env.SS_SERVICE_URL || 'http://localhost:3005';
+const BASE_URL = process.env.SS_BASE_URL || 'http://localhost:3001'
+const SERVICE_URL = process.env.SS_SERVICE_URL || 'http://localhost:3005'
 
 module.exports = {
-    takeScreenshot
+  takeScreenshot
 }
 
 /**
@@ -17,17 +17,17 @@ module.exports = {
  * @param {boolean} fullUrl whether the path is full url or BASE_URL prefix should be used
  */
 async function takeScreenshot(path, fileName, fullUrl = false) {
-    return new Promise((resolve, reject) => {
-        if (process.env.NODE_ENV === 'test') {
-            return;
-        }
-        const url = fullUrl ? path : BASE_URL + path
-        const stream = request.get(`${SERVICE_URL}?url=${url}`, {}, (err, _res, _body) => {
-            if (err) {
-                reject(err)
-            }
-        }).pipe(fs.createWriteStream(fileName));
-        stream.on('error', reject);
-        stream.on('finish', () => resolve(fileName));
-    })
+  return new Promise((resolve, reject) => {
+    if (process.env.NODE_ENV === 'test') {
+      return
+    }
+    const url = fullUrl ? path : BASE_URL + path
+    const stream = request.get(`${SERVICE_URL}?url=${url}`, {}, (err, _res, _body) => {
+      if (err) {
+        reject(err)
+      }
+    }).pipe(fs.createWriteStream(fileName))
+    stream.on('error', reject)
+    stream.on('finish', () => resolve(fileName))
+  })
 }

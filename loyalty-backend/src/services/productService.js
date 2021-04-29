@@ -1,24 +1,24 @@
-const Product = require('../models/product');
-const Business = require('../models/business');
-const StatusError = require('../helpers/statusError');
+const Product = require('../models/product')
+const Business = require('../models/business')
+const StatusError = require('../helpers/statusError')
 
 module.exports = {
-    getAllProducts: getAll,
-    getById,
-    create,
-    update,
-    deleteProduct
+  getAllProducts: getAll,
+  getById,
+  create,
+  update,
+  deleteProduct
 }
 
 /**
  * Get all products created by this business
  */
 async function getAll(populate) {
-    const res = Product.find();
-    if (populate) {
-        res.populate('categories');
-    }
-    return await res;
+  const res = Product.find()
+  if (populate) {
+    res.populate('categories')
+  }
+  return await res
 }
 
 /**
@@ -26,7 +26,7 @@ async function getAll(populate) {
  * @param {any} productId the product's _id field
  */
 async function getById(productId) {
-    return Product.findById(productId).populate('categories');
+  return Product.findById(productId).populate('categories')
 }
 
 /**
@@ -34,12 +34,12 @@ async function getById(productId) {
  * @param {*} product the product to save
  */
 async function create(product) {
-    const business = await Business.findOne();
-    const limit = business.plan.limits.productsTotal;
-    if (limit !== -1 && await Product.countDocuments() >= limit) {
-        throw new StatusError('Plan limit reached', 402)
-    }
-    return Product.create(product);
+  const business = await Business.findOne()
+  const limit = business.plan.limits.productsTotal
+  if (limit !== -1 && await Product.countDocuments() >= limit) {
+    throw new StatusError('Plan limit reached', 402)
+  }
+  return Product.create(product)
 }
 
 /**
@@ -48,9 +48,9 @@ async function create(product) {
  * @param {Object} updatedProduct an object with the values to update
  */
 async function update(productId, updatedProduct) {
-    const product = await getById(productId);
-    Object.assign(product, updatedProduct);
-    return product.save();
+  const product = await getById(productId)
+  Object.assign(product, updatedProduct)
+  return product.save()
 }
 
 /**
@@ -58,5 +58,5 @@ async function update(productId, updatedProduct) {
  * @param {any} productId the product's _id field
  */
 async function deleteProduct(productId) {
-    return await Product.findByIdAndDelete(productId)
+  return await Product.findByIdAndDelete(productId)
 }

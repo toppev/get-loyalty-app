@@ -6,9 +6,8 @@
 # User QR code: <userId>, example: 5f21ea5da23a5300189ae163
 # User reward QR code: <userId>:<rewardId>, example: 5f21ea5da23a5300189ae163:5f3e52a5bf87b20018a88b95
 
-from pathlib import Path
-
 import qrcode
+from pathlib import Path
 
 data = input("Data: ")
 

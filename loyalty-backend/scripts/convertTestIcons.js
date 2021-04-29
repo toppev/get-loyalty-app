@@ -4,18 +4,18 @@
  * Check the new icons manually!
  */
 
-const iconService = require('../src/services/iconService');
+const iconService = require('../src/services/iconService')
 
 
 const favicon = 'testresources/converted-favicon.ico'
 console.log(`Generating ${favicon}`)
 iconService.generateFavicon('./testresources/icon-192x192.png', favicon).then(() => {
-    console.log(`${favicon} generated`)
+  console.log(`${favicon} generated`)
 })
 
 
 const file512 = 'converted-icon'
 console.log(`Generating ${file512}`)
 iconService.resizeToPNG('./testresources/icon-192x192.png', [512], 'testresources', file512).then(() => {
-    console.log(`${file512} generated`)
+  console.log(`${file512} generated`)
 })

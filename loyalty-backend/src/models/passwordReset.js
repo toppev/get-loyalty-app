@@ -1,24 +1,24 @@
-const mongoose = require('mongoose');
-const { Schema } = mongoose;
+const mongoose = require('mongoose')
+const { Schema } = mongoose
 
 const resetModel = new Schema({
-    token: {
-        type: String,
-        required: true
-    },
-    userId: {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
-    }
+  token: {
+    type: String,
+    required: true
+  },
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  }
 }, {
-    timestamps: true,
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true }
-});
+  timestamps: true,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
+})
 
 resetModel.statics.findByToken = function (token, callback) {
-    return this.findOne({ token }, callback);
+  return this.findOne({ token }, callback)
 }
 
-module.exports = mongoose.model('PasswordReset', resetModel);
+module.exports = mongoose.model('PasswordReset', resetModel)

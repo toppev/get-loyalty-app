@@ -4,9 +4,9 @@ const productItemClass = "loyalty-product"
 // "categories" property is not (yet) used
 
 function addProductsBlock(blockManager: any) {
-    blockManager.add(productsClass, {
-        label: `Products`,
-        content: (`
+  blockManager.add(productsClass, {
+    label: `Products`,
+    content: (`
             <div class="${productsClass}" style="text-align: center">
                 <h2>
                     <b>Products</b> ({{products.length}})
@@ -24,12 +24,12 @@ function addProductsBlock(blockManager: any) {
                 <p>{{/each}}</p>
             </div>
             `
-        ),
-    });
+    ),
+  });
 }
 
 export {
-    productsClass,
-    productItemClass,
-    addProductsBlock
+  productsClass,
+  productItemClass,
+  addProductsBlock
 }

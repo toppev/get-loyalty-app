@@ -5,28 +5,28 @@ import CloseButton from "./button/CloseButton";
 
 
 const useStyles = makeStyles(() =>
-    createStyles({
-        dialog: {},
-    }));
+  createStyles({
+    dialog: {},
+  }));
 
 interface ColorPickerProps {
-    open: boolean
-    initialColor: string
-    onChange: (color: string) => any
+  open: boolean
+  initialColor: string
+  onChange: (color: string) => any
 }
 
 export default function (props: ColorPickerProps) {
 
-    const [color, setColor] = useState(props.initialColor);
+  const [color, setColor] = useState(props.initialColor);
 
-    const classes = useStyles();
+  const classes = useStyles();
 
-    return (
-        <Dialog open={props.open} onBackdropClick={() => props.onChange(color)} className={classes.dialog}>
-            <CloseButton onClick={() => props.onChange(color)}/>
-            <DialogContent>
-                <SketchPicker color={color} onChange={(v) => setColor(v.hex)}/>
-            </DialogContent>
-        </Dialog>
-    )
+  return (
+    <Dialog open={props.open} onBackdropClick={() => props.onChange(color)} className={classes.dialog}>
+      <CloseButton onClick={() => props.onChange(color)}/>
+      <DialogContent>
+        <SketchPicker color={color} onChange={(v) => setColor(v.hex)}/>
+      </DialogContent>
+    </Dialog>
+  )
 }

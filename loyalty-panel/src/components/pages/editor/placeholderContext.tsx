@@ -3,15 +3,15 @@ import AppContext from "../../../context/AppContext";
 
 function usePlaceholderContext() {
 
-    const appContext = useContext(AppContext);
+  const appContext = useContext(AppContext);
 
-    const values = {
-        business: appContext.business.public
-    }
+  const values = {
+    business: appContext.business.public
+  }
 
-    return { appContext, values }
+  return { appContext, values }
 }
 
 export {
-    usePlaceholderContext
+  usePlaceholderContext
 }

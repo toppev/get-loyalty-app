@@ -15,6 +15,10 @@
     "ecmaVersion": 2018
   },
   "rules": {
+    "indent": [
+      "warn",
+      2
+    ],
     "semi": [
       "warn",
       "never"

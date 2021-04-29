@@ -3,5 +3,5 @@
  * Nothing to do with push notifications
  */
 export interface AccountNotificationValues {
-    [key: string]: number;
+  [key: string]: number;
 }

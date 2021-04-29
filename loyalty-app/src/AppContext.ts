@@ -1,11 +1,11 @@
 import { createContext } from "react";
 
 export interface AppContextInterface {
-    user?: any
+  user?: any
 }
 
 export const defaultAppContext = {
-    user: undefined
+  user: undefined
 };
 
 export const AppContext = createContext<AppContextInterface>(defaultAppContext);

@@ -6,10 +6,10 @@ import * as serviceWorker from './serviceWorker';
 import { startSubscribeTask } from "./modules/pushNotifications";
 
 ReactDOM.render(
-    <React.StrictMode>
-        <App/>
-    </React.StrictMode>,
-    document.getElementById('root')
+  <React.StrictMode>
+    <App/>
+  </React.StrictMode>,
+  document.getElementById('root')
 );
 
 serviceWorker.register();

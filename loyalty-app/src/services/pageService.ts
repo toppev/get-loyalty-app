@@ -5,14 +5,14 @@ import { get } from "../config/axios";
  * Does not contain the HTML
  */
 function getPages() {
-    return get(`/page/pages`)
+  return get(`/page/pages`)
 }
 
 function getPageHtml(pageId: any) {
-    return get(`/page/${pageId}/html`)
+  return get(`/page/${pageId}/html`)
 }
 
 export {
-    getPages,
-    getPageHtml
+  getPages,
+  getPageHtml
 }

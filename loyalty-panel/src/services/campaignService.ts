@@ -3,30 +3,30 @@ import { Campaign } from "../components/campaigns/Campaign";
 
 
 function listCampaigns() {
-    return get(`/campaign/all`);
+  return get(`/campaign/all`);
 }
 
 function createCampaign(campaign: Campaign) {
-    return post(`/campaign`, campaign);
+  return post(`/campaign`, campaign);
 }
 
 function updateCampaign(campaign: Campaign) {
-    return patch(`/campaign/${campaign?.id}`, campaign);
+  return patch(`/campaign/${campaign?.id}`, campaign);
 }
 
 function deleteCampaign(campaign: Campaign) {
-    return remove(`/campaign/${campaign?.id}`)
+  return remove(`/campaign/${campaign?.id}`)
 }
 
 function loadCampaign(campaignId: string) {
-    return get(`/campaign/${campaignId}`);
+  return get(`/campaign/${campaignId}`);
 }
 
 
 export {
-    listCampaigns,
-    updateCampaign,
-    createCampaign,
-    deleteCampaign,
-    loadCampaign
+  listCampaigns,
+  updateCampaign,
+  createCampaign,
+  deleteCampaign,
+  loadCampaign
 }

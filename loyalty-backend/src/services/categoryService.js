@@ -1,9 +1,9 @@
-const Category = require('../models/category');
+const Category = require('../models/category')
 
 module.exports = {
-    create,
-    find,
-    findById
+  create,
+  find,
+  findById
 }
 
 
@@ -13,11 +13,11 @@ module.exports = {
  * @return the created campaign
  */
 async function create(categoryParam) {
-    const category = new Category(categoryParam);
-    // Won't use this for creating the official categories so just force it here
-    category.official = false;
-    await category.save();
-    return category;
+  const category = new Category(categoryParam)
+  // Won't use this for creating the official categories so just force it here
+  category.official = false
+  await category.save()
+  return category
 }
 
 /**
@@ -27,17 +27,17 @@ async function create(categoryParam) {
  * @param {string} type to search ('product', 'service', 'business' or null)
  */
 async function find(query, type, limit = 100) {
-    // Whether the type was specified
-    const typeQuery = type ? { categoryType: type } : {}
-    // Whether the query was specified
-    const finalQuery = query ? {
-        $or: [{ keywords: query }, { name: query }],
-        ...typeQuery
-    } : { ...typeQuery }
+  // Whether the type was specified
+  const typeQuery = type ? { categoryType: type } : {}
+  // Whether the query was specified
+  const finalQuery = query ? {
+    $or: [{ keywords: query }, { name: query }],
+    ...typeQuery
+  } : { ...typeQuery }
 
-    const categories = await Category.find(finalQuery).limit(limit);
+  const categories = await Category.find(finalQuery).limit(limit)
 
-    return categories;
+  return categories
 }
 
 /**
@@ -45,5 +45,5 @@ async function find(query, type, limit = 100) {
  * @param {any} id the category id
  */
 async function findById(id) {
-    return await Category.findById(id);
+  return await Category.findById(id)
 }
