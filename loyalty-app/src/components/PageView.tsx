@@ -14,7 +14,7 @@ export default function (props: PageViewProps) {
 
   const html = page.html || LOADING_HTML
 
-  useEffect(() => ON_PAGE_RENDER_MODULES.forEach(it => it({ page })), [html])
+  useEffect(() => ON_PAGE_RENDER_MODULES.forEach(it => it({ page })), [html, page])
   useUserFormInitialValues()
 
   return externalURL ? (
