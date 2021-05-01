@@ -11,7 +11,7 @@ interface NavbarProps {
   pages: Page[]
 }
 
-export default function (props: NavbarProps) {
+export default function Navbar(props: NavbarProps) {
   const { pages } = props
 
   const location = useLocation()
@@ -38,7 +38,7 @@ export default function (props: NavbarProps) {
       <hr className="navbar-hr"/>
       {pages?.map(page => (
         <NavLink key={page._id} to={page.pathname + window.location.search} className="navlink-desktop">
-          <div style={{ display: 'flex' }}>
+          <div className="flex">
             <PageIcon page={page}/>
             <span className="navlink-page-name">
               {page.pathname.replace("-", " ")}

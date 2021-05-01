@@ -7,7 +7,7 @@ interface PageIconProps extends React.HTMLProps<HTMLDivElement> {
   page: Page
 }
 
-export default function (props: PageIconProps) {
+export default function PageIcon(props: PageIconProps) {
   const { page, ...htmlProps } = props
   const icon = page.icon || `<a>${page.pathname}</a>`
 

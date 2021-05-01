@@ -15,7 +15,7 @@ interface NotificationProps {
   notification?: Notification
 }
 
-export default function ({ notification }: NotificationProps) {
+export default function PopupNotification({ notification }: NotificationProps) {
 
   const { message, status } = { status: "neutral", ...notification }
 

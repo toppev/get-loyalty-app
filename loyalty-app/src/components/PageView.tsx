@@ -7,7 +7,7 @@ interface PageViewProps {
   page: Page
 }
 
-export default function (props: PageViewProps) {
+export default function PageView(props: PageViewProps) {
 
   const { page } = props
   const { externalURL, pathname: title } = page

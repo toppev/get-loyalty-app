@@ -6,7 +6,7 @@ interface NotificationHandlerProps {
   onRefresh: (id: any) => any
 }
 
-export default function (props: NotificationHandlerProps) {
+export default function NotificationHandler(props: NotificationHandlerProps) {
 
   // Subscribe to long polling messages/notifications (e.g "Scanned", "Received a reward")
   // We could subscribe when needed or migrate to websockets but this is good enough for now
