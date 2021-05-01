@@ -3,9 +3,10 @@
   left: 0;
   right: 0;
   margin: 100px auto;
-  width: 300px;
+  min-width: 300px;
+  max-width: min(600px, 80%);
   text-align: center;
-  padding: 30px;
+  padding: 18px 24px;
   border: 1px solid #bababa;
   border-radius: 5px;
   background-color: ghostwhite;
@@ -19,21 +20,16 @@
   font-size: 20px;
   position: absolute;
   right: 15px;
-  top: 15px;
+  top: 5px;
   color: #6c6c6c;
 }
 
-.referral__dialog-description {
-  color: gray;
-}
-
 .referral__copy-clipboard {
-  padding: 3px;
+  padding: 2px 4px;
   border: solid #c6c6c6 1px;
   border-radius: 4px;
   font-size: 16px;
   color: #424242;
-  font-weight: bolder;
 }
 
 .referral__tooltip {
