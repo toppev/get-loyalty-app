@@ -72,7 +72,7 @@ async function handleReferralCode(user, campaign, referrer) {
   if (referrer === user.id) throw new StatusError("Can not refer yourself", 403)
   user.referrer = referrer
   if (referrerUser) {
-    const referralLimit = 1
+    const referralLimit = user.maxRefers
     if (referrerUser.referrerFor && referrerUser.referrerFor.length >= referralLimit) {
       throw new StatusError(`The user has reached the limit of ${referralLimit} referrals`, 403)
     }

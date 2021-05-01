@@ -9,14 +9,11 @@ const mongoose = require('mongoose')
 const passport = require('passport')
 const cookieParser = require('cookie-parser')
 const cors = require('cors')
-const csurf = require('csurf')
 const routes = require('./src/routes/routes')
 
 const morgan = require('morgan')
-const logger = require('./src/config/logger')
 
 const isTesting = process.env.NODE_ENV === 'test'
-const ENABLE_CSRF = !isTesting && false // Currently broken
 
 if (!isTesting) {
   mongoose.connect(process.env.MONGO_URI, {
@@ -32,7 +29,7 @@ if (!isTesting) {
       console.log('Listening on port ' + port)
     })
   })
-  app.use(morgan('":method :url" :status (len: :res[content-length] - :response-time[0] ms) ":user-agent"', { stream: logger.stream }))
+  app.use(morgan('":method :url" :status (len: :res[content-length] - :response-time[0] ms) ":user-agent"', {}))
 }
 
 app.disable("x-powered-by")
@@ -81,22 +78,6 @@ app.use(session.sessionHandler)
 app.use(session.customSessionConfig)
 app.use(passport.initialize())
 app.use(passport.session())
-
-if (ENABLE_CSRF) {
-  app.use(csurf())
-  app.use((req, res, next) => {
-    res.cookie('XSRF-TOKEN', req.csrfToken(), { domain: process.env.COOKIE_DOMAIN })
-    next()
-  })
-  app.use((err, req, res, next) => {
-    if (err.code !== 'EBADCSRFTOKEN') return next(err)
-    // Bypass csrf error on login because the scanner app does not support it (currently)
-    if (req.url === '/user/login') {
-      return next()
-    }
-    return next(err)
-  })
-}
 
 require('./src/config/planUpdateScheduler')
 

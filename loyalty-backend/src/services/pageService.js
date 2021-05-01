@@ -77,6 +77,7 @@ async function getPublicPage() {
 }
 
 async function uploadPage(pageId, { html, css }) {
+  if(!css) css = ""
   const res = await validateHandlebars(html)
   if (res.error) {
     throw new StatusError(`Invalid placeholders. ${res.error}`, 400)

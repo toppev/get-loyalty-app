@@ -75,6 +75,10 @@ const userSchema = new Schema({
   referrerFor: [{
     type: mongoose.Types.ObjectId,
   }],
+  maxRefers: {
+    type: Number,
+    default: 1,
+  },
   termsAccepted: {
     type: Date,
     validate: {
