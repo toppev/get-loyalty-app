@@ -1,5 +1,6 @@
 const businessService = require('./businessService')
 const request = require("request")
+const _ = require('lodash')
 
 const SERVER_KEY = process.env.SERVER_KEY || 'testing'
 if (SERVER_KEY === 'testing') console.log(`Using test SERVER_KEY: ${SERVER_KEY}`)
@@ -57,9 +58,10 @@ function planHasChanged(oldPlan, newPlan) {
   const { _id, ...oldObj } = JSON.parse(JSON.stringify(oldPlan))
   // eslint-disable-next-line no-unused-vars
   const { id, ...newObj } = JSON.parse(JSON.stringify(newPlan))
-  if (oldObj !== newObj) {
-    console.log("Plan updated from", oldObj, "to", newObj)
-    return true
+  if (_.isEqual(oldObj, newObj)) {
+    console.log(`Plans (${newObj.name}/${newObj.type}) are equal, not updating.`)
+    return false
   }
-  return false
+  console.log("Plan updated from", oldObj, "to", newObj)
+  return true
 }

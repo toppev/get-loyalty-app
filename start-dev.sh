@@ -3,8 +3,8 @@
 echo "Starting development environment. This may take a few minutes..."
 
 echo "The web apps are available at:"
-echo "http://localhost:3000"
-echo "http://localhost:3002"
+echo "loyalty-app: http://localhost:3000"
+echo "loyalty-panel: http://localhost:3002"
 
 : '
 echo "Opening the web apps..."
