@@ -12,21 +12,22 @@ mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false
-}, function (err) {
+}, async (err) => {
   if (err) throw err
+
+  const allUsers = await User.find()
+  allUsers.forEach(it => it.email && console.log(it.email))
 
   const email = readlineSync.question('Email address: ')
 
-  User.find({ email: email }).then(users => {
-    const user = users[0]
-    if (!user) {
-      console.log('User not found.')
-    } else {
-      const password = readlineSync.question('New password: ')
-      userService.update(user.id, { password: password })
-        .then(user => console.log(user, 'Password updated.'))
-    }
-  })
-
+  const users = await User.find({ email: email })
+  const user = users[0]
+  if (!user) {
+    console.log('User not found.')
+  } else {
+    const password = readlineSync.question('New password: ')
+    userService.update(user.id, { password: password })
+      .then(user => console.log(user, 'Password updated.'))
+  }
 
 })
