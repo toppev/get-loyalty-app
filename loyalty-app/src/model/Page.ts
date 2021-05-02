@@ -7,6 +7,7 @@ interface Page {
   icon?: string
   externalURL?: string
   html?: string
+  head?: string
 }
 
 export {

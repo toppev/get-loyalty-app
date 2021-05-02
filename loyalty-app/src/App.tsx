@@ -13,6 +13,7 @@ import { AppContext, AppContextInterface, defaultAppContext } from './AppContext
 import NotificationHandler from "./components/notification/NotificationHandler"
 import Navbar from "./components/Navbar"
 import { ReferrerDialog } from "./modules/Referrer"
+import { getAllTextBetween, getTextBetween } from "./util/stringUtils"
 
 function App() {
 
@@ -95,7 +96,14 @@ function App() {
   const fetchHtml = async (page: Page) => {
     try {
       const res = await getPageHtml(page._id)
-      page.html = res.data
+      const html = res.data
+      page.html = html
+      // Add script tags(s) in the header so they are executed
+      // TODO: support other stuff?
+      // TODO: multiple script tags don't currently work
+      // TODO: test if styles work
+      // TODO: grapejs saves &quot etc
+      page.head = getAllTextBetween(html || "", "<script>", "</script>")
     } catch (err) {
       console.log(err)
       page.html = ERROR_HTML
