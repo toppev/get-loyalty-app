@@ -44,8 +44,10 @@ function GrapesPageEditor(props) {
       // Auto-saved on exit, see useEffect return cleanup function
       noticeOnUnload: false,
       container: `#page-editor`,
+      allowScripts: true,
       canvas: {
-        styles: ["./editorCanvas.css"]
+        styles: ["./editorCanvas.css"],
+        scripts: []
       },
       plugins: [
         gjsBlocksBasic,
