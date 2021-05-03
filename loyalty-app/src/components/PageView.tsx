@@ -27,6 +27,7 @@ export default function PageView(props: PageViewProps) {
   ) : (
     <>
       <Helmet>
+        {/* We manually parse the script tag from the head string (as a temp fix) */}
         <script>{getTextBetween(head, "<script>", "</script>")}</script>
       </Helmet>
       <div className="page-view" dangerouslySetInnerHTML={{ __html: html }}/>

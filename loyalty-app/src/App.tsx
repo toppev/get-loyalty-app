@@ -98,11 +98,10 @@ function App() {
       const res = await getPageHtml(page._id)
       const html = res.data
       page.html = html
-      // Add script tags(s) in the header so they are executed
-      // TODO: support other stuff?
+      // Parse what goes in the head tag (e.g scripts)
+      // TODO: support more than just script tags
       // TODO: multiple script tags don't currently work
-      // TODO: test if styles work
-      // TODO: grapejs saves &quot etc
+      // FIXME: grapejs saves " as &quot etc and that breaks the scripts
       page.head = getAllTextBetween(html || "", "<script>", "</script>")
     } catch (err) {
       console.log(err)
@@ -116,10 +115,8 @@ function App() {
 
   return (
     <Router>
-
       <AppContext.Provider value={contextState}>
         <div className="App">
-
           <Helmet>
             <link id="favicon" rel="icon" href={`${BASE_URL}/business/icon`} type="image/x-icon"/>
           </Helmet>
@@ -128,7 +125,6 @@ function App() {
 
           <Navbar pages={pages || []}/>
           <ReferrerDialog user={contextState.user} referUrl={`${firstPagePath}?coupon=referral?referrer=${contextState.user?.id}`}/>
-
           <Switch>
             {pages.map(page => (
               <Route exact path={`/${page.pathname}`} key={page._id}>
@@ -138,7 +134,6 @@ function App() {
             {pages.length > 0 &&
             <Redirect to={{ pathname: pages[0].pathname, search: window.location.search }}/>}
           </Switch>
-
           <NotificationHandler onRefresh={refreshHtmlPages}/>
         </div>
       </AppContext.Provider>
