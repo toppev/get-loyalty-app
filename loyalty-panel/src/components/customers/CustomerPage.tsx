@@ -103,11 +103,6 @@ export default function () {
           variant="contained"
           onClick={() => setRewardAllSelector(true)}
         >Reward All</Button>
-        <Button
-          disabled
-          className={classes.actionBtn}
-          variant="contained"
-        >Export (WIP)</Button>
       </Box>
       <SearchField
         setSearch={setSearch}
