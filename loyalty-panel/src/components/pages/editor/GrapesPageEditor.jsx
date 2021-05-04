@@ -75,11 +75,6 @@ function GrapesPageEditor(props) {
       }
     })
 
-    editor.on('storage:start', () => {
-      const storage = editor.StorageManager.getCurrentStorage()
-      storage.attributes.headers['XSRF-TOKEN'] = Cookie.get('XSRF-TOKEN')
-    })
-
     editor.on('storage:start:store', () => {
       uploadHtmlCss(props.page, editor.getHtml(), editor.getCss())
         .then(() => props.setError())
