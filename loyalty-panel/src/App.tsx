@@ -24,6 +24,7 @@ const SettingsPage = lazy(() => import('./components/settings/SettingsPage'))
 const CampaignPage = lazy(() => import('./components/campaigns/CampaignPage'))
 const NotificationsPage = lazy(() => import('./components/notifications/NotificationsPage'))
 const FeedbackPage = lazy(() => import('./components/feedback/FeedbackPage'))
+const DataAndChartsPage = lazy(() => import('./components/charts/DataAndChartsPage'))
 const NotFoundPage = lazy(() => import('./components/NotFoundPage'))
 
 
@@ -136,6 +137,7 @@ export default function () {
                 </div>
               )}>
               <Switch>
+                {/* Business */}
                 <Route exact path="/">
                   <OverviewPage/>
                 </Route>
@@ -151,6 +153,8 @@ export default function () {
                 <Route path="/Notifications">
                   <NotificationsPage/>
                 </Route>
+
+                {/* Pages */}
                 <Route path="/pages">
                   <PagesPage/>
                 </Route>
@@ -160,11 +164,16 @@ export default function () {
                 <Route path="/settings">
                   <SettingsPage/>
                 </Route>
-                <Route path="/account">
-                  <AccountPage/>
+
+                {/* Other */}
+                <Route path="/data-and-charts">
+                  <DataAndChartsPage/>
                 </Route>
                 <Route path="/feedback">
                   <FeedbackPage/>
+                </Route>
+                <Route path="/account">
+                  <AccountPage/>
                 </Route>
 
                 <Route>

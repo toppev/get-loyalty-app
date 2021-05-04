@@ -22,6 +22,7 @@ import HelpIcon from '@material-ui/icons/Help'
 import OpenInNewIcon from '@material-ui/icons/OpenInNew'
 import clsx from 'clsx'
 import React from 'react'
+import TrendingUpIcon from '@material-ui/icons/TrendingUp';
 import { NavLink } from "react-router-dom"
 import { AccountNotificationValues } from './account/AccountNotifications'
 
@@ -53,6 +54,7 @@ const categories = [
   {
     id: 'Other',
     children: [
+      { id: 'Data & Charts', icon: <TrendingUpIcon/>, to: '/data-and-charts' },
       { id: 'Feedback', icon: <FeedbackIcon/>, to: '/feedback' },
       { id: 'Help & Support', icon: <HelpIcon/>, to: `https://support.${DOMAIN_HOME_PAGE}` },
     ],
@@ -222,8 +224,7 @@ export default function Navigator(props: NavigatorProps) {
                   {...otherProps}
                 >
                   <ListItemIcon className={classes.itemIcon}>
-                    <Badge badgeContent={props.notifications[childId]}
-                      color="secondary">{icon}</Badge>
+                    <Badge badgeContent={props.notifications[childId]} color="secondary">{icon}</Badge>
                   </ListItemIcon>
                   <ListItemText classes={{ primary: classes.itemPrimary }}>{childId}</ListItemText>
                   {external &&
