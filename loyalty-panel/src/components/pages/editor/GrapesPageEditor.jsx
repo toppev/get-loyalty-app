@@ -8,7 +8,6 @@ import React, { useContext, useEffect } from "react"
 import { addPlaceholderBlock, registerListener } from "./blocks/placeholderBlock"
 import { addCampaignsBlock } from "./blocks/campaignsBlock"
 import { addUserRewardsBlock } from "./blocks/userRewardsBlock"
-import Cookie from "js-cookie"
 import { uploadHtmlCss } from "../../../services/pageService"
 import { addRichTextEditorPlaceholders } from "./richPlaceholder"
 import { usePlaceholderContext } from "./placeholderContext"
@@ -114,20 +113,8 @@ function GrapesPageEditor(props) {
       }
     }
 
-    /* Currently disabled because editor#getDirtyCount does not reset for some reason
-
-    let timeout = setTimeout(autosave, 10000);
-
-    // Auto-save every 5 seconds
-    function autosave() {
-        saveIfNeeded()
-        timeout = setTimeout(autosave, 5000);
-    }
-    */
-
     // Save when closing
     return function () {
-      // clearInterval(timeout);
       saveIfNeeded()
     }
   })
