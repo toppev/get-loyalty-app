@@ -22,7 +22,7 @@ import HelpIcon from '@material-ui/icons/Help'
 import OpenInNewIcon from '@material-ui/icons/OpenInNew'
 import clsx from 'clsx'
 import React from 'react'
-import TrendingUpIcon from '@material-ui/icons/TrendingUp';
+import TrendingUpIcon from '@material-ui/icons/TrendingUp'
 import { NavLink } from "react-router-dom"
 import { AccountNotificationValues } from './account/AccountNotifications'
 
