@@ -25,16 +25,17 @@ async function getCustomerInfo(user) {
   if (!user.customerData) { // Does not exists, the given param is the user id
     user = await User.findById(user)
   }
-  const { _id, id, email, customerData, lastVisit, birthday, authentication, role } = user
+  const { _id, id, email, customerData, lastVisit, birthday, role, authentication, createdAt } = user
   return {
     _id,
     id,
-    customerData,
     email,
-    role,
+    customerData,
     lastVisit,
     birthday,
-    authentication: { service: authentication.service }
+    role,
+    authentication: { service: authentication.service },
+    createdAt,
   }
 }
 
@@ -184,7 +185,7 @@ async function searchCustomers(limit, search) {
   // If searching, get first 500 customers and filter, otherwise return first 100
   // might fix later
   // FIXME: could be a lot better
-  let users = await _listCustomers().limit(limit !== undefined ? limit : search ? 500 : 100)
+  let users = await _listCustomers().limit(limit || search ? 500 : 100)
   if (search && search.trim().length) {
     users = users.filter(u => JSON.stringify(u).toLowerCase().includes(search))
   }
