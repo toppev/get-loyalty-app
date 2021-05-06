@@ -1,5 +1,5 @@
 import React, { Fragment } from "react"
-import { Box, createStyles, Divider, LinearProgress, makeStyles, Theme, Typography } from "@material-ui/core"
+import { Box, Card, createStyles, Divider, LinearProgress, makeStyles, Theme, Typography } from "@material-ui/core"
 import { Bar, Line } from 'react-chartjs-2'
 import useRequest from "../../hooks/useRequest"
 import { listCustomers } from "../../services/customerService"
@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.grey[600]
     },
     chartTitle: {
-      color: theme.palette.grey[300],
+      color: theme.palette.grey[600],
       marginBottom: '4px'
     },
     chart: {
@@ -31,14 +31,14 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     chartDates: {
-      color: theme.palette.grey[400],
+      color: theme.palette.grey[500],
       marginTop: '0'
     },
     center: {
       textAlign: 'center'
     },
     divider: {
-      margin: '60px 0',
+      margin: '50px 0',
       backgroundColor: theme.palette.grey[800]
     }
   }))
@@ -96,7 +96,7 @@ export default function () {
       component: (
         <UsageLengthChart
           title="Usage Retention"
-          label="how many customers have used the app this long"
+          label="how many customers have used the app longer than"
           joinLastDiff={customerUsageLength}
         />
       )
@@ -177,7 +177,7 @@ function DateChart(props: DateChartProps) {
   }
 
   return (
-    <div className={classes.chart}>
+    <Card raised className={classes.chart}>
       <div className={classes.center}>
         <h2 className={classes.chartTitle}>{props.title}</h2>
         <p className={classes.chartDates}>
@@ -186,7 +186,7 @@ function DateChart(props: DateChartProps) {
       </div>
       {/* @ts-ignore  */}
       <Line data={data} options={COMMON_LINE_CHART_OPTIONS}/>
-    </div>
+    </Card>
   )
 }
 
@@ -204,6 +204,7 @@ function UsageLengthChart(props: RetentionChartProps) {
     '> year': dayInMS * 30 * 12,
     '> 6 months': dayInMS * 30 * 6,
     '> 3 months': dayInMS * 30 * 3,
+    '> 2 months': dayInMS * 30 * 2,
     '> month': dayInMS * 30,
     '> 14 days': dayInMS * 14,
     '> week': dayInMS * 7,
@@ -234,13 +235,13 @@ function UsageLengthChart(props: RetentionChartProps) {
   }
 
   return (
-    <div className={classes.chart}>
+    <Card raised className={classes.chart}>
       <div className={classes.center}>
         <h2 className={classes.chartTitle}>{props.title}</h2>
         <p className={classes.chartDates}>All time</p>
       </div>
       {/* @ts-ignore  */}
       <Bar data={data} options={COMMON_LINE_CHART_OPTIONS}/>
-    </div>
+    </Card>
   )
 }
