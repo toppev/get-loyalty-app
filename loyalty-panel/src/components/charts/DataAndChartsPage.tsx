@@ -1,6 +1,6 @@
 import React, { Fragment } from "react"
 import { Box, createStyles, Divider, LinearProgress, makeStyles, Theme, Typography } from "@material-ui/core"
-import { Line } from 'react-chartjs-2'
+import { Bar, Line } from 'react-chartjs-2'
 import useRequest from "../../hooks/useRequest"
 import { listCustomers } from "../../services/customerService"
 import RetryButton from "../common/button/RetryButton"
@@ -240,7 +240,7 @@ function UsageLengthChart(props: RetentionChartProps) {
         <p className={classes.chartDates}>All time</p>
       </div>
       {/* @ts-ignore  */}
-      <Line data={data} options={COMMON_LINE_CHART_OPTIONS}/>
+      <Bar data={data} options={COMMON_LINE_CHART_OPTIONS}/>
     </div>
   )
 }
