@@ -14,14 +14,19 @@ export const useStyles = makeStyles((theme: Theme) =>
     title: {
       fontSize: '38px',
       color: 'ghostwhite',
-      marginBottom: '20px'
+      textAlign: 'center',
+      margin: '20px auto',
+      [theme.breakpoints.up('sm')]: {
+        textAlign: 'start',
+        margin: '20px 40px',
+      }
     },
     p: {
       fontSize: '14px',
       color: theme.palette.grey[600]
     },
     divider: {
-      margin: '50px 0',
+      margin: '20px 0',
       backgroundColor: theme.palette.grey[800]
     },
   }))

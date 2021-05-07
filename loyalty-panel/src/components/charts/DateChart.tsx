@@ -1,7 +1,7 @@
 import { Card } from "@material-ui/core"
 import { Line } from "react-chartjs-2"
 import React from "react"
-import { ChartProps, COMMON_LINE_CHART_OPTIONS, useChartStyles } from "./ChartProps"
+import { ChartProps, COMMON_LINE_CHART_OPTIONS, useChartStyles } from "./ChartConsts"
 
 interface DateChartProps extends ChartProps {
   dateData: Date[]

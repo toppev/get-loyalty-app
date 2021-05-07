@@ -16,10 +16,6 @@ export const COMMON_LINE_CHART_OPTIONS = {
 
 export const useChartStyles = makeStyles((theme: Theme) =>
   createStyles({
-    title: {
-      fontSize: '38px',
-      color: 'ghostwhite',
-    },
     p: {
       fontSize: '14px',
       color: theme.palette.grey[600]
@@ -29,10 +25,11 @@ export const useChartStyles = makeStyles((theme: Theme) =>
       marginBottom: '4px'
     },
     chart: {
-      margin: 'auto',
-      minWidth: '95%',
+      padding: '15px',
+      margin: '15px auto',
+      width: '95%',
       [theme.breakpoints.up('sm')]: {
-        minWidth: '600px',
+        width: '600px',
         margin: '40px',
       },
     },
