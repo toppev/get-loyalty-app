@@ -1,7 +1,6 @@
 import {
   Box,
-  Button,
-  ButtonProps,
+  Button, ButtonProps,
   Card,
   CardActions,
   CardContent,
@@ -21,13 +20,12 @@ import {
 } from '@material-ui/core'
 import EditIcon from '@material-ui/icons/Edit'
 import WebIcon from '@material-ui/icons/Web'
-import React, { useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import { backendURL, post } from '../../config/axios'
 import CloseButton from '../common/button/CloseButton'
 import IdText from '../common/IdText'
 import RetryButton from '../common/button/RetryButton'
 import { Page } from './Page'
-import PageEditor from './grapes/PageEditor'
 import useRequest from "../../hooks/useRequest"
 import useResponseState from "../../hooks/useResponseState"
 import { createPage, deletePage, listPages, listTemplates, updatePage } from "../../services/pageService"
@@ -36,6 +34,8 @@ import URLSelectorDialog from "./URLSelectorDialog"
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft'
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight'
 import PageSettings from './PageSettings'
+
+const PageEditor = React.lazy(() => import('./grapes/PageEditor'))
 
 export const usePageStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -314,7 +314,9 @@ export default function () {
       <div>
         <Divider className={classes.divider}/>
         <PageSettings pageOpen={pageOpen} requests={otherRequests}/>
-        <PageEditor page={pageOpen}/>
+        <Suspense fallback={<div className={classes.loading}>Loading editor...</div>}>
+          <PageEditor page={pageOpen}/>
+        </Suspense>
       </div>}
 
     </div>
@@ -381,7 +383,7 @@ function PageCard(props: PageCardProps) {
                 >
                   <div>
                     <IconButton className={classes.editPageNameBtn}
-                      onClick={() => editing ? submitNameChange() : setEditing(true)}>
+                                onClick={() => editing ? submitNameChange() : setEditing(true)}>
                       <EditIcon/>
                     </IconButton>
                   </div>
