@@ -1,9 +1,9 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import Page, { LOADING_HTML } from "../model/Page"
 import { useUserFormInitialValues } from "../modules/userForm"
 import { ON_PAGE_RENDER_MODULES } from "../modules"
 import { Helmet } from "react-helmet"
-import { getTextBetween } from "../util/stringUtils"
+import { getPageStaticFile } from "../services/pageService"
 
 interface PageViewProps {
   page: Page
@@ -15,7 +15,6 @@ export default function PageView(props: PageViewProps) {
   const { externalURL, pathname: title } = page
 
   const html = page.html || LOADING_HTML
-  const head = page.head || ""
 
   useEffect(() => ON_PAGE_RENDER_MODULES.forEach(it => it({ page })), [html, page])
   useUserFormInitialValues()
@@ -26,13 +25,27 @@ export default function PageView(props: PageViewProps) {
     </div>
   ) : (
     <>
-      <Helmet>
-        {/* We manually parse the script tag from the head string (as a temp fix) */}
-        <script>{getTextBetween(head, "<script>", "</script>")}</script>
-      </Helmet>
+      <PageHead page={page}/>
       <div className="page-view" dangerouslySetInnerHTML={{ __html: html }}/>
     </>
   )
 }
 
+function PageHead({ page }: PageViewProps) {
+  const pageId = page._id
 
+  const [script, setScript] = useState("")
+
+  useEffect(() => {
+    const fileName = 'main.js'
+    getPageStaticFile(pageId, fileName)
+      .then(it => setScript(it.data))
+      .catch(() => console.log(`Failed to load external static head file: ${fileName}`))
+  }, [pageId])
+
+  return (
+    <Helmet>
+      <script>{script}</script>
+    </Helmet>
+  )
+}
