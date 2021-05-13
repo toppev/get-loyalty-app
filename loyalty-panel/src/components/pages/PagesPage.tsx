@@ -107,6 +107,11 @@ export const usePageStyles = makeStyles((theme: Theme) =>
     iconTitle: {
       color: theme.palette.grey[600]
     },
+    loading: {
+      color: theme.palette.info.main,
+      fontSize: '16px',
+      textAlign: 'center'
+    },
     info: {
       color: theme.palette.info.dark,
       fontSize: '12px',

@@ -4,10 +4,11 @@ import { Page, PUBLISHED } from "./Page"
 import { getPageScript, updatePage, uploadPageStaticFile } from "../../services/pageService"
 import PageIcon from "./PageIcon"
 import IconSelector from "./grapes/IconSelector"
-import React, { useState } from "react"
+import React, { useState, Suspense } from "react"
 import { usePageStyles } from "./PagesPage"
 import { RequestHandler } from "../../hooks/useRequest"
-import CodeMirror from "./codemirror/CodeMirror"
+
+const CodeMirror = React.lazy(() => import("./codemirror/CodeMirror"))
 
 
 interface PageSettingsProps {
@@ -111,15 +112,17 @@ export default function ({ pageOpen, requests }: PageSettingsProps) {
           </div>
         </div>
         {codeMirrorContent !== undefined &&
-        <CodeMirror
-          open
-          initialValue={codeMirrorContent}
-          onChange={(_editor, _data, content) => Math.random() > 0.9 && uploadScript(content)}
-          onClose={(content) => {
-            setCodeMirrorContent(undefined)
-            uploadScript(content)
-          }}
-        />}
+        <Suspense fallback={<div className={classes.loading}>Loading...</div>}>
+          <CodeMirror
+            open
+            initialValue={codeMirrorContent}
+            onChange={(_editor, _data, content) => Math.random() > 0.9 && uploadScript(content)}
+            onClose={(content) => {
+              setCodeMirrorContent(undefined)
+              uploadScript(content)
+            }}
+          />
+        </Suspense>}
       </Paper>
     </Box>
   )
