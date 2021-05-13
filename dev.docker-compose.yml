@@ -5,7 +5,7 @@ services:
     restart: always
     build:
       context: ./loyalty-backend
-      dockerfile: loyalty-backend/dev.Dockerfile
+      dockerfile: dev.Dockerfile
       args:
         NPM_TOKEN: ${NPM_TOKEN}
     volumes:
