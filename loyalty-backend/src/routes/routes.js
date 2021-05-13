@@ -32,7 +32,13 @@ router.use('/business', requireLogin.unless({ path: ['/business/icon'] }), busin
 router.use('/category', category)
 router.use('/campaign', requireLogin, campaigns)
 router.use('/product', requireLogin, products)
-router.use('/page', requireLogin.unless({ path: ['/page/templates', new RegExp('/page/[a-z0-9]+/html', 'i')] }), page)
+router.use('/page', requireLogin.unless({
+  path: [
+    '/page/templates',
+    new RegExp('/page/[a-z0-9]+/html', 'i'),
+    new RegExp('/page/[a-z0-9]+/static', 'i')
+  ]
+}), page)
 router.use('/customer/:userId', requireLogin, customer)
 // Coupon codes
 router.use('/coupon', requireLogin, coupon)

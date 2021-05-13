@@ -2,6 +2,7 @@ const { initDatabase, closeDatabase, deleteUploadsDirectory } = require('./testU
 const businessService = require('../src/services/businessService')
 const User = require('../src/models/user')
 const app = require('../app')
+const fs = require("fs")
 const api = require('supertest')(app)
 
 const businessParams = { email: "example@email.com", public: { address: 'this is an address' } }
@@ -142,6 +143,25 @@ describe('Logged in user with permissions can', () => {
       .set('Cookie', cookie)
       .expect(200)
     expect(res.text).toBe(expectedPage)
+  })
+
+
+  it('upload JavaScript file', async () => {
+    await api
+      .post(`/page/${testPageData.id}/upload-static?fileName=main.js`)
+      .type('multipart/form-data')
+      .attach('file', 'testresources/main.js')
+      .set('Cookie', cookie)
+      .expect(200)
+  })
+
+  it('get JavaScript file', async () => {
+    const res = await api
+      .get(`/page/${testPageData.id}/static/main.js`)
+      .expect(200)
+    expect(res.headers['content-type']).toBe('application/javascript; charset=UTF-8')
+    const fileAsString = await fs.promises.readFile('testresources/main.js', 'utf8')
+    expect(res.text).toEqual(fileAsString)
   })
 
 })

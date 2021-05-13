@@ -2,6 +2,7 @@ const router = require('express').Router({ mergeParams: true })
 const pageService = require('../../services/pageService')
 const permit = require('../../middlewares/permitMiddleware')
 const validation = require('../../helpers/bodyFilter')
+const Busboy = require("busboy")
 const pageValidator = validation.validate(validation.pageValidator)
 
 // Get templates (no html/css only other data)
@@ -13,14 +14,16 @@ router.get('/list', permit('page:load'), listPages)
 router.get('/pages', listPublicPages)
 // Get any html, no perms needed
 router.get('/:pageId/html', getHtml)
+router.get('/:pageId/static/:fileName', getStaticFile)
 // GET for screenshot/thumbnail
 router.get('/:pageId/thumbnail', getThumbnail)
 // Loading the GJS data
 router.get('/:pageId', permit('page:load'), loadPage)
 // Uploading html/css (only mongoose validation)
 router.post('/:pageId/upload', permit('page:upload'), uploadPage)
-// Saving the GJS data
-// Even though it's a post (because it's easier with grapesjs in frontend) pageService uses Object.assign so partial updates work
+// Uploading javascript
+router.post('/:pageId/upload-static', permit('page:upload'), uploadStaticFile)
+// Saving the GJS raw data
 router.post('/:pageId', permit('page:save'), pageValidator, savePage)
 // Creating a new page
 router.post('/', permit('page:create'), pageValidator, createPage)
@@ -113,4 +116,27 @@ async function getHtml(req, res, next) {
   } catch (error) {
     next(error)
   }
+}
+
+function uploadStaticFile(req, res, next) {
+  const fileSizeLimit = 1024 * 2 // KB
+  const busboy = new Busboy({ headers: req.headers, limits: { fileSize: (1024 * fileSizeLimit) } })
+  busboy.on('file', (fieldName, file, filename, encoding, mimetype) => {
+    file.on('limit', () => res.status(400).json({ message: `Max file size: ${fileSizeLimit}KB` }))
+    file.on('data', (data) => {
+      const pageId = req.params.pageId
+      pageService.uploadStaticFile(pageId, data, req.query.fileName)
+        .then(() => res.sendStatus(200))
+        .catch(err => next(err))
+    })
+  })
+  return req.pipe(busboy)
+}
+
+async function getStaticFile(req, res, next) {
+  const pageId = req.params.pageId
+  const { fileName } = req.params
+  pageService.getStaticFile(pageId, fileName)
+    .then(file => file ? res.sendFile(file) : res.sendStatus(404))
+    .catch(err => next(err))
 }

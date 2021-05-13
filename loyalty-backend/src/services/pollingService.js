@@ -1,4 +1,5 @@
 const axios = require("axios")
+const User = require("../models/user")
 
 const BASE_URL = process.env.POLLING_BASE_URL || 'http://localhost:8080/'
 
@@ -23,8 +24,17 @@ function sendToUser(userId, data, type = '') {
   })
 }
 
+async function refreshOwner({ message }) {
+  const owner = await User.findOne({ role: 'business' })
+  sendToUser(owner.id, {
+    message: message,
+    refresh: true,
+    duration: 1000
+  }, POLLING_IDENTIFIERS.OTHER)
+}
 
 module.exports = {
   sendToUser,
+  refreshOwner,
   IDENTIFIERS: POLLING_IDENTIFIERS
 }

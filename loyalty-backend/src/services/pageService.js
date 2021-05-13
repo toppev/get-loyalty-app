@@ -4,7 +4,6 @@ const juice = require('juice')
 const pageScreenshot = require('./pageScreenshot')
 const fs = require('fs')
 const Business = require("../models/business")
-const User = require("../models/user")
 const handlebars = require("handlebars")
 const StatusError = require('../helpers/statusError')
 const customerService = require('./customerService')
@@ -12,6 +11,7 @@ const campaignService = require('./campaignService')
 const productService = require('./productService')
 const scanService = require('./scanService')
 const pollingService = require('./pollingService')
+const { validateHandlebars } = require("../helpers/handlebars")
 
 module.exports = {
   createPage,
@@ -20,9 +20,11 @@ module.exports = {
   getBusinessPages,
   getPublicPage,
   uploadPage,
+  uploadStaticFile,
   getThumbnail,
   getTemplates,
-  renderPageView
+  renderPageView,
+  getStaticFile
 }
 
 async function createPage(pageParam) {
@@ -76,13 +78,17 @@ async function getPublicPage() {
   }).sort('pageIndex').select('_id icon pathname')
 }
 
+/**
+ * Validates placeholders etc. Does css/html inlining or other stuff, queues a thumbnail screenshot.
+ * So not exactly same as #uploadStaticFile.
+ */
 async function uploadPage(pageId, { html, css }) {
-  if(!css) css = ""
+  if (!css) css = ""
   const res = await validateHandlebars(html)
   if (res.error) {
     throw new StatusError(`Invalid placeholders. ${res.error}`, 400)
   }
-  // TODO: link the css instead of inlining for performance benefits
+  // IDEA: link the css instead of inlining for performance benefits
   const tmpl = `${html}<style>${css}</style>`
   const inlineHtml = juice(tmpl)
 
@@ -91,12 +97,7 @@ async function uploadPage(pageId, { html, css }) {
   await uploader.upload(dir, 'main.css', css)
 
   // Refresh the page for the page owner to automatically see changes
-  const owner = await User.findOne({ role: 'business' })
-  pollingService.sendToUser(owner.id, {
-    message: '[Editor]\nChanges detected',
-    refresh: true,
-    duration: 1000
-  }, pollingService.IDENTIFIERS.OTHER)
+  await pollingService.refreshOwner({ message: '[Editor]\nChanges detected' })
 
   const page = await PageData.findById(pageId)
   if (page) {
@@ -108,16 +109,6 @@ async function uploadPage(pageId, { html, css }) {
   } else {
     console.log('Page with invalid ID was uploaded', pageId)
   }
-}
-
-async function validateHandlebars(html) {
-  try {
-    const template = handlebars.compile(html)
-    template({})
-  } catch (err) {
-    return { error: err }
-  }
-  return true
 }
 
 async function createScreenshot(pageId) {
@@ -248,9 +239,30 @@ async function getPageContext(user) {
 async function renderPageView(pageId, user) {
   const pageHtml = await getPageContent(pageId)
   const context = await getPageContext(user)
-  // IDEA: we could precompile when the page is saved, send the precompiled + data to browser
-  // browser can compile with handlebars.runtime library
   const template = handlebars.compile(pageHtml)
   // IDEA: should we cache the compiled html based on the context or user/page
   return template(context)
+}
+
+async function uploadStaticFile(pageId, jsCode, fileName) {
+  validateStaticFileName(fileName)
+  const dir = `page_${pageId}`
+  await uploader.upload(dir, fileName, jsCode)
+  // Refresh the page for the page owner to automatically see changes
+  await pollingService.refreshOwner({ message: '[Editor]\nChanges detected' })
+}
+
+async function getStaticFile(pageId, fileName) {
+  validateStaticFileName(fileName)
+  const dir = `page_${pageId}`
+  const file = uploader.toPath(dir + '/' + fileName)
+  console.log(file)
+  return file
+}
+
+function validateStaticFileName(fileName) {
+  // Just to be sure it's safe for now
+  if (!['main.js', 'index.html', 'main.css'].includes(fileName)) {
+    throw new StatusError(`Unsupported static file: ${fileName}`, 403)
+  }
 }
