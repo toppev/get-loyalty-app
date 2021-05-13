@@ -14,13 +14,10 @@ import {
   IconButton,
   LinearProgress,
   makeStyles,
-  Paper,
   TextField,
   Theme,
   Tooltip,
-  Typography,
-  useMediaQuery,
-  useTheme
+  Typography
 } from '@material-ui/core'
 import EditIcon from '@material-ui/icons/Edit'
 import WebIcon from '@material-ui/icons/Web'
@@ -29,20 +26,18 @@ import { backendURL, post } from '../../config/axios'
 import CloseButton from '../common/button/CloseButton'
 import IdText from '../common/IdText'
 import RetryButton from '../common/button/RetryButton'
-import { Page, PUBLISHED } from './Page'
-import PageEditor from './editor/PageEditor'
+import { Page } from './Page'
+import PageEditor from './grapes/PageEditor'
 import useRequest from "../../hooks/useRequest"
 import useResponseState from "../../hooks/useResponseState"
 import { createPage, deletePage, listPages, listTemplates, updatePage } from "../../services/pageService"
-import StageSelector from "./StageSelector"
 import PreviewPage from "./PreviewPage"
-import IconSelector from "./editor/IconSelector"
 import URLSelectorDialog from "./URLSelectorDialog"
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft'
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight'
-import PageIcon from "./PageIcon"
+import PageSettings from './PageSettings'
 
-const useStyles = makeStyles((theme: Theme) =>
+export const usePageStyles = makeStyles((theme: Theme) =>
   createStyles({
     cardsDiv: {},
     card: {
@@ -82,7 +77,7 @@ const useStyles = makeStyles((theme: Theme) =>
     published: {
       color: "#26a829",
     },
-    settingDiv: {
+    settingsCardDiv: {
       textAlign: 'center',
       paddingTop: '20px',
       position: 'relative',
@@ -146,9 +141,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function () {
 
-  const classes = useStyles()
-  const theme = useTheme()
-  const bigScreen = useMediaQuery(theme.breakpoints.up('md'))
+  const classes = usePageStyles()
 
   const [pageOpen, setPageOpen] = useState<Page | null>(null)
   const [templateSelectorOpen, setTemplateSelectorOpen] = useState(false)
@@ -315,96 +308,13 @@ export default function () {
       {pageOpen &&
       <div>
         <Divider className={classes.divider}/>
-        <Box display="flex" flexDirection={bigScreen ? "row" : "column"}>
-          <Paper className={classes.card}>
-            <div className={classes.settingDiv}>
-              <div>
-                <StageSelector
-                  stage={pageOpen.stage}
-                  onChange={(value) => {
-                    if (value !== PUBLISHED || window.confirm(`Confirm publishing "${pageOpen.name}". Anyone can see this page.`)) {
-                      otherRequests.performRequest(
-                        () => {
-                          pageOpen.stage = value
-                          return updatePage(pageOpen, false)
-                        }
-                      )
-                      return true
-                    }
-                    return false
-                  }}/>
-              </div>
-              <p className={classes.info}>Published sites are visible to anyone vising the site</p>
-            </div>
-          </Paper>
-          <Paper className={classes.card}>
-            <div className={`${classes.settingDiv} ${classes.center}`}>
-              <Typography className={classes.iconTitle} variant="h6">Icon</Typography>
-              <PageIcon icon={pageOpen.icon}/>
-              <IconSelector
-                initialIcon={pageOpen.icon || pageOpen.pathname}
-                onSubmit={(icon) => {
-                  otherRequests.performRequest(
-                    () => {
-                      pageOpen.icon = icon
-                      return updatePage(pageOpen, false)
-                    }
-                  )
-                }}/>
-              <p className={classes.info}>Icons are used in the site navigation bar</p>
-            </div>
-          </Paper>
-          <Paper className={classes.card}>
-            <div className={`${classes.settingDiv} ${classes.center}`}>
-              <Typography className={classes.iconTitle} variant="h6">Pathname</Typography>
-              <PathnameField
-                value={pageOpen.pathname}
-                onSubmit={(pathname) => {
-                  otherRequests.performRequest(
-                    () => {
-                      pageOpen.pathname = pathname
-                      return updatePage(pageOpen, false)
-                    }
-                  )
-                }}
-              />
-            </div>
-          </Paper>
-        </Box>
+        <PageSettings pageOpen={pageOpen} requests={otherRequests}/>
         <PageEditor page={pageOpen}/>
       </div>}
 
     </div>
   )
 }
-
-interface PathnameFieldProps {
-  onSubmit: (pathname: string) => any
-  value: string
-}
-
-function PathnameField({ onSubmit, value }: PathnameFieldProps) {
-
-  if (!value.startsWith('/')) {
-    value = `/${value}`
-  }
-
-  const classes = useStyles()
-
-  return (
-    <div className={classes.pathnameDiv}>
-      <TextField
-        className={classes.pathnameField}
-        name="pathname"
-        label="URL pathname of this page"
-        placeholder="e.g /home or /rewards"
-        value={value}
-        onChange={(e) => onSubmit(e.target.value)}
-      />
-    </div>
-  )
-}
-
 
 interface PageCardProps extends CardProps {
   page: Page
@@ -419,7 +329,7 @@ function PageCard(props: PageCardProps) {
 
   const { editableName, page, actions, displayId = true, displayStage = true, image, ...otherProps } = props
 
-  const classes = useStyles()
+  const classes = usePageStyles()
 
   const [editing, setEditing] = useState(false)
 
@@ -508,7 +418,7 @@ interface TemplateSelectorDialogProps {
 
 function TemplateSelectorDialog({ open, onClose, onSelect }: TemplateSelectorDialogProps) {
 
-  const classes = useStyles()
+  const classes = usePageStyles()
 
   const [previewPage, setPreviewPage] = useState<Page | undefined>()
 
@@ -576,7 +486,7 @@ function TemplateSelectorDialog({ open, onClose, onSelect }: TemplateSelectorDia
 
 function SelectTemplateButton(props: ButtonProps) {
 
-  const classes = useStyles()
+  const classes = usePageStyles()
 
   return (
     <Button

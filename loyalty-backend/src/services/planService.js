@@ -32,7 +32,7 @@ async function updateUserPlan() {
       await businessService.update(business)
     }
   } catch (err) {
-    console.log("Updating user plan failed", err)
+    console.log("Updating user plan failed: " + err)
   }
 }
 

@@ -12,6 +12,14 @@ type RequestWithCallback = {
   onError?: OnError
 }
 
+export interface RequestHandler {
+  loading: boolean|undefined
+  error: any,
+  response: any,
+  execute: any,
+  performRequest: (request: Request, callback?: Callback | undefined, onError?: OnError | undefined) => void
+}
+
 /**
  * Hook to easily perform axios request with possibility to retry on error
  *
@@ -37,7 +45,7 @@ export default function useRequest(
     onError?: OnError
   },
   initialCallback?: Callback,
-) {
+): RequestHandler {
 
   // Options to use
   const opts = {

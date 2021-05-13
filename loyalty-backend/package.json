@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest --forceExit --runInBand",
     "start": "node app.js",
-    "dev": "nodemon app.js"
+    "dev": "nodemon --ignore ./uploads/ app.js"
   },
   "author": "",
   "license": "ISC",
