@@ -1,6 +1,6 @@
 const businessService = require('./businessService')
-const request = require("request")
 const _ = require('lodash')
+const axios = require("axios")
 
 const SERVER_KEY = process.env.SERVER_KEY || 'testing'
 if (SERVER_KEY === 'testing') console.log(`Using test SERVER_KEY: ${SERVER_KEY}`)
@@ -37,14 +37,10 @@ async function updateUserPlan() {
 }
 
 async function getUserPlan(email) {
-  return new Promise((resolve, reject) => {
-    request.get(USER_PLAN_API, { email: email }, (err, _res, body) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(JSON.parse(body))
-      }
-    })
+  return axios({
+    method: "get",
+    url: USER_PLAN_API,
+    body: { email: email }
   })
 }
 
