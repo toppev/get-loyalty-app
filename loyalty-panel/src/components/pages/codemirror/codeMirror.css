@@ -1,3 +1,7 @@
 .CodeMirror-wrap {
   min-height: 800px;
 }
+
+.CodeMirror-hints {
+  z-index: 1500 !important;
+}

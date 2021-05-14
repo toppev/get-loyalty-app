@@ -4,9 +4,10 @@ import { Page, PUBLISHED } from "./Page"
 import { getPageScript, updatePage, uploadPageStaticFile } from "../../services/pageService"
 import PageIcon from "./PageIcon"
 import IconSelector from "./grapes/IconSelector"
-import React, { useState, Suspense } from "react"
+import React, { Suspense, useState } from "react"
 import { usePageStyles } from "./PagesPage"
 import { RequestHandler } from "../../hooks/useRequest"
+import EditIcon from "@material-ui/icons/Edit"
 
 const CodeMirror = React.lazy(() => import("./codemirror/CodeMirror"))
 
@@ -93,6 +94,7 @@ export default function ({ pageOpen, requests }: PageSettingsProps) {
               variant="outlined"
               color="secondary"
               size="small"
+              endIcon={<EditIcon/>}
               style={{
                 fontSize: '16px',
                 padding: '0px 20px',
@@ -116,11 +118,11 @@ export default function ({ pageOpen, requests }: PageSettingsProps) {
           <CodeMirror
             open
             initialValue={codeMirrorContent}
-            onChange={(_editor, _data, content) => Math.random() > 0.9 && uploadScript(content)}
-            onClose={(content) => {
-              setCodeMirrorContent(undefined)
-              uploadScript(content)
+            onChange={(_editor, _data, content) => {
+              Math.random() > 0.9 && uploadScript(content)
             }}
+            onSave={(content) => uploadScript(content)}
+            onClose={() => setCodeMirrorContent(undefined)}
           />
         </Suspense>}
       </Paper>

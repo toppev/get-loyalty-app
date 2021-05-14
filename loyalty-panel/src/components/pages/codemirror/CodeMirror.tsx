@@ -1,7 +1,7 @@
 import { Controlled as CodeMirror } from 'react-codemirror2'
 
 import React, { useState } from "react"
-import { Dialog, DialogContent, makeStyles } from "@material-ui/core"
+import { Button, Dialog, DialogContent, makeStyles } from "@material-ui/core"
 import CloseButton from "../../common/button/CloseButton"
 import "codemirror/lib/codemirror.css"
 import "codemirror/theme/material.css"
@@ -23,28 +23,49 @@ import { createStyles, Theme } from "@material-ui/core/styles"
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     dialogContent: {
-      padding: '35px',
+      padding: '15px',
       minHeight: '600px'
     }
   }))
 
 interface CodeMirrorProps {
   open: boolean
-  onClose: (content: string) => any
+  onClose: () => any
+  onSave: (content: string) => any
   initialValue: string
   onChange: (editor: any, data: any, value: string) => any
 }
 
-export default function ({ open, onClose, initialValue, onChange }: CodeMirrorProps) {
+export default function ({ open, onClose, initialValue, onChange, onSave }: CodeMirrorProps) {
 
   const classes = useStyles()
 
   const [content, setContent] = useState(initialValue)
+  const [lastSavedContent, setLastSavedContent] = useState(initialValue)
+
+  const isSaved = () => content === lastSavedContent
+
+  window.onbeforeunload = !isSaved() ? () => true : null
 
   return (
     <Dialog open={open} fullWidth maxWidth="lg">
-      <CloseButton onClick={() => onClose(content)}/>
+      <CloseButton onClick={() => {
+        if (isSaved() || window.confirm('Close without saving?')) {
+          onClose()
+        }
+      }}/>
       <DialogContent className={classes.dialogContent}>
+        <Button
+          disabled={isSaved()}
+          size="small"
+          variant="contained"
+          color="primary"
+          style={{ marginBottom: '10px' }}
+          onClick={() => {
+            setLastSavedContent(content)
+            onSave(content)
+          }}
+        >Save</Button>
         <CodeMirror
           value={content}
           options={{

@@ -1,6 +1,7 @@
 import {
   Box,
-  Button, ButtonProps,
+  Button,
+  ButtonProps,
   Card,
   CardActions,
   CardContent,
@@ -382,8 +383,10 @@ function PageCard(props: PageCardProps) {
                   }
                 >
                   <div>
-                    <IconButton className={classes.editPageNameBtn}
-                                onClick={() => editing ? submitNameChange() : setEditing(true)}>
+                    <IconButton
+                      className={classes.editPageNameBtn}
+                      onClick={() => editing ? submitNameChange() : setEditing(true)}
+                    >
                       <EditIcon/>
                     </IconButton>
                   </div>
