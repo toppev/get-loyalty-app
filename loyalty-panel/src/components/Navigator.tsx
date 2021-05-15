@@ -30,6 +30,7 @@ const drawerWidth = 240
 export const DOMAIN_HOME_PAGE = "GetLoyalty.App"
 export const privacyLink = `https://${DOMAIN_HOME_PAGE}/privacy`
 export const termsLink = `https://${DOMAIN_HOME_PAGE}/terms`
+export const sourceLink = `https://github.com/toppev/easy-loyalty-app/`
 
 
 const categories = [
@@ -70,6 +71,10 @@ const otherLinks = [
     id: 'Terms of Service',
     to: termsLink
   },
+  {
+    id: 'Source Code',
+    to: sourceLink
+  }
 ]
 
 const useStyles = makeStyles((theme: Theme) =>
