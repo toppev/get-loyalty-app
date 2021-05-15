@@ -2,21 +2,29 @@
 
 Loyalty app setup with (progressive web) app, backend, management panel and a scanner app.
 
-The solution for building versatile loyalty apps easier with a WYSIWYG editor ([grapesjs](https://grapesjs.com/)).
+The solution for building versatile loyalty apps easier with a WYSIWYG editor.
 
 This documentation will be updated later. Also, the entire project is still under development.
 
+### [Screenshots](screenshots.md)
+The screenshots are from the development version and will be updated later.
+
 ## Features
 
-- Customizable pages ([grapesjs](https://grapesjs.com/) editor or raw HTML/CSS)
-- Customizable [app](../loyalty-app) and app settings
-- Versatile campaigns: stamps, birthday and custom campaigns and [more](../loyalty-campaigns)
+- Customizable pages
+    - [grapesjs](https://grapesjs.com/) WYSIWYG editor
+    - or HTML/CSS and JavaScript
+- Customizable [app](../../loyalty-app) and app settings
+- Versatile campaigns
+    - stamps, birthday and custom campaigns
+    - more [here](../../loyalty-campaigns)
+- Customer points and customer levels
 - Customer rewards
-- Customer levels with rewards
 - QR codes in the app to identify the customer and reward
-- QR code reader app ([scanner-app](../scanner-app))
+    - QR code reader app ([scanner-app](../scanner-app))
 - Progressive web app (e.g add to home screen)
 - Push notifications
+- Charts and API (soon...)
 
 ...and more
 
@@ -35,9 +43,12 @@ The control/management panel where you create the campaigns, pages etc.
 
 Default development port: [3002](http://localhost:3002)
 
-![Scanner App](./assets/overview-page.png)
+### Technologies
 
-![Scanner App](./assets/editing-campaign.jpg)
+- ReactJS
+- NPM
+- [Material-UI](https://material-ui.com/)
+- [grapesjs](https://grapesjs.com/)
 
 ## loyalty-app
 
@@ -45,19 +56,25 @@ The web app (PWA) the users/customers will use. You can see the pages, on going 
 
 Default development port: [3000](http://localhost:3000)
 
-![Scanner App](./assets/editing-pages.png)
-
-![Scanner App](./assets/example-pages-phone.jpg)* The screenshots are from the beta version. The pages are already a lot better and you can
-easily edit them.
+### Technologies
+- ReactJS
+- [yarn](https://yarnpkg.com/)
+- [Tailwind CSS](https://tailwindcss.com/)
 
 ## scanner-app
 
 A simple app to scan customer QR codes and confirm purchases and rewards.
 
-![Scanner App](./assets/scanner-feature.jpg)
+### Technologies
+- [Flutter](https://flutter.dev/)
 
 ## loyalty-backend
 
 The backend of the loyalty app (one per app). Uses MongoDB as the database for users, campaigns, pages etc.
+
+### Technologies
+- Node.js + NPM
+- [Express](https://expressjs.com/)
+- [MongDB](https://www.mongodb.com/) + mongoose
 
 Default development port: [3001](http://localhost:3001)
