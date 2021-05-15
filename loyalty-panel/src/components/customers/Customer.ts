@@ -9,6 +9,7 @@ export default class Customer {
   hasPassword?: boolean
   authentication?: CustomerAuthentication
   customerData!: CustomerData
+  createdAt: Date;
 
   constructor(data: any) {
     this.id = data.id
@@ -16,6 +17,7 @@ export default class Customer {
     this.role = data.role
     this.birthday = data.birthday ? new Date(data.birthday) : undefined
     this.lastVisit = data.lastVisit ? new Date(data.lastVisit) : undefined
+    this.createdAt = new Date(data.createdAt)
     this.hasPassword = data.hasPassword
     this.authentication = data.authentication
     this.customerData = data.customerData
