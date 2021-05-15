@@ -1,6 +1,8 @@
 import { DEMO_URL, get, multipartPost, post } from "../config/axios"
 import { Page } from "../components/pages/Page"
 
+const DEFAULT_MAIN_JS_URL = '/templates/main.js'
+
 function listPages() {
   const subUrl = `/page`
   return get(subUrl + "/list")
@@ -56,7 +58,7 @@ async function getPageScript(pageId: any): Promise<string> {
           reject(err)
         } else {
           // return the template if non exists yet
-          fetch('/templates/main.js')
+          fetch(DEFAULT_MAIN_JS_URL)
             .then(it => resolve(it.text()))
             .catch(e => reject(e))
         }
@@ -73,5 +75,6 @@ export {
   uploadHtmlCss,
   getPageStaticFile,
   uploadPageStaticFile,
-  getPageScript
+  getPageScript,
+  DEFAULT_MAIN_JS_URL
 }

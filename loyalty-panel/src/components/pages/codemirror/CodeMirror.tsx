@@ -1,7 +1,7 @@
 import { Controlled as CodeMirror } from 'react-codemirror2'
 
 import React, { useState } from "react"
-import { Button, Dialog, DialogContent, makeStyles } from "@material-ui/core"
+import { Button, Dialog, DialogContent, Link, makeStyles } from "@material-ui/core"
 import CloseButton from "../../common/button/CloseButton"
 import "codemirror/lib/codemirror.css"
 import "codemirror/theme/material.css"
@@ -24,19 +24,27 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     dialogContent: {
       padding: '15px',
-      minHeight: '600px'
+      minHeight: '600px',
+    },
+    dialogTools: {
+      textAlign: 'end',
+      margin: '0 25px'
+    },
+    toolItem: {
+      margin: '0 15px 10px 0',
     }
   }))
 
 interface CodeMirrorProps {
+  initialValue: string
+  defaultValueURL?: string
   open: boolean
   onClose: () => any
-  onSave: (content: string) => any
-  initialValue: string
   onChange: (editor: any, data: any, value: string) => any
+  saveContent: (content: string) => Promise<boolean>
 }
 
-export default function ({ open, onClose, initialValue, onChange, onSave }: CodeMirrorProps) {
+export default function ({ open, onClose, initialValue, onChange, saveContent, defaultValueURL }: CodeMirrorProps) {
 
   const classes = useStyles()
 
@@ -44,6 +52,8 @@ export default function ({ open, onClose, initialValue, onChange, onSave }: Code
   const [lastSavedContent, setLastSavedContent] = useState(initialValue)
 
   const isSaved = () => content === lastSavedContent
+
+  const [saveButton, setSaveButton] = useState("Save")
 
   window.onbeforeunload = !isSaved() ? () => true : null
 
@@ -55,17 +65,30 @@ export default function ({ open, onClose, initialValue, onChange, onSave }: Code
         }
       }}/>
       <DialogContent className={classes.dialogContent}>
-        <Button
-          disabled={isSaved()}
-          size="small"
-          variant="contained"
-          color="primary"
-          style={{ marginBottom: '10px' }}
-          onClick={() => {
-            setLastSavedContent(content)
-            onSave(content)
-          }}
-        >Save</Button>
+        <div className={classes.dialogTools}>
+          {defaultValueURL &&
+          <Link className={classes.toolItem} target="_blank" rel="noopener" href={defaultValueURL}>View default value</Link>}
+          <Button
+            disabled={isSaved()}
+            size="small"
+            variant="contained"
+            color="primary"
+            className={classes.toolItem}
+            onClick={() => {
+              setSaveButton("Saving...")
+              setLastSavedContent(content)
+              saveContent(content).then(it => {
+                if (it) {
+                  setSaveButton("Save")
+                } else {
+                  setSaveButton("Save failed!")
+                  // Fake a change
+                  setLastSavedContent("")
+                }
+              })
+            }}
+          >{saveButton}</Button>
+        </div>
         <CodeMirror
           value={content}
           options={{

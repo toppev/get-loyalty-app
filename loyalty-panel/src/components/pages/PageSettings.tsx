@@ -1,7 +1,7 @@
 import { Box, Button, Paper, TextField, Typography, useMediaQuery, useTheme } from "@material-ui/core"
 import StageSelector from "./StageSelector"
 import { Page, PUBLISHED } from "./Page"
-import { getPageScript, updatePage, uploadPageStaticFile } from "../../services/pageService"
+import { DEFAULT_MAIN_JS_URL, getPageScript, updatePage, uploadPageStaticFile } from "../../services/pageService"
 import PageIcon from "./PageIcon"
 import IconSelector from "./grapes/IconSelector"
 import React, { Suspense, useState } from "react"
@@ -26,8 +26,7 @@ export default function ({ pageOpen, requests }: PageSettingsProps) {
   const [codeMirrorContent, setCodeMirrorContent] = useState<string | undefined>()
 
   const uploadScript = (content: string) => {
-    uploadPageStaticFile(pageOpen._id, 'main.js', new Blob([content], { type: 'text/plain' }))
-      .then(() => console.log('Uploaded the script!'))
+    return uploadPageStaticFile(pageOpen._id, 'main.js', new Blob([content], { type: 'text/plain' }))
   }
 
   return (
@@ -118,10 +117,11 @@ export default function ({ pageOpen, requests }: PageSettingsProps) {
           <CodeMirror
             open
             initialValue={codeMirrorContent}
+            defaultValueURL={DEFAULT_MAIN_JS_URL}
             onChange={(_editor, _data, content) => {
               Math.random() > 0.9 && uploadScript(content)
             }}
-            onSave={(content) => uploadScript(content)}
+            saveContent={async (content) => [200, 201].includes((await uploadScript(content)).status)}
             onClose={() => setCodeMirrorContent(undefined)}
           />
         </Suspense>}
