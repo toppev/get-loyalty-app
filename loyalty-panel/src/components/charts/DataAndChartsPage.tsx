@@ -8,6 +8,7 @@ import useResponseState from "../../hooks/useResponseState"
 import { DateChart } from "./DateChart"
 import { UsageLengthChart } from "./UsageLengthChart"
 import ExportData from "./ExportData"
+import { ErrorBoundary } from "../ErrorBoundary"
 
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -103,7 +104,13 @@ export default function () {
         <Typography variant="h1" className={classes.title}>A few cool charts</Typography>
         {loading && <LinearProgress/>}
         <Box display="flex" flexWrap="wrap">
-          {charts.map(it => <Fragment key={it.id}>{it.component}</Fragment>)}
+          {charts.map(it => (
+            <Fragment key={it.id}>
+              <ErrorBoundary>
+                {it.component}
+              </ErrorBoundary>
+            </Fragment>)
+          )}
         </Box>
       </div>
       <Divider className={classes.divider}/>
