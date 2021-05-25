@@ -141,13 +141,8 @@ purchaseSchema.methods.populateProducts = function () {
  * Check whether user can perform the specified operation.
  */
 userSchema.methods.hasPermission = async function (operation, params) {
-  // If superRole is set use it otherwise defaults to 'user'
-  let userRole = this.role || 'user'
-  const result = await role.can(userRole, operation, params)
-    .catch(err => {
-      throw err
-    })
-  return result
+  const userRole = this.role || 'user'
+  return role.hasPermission(userRole, operation, params)
 }
 
 userSchema.pre('save', async function (next) {
@@ -173,7 +168,7 @@ userSchema.methods.isBirthday = function () {
 }
 
 userSchema.methods.toJSON = function () {
-  let obj = this.toObject()
+  const obj = this.toObject()
   delete obj.password
   return obj
 }
@@ -184,4 +179,4 @@ module.exports = User
 
 // Because of circular dependencies
 // FIXME?
-var role = require('./role')
+const role = require('./role')

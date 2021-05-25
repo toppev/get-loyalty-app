@@ -65,6 +65,14 @@ describe('Not logged in user should', () => {
     expect(res.body.email).toEqual(userParams.email)
   })
 
+
+  it('not login: wrong password (local)', async () => {
+    await api
+      .post('/user/login/local')
+      .send({ email: userParams.email, password: 'abc123%' })
+      .expect(401)
+  })
+
 })
 
 describe('Logged in user should', () => {

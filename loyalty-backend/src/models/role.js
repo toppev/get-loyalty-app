@@ -2,10 +2,10 @@
 // * (a wildcard) works
 const roles = {
   admin: {
-    can: { '*': true },
+    perms: { '*': true },
   },
   business: {
-    can: {
+    perms: {
       'business:*': true,
       'campaign:*': true,
       'product:*': true,
@@ -25,7 +25,7 @@ const roles = {
     },
   },
   user: {
-    can: {
+    perms: {
       'campaign:list': true,
       'product:list': true,
       'user:*': _ownUserOnly
@@ -34,34 +34,36 @@ const roles = {
 }
 
 /**
- * Checks whether the params.userId equals params.reqParams.userId
+ * Checks whether the params.userId equals params.reqParams.userId or reqParams.userId does not exist
+ * @param options {{userId, reqParams: {userId}}}
  */
-async function _ownUserOnly(params) {
-  const reqParams = params.reqParams
-  return params.userId && (params.userId === reqParams.userId || !reqParams.userId)
+async function _ownUserOnly(options) {
+  const reqParams = options.reqParams
+  return options.userId && (options.userId === reqParams.userId || !reqParams.userId)
 }
 
-async function can(roleName, operation, params) {
-  if (!this.roles[roleName]) {
+/**
+ *
+ * @param roleName {string}
+ * @param operation {string}
+ * @param options {{userId, reqParams}}
+ * @return {Promise<boolean>}
+ */
+async function hasPermission(roleName, operation, options) {
+  if (!roles[roleName]) {
     return false
   }
-  const role = this.roles[roleName]
-  const permits = role.can
-  if (await _canOperation(permits, '*', params)) {
-    return true
-  }
-  if (await _canOperation(permits, operation, params)) {
+  const role = roles[roleName]
+  const permits = role.perms
+  if (_canOperation(permits, '*', options) || _canOperation(permits, operation, options)) {
     return true
   }
   // e.g product:create and product:remove operations will accept product:*
   const operationWildcard = operation.substring(0, operation.indexOf(':')) + ':*'
-  if (await _canOperation(permits, operationWildcard, params)) {
-    return true
-  }
-  return role.inherits && role.inherits.some(childRole => this.can(childRole, operation, params))
+  return !!_canOperation(permits, operationWildcard, options)
 }
 
-async function _canOperation(permits, operation, params) {
+function _canOperation(permits, operation, params) {
   if (permits[operation] === undefined) {
     return false
   }
@@ -73,5 +75,5 @@ async function _canOperation(permits, operation, params) {
 
 module.exports = {
   roles,
-  can,
+  hasPermission,
 }

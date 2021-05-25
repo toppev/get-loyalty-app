@@ -42,7 +42,7 @@ const businessValidator = (business) => {
 }
 
 const businessRoleValidator = (data) => {
-  if (data.role !== "user" && data.role !== "business") {
+  if (!["user", "business"].includes(data.role)) {
     throw new StatusError(`Forbidden role: "${data.role}"`, 400)
   }
 }

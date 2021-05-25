@@ -41,17 +41,17 @@ async function initParams(paramsObj) {
 describe('admin', () => {
   it('should have permission to test:example ', () => {
     expect.assertions(1)
-    return expect(role.can('admin', 'test:example', params)).resolves.toBeTruthy()
+    return expect(role.hasPermission('admin', 'test:example', params)).resolves.toBeTruthy()
   })
 
   it('should have permission to test:* ', () => {
     expect.assertions(1)
-    return expect(role.can('admin', 'test:*', params)).resolves.toBeTruthy()
+    return expect(role.hasPermission('admin', 'test:*', params)).resolves.toBeTruthy()
   })
 
   it('should have permission to * ', () => {
     expect.assertions(1)
-    return expect(role.can('admin', '*', params)).resolves.toBeTruthy()
+    return expect(role.hasPermission('admin', '*', params)).resolves.toBeTruthy()
   })
 })
 
@@ -59,22 +59,22 @@ describe('admin', () => {
 describe('business', () => {
   it('should have permission to campaign:update', () => {
     expect.assertions(1)
-    return expect(role.can('business', 'campaign:create', params)).resolves.toBeTruthy()
+    return expect(role.hasPermission('business', 'campaign:create', params)).resolves.toBeTruthy()
   })
 
   it('should have permission to product:*', () => {
     expect.assertions(1)
-    return expect(role.can('business', 'product:*', params)).resolves.toBeTruthy()
+    return expect(role.hasPermission('business', 'product:*', params)).resolves.toBeTruthy()
   })
 
   it('should have permission to purchase:create', () => {
     expect.assertions(1)
-    return expect(role.can('business', 'purchase:create', params)).resolves.toBeTruthy()
+    return expect(role.hasPermission('business', 'purchase:create', params)).resolves.toBeTruthy()
   })
 
   it('should not should have permission to *', () => {
     expect.assertions(1)
-    return expect(role.can('business', '*', params)).resolves.toBeFalsy()
+    return expect(role.hasPermission('business', '*', params)).resolves.toBeFalsy()
   })
 
 })
@@ -83,37 +83,37 @@ describe('business', () => {
 describe('user', () => {
   it('should not should have permission to *', () => {
     expect.assertions(1)
-    return expect(role.can('user', '*', params)).resolves.toBeFalsy()
+    return expect(role.hasPermission('user', '*', params)).resolves.toBeFalsy()
   })
 
   it('should not should have permission to campaign:*', () => {
     expect.assertions(1)
-    return expect(role.can('user', 'campaign:*', params)).resolves.toBeFalsy()
+    return expect(role.hasPermission('user', 'campaign:*', params)).resolves.toBeFalsy()
   })
 
   it('should not should have permission to product:*', () => {
     expect.assertions(1)
-    return expect(role.can('user', 'product:*', params)).resolves.toBeFalsy()
+    return expect(role.hasPermission('user', 'product:*', params)).resolves.toBeFalsy()
   })
 
   it('should not should have permission to purchase:*', () => {
     expect.assertions(1)
-    return expect(role.can('user', 'purchase:*', params)).resolves.toBeFalsy()
+    return expect(role.hasPermission('user', 'purchase:*', params)).resolves.toBeFalsy()
   })
 
   it('should have permission to product:list', () => {
     expect.assertions(1)
-    return expect(role.can('user', 'product:list', params)).resolves.toBeTruthy()
+    return expect(role.hasPermission('user', 'product:list', params)).resolves.toBeTruthy()
   })
 
   it('should have permission to campaign:list', () => {
     expect.assertions(1)
-    return expect(role.can('user', 'campaign:list', params)).resolves.toBeTruthy()
+    return expect(role.hasPermission('user', 'campaign:list', params)).resolves.toBeTruthy()
   })
 
   it('should have permission to user:create', () => {
     expect.assertions(1)
-    return expect(role.can('user', 'user:create', params)).resolves.toBeTruthy()
+    return expect(role.hasPermission('user', 'user:create', params)).resolves.toBeTruthy()
   })
 })
 
