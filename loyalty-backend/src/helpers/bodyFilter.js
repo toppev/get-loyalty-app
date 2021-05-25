@@ -10,23 +10,23 @@ const StatusError = require('../helpers/statusError')
  * allowed to modify. In some cases the validator may throw an error. For example, if the property is allowed by
  * it's value is not (e.g a role)
  *
- * @param filter the filter to use
+ * @param filter {function(reqBody: {})}
  * @param bypassPermission bypass permission, by default "validation:bypass"
  */
-function validate(filter, bypassPermission = "validation:bypass") {
-  return (req, res, next) => {
+function validateWith(filter, bypassPermission = "validation:bypass") {
+  return async (req, res, next) => {
     // Check if the user has permission to bypass validation (site admins)
-    Promise.resolve(!req.user ? false : req.user.hasPermission(bypassPermission, {
-      userId: req.user.id,
-      reqParams: req.params
-    })).then(result => {
-      if (result) {
+    try {
+      const bypass = req.user && await req.user.hasPermission(bypassPermission, { userId: req.user.id, reqParams: req.params })
+      if (bypass) {
         next()
       } else {
         filter(req.body)
         next()
       }
-    }).catch(err => next(err))
+    } catch (err) {
+      next(err)
+    }
   }
 }
 
@@ -71,7 +71,7 @@ const pageValidator = (page) => {
 }
 
 module.exports = {
-  validate,
+  validate: validateWith,
   userValidator,
   businessValidator,
   businessRoleValidator,
