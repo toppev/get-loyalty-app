@@ -1,9 +1,9 @@
-// IDEA: maybe later use AWS s3 or something else
+// IDEA: maybe later use AWS s3 or the database for images too or something else
 
 const fs = require('fs')
-const sep = '/' // const { sep } require('path'); doesn't really work as well with express (or something) (even on Windows)
+const separator = '/'
 
-const uploadDir = process.env.UPLOAD_DIR || process.env.PWD.concat(`${sep}uploads`)
+const uploadDir = process.env.UPLOAD_DIR || process.env.PWD.concat(`${separator}uploads`)
 console.log(`Upload dir: ${uploadDir}`)
 
 if (!fs.existsSync(uploadDir)) {
@@ -15,11 +15,11 @@ if (!fs.existsSync(uploadDir)) {
  * e.g /uploads/${fileName}
  */
 function toPath(fileName) {
-  return uploadDir + sep + fileName
+  return uploadDir + separator + fileName
 }
 
 async function upload(dirName, fileName, data) {
-  const path = toPath(dirName + sep + fileName)
+  const path = toPath(dirName + separator + fileName)
   const dir = dirName ? toPath(dirName) : uploadDir
 
   try {
@@ -35,7 +35,7 @@ async function upload(dirName, fileName, data) {
 /* Wrappers - So it's easy to replace with a S3 or whatever */
 
 async function readFile(source, opts) {
-  return await fs.promises.readFile(source, opts)
+  return fs.promises.readFile(source, opts)
 }
 
 async function writeFile(path, data) {

@@ -2,12 +2,13 @@ const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 const User = require('../models/user')
 const userService = require('../services/userService')
+const mongoose = require('mongoose')
+
 
 passport.use(new LocalStrategy({
   usernameField: 'email',
   passwordField: 'password'
-},
-async function (email, password, next) {
+}, async function (email, password, next) {
   email = email.toLowerCase()
   try {
     const user = await User.findOne({ email })
@@ -51,12 +52,15 @@ async function (email, password, next) {
 }
 ))
 
-passport.serializeUser(function (user, done) {
-  done(null, user.id)
+passport.serializeUser(async (user, done) => {
+  const loginId = mongoose.Types.ObjectId()
+  user.authentication.logins.push({ loginId: loginId })
+  await user.save()
+  done(null, { id: user.id, timestamp: Date.now(), loginId: loginId })
 })
 
-passport.deserializeUser(function (id, done) {
-  userService.getById(id)
+passport.deserializeUser((serialized, done) => {
+  userService.getById(serialized.id || serialized)
     .then(u => done(null, u))
     .catch(err => done(err, null))
 })

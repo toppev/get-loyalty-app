@@ -55,10 +55,11 @@ const userSchema = new Schema({
     type: Date
   },
   authentication: {
-    // The service used
+    // The service used, e.g Facebook/Google
     service: {
       type: String,
     },
+    // Service profile
     profile: {
       type: Object,
     },
@@ -67,7 +68,15 @@ const userSchema = new Schema({
     },
     failStreak: {
       type: Number
-    }
+    },
+    // Save JWT loginId so we can deny it in the future if needed
+    logins: [{
+      loginId: String,
+      time: {
+        type: Date,
+        default: Date.now
+      },
+    }]
   },
   referrer: {
     type: mongoose.Types.ObjectId,
