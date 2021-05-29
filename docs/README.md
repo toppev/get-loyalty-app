@@ -1,4 +1,4 @@
-# easy-loyalty-app
+# get-loyalty-app
 
 Loyalty app setup with (progressive web) app, backend, management panel and a scanner app.
 

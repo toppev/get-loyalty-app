@@ -30,7 +30,7 @@ const drawerWidth = 240
 export const DOMAIN_HOME_PAGE = "GetLoyalty.App"
 export const privacyLink = `https://${DOMAIN_HOME_PAGE}/privacy`
 export const termsLink = `https://${DOMAIN_HOME_PAGE}/terms`
-export const sourceLink = `https://github.com/toppev/easy-loyalty-app/`
+export const sourceLink = `https://github.com/toppev/get-loyalty-app/`
 
 
 const categories = [

@@ -14,4 +14,4 @@ echo "Opening the web apps..."
 '
 
 echo "Using dev.docker-compose.yml"
-sudo docker-compose -f dev.docker-compose.yml -p easy-loyalty-app up --build
+sudo docker-compose -f dev.docker-compose.yml -p get-loyalty-app up --build
