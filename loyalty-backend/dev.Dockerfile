@@ -10,7 +10,6 @@ ARG NPM_TOKEN
 # ~/.npmrc is used to authenticate, different from the project level .npmrc
 RUN echo //npm.pkg.github.com/:_authToken=${NPM_TOKEN} > ~/.npmrc
 
-# Don't install devDependencies
 RUN npm install
 RUN rm -f ~/.npmrc
 COPY . .
