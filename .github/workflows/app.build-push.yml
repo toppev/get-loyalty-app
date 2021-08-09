@@ -1,4 +1,4 @@
-name: Backend (CI) build and push
+name: loyalty-app (CI) build and push
 on:
   push:
     branches:
@@ -22,8 +22,6 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
-          context: ./loyalty-backend
+          context: ./loyalty-app
           push: true
-          tags: ${{ secrets.DOCKER_REGISTRY_URL }}/loyalty-backend:develop
-          build-args: |
-            NPM_TOKEN=${{ secrets.READ_ORG_PACKAGES }}
+          tags: ${{ secrets.DOCKER_REGISTRY_URL }}/loyalty-app:develop
