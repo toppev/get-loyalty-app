@@ -27,3 +27,5 @@ jobs:
           context: ./loyalty-backend
           push: true
           tags: ${{ secrets.DOCKER_REGISTRY_URL }}/loyalty-backend:develop
+          build-args: |
+            NPM_TOKEN=${{ secrets.READ_ORG_PACKAGES }}
