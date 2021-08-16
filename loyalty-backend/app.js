@@ -55,7 +55,7 @@ const origins = [
   'https://panel.getloyalty.app',
   'http://localhost:3002',
   'http://localhost:3000' // Just so dev setups can access templates at api.getloyalty.app/...
-]
+].map(it => it.startsWith("http") ? it : `https://${it}`)
 console.log(`Allowed origins (${origins.length}): ${origins}`)
 
 app.use(cors(function (req, callback) {
