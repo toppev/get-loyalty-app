@@ -7,11 +7,16 @@ const vapidPrivateKey = process.env.VAPID_PRIVATE_KEY
 let vapidSubject = process.env.VAPID_CONTACT
 
 if (process.env.NODE_ENV !== 'test') {
-  webpush.setVapidDetails(
-    vapidSubject,
-    vapidPublicKey,
-    vapidPrivateKey
-  )
+  try {
+
+    webpush.setVapidDetails(
+      vapidSubject,
+      vapidPublicKey,
+      vapidPrivateKey
+    )
+  } catch (err) {
+    console.log("Failed to initialize webpush/vapid", err)
+  }
 }
 
 const options = {
