@@ -1,19 +1,19 @@
-import { get } from "../config/axios"
+import client from "../config/axios"
 
 /**
  * Only returns public data of the published pages.
  * Does not contain the HTML
  */
 async function getPages() {
-  return get(`/page/pages`)
+  return client.get(`/page/pages`)
 }
 
 async function getPageHtml(pageId: any) {
-  return get(`/page/${pageId}/html`)
+  return client.get(`/page/${pageId}/html`)
 }
 
 async function getPageStaticFile(pageId: any, fileName: string) {
-  return get(`/page/${pageId}/static/${fileName}`)
+  return client.get(`/page/${pageId}/static/${fileName}`)
 }
 
 export {

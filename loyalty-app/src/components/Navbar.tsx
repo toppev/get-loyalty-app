@@ -20,7 +20,7 @@ export default function Navbar(props: NavbarProps) {
   const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
 
   // Not enabled if only one page
-  if (pages?.length === 0) return null
+  if (pages?.length <= 1) return null
 
   return isTabletOrMobile ? (
     <nav className="mobile-navbar">

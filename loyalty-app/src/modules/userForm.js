@@ -1,4 +1,4 @@
-import { patch } from "../config/axios"
+import client from "../config/axios"
 import { AppContext } from "../AppContext"
 import { useContext } from "react"
 
@@ -51,7 +51,7 @@ function submitChanges() {
   const submitBtn = getSubmitBtn()
   submitBtn.disabled = true
 
-  patch('/user', {
+  client.patch('/user', {
     email: getEmailField().value,
     birthday: new Date(getBirthdayField().value),
     acceptAll: true,

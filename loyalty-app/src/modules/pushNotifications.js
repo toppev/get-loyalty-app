@@ -1,4 +1,4 @@
-import { post } from "../config/axios"
+import client from "../config/axios"
 import { someParentHasClassname } from "../util/classUtils"
 
 export {
@@ -115,7 +115,7 @@ function getPushManager() {
 }
 
 function sendSubscription(subscription) {
-  return post(`/notifications/subscribe`, subscription)
+  return client.post(`/notifications/subscribe`, subscription)
 }
 
 // Edited from https://github.com/GoogleChromeLabs/web-push-codelab/issues/46#issuecomment-429273981
