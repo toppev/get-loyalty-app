@@ -37,11 +37,12 @@ async function updateUserPlan() {
 }
 
 async function getUserPlan(email) {
-  return axios({
+  const res = await axios({
     method: "get",
     url: USER_PLAN_API,
     body: { email: email }
   })
+  return res.data
 }
 
 /**
