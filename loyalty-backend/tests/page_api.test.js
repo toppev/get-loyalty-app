@@ -159,7 +159,7 @@ describe('Logged in user with permissions can', () => {
     const res = await api
       .get(`/page/${testPageData.id}/static/main.js`)
       .expect(200)
-    expect(res.headers['content-type']).toBe('application/javascript; charset=UTF-8')
+    expect(res.headers['content-type']).toBe('application/javascript; charset=utf-8')
     const fileAsString = await fs.promises.readFile('testresources/main.js', 'utf8')
     expect(res.text).toEqual(fileAsString)
   })
@@ -168,5 +168,4 @@ describe('Logged in user with permissions can', () => {
 
 afterAll(() => {
   closeDatabase()
-  deleteUploadsDirectory()
 })

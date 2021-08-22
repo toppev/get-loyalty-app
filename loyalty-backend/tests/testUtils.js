@@ -3,7 +3,6 @@ const mongoose = require('mongoose')
 module.exports = {
   initDatabase,
   closeDatabase,
-  deleteUploadsDirectory
 }
 
 async function initDatabase(identifier) {
@@ -20,21 +19,4 @@ async function initDatabase(identifier) {
 
 function closeDatabase() {
   mongoose.connection.close()
-}
-
-function deleteUploadsDirectory(dir) {
-  const uploadDir = dir || require('../src/helpers/uploader').uploadDir
-
-  const fs = require('fs')
-  const files = fs.readdirSync(uploadDir)
-  files.forEach(file => {
-    const curPath = uploadDir + '/' + file
-    if (fs.lstatSync(curPath).isDirectory()) {
-      deleteUploadsDirectory(curPath)
-    } else {
-      fs.unlinkSync(curPath)
-    }
-  })
-
-  dir && fs.rmdirSync(dir)
 }

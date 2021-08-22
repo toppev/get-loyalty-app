@@ -137,6 +137,12 @@ async function getStaticFile(req, res, next) {
   const pageId = req.params.pageId
   const { fileName } = req.params
   pageService.getStaticFile(pageId, fileName)
-    .then(file => file ? res.sendFile(file) : res.sendStatus(404))
+    .then(file => {
+      if (!file) res.sendStatus(404)
+      else {
+        res.contentType(file.contentType)
+        res.send(file.data)
+      }
+    })
     .catch(err => next(err))
 }

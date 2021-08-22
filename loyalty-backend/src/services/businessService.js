@@ -1,6 +1,6 @@
 const Business = require('../models/business')
 const User = require('../models/user')
-const uploader = require('../helpers/uploader')
+const fileService = require('../services/fileService')
 const fs = require('fs')
 const StatusError = require('../helpers/statusError')
 const templateService = require('./templateService')
@@ -114,20 +114,22 @@ async function getPublicInformation() {
 }
 
 async function getIcon(size) {
-  let file
-  if (size) {
-    file = uploader.toPath(`icons/icon-${size}.png`)
-    if (fs.existsSync(file)) return file
-    file = uploader.toPath(`icons/icon.png`)
-  } else {
-    file = uploader.toPath(`icons/favicon.ico`)
+  const fileNames =
+    size ? [`icons/icon-${size}.png`, `icons/icon.png`, `icons/favicon.ico`] : [`icons/favicon.ico`]
+  for (let fileName of fileNames) {
+    const upload = await fileService.getUpload(fileName)
+    if (upload?.data) {
+      return upload
+    }
   }
-  return fs.existsSync(file) ? file : undefined
 }
 
 async function uploadIcon(icon) {
-  const path = await uploader.upload('icons', 'icon.png', icon)
-  await iconService.resizeToPNG(icon, [180, 192, 512], uploader.toPath('icons'), 'icon')
-  await iconService.generateFavicon(uploader.toPath('icons/icon-192.png'), uploader.toPath('icons/favicon.ico'))
+  const path = await fileService.upload('icons/icon.png', icon)
+  await iconService.resizeToPNG(icon, [180, 192, 512], 'icons', 'icon')
+  await iconService.generateFavicon(
+    (await fileService.getUpload('icons/icon-192.png')).data,
+    'icons/favicon.ico'
+  )
   return { path }
 }

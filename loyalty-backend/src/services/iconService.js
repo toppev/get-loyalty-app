@@ -1,7 +1,6 @@
-const fs = require('fs')
 const sharp = require('sharp')
 const toIco = require('to-ico')
-const uploader = require('../helpers/uploader')
+const fileService = require('../services/fileService')
 
 /**
  *
@@ -11,21 +10,22 @@ const uploader = require('../helpers/uploader')
  * @param name
  */
 async function resizeToPNG(input, sizes, outputDir, name) {
-  const tasks = sizes.map(size => sharp(input).resize(size, size).toFile(`${outputDir}/${name}-${size}.png`))
+  const tasks = sizes
+    .map(size => sharp(input).resize(size, size)
+      .toBuffer()
+      .then(it => fileService.upload(`${outputDir}/${name}-${size}.png`, it)))
   return Promise.all(tasks)
 }
 
 /**
  * Generate a favicon.ico file from the PNG image source (URI). Saves it in the output
  */
-async function generateFavicon(source, output) {
-  const image = await uploader.readFile(source)
-
-  const result = await toIco([image], {
+async function generateFavicon(buffer, output) {
+  const result = await toIco([buffer], {
     sizes: [16, 24, 32, 48, 64],
     resize: true
   })
-  await uploader.writeFile(output, result)
+  await fileService.upload(output, result)
 }
 
 module.exports = {

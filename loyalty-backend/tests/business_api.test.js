@@ -6,7 +6,7 @@ const Category = require('../src/models/category')
 const Product = require('../src/models/product')
 const app = require('../app')
 const api = require('supertest')(app)
-const { initDatabase, closeDatabase, deleteUploadsDirectory } = require('./testUtils')
+const { initDatabase, closeDatabase } = require('./testUtils')
 
 const userParams = { email: "example@email.com", password: "password123" }
 let userId
@@ -148,7 +148,7 @@ describe('Logged in user can', () => {
       .get(`/business/icon`)
       .expect(200)
 
-    expect(res.headers['content-type']).toBe('image/x-icon')
+    expect(res.headers['content-type']).toBe('image/vnd.microsoft.icon')
 
     const buf = await fs.promises.readFile('testresources/converted-favicon.ico')
     expect(res.body).toEqual(buf)
@@ -171,5 +171,4 @@ describe('Logged in user can', () => {
 
 afterAll(() => {
   closeDatabase()
-  deleteUploadsDirectory()
 })

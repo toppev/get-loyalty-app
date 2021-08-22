@@ -1,6 +1,6 @@
 const request = require('request')
 const pageService = require('./pageService')
-const uploader = require('../helpers/uploader')
+const fileService = require('../services/fileService')
 
 const PAGE_API_URL = 'https://demo.getloyalty.app/api/page'
 
@@ -19,7 +19,7 @@ async function loadDefaultTemplates() {
         const page = await pageService.createPage(template)
         // FIXME: dont use html of the demo (wrong placeholders)
         const inlineHtml = await getTemplateSource(page.id)
-        await uploader.upload(`page_${page.id}`, `index.html`, inlineHtml)
+        await fileService.upload(`page_${page.id}/index.html`, inlineHtml)
         console.log(`Template ${template.id} loaded`)
       }
     }))

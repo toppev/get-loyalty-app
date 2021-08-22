@@ -1,8 +1,7 @@
 const PageData = require('../models/page')
-const uploader = require('../helpers/uploader')
+const fileService = require('./fileService')
 const juice = require('juice')
 const pageScreenshot = require('./pageScreenshot')
-const fs = require('fs')
 const Business = require("../models/business")
 const handlebars = require("handlebars")
 const StatusError = require('../helpers/statusError')
@@ -93,8 +92,8 @@ async function uploadPage(pageId, { html, css }) {
   const inlineHtml = juice(tmpl)
 
   const dir = `page_${pageId}`
-  await uploader.upload(dir, 'index.html', inlineHtml)
-  await uploader.upload(dir, 'main.css', css)
+  await fileService.upload(dir + '/index.html', inlineHtml)
+  await fileService.upload(dir + '/main.css', css)
 
   // Refresh the page for the page owner to automatically see changes
   await pollingService.refreshOwner({ message: '[Editor]\nChanges detected' })
@@ -113,15 +112,15 @@ async function uploadPage(pageId, { html, css }) {
 
 async function createScreenshot(pageId) {
   const pagePath = `/page/${pageId}/html`
-  const path = uploader.toPath(`page_${pageId}/screenshot.jpg`)
+  const fileName = `page_${pageId}/screenshot.jpg`
   try {
-    await pageScreenshot.takeScreenshot(pagePath, path)
+    await pageScreenshot.takeScreenshot(pagePath, fileName)
   } catch (err) {
     if (err) {
       console.log('Failed to create a screenshot', err.message || err)
     }
   }
-  return path
+  return fileName
 }
 
 /**
@@ -129,8 +128,8 @@ async function createScreenshot(pageId) {
  * @param {any} pageId the id of the page
  */
 async function getThumbnail(pageId) {
-  const file = uploader.toPath(`page_${pageId}/screenshot.jpg`)
-  if (fs.existsSync(file)) {
+  const file = fileService.getUpload(`page_${pageId}/screenshot.jpg`)
+  if (file?.data) {
     return file
   }
   const page = await PageData.findById(pageId)
@@ -145,8 +144,8 @@ async function getTemplates() {
 }
 
 async function getPageContent(pageId) {
-  const path = uploader.toPath(`page_${pageId}/index.html`)
-  return await uploader.readFile(path, 'utf8')
+  const upload = await fileService.getUpload(`page_${pageId}/index.html`)
+  return upload.data?.toString() || ""
 }
 
 async function getPageContext(user) {
@@ -246,8 +245,8 @@ async function renderPageView(pageId, user) {
 
 async function uploadStaticFile(pageId, jsCode, fileName) {
   validateStaticFileName(fileName)
-  const dir = `page_${pageId}`
-  await uploader.upload(dir, fileName, jsCode)
+  const dir = `page_${pageId}/`
+  await fileService.upload(dir + fileName, jsCode)
   // Refresh the page for the page owner to automatically see changes
   await pollingService.refreshOwner({ message: '[Editor]\nChanges detected' })
 }
@@ -255,9 +254,8 @@ async function uploadStaticFile(pageId, jsCode, fileName) {
 async function getStaticFile(pageId, fileName) {
   validateStaticFileName(fileName)
   const dir = `page_${pageId}`
-  const file = uploader.toPath(dir + '/' + fileName)
-  console.log(file)
-  return file
+  const upload = await fileService.getUpload(dir + '/' + fileName)
+  return upload
 }
 
 function validateStaticFileName(fileName) {

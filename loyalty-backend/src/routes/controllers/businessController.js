@@ -57,7 +57,13 @@ function getPublicInformation(req, res, next) {
 
 function getIcon(req, res, next) {
   businessService.getIcon(req.query.size)
-    .then(file => file ? res.sendFile(file) : res.sendStatus(404))
+    .then(file => {
+      if (!file) res.sendStatus(404)
+      else {
+        res.contentType(file.contentType);
+        res.send(file.data)
+      }
+    })
     .catch(err => next(err))
 }
 
