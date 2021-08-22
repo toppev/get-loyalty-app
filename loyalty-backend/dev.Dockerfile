@@ -1,6 +1,6 @@
 # Dev Dockerfile
 
-FROM node:12.16
+FROM node:14
 
 WORKDIR /usr/src/app
 COPY package*.json .npmrc ./

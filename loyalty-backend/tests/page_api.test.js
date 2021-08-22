@@ -1,4 +1,4 @@
-const { initDatabase, closeDatabase, deleteUploadsDirectory } = require('./testUtils')
+const { initDatabase, closeDatabase } = require('./testUtils')
 const businessService = require('../src/services/businessService')
 const User = require('../src/models/user')
 const app = require('../app')
@@ -105,19 +105,19 @@ describe('Logged in user with permissions can', () => {
 
   // language=HTML
   const htmlPage = `
-        <div>
-            <h1>Hello {{user.email}}!</h1>
-            <br>
-            <p>This is a test with åäö</p>
-        </div>
-    `
+    <div>
+      <h1>Hello {{user.email}}!</h1>
+      <br>
+      <p>This is a test with åäö</p>
+    </div>
+  `
 
   // language=CSS
   const pageCss = `
-      h1 {
-        color: red;
-      }
-    `
+    h1 {
+      color: red;
+    }
+  `
 
   it('replace page html', async () => {
     await api
@@ -129,12 +129,12 @@ describe('Logged in user with permissions can', () => {
 
   // language=HTML
   const expectedPage = `
-        <div>
-            <h1 style="color: red;">Hello ${userParams.email}!</h1>
-            <br>
-            <p>This is a test with åäö</p>
-        </div>
-    `
+    <div>
+      <h1 style="color: red;">Hello ${userParams.email}!</h1>
+      <br>
+      <p>This is a test with åäö</p>
+    </div>
+  `
 
 
   it('get page html with placeholder', async () => {

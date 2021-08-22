@@ -15,7 +15,7 @@
 #   WEBSITE_DESCRIPTION - description of the app
 #   WEBSITE_KEYWORDS - keywords used in the <meta> tag
 
-FROM node:12-alpine as build
+FROM node:14-alpine as build
 WORKDIR /app
 
 ENV PATH /app/node_modules/.bin:$PATH
