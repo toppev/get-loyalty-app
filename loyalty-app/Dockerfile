@@ -48,9 +48,11 @@ COPY . /app
 RUN yarn build
 
 FROM nginx:stable-alpine
-# Copy build and nginx config
-COPY --from=build /app/build /usr/share/nginx/html
+# Copy the nginx config, build and other stuff
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/build /usr/share/nginx/html
+COPY --from=build /app/nginx-serve.sh /
+RUN chmod +x /nginx-serve.sh
 
 EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["./nginx-serve.sh"]
