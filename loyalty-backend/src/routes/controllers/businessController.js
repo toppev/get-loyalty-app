@@ -60,7 +60,7 @@ function getIcon(req, res, next) {
     .then(file => {
       if (!file) res.sendStatus(404)
       else {
-        res.contentType(file.contentType);
+        res.contentType(file.contentType)
         res.send(file.data)
       }
     })

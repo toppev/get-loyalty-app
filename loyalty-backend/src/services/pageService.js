@@ -143,11 +143,6 @@ async function getTemplates() {
   return await PageData.find({ template: true })
 }
 
-async function getPageContent(pageId) {
-  const upload = await fileService.getUpload(`page_${pageId}/index.html`)
-  return upload.data?.toString() || ""
-}
-
 async function getPageContext(user) {
   const business = await Business.findOne().lean()
   if (business) {
@@ -236,7 +231,9 @@ async function getPageContext(user) {
 }
 
 async function renderPageView(pageId, user) {
-  const pageHtml = await getPageContent(pageId)
+  const upload = await fileService.getUpload(`page_${pageId}/index.html`)
+  const pageHtml = upload?.data?.toString() || ""
+
   const context = await getPageContext(user)
   const template = handlebars.compile(pageHtml)
   // IDEA: should we cache the compiled html based on the context or user/page
