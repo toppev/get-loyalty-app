@@ -69,9 +69,8 @@ const userSchema = new Schema({
     failStreak: {
       type: Number
     },
-    // Save JWT loginId so we can deny it in the future if needed
+    // Save JWT login (with id) so we can deny it in the future if needed
     logins: [{
-      loginId: String,
       time: {
         type: Date,
         default: Date.now

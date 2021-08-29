@@ -53,10 +53,9 @@ passport.use(new LocalStrategy({
 ))
 
 passport.serializeUser(async (user, done) => {
-  const loginId = mongoose.Types.ObjectId()
-  user.authentication.logins.push({ loginId: loginId })
+  user.authentication.logins.push({})
   await user.save()
-  done(null, { id: user.id, timestamp: Date.now(), loginId: loginId })
+  done(null, { id: user.id, timestamp: Date.now() })
 })
 
 passport.deserializeUser((serialized, done) => {

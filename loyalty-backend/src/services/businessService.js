@@ -1,7 +1,6 @@
 const Business = require('../models/business')
 const User = require('../models/user')
 const fileService = require('../services/fileService')
-const fs = require('fs')
 const StatusError = require('../helpers/statusError')
 const templateService = require('./templateService')
 const iconService = require('./iconService')
@@ -68,7 +67,8 @@ async function createBusiness(businessParam, userId) {
  */
 async function getBusiness() {
   return Business.findOne().populate({
-    path: 'public.customerLevels', populate: [{
+    path: 'public.customerLevels',
+    populate: [{
       path: 'rewards.categories',
       model: 'Category',
     }, {
@@ -103,7 +103,11 @@ async function setUserRole(userId, role) {
   user.role = role
   await user.save()
   // For legacy stuff return role and business separately too
-  return { role: user.role, business: (await Business.findOne()).id, customerData: user.customerData }
+  return {
+    role: user.role,
+    business: (await Business.findOne()).id,
+    customerData: user.customerData
+  }
 }
 
 /**
@@ -114,8 +118,7 @@ async function getPublicInformation() {
 }
 
 async function getIcon(size) {
-  const fileNames =
-    size ? [`icons/icon-${size}.png`, `icons/icon.png`, `icons/favicon.ico`] : [`icons/favicon.ico`]
+  const fileNames = size ? [`icons/icon-${size}.png`, `icons/icon.png`, `icons/favicon.ico`] : [`icons/favicon.ico`]
   for (let fileName of fileNames) {
     const upload = await fileService.getUpload(fileName)
     if (upload?.data) {
