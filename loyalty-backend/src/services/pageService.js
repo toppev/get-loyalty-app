@@ -101,9 +101,7 @@ async function uploadPage(pageId, { html, css }) {
   const page = await PageData.findById(pageId)
   if (page) {
     createScreenshot(pageId)
-      .then(() => {
-        console.log('Created or updated page thumbnail of', pageId)
-      })
+      .then(() => console.log('Created or updated page thumbnail of', pageId))
       .catch(err => console.error(`Failed to create a screenshot of ${pageId} page: ${err}`))
   } else {
     console.log('Page with invalid ID was uploaded', pageId)
@@ -114,6 +112,7 @@ async function createScreenshot(pageId) {
   const pagePath = `/page/${pageId}/html`
   const fileName = `page_${pageId}/screenshot.jpg`
   try {
+    // TODO: Stop DDoSing our servers :(
     await pageScreenshot.takeScreenshot(pagePath, fileName)
   } catch (err) {
     if (err) {
@@ -123,18 +122,10 @@ async function createScreenshot(pageId) {
   return fileName
 }
 
-/**
- * Get the screenshot file path if it exists, otherwise creates a new screenshot and finally returns it
- * @param {any} pageId the id of the page
- */
 async function getThumbnail(pageId) {
   const file = fileService.getUpload(`page_${pageId}/screenshot.jpg`)
   if (file?.data) {
     return file
-  }
-  const page = await PageData.findById(pageId)
-  if (page) {
-    return await createScreenshot(pageId)
   }
 }
 

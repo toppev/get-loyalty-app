@@ -1,6 +1,5 @@
-const fs = require('fs')
-// deprecated but will still use as it just works
-const request = require('request')
+const { get } = require("axios")
+const fileService = require('./fileService')
 
 const BASE_URL = process.env.SS_BASE_URL || 'http://localhost:3001'
 const SERVICE_URL = process.env.SS_SERVICE_URL || 'http://localhost:3005'
@@ -17,17 +16,10 @@ module.exports = {
  * @param {boolean} fullUrl whether the path is full url or BASE_URL prefix should be used
  */
 async function takeScreenshot(path, fileName, fullUrl = false) {
-  return new Promise((resolve, reject) => {
-    if (process.env.NODE_ENV === 'test') {
-      return
-    }
-    const url = fullUrl ? path : BASE_URL + path
-    const stream = request.get(`${SERVICE_URL}?url=${url}`, {}, (err, _res, _body) => {
-      if (err) {
-        reject(err)
-      }
-    }).pipe(fs.createWriteStream(fileName))
-    stream.on('error', reject)
-    stream.on('finish', () => resolve(fileName))
-  })
+  if (process.env.NODE_ENV === 'test') {
+    return
+  }
+  const url = fullUrl ? path : BASE_URL + path
+  const res = await get(`${SERVICE_URL}?url=${url}`)
+  await fileService.upload(fileName, res.data)
 }
