@@ -6,6 +6,7 @@ const campaignService = require('./campaignService')
 const pollingService = require('./pollingService')
 const format = require('../util/stringUtils').format
 const { asyncFilter } = require('../util/asyncFilter')
+const logger = require("../util/logger")
 
 const POLLING_IDENTIFIERS = pollingService.IDENTIFIERS
 
@@ -210,7 +211,7 @@ async function useScan(scanStr, data) {
       }
     } catch (err) {
       if (err.name !== 'StatusError') {
-        console.log(`ERROR! User not eligible to participate in a campaign because an error occurred ${err}`)
+        logger.error(`User not eligible to participate in a campaign because an error occurred`, err)
       }
       // IDEA: should we return reasons why the customer was not eligible?
     }

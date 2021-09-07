@@ -11,6 +11,7 @@ const productService = require('./productService')
 const scanService = require('./scanService')
 const pollingService = require('./pollingService')
 const { validateHandlebars } = require("../helpers/handlebars")
+const logger = require("../util/logger")
 
 module.exports = {
   createPage,
@@ -101,10 +102,10 @@ async function uploadPage(pageId, { html, css }) {
   const page = await PageData.findById(pageId)
   if (page) {
     createScreenshot(pageId)
-      .then(() => console.log('Created or updated page thumbnail of', pageId))
-      .catch(err => console.error(`Failed to create a screenshot of ${pageId} page: ${err}`))
+      .then(() => logger.info('Created or updated page thumbnail of', pageId))
+      .catch(err => logger.error(`Failed to create a screenshot of ${pageId} page`, err))
   } else {
-    console.log('Page with invalid ID was uploaded', pageId)
+    logger.warning('Page with invalid ID was uploaded', pageId)
   }
 }
 
@@ -116,7 +117,7 @@ async function createScreenshot(pageId) {
     await pageScreenshot.takeScreenshot(pagePath, fileName)
   } catch (err) {
     if (err) {
-      console.log('Failed to create a screenshot', err.message || err)
+      logger.error(`Failed to create a screenshot (${err.message})`, err)
     }
   }
   return fileName

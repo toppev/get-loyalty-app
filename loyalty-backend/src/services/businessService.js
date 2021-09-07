@@ -4,6 +4,7 @@ const fileService = require('../services/fileService')
 const StatusError = require('../util/statusError')
 const templateService = require('./templateService')
 const iconService = require('./iconService')
+const logger = require("../util/logger")
 
 
 module.exports = {
@@ -29,7 +30,7 @@ async function getOwnBusiness(user) {
   if (user.role === 'business') {
     return (await Business.findOne()).id
   }
-  return undefined
+  return
 }
 
 /**
@@ -38,10 +39,10 @@ async function getOwnBusiness(user) {
 async function getBusinessOwnerUser() {
   const owners = await User.find({ role: 'business' })
   if (owners.length === 0) {
-    console.log(`Warning: no business owners found. Nobody registered?`)
+    logger.warning(`No business owners found. Nobody registered?`)
   }
   if (owners.length > 1) {
-    console.log(`Warning: more business owners than expected: ${owners.length}`)
+    logger.warning(`More business owners than expected: ${owners.length}`)
   }
   return owners[0]
 }

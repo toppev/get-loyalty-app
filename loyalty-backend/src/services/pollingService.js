@@ -1,5 +1,6 @@
 const axios = require("axios")
 const User = require("../models/user")
+const logger = require("../util/logger")
 
 const BASE_URL = process.env.POLLING_BASE_URL || 'http://localhost:8080/'
 
@@ -20,7 +21,7 @@ function sendToUser(userId, data, type = '') {
       'Polling-Authentication': process.env.POLLING_AUTHENTICATION
     }
   }).catch(err => {
-    console.log(`Failed to poll user`, err)
+    logger.error(`Failed to poll user`, err)
   })
 }
 

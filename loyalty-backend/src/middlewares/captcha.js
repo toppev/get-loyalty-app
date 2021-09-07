@@ -1,6 +1,7 @@
 const request = require("request")
 const StatusError = require("../util/statusError")
 const User = require("../models/user")
+const logger = require("../util/logger")
 
 // "IF_EMPTY" to verify only if there are no users yet (e.g creating the first user)
 // "ALL" to verify all requests (whatever uses this middleware)
@@ -14,7 +15,7 @@ let isEmptyServer
 const checkEmpty = () => {
   User.countDocuments().then(count => {
     isEmptyServer = count === 0
-    console.log(`isEmptyServer (no users yet): ${isEmptyServer}`)
+    logger.info(`isEmptyServer (no users yet): ${isEmptyServer}`)
   })
 }
 checkEmpty()
@@ -30,12 +31,13 @@ function verifyCAPTCHA(req, res, next) {
   const secret = process.env.CAPTCHA_SECRET_KEY
   const url = `https://www.google.com/recaptcha/api/siteverify?secret=${secret}&response=${token}`
 
+  // TODO replace with axios
   request.post({ url }, function (error, response, body) {
     if (JSON.parse(body).success === true) {
       next()
     } else {
       next(error || new StatusError('Invalid CAPTCHA token', 400))
-      console.log("err", error, "response", body, "secret length:", secret.length, "token length:", token)
+      logger.important("Captcha validation error", { error, body, secretLength: secret.length, token: token })
     }
   })
 

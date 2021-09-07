@@ -1,7 +1,8 @@
 const cookieSession = require('cookie-session')
+const logger = require("../util/logger")
 
 const sessionName = process.env.SESSION_NAME || 'loyalty_session'
-console.log(`Session cookie name: ${sessionName}`, "(env " + process.env.SESSION_NAME + ")")
+logger.info(`Session cookie name: ${sessionName}`, "(env " + process.env.SESSION_NAME + ")")
 
 const sessionHandler = cookieSession({
   name: sessionName,

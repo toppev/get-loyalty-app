@@ -1,4 +1,5 @@
 const webpush = require('web-push')
+const logger = require("../util/logger")
 
 // TODO: add in .env.example
 const vapidPublicKey = process.env.VAPID_PUBLIC_KEY
@@ -15,7 +16,7 @@ if (process.env.NODE_ENV !== 'test') {
       vapidPrivateKey
     )
   } catch (err) {
-    console.log("Failed to initialize webpush/vapid", err)
+    logger.error("Failed to initialize webpush/vapid", err)
   }
 }
 
@@ -54,11 +55,11 @@ async function sendNotification(users, payload) {
       if (statusCode === 201) {
         sent++
       } else {
-        console.log(`Failed to send a push notification. Received ${statusCode} ${body && body.message}`)
+        logger.severe(`Failed to send a push notification. Received ${statusCode} ${body && body.message}`)
         failed++
       }
     } catch (err) {
-      console.log(`Failed to send a push notification. ${err}`)
+      logger.error('Failed to send a push notification', err)
       failed++
     }
   }

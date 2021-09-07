@@ -7,6 +7,7 @@ const campaignService = require('../../services/campaignService')
 const User = require('../../models/user')
 const StatusError = require("../../util/statusError")
 const campaignTypes = require('@toppev/getloyalty-campaigns')
+const logger = require("../../util/logger")
 
 // Claim a coupon reward
 // Simple coupon: /coupon/<coupon>
@@ -66,7 +67,7 @@ async function handleReferralCode(user, campaign, referrer) {
       throw new StatusError("Referrer must have made a purchased previously", 403)
     }
   } else if (validationMethod && validationMethod !== "none") {
-    console.log(`Invalid referral validation method in ${campaign.id}/${campaign.name}: ${validationMethod}`)
+    logger.severe(`Invalid referral validation method in ${campaign.id}/${campaign.name}: ${validationMethod}`)
   }
   if (user.referrer) throw new StatusError("You have already be referred by someone", 403)
   if (referrer === user.id) throw new StatusError("Can not refer yourself", 403)

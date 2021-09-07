@@ -8,6 +8,7 @@ const authenticator = require('../../middlewares/authenticator')
 const { verifyCAPTCHA } = require('../../middlewares/captcha')
 
 const validation = require('../../helpers/bodyFilter')
+const logger = require("../../util/logger")
 const userValidator = validation.validate(validation.userValidator)
 
 // Not logged in, no perms
@@ -93,7 +94,7 @@ function getCurrent(req, res, next) {
     .then(user => {
       if (user) {
         userService.markLastVisit(req.user)
-          .catch(err => console.log("Failed to update 'lastVisit' in #getCurrent", err))
+          .catch(err => logger.error("Failed to update 'lastVisit' in #getCurrent", err))
         businessService.getOwnBusiness(user)
           .then((businessId) => res.json({
             ...user.toJSON(),

@@ -1,8 +1,9 @@
 const StatusError = require("../util/statusError")
+const logger = require("../util/logger")
 
 function errorHandler(err, req, res, _next) {
-  if (!(err instanceof StatusError)) console.log(err)
-  console.log(`${err.status || 500} - ${err} - ${req.originalUrl} - ${req.method} - ${req.ip}`)
+  if (!(err instanceof StatusError)) logger.error("HTTPStatusError", err)
+  logger.info(`${err.status || 500} - ${err} - ${req.originalUrl} - ${req.method} - ${req.ip}`)
   const status = err.status || 400
   if (process.env.NODE_ENV !== 'production') {
     return res.status(status).json({

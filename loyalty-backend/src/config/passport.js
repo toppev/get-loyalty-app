@@ -3,6 +3,7 @@ const LocalStrategy = require('passport-local').Strategy
 const User = require('../models/user')
 const userService = require('../services/userService')
 const mongoose = require('mongoose')
+const logger = require("../util/logger")
 
 
 passport.use(new LocalStrategy({
@@ -25,7 +26,7 @@ passport.use(new LocalStrategy({
         const cooldownLeft = (1000 * 60 * 30) - (lastAttempt ? Date.now() - lastAttempt.getTime() : 0)
         const cooldownMinutes = cooldownLeft / 60000
         if (cooldownMinutes > 0) {
-          console.log(`${email} has reached max login attempts (${user.authentication.failStreak}).`)
+          logger.important(`${email} has reached max login attempts (${user.authentication.failStreak}).`)
           return next(null, false, { message: `Max login attempts reached. Please try again in ${cooldownMinutes} minutes.` })
         }
       }

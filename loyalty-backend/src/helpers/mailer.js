@@ -2,6 +2,7 @@
 
 const nodemailer = require('nodemailer')
 const config = require('../config/mailerConfig.js')
+const logger = require("../util/logger")
 
 module.exports = {
   emailPasswordReset
@@ -30,9 +31,9 @@ async function emailPasswordReset(email, token, redirectUrl) {
 
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
-      console.log('Failed to email password reset', error)
+      logger.error('Failed to email password reset', error)
     } else {
-      console.log('Password reset email was sent to ' + email + '\nInfo: ' + info)
+      logger.important('Password reset email was sent to ' + email + '\nInfo: ' + info)
     }
   })
 }
