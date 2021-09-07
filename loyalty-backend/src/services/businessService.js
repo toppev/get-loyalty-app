@@ -1,7 +1,7 @@
 const Business = require('../models/business')
 const User = require('../models/user')
 const fileService = require('../services/fileService')
-const StatusError = require('../helpers/statusError')
+const StatusError = require('../util/statusError')
 const templateService = require('./templateService')
 const iconService = require('./iconService')
 

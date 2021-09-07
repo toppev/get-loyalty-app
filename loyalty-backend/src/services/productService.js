@@ -1,6 +1,6 @@
 const Product = require('../models/product')
 const Business = require('../models/business')
-const StatusError = require('../helpers/statusError')
+const StatusError = require('../util/statusError')
 
 module.exports = {
   getAllProducts: getAll,

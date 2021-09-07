@@ -1,6 +1,6 @@
 const Campaign = require('../models/campaign')
 const Business = require('../models/business')
-const StatusError = require('../helpers/statusError')
+const StatusError = require('../util/statusError')
 const userService = require('./userService')
 const campaignTypes = require('@toppev/getloyalty-campaigns')
 

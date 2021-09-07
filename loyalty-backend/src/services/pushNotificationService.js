@@ -2,7 +2,7 @@ const PushNotification = require('../models/pushNotification')
 const Business = require('../models/business')
 const customerService = require('../services/customerService')
 const webpushService = require('../services/webpushService')
-const StatusError = require('../helpers/statusError')
+const StatusError = require('../util/statusError')
 const User = require("../models/user")
 
 module.exports = {

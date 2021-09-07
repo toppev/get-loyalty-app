@@ -1,5 +1,5 @@
 const passport = require('passport')
-const StatusError = require('../helpers/statusError')
+const StatusError = require('../util/statusError')
 
 
 /**

@@ -1,4 +1,4 @@
-const StatusError = require("../helpers/statusError")
+const StatusError = require("../util/statusError")
 
 function errorHandler(err, req, res, _next) {
   if (!(err instanceof StatusError)) console.log(err)

@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const userService = require('../../services/userService')
 const businessService = require('../../services/businessService')
-const StatusError = require('../../helpers/statusError')
+const StatusError = require('../../util/statusError')
 
 const permit = require('../../middlewares/permitMiddleware')
 const authenticator = require('../../middlewares/authenticator')

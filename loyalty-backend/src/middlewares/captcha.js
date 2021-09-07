@@ -1,5 +1,5 @@
 const request = require("request")
-const StatusError = require("../helpers/statusError")
+const StatusError = require("../util/statusError")
 const User = require("../models/user")
 
 // "IF_EMPTY" to verify only if there are no users yet (e.g creating the first user)

@@ -3,7 +3,7 @@
  * e.g changing owner of a product or changing the business account's plan or user role
  */
 
-const StatusError = require('../helpers/statusError')
+const StatusError = require('../util/statusError')
 
 /**
  * If the user doesn't have the given permission the filter will remove fields from the request that the user is not

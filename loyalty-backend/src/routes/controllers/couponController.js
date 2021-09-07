@@ -5,7 +5,7 @@ const router = require('express').Router()
 const customerService = require('../../services/customerService')
 const campaignService = require('../../services/campaignService')
 const User = require('../../models/user')
-const StatusError = require("../../helpers/statusError")
+const StatusError = require("../../util/statusError")
 const campaignTypes = require('@toppev/getloyalty-campaigns')
 
 // Claim a coupon reward

@@ -1,11 +1,11 @@
 const userService = require('./userService')
-const StatusError = require('../helpers/statusError')
+const StatusError = require('../util/statusError')
 const Business = require('../models/business')
 const customerService = require('./customerService')
 const campaignService = require('./campaignService')
 const pollingService = require('./pollingService')
-const format = require('../helpers/stringUtils').format
-const { asyncFilter } = require('../helpers/asyncFilter')
+const format = require('../util/stringUtils').format
+const { asyncFilter } = require('../util/asyncFilter')
 
 const POLLING_IDENTIFIERS = pollingService.IDENTIFIERS
 
