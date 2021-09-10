@@ -2,7 +2,8 @@ const axios = require("axios")
 const User = require("../models/user")
 const logger = require("../util/logger")
 
-const BASE_URL = process.env.POLLING_BASE_URL || 'http://localhost:8080/'
+let BASE_URL = process.env.POLLING_BASE_URL || 'http://localhost:8080'
+if (BASE_URL.endsWith("/")) BASE_URL = BASE_URL.slice(0, -1)
 
 const POLLING_IDENTIFIERS = {
   SCAN: 'scan',
