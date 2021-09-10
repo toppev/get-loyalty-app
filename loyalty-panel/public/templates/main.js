@@ -37,6 +37,7 @@ function loadScript(src, onLoad) {
 
 // Used by default pages, only remove if you really know you don't need this
 loadScript("https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js", function () { /* BootStrap JS code here */ })
+loadCSS("https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css")
 
 // Some popular JS/CSS. Uncomment to include them if needed.
 // loadCSS("https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css")
