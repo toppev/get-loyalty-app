@@ -45,8 +45,17 @@ router.use('/coupon', requireLogin, coupon)
 router.use('/scan', requireLogin, scan)
 router.use('/notifications', requireLogin, notifications)
 
+
+const statusData = {
+  status: "online",
+  onlineSince: new Date()
+}
+
 router.get('/ping', (req, res) => {
-  res.status(200).json({ message: 'Success!' })
+  res.status(200).json(statusData)
+})
+router.get('/status', (req, res) => {
+  res.status(200).json(statusData)
 })
 
 module.exports = router
