@@ -23,8 +23,8 @@ export function ServerStatusBar() {
   // In the future we can return some data from the /ping endpoint, e.g server condition
   const checkStatus = () => {
     incrementDelay++
-    waitForServer(() => {
-      setServerState({ severity: "success", message: "Your server is online." })
+    waitForServer(data => {
+      setServerState({ severity: "success", message: "Your server is online since " + (new Date(data.onlineSince).toLocaleString()) })
       setTimeout(checkStatus, 10_000 + (incrementDelay * 5000))
     }, () => {
       setServerState({ severity: "error", message: "Your server could not be reached." })

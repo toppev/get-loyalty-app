@@ -32,15 +32,11 @@ function updateServerOwner(data: { email: string, updated: { email: string } }) 
   return post(`${SERVER_API_URL}/user/update`, data, true)
 }
 
-
-/**
- * Ping the server until it responds.
- */
-function waitForServer(callback: () => any, onError?: (error: Error) => any) {
+function waitForServer(callback: (data: any) => any, onError?: (error: Error) => any, waitRestart?: boolean) {
 
   const sendRequest = () => {
-    get('/ping')
-      .then(callback)
+    get('/status')
+      .then(res => callback(res.data))
       .catch((err) => {
         onError && onError(err)
         setTimeout(sendRequest, 5000)

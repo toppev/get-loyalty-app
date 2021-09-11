@@ -26,7 +26,7 @@ import { Alert } from "@material-ui/lab"
 import { backendURL } from "../../config/axios"
 import useRequest from "../../hooks/useRequest"
 import SaveChangesSnackbar from "../common/SaveChangesSnackbar"
-import { getOrCreateServer, updateServer, waitForServer } from "../../services/serverService"
+import { getOrCreateServer, updateServer } from "../../services/serverService"
 import RetryButton from "../common/button/RetryButton"
 import { isURL } from "../../util/validate"
 import { listPages } from "../../services/pageService"
@@ -146,27 +146,27 @@ export default function () {
               <Form>
                 <div className={classes.fieldDiv}>
                   {Object.keys(translations).map(k => {
-                    const { plural, singular, placeholder } = translations[k]
-                    const both = plural && singular
-                    return (
-                      <div key={k}>
-                        {plural && <TextField
-                          className={classes.field}
-                          name={`config.translations.${k}.plural`}
-                          type="text"
-                          label={`"${k}" translation ${both ? "(plural)" : ""}`}
-                          placeholder={placeholder}
-                        />}
-                        {singular && <TextField
-                          className={classes.field}
-                          name={`config.translations.${k}.singular`}
-                          type="text"
-                          label={`"${k}" translation ${both ? "(singular)" : ""}`}
-                          placeholder={placeholder}
-                        />}
-                      </div>
-                    )
-                  }
+                      const { plural, singular, placeholder } = translations[k]
+                      const both = plural && singular
+                      return (
+                        <div key={k}>
+                          {plural && <TextField
+                            className={classes.field}
+                            name={`config.translations.${k}.plural`}
+                            type="text"
+                            label={`"${k}" translation ${both ? "(plural)" : ""}`}
+                            placeholder={placeholder}
+                          />}
+                          {singular && <TextField
+                            className={classes.field}
+                            name={`config.translations.${k}.singular`}
+                            type="text"
+                            label={`"${k}" translation ${both ? "(singular)" : ""}`}
+                            placeholder={placeholder}
+                          />}
+                        </div>
+                      )
+                    }
                   )}
                 </div>
                 <SaveChangesSnackbar
@@ -228,9 +228,8 @@ function ServerSettingsForm() {
   )
 
   const [popupOpen, setPopupOpen] = useState(false)
-  const [pingingServer, setPingingServer] = useState(false)
 
-  const loading = serverInfo.loading || updateRequest.loading || pingingServer
+  const loading = serverInfo.loading || updateRequest.loading
   const error = serverInfo.error || updateRequest.error
 
   // Needed for askNotifications menu
@@ -255,8 +254,6 @@ function ServerSettingsForm() {
 
       {loading ? <LinearProgress/> : <RetryButton error={error ? { ...error, retry: undefined } : undefined}/>}
       {error && <p>Seems like there was an error. Everything may still work correctly.</p>}
-
-      {pingingServer && <p style={{ textAlign: 'center' }}>This is taking an unexpectedly long time...</p>}
 
       <Dialog open={popupOpen}>
         <DialogContent style={{ padding: '25px' }}>
@@ -287,20 +284,9 @@ function ServerSettingsForm() {
                 actions.setSubmitting(false)
                 setPopupOpen(false)
               },
-              (err) => {
-                const status = err.response?.status
-                // Timeout (probably)
-                if (!status || status === 408 || status === 504 || status === 524) {
-                  setPingingServer(true)
-                  waitForServer(() => {
-                    actions.setSubmitting(false)
-                    setPopupOpen(false)
-                    setPingingServer(false)
-                  })
-                } else {
-                  actions.setSubmitting(false)
-                  setPopupOpen(false)
-                }
+              () => {
+                actions.setSubmitting(false)
+                setPopupOpen(false)
               }
             )
           } else {
