@@ -37,7 +37,7 @@ function listTemplates() {
 
 function getPageStaticFile(pageId: any, fileName: string) {
   const subUrl = `/page`
-  return get(`${subUrl}/${pageId}/static/${fileName}`)
+  return get(`${subUrl}/${pageId}/static/${fileName}?nocache=1`) // We can ignore Cloudflare cache if query parameters exists
 }
 
 function uploadPageStaticFile(pageId: any, fileName: string, file: any) {

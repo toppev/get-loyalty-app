@@ -145,8 +145,15 @@ describe('Logged in user with permissions can', () => {
     expect(res.text).toBe(expectedPage)
   })
 
+  it('upload the JavaScript file', async () => {
+    await api
+      .post(`/page/${testPageData.id}/upload-static?fileName=main.js`)
+      .type('multipart/form-data')
+      .attach('file', 'testresources/temp_main.js')
+      .set('Cookie', cookie)
+      .expect(200)
 
-  it('upload JavaScript file', async () => {
+    // Should update, in the next test we check if it's the correct file
     await api
       .post(`/page/${testPageData.id}/upload-static?fileName=main.js`)
       .type('multipart/form-data')
