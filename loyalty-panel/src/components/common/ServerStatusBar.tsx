@@ -3,7 +3,7 @@ import { Alert } from "@material-ui/lab"
 import React, { useEffect, useState } from "react"
 import { createStyles, makeStyles, Theme } from "@material-ui/core"
 
-type ServerStatusBar = { severity: 'success' | 'info' | 'warning' | 'error', message: string }
+type StatusBarState = { severity: 'success' | 'info' | 'warning' | 'error', message: string }
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -18,9 +18,8 @@ export function ServerStatusBar() {
 
   const classes = useStyles()
 
-  const [serverState, setServerState] = useState<ServerStatusBar>({ severity: 'info', message: 'Loading status...' })
+  const [serverState, setServerState] = useState<StatusBarState>({ severity: 'info', message: 'Loading status...' })
 
-  // In the future we can return some data from the /ping endpoint, e.g server condition
   const checkStatus = () => {
     incrementDelay++
     waitForServer(data => {
@@ -28,7 +27,7 @@ export function ServerStatusBar() {
       setTimeout(checkStatus, 10_000 + (incrementDelay * 5000))
     }, () => {
       setServerState({ severity: "error", message: "Your server could not be reached." })
-      setTimeout(checkStatus, 5_000 + (incrementDelay * 5000))
+      // #waitForServer automatically reattempts
     })
   }
 

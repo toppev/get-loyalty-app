@@ -32,7 +32,7 @@ function updateServerOwner(data: { email: string, updated: { email: string } }) 
   return post(`${SERVER_API_URL}/user/update`, data, true)
 }
 
-function waitForServer(callback: (data: any) => any, onError?: (error: Error) => any, waitRestart?: boolean) {
+function waitForServer(callback: (data: any) => any, onError?: (error: Error) => any) {
 
   const sendRequest = () => {
     get('/status')
