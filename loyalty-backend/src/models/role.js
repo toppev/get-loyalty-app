@@ -21,7 +21,8 @@ const roles = {
       'scan:get': true,
       'scan:use': true,
       'notification:*': true,
-      'user:*': _ownUserOnly
+      'user:*': _ownUserOnly,
+      'file:*': true
     },
   },
   user: {

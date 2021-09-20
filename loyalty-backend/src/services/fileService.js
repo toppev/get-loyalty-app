@@ -1,15 +1,19 @@
 const FileUpload = require('../models/fileUpload')
 const mime = require('mime-types')
 
-async function getUpload(name) {
-  return FileUpload.findById(name)
+async function getUpload(name, { visibility } = {}) {
+  const res = await FileUpload.findById(name)
+  if (res.visibility === (visibility || 'public')) {
+    return res
+  }
 }
 
-async function upload(name, data) {
+async function upload(name, data, { visibility, contentType } = {}) {
   return FileUpload.findOneAndUpdate({ _id: name }, {
     _id: name,
     data: data,
-    contentType: mime.lookup(name)
+    contentType: contentType || mime.lookup(name),
+    visibility: visibility || 'public'
   }, { upsert: true })
 }
 

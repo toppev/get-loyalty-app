@@ -2,3 +2,6 @@
 .idea
 *.iml
 .env
+
+# Misc
+scratch

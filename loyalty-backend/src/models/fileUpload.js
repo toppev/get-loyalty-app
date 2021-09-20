@@ -11,6 +11,11 @@ const fileSchema = new Schema({
   },
   contentType: {
     type: String,
+  },
+  visibility: {
+    type: String,
+    enum: ['public', 'private'],
+    default: 'public'
   }
 })
 
