@@ -8,8 +8,6 @@ FROM node:14-alpine
 WORKDIR /usr/src/app
 COPY package*.json .npmrc ./
 
-RUN apk --update --no-cache add curl
-
 ARG NPM_TOKEN
 
 # ~/.npmrc is used to authenticate, different from the project level .npmrc
