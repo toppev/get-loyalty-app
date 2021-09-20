@@ -36,10 +36,10 @@
     "sharp": "^0.26.3",
     "to-ico": "^1.1.5",
     "validator": "^13.6.0",
-    "web-push": "^3.4.4"
+    "web-push": "^3.4.4",
+    "@toppev/getloyalty-campaigns": "^1.0.5"
   },
   "devDependencies": {
-    "@toppev/getloyalty-campaigns": "^1.0.5",
     "@types/bcrypt": "^10.0.28-alpha",
     "@types/body-parser": "^1.19.1",
     "@types/busboy": "^0.2.4",
