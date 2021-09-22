@@ -252,7 +252,7 @@ function ServerSettingsForm() {
         Other Settings
       </Typography>
 
-      {loading ? <LinearProgress/> : <RetryButton error={error ? { ...error, retry: undefined } : undefined}/>}
+      {loading ? <LinearProgress/> : <RetryButton error={error && { ...error, retry: undefined }}/>}
       {error && <p>Seems like there was an error. Everything may still work correctly.</p>}
 
       <Dialog open={popupOpen}>
@@ -294,7 +294,7 @@ function ServerSettingsForm() {
           }
         }}
       >
-        {({ submitForm, isSubmitting }) => (
+        {({ submitForm, isSubmitting, values, initialValues }) => (
           <Paper className={classes.paper}>
             <ServerStatusBar/>
             <Form>
@@ -373,7 +373,13 @@ function ServerSettingsForm() {
                   disabled={isSubmitting}
                   variant="contained"
                   size="small"
-                  onClick={() => submitForm()}
+                  onClick={() => {
+                    if (!hasDomainChanged(initialValues.appAddress, values.appAddress) || window.confirm(
+                      "WARNING! Changing the domain will log out all users! Your customers may lose their data (e.g points, rewards etc)"
+                    )) {
+                      submitForm()
+                    }
+                  }}
                 >Update & Restart</Button>
               </div>
             </Form>
@@ -383,4 +389,18 @@ function ServerSettingsForm() {
       }
     </div>
   )
+}
+
+/** Compare the URLs and return if the domain is different. */
+function hasDomainChanged(url1?: string, url2?: string) {
+  if (url1 === url2) return false
+  if ((!url1 && url2) || (url1 && !url2)) return true
+  try {
+    const { hostname: oldDomain } = new URL(url1!!)
+    const { hostname: newDomain } = new URL(url2!!)
+    return oldDomain !== newDomain
+  } catch (err) {
+    console.log(err)
+  }
+  return false
 }
