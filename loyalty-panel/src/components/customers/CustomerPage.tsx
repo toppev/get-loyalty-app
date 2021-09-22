@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import {
   Box,
   Button,
@@ -28,6 +28,7 @@ import IdText from "../common/IdText"
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
 import CustomerDetails from "./CustomerDetails"
+import { debounce } from "lodash"
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -64,24 +65,17 @@ export default function () {
 
   const classes = useStyles()
   // How many customers to render
-  const renderLimit = 50
-  // How long to wait before searching (resets every keypress) in milliseconds
-  const searchTimeout = 900
+  const renderLimit = 100
 
-  const { search, setSearch, searchFilter } = useSearch()
+  const { search, setSearch } = useSearch()
   const { error, loading, response, performRequest } = useRequest()
-  // Timeout so we won't spam the API endpoint
-  const [typingTimeout, setTypingTimeout] = useState<any>()
-  useEffect(() => {
-    if (typingTimeout) {
-      clearTimeout(typingTimeout)
-    }
-    setTypingTimeout(setTimeout(function () {
-      performRequest(() => listCustomers(search))
-      setTypingTimeout(undefined)
-    }, searchTimeout))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [performRequest, search])
+
+  const execSearch = useCallback(debounce((searchStr?: string) => {
+    performRequest(() => listCustomers(searchStr))
+  }, 500, { leading: true }), [])
+
+  useEffect(() => execSearch(search), [execSearch, search])
+
   const [customers] = useResponseState<Customer[]>(response, [], (res) => {
     return res.data.customers?.map((it: any) => new Customer(it)) || []
   })
@@ -124,7 +118,7 @@ export default function () {
         }}
       />
       <p className={classes.p}>Showing up to {renderLimit} customers at once</p>
-      {(loading || typingTimeout !== undefined) && <LinearProgress/>}
+      {loading && <LinearProgress/>}
 
       <TableContainer>
         <Table>
@@ -140,7 +134,7 @@ export default function () {
             </TableRow>
           </TableHead>
           <TableBody>
-            {customers.filter(searchFilter).slice(0, renderLimit).map(customer => (
+            {customers.slice(0, renderLimit).map(customer => (
               <CustomerRow
                 key={customer.id}
                 customer={customer}
@@ -209,3 +203,5 @@ function CustomerRow(props: CustomerRowProps) {
     </>
   )
 }
+
+
