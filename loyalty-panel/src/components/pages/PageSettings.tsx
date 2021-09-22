@@ -8,6 +8,7 @@ import React, { Suspense, useState } from "react"
 import { usePageStyles } from "./PagesPage"
 import { RequestHandler } from "../../hooks/useRequest"
 import EditIcon from "@material-ui/icons/Edit"
+import { debounce } from "lodash"
 
 const CodeMirror = React.lazy(() => import("./codemirror/CodeMirror"))
 
@@ -29,6 +30,14 @@ export default function ({ pageOpen, requests }: PageSettingsProps) {
     return uploadPageStaticFile(pageOpen._id, 'main.js', new Blob([content], { type: 'text/plain' }))
   }
 
+  const sendPageUpdate = debounce(function () {
+    requests.performRequest(
+      () => {
+        return updatePage(pageOpen, false)
+      }
+    )
+  }, 500)
+
   return (
     <Box className={""} display="flex" flexDirection={smallScreen ? "column" : "row"}>
       <Paper className={classes.card}>
@@ -38,12 +47,8 @@ export default function ({ pageOpen, requests }: PageSettingsProps) {
               stage={pageOpen.stage}
               onChange={(value) => {
                 if (value !== PUBLISHED || window.confirm(`Confirm publishing "${pageOpen.name}". Anyone can see this page.`)) {
-                  requests.performRequest(
-                    () => {
-                      pageOpen.stage = value
-                      return updatePage(pageOpen, false)
-                    }
-                  )
+                  pageOpen.stage = value
+                  sendPageUpdate()
                   return true
                 }
                 return false
@@ -59,12 +64,8 @@ export default function ({ pageOpen, requests }: PageSettingsProps) {
           <IconSelector
             initialIcon={pageOpen.icon || pageOpen.pathname}
             onSubmit={(icon) => {
-              requests.performRequest(
-                () => {
-                  pageOpen.icon = icon
-                  return updatePage(pageOpen, false)
-                }
-              )
+              pageOpen.icon = icon
+              sendPageUpdate()
             }}/>
           <p className={classes.info}>Icons are used in the site navigation bar</p>
         </div>
@@ -73,14 +74,10 @@ export default function ({ pageOpen, requests }: PageSettingsProps) {
         <div className={`${classes.settingsCardDiv} ${classes.center}`}>
           <Typography className={classes.iconTitle} variant="h6">Pathname</Typography>
           <PathnameField
-            value={pageOpen.pathname}
+            defaultValue={`/${pageOpen.pathname}`}
             onSubmit={(pathname) => {
-              requests.performRequest(
-                () => {
-                  pageOpen.pathname = pathname
-                  return updatePage(pageOpen, false)
-                }
-              )
+              pageOpen.pathname = pathname
+              sendPageUpdate()
             }}
           />
         </div>
@@ -132,14 +129,10 @@ export default function ({ pageOpen, requests }: PageSettingsProps) {
 
 interface PathnameFieldProps {
   onSubmit: (pathname: string) => any
-  value: string
+  defaultValue: string
 }
 
-function PathnameField({ onSubmit, value }: PathnameFieldProps) {
-
-  if (!value.startsWith('/')) {
-    value = `/${value}`
-  }
+function PathnameField({ onSubmit, defaultValue }: PathnameFieldProps) {
 
   const classes = usePageStyles()
 
@@ -150,8 +143,11 @@ function PathnameField({ onSubmit, value }: PathnameFieldProps) {
         name="pathname"
         label="URL pathname of this page"
         placeholder="e.g /home or /rewards"
-        value={value}
-        onChange={(e) => onSubmit(e.target.value)}
+        defaultValue={defaultValue}
+        onChange={e => {
+          const value = e.target.value
+          onSubmit(value)
+        }}
       />
     </div>
   )
