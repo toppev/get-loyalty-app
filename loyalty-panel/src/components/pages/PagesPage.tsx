@@ -93,6 +93,11 @@ export const usePageStyles = makeStyles((theme: Theme) =>
       margin: '15px',
       textAlign: 'center'
     },
+    activeCard: {
+    },
+    inactiveCard: {
+      backgroundColor: '#dcdcdc'
+    },
     pageDesc: {
       color: theme.palette.grey[700],
       margin: '0px 5px'
@@ -257,57 +262,60 @@ export default function () {
         {loading && <LinearProgress/>}
 
         <Box display="flex" flexWrap="wrap">
-          {sortedPages.filter(page => !page.isDiscarded()).map(page => (
-            <PageCard
-              key={page._id}
-              className={classes.pageCard}
-              editableName
-              page={page}
-              image={`${backendURL}/page/${page._id}/thumbnail`}
-              actions={(
-                <>
-                  <IconButton
-                    className="show-on-hover"
-                    disabled={page === sortedPages[0]}
-                    onClick={() => movePage(page, "left")}
-                  ><KeyboardArrowLeftIcon/></IconButton>
-                  <Button
-                    disabled={pageOpen?._id === page._id}
-                    className={classes.actionButton}
-                    color="primary"
-                    variant="contained"
-                    startIcon={(<EditIcon/>)}
-                    onClick={() => setPageOpen(page)}
-                  >Edit</Button>
-                  <Button
-                    className={classes.actionButton}
-                    color="secondary"
-                    onClick={() => {
-                      if (window.confirm(`Do you want to remove the page "${page.name}"?`)) {
-                        // Not actually deleting them,
-                        // instead make it invisible/(unavailable/discarded)
-                        otherRequests.performRequest(
-                          () => deletePage(page),
-                          () => {
-                            if (page._id === pageOpen?._id) {
-                              setPageOpen(null)
+          {sortedPages.filter(page => !page.isDiscarded()).map(page => {
+            const isActive = pageOpen?._id === page._id
+            return (
+              <PageCard
+                key={page._id}
+                className={classes.pageCard + ' ' + (isActive ? classes.activeCard : pageOpen && classes.inactiveCard)}
+                editableName
+                page={page}
+                image={`${backendURL}/page/${page._id}/thumbnail`}
+                actions={(
+                  <>
+                    <IconButton
+                      className="show-on-hover"
+                      disabled={page === sortedPages[0]}
+                      onClick={() => movePage(page, "left")}
+                    ><KeyboardArrowLeftIcon/></IconButton>
+                    <Button
+                      disabled={isActive}
+                      className={classes.actionButton}
+                      color="primary"
+                      variant="contained"
+                      startIcon={(<EditIcon/>)}
+                      onClick={() => setPageOpen(page)}
+                    >Edit</Button>
+                    <Button
+                      className={classes.actionButton}
+                      color="secondary"
+                      onClick={() => {
+                        if (window.confirm(`Do you want to remove the page "${page.name}"?`)) {
+                          // Not actually deleting them,
+                          // instead make it invisible/(unavailable/discarded)
+                          otherRequests.performRequest(
+                            () => deletePage(page),
+                            () => {
+                              if (page._id === pageOpen?._id) {
+                                setPageOpen(null)
+                              }
                             }
-                          }
-                        )
-                      }
-                    }}
-                  >Delete</Button>
-                  <IconButton
-                    className="show-on-hover"
-                    disabled={page === sortedPages[sortedPages.length - 1]}
-                    onClick={() => movePage(page, "right")}
-                  >
-                    <KeyboardArrowRightIcon/>
-                  </IconButton>
-                </>
-              )}
-            />
-          ))}
+                          )
+                        }
+                      }}
+                    >Delete</Button>
+                    <IconButton
+                      className="show-on-hover"
+                      disabled={page === sortedPages[sortedPages.length - 1]}
+                      onClick={() => movePage(page, "right")}
+                    >
+                      <KeyboardArrowRightIcon/>
+                    </IconButton>
+                  </>
+                )}
+              />
+            )
+          })}
         </Box>
       </div>
 
