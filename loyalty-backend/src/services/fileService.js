@@ -11,7 +11,7 @@ async function getUpload(name, { visibility } = {}) {
     throw new StatusError(401, err)
   }
   const res = await FileUpload.findById(name)
-  if (res.visibility === (visibility || 'public')) {
+  if (res?.visibility === (visibility || 'public')) {
     return res
   }
 }
