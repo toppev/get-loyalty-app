@@ -33,8 +33,9 @@ function uploadFile(req, res, next) {
     })
     file.on('data', function (data) {
       const fileId = new mongoose.mongo.ObjectId()
+      const fileURL = `${process.env.PUBLIC_URL}/file${fileId}`
       fileService.upload(`uploads/${fileId}`, data, { contentType: mimetype })
-        .then(() => res.json({ success: true, data: [fileId] }))
+        .then(() => res.json({ success: true, data: [fileURL] }))
         .catch(err => next(err))
     })
   })
