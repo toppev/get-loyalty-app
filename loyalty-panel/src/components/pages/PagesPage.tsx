@@ -439,6 +439,11 @@ function TemplateSelectorDialog({ open, onClose, onSelect }: TemplateSelectorDia
   useEffect(loadTemplates, [open])
   const [templates] = useResponseState<Page[]>(response, [], res => res.data.map((d: any) => new Page(d)))
 
+  const selectTemplate = (page: Page) => {
+    console.log(page)
+    onSelect(page)
+    setPreviewPage(undefined)
+  }
 
   const blankPage = new Page({
     _id: 'blank_page',
@@ -455,10 +460,7 @@ function TemplateSelectorDialog({ open, onClose, onSelect }: TemplateSelectorDia
         variant="contained"
         onClick={() => setPreviewPage(page)}
       >Preview Template</Button>
-      <SelectTemplateButton onClick={() => {
-        onSelect(page)
-        setPreviewPage(undefined)
-      }}/>
+      <SelectTemplateButton onClick={() => selectTemplate(page)}/>
     </>
   )
 
@@ -485,7 +487,9 @@ function TemplateSelectorDialog({ open, onClose, onSelect }: TemplateSelectorDia
             <PreviewPage
               page={previewPage}
               onClose={() => setPreviewPage(undefined)}
-              actions={(<SelectTemplateButton onClick={() => onSelect(previewPage!!)}/>)}
+              actions={(
+                <SelectTemplateButton onClick={() => selectTemplate(previewPage!!)}/>
+              )}
             />
           </DialogContent>
         </>

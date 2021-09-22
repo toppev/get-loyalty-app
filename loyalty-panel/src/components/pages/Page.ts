@@ -7,8 +7,9 @@ class Page {
   icon: string
   pageIndex: number
   pathname: string
-  template: boolean;
+  template: boolean
   externalURL?: string
+  gjs: any
 
   constructor(data: any) {
     this._id = data._id || data.id
@@ -20,6 +21,7 @@ class Page {
     this.pathname = data.pathname
     this.externalURL = data.externalURL
     this.template = data.template
+    this.gjs = data.gjs
   }
 
   isPublished() {
