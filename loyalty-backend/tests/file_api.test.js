@@ -36,12 +36,13 @@ describe('fileController', () => {
       .attach('file', 'testresources/icon-192x192.png')
       .set('Cookie', cookie)
       .expect(200)
-    const fileId = uploadRes.body?.data?.[0]
-    expect(fileId).toBeDefined()
+    const fileURL = uploadRes.body?.data?.[0]
+    console.log(fileURL)
+    expect(fileURL).toBeDefined()
+    expect(fileURL.startsWith(process.env.PUBLIC_URL + '/file'))
 
     const getRes = await api
-      .get(`/file/${fileId}`)
-      .set('Cookie', cookie)
+      .get(fileURL.substring((process.env.PUBLIC_URL).length))
       .expect(200)
 
     expect(getRes.headers['content-type']).toBe('image/png')
