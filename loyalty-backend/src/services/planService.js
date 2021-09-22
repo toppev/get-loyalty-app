@@ -61,6 +61,6 @@ function planHasChanged(oldPlan, newPlan) {
     logger.info(`Plans (${name}/${type}) are equal, not updating.`)
     return false
   }
-  logger.important("Plan updated from", oldObj, "to", newObj)
+  logger.important("Plan updated from", JSON.stringify(oldObj, 2), "to", JSON.stringify(newObj, 2))
   return true
 }
