@@ -67,18 +67,15 @@ export default function () {
     endpoint: backendURL + '/business/customers?limit=-1',
   }]
 
-  const [viewSecrets, setViewSecrets] = useState(false)
   const [dataType, setDataType] = React.useState(supportedTypes[0])
   const fileName = "customers-" + new Date().toISOString().slice(0, 10) + dataType.type
-
-  const endpointWithSecret = dataType.endpoint
 
   return (
     <Box display="flex" flexWrap="wrap" className={classes.documentation}>
       <Paper className={classes.exportSectionPaper}>
         <Typography variant="h3" className={classes.exportTitle}>Export Customers</Typography>
         <p className={classes.p}>
-          Download current customers or use the API endpoint to import them automatically (e.g in excel)
+          Download current customers (for example, to import them in excel)
         </p>
 
         {
@@ -110,43 +107,6 @@ export default function () {
         >
           Download ({dataType.type})
         </Button>
-
-        <Divider className={classes.divider}/>
-
-        <Typography className={classes.p}>REST API</Typography>
-        <p className={classes.p}>
-          You can get the data by sending a <i>HTTP GET</i> request to the URL below.
-        </p>
-        <b>Note that anyone who has the secret can view your data!</b>
-        <br/>
-        <Button
-          size="small"
-          color="secondary"
-          onClick={() => setViewSecrets(!viewSecrets)}
-          startIcon={<KeyIcon/>}
-        >View Secrets</Button>
-        <Collapse in={viewSecrets} timeout="auto" unmountOnExit>
-          <Paper variant="outlined" style={{ padding: '10px', marginTop: '10px' }}>
-            <p>
-              Your secret will be added here at some point...
-            </p>
-            <p>
-              <code className={classes.code}>{endpointWithSecret}</code>
-              <span style={{ marginLeft: '10px' }}>
-                <CopyToClipboard>
-                  {({ copy }) => (
-                    <Button
-                      size="small"
-                      color="secondary"
-                      onClick={() => copy(endpointWithSecret)}
-                      endIcon={<LinkIcon/>}
-                    >Copy</Button>
-                  )}
-                </CopyToClipboard>
-              </span>
-            </p>
-          </Paper>
-        </Collapse>
 
       </Paper>
     </Box>

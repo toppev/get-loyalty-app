@@ -115,7 +115,7 @@ export default function () {
       </div>
       <Divider className={classes.divider}/>
       <div>
-        <Typography id="export-data" variant="h1" className={classes.title}>Export data & API</Typography>
+        <Typography id="export-data" variant="h1" className={classes.title}>Export data</Typography>
         <ExportData/>
       </div>
     </div>
