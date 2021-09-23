@@ -19,15 +19,15 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
 <div class="page">
-    <div class="gjs-cell text-center h-auto">
-        <div class="my-5">
+    <div class="text-center h-auto">
+        <div class="py-4">
             <h1 class="text-primary">Active Campaigns ({{campaigns.length}})</h1>
         </div>
         <div class="my-2 fs-4 text-light text-center">
             Show your <i><a href="/profile" class="link-light">QR code</a></i> to participate.
         </div>
     </div>
-    <div class="card page-modal">
+    <div class="card page-modal my-3">
         <div class="card-body">
             <div class="p-2">{{#each campaigns}}</div>
             <h4 class="card-title">{{name}}</h4>
@@ -81,8 +81,8 @@
   }
 
   body {
-    margin: 0;
     background-color: black;
+    min-height: 1050px;
   }
 
   body::before {
@@ -101,8 +101,8 @@
     background-size: cover;
     width: 100%;
     height: 100%;
-    -webkit-filter: blur(3px);
-    filter: blur(3px);
+    -webkit-filter: blur(2px);
+    filter: blur(2px);
   }
 
   @supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
@@ -139,13 +139,6 @@
     margin: 0 0 -40px -8px;
     padding: 10px 10px 0 0;
     font-size: 14px;
-  }
-
-  @media (max-width: 768px) {
-    .gjs-cell {
-      width: 100%;
-      display: block;
-    }
   }
 </style>
 </html>
