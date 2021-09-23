@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css"
+          crossorigin="anonymous" referrerpolicy="no-referrer">
+
+    <!-- Other CSS / Themes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/startbootstrap-creative/5.1.8/css/creative.min.css"
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+
+    <title>Campaigns template page</title>
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+<div class="page">
+    <div class="gjs-cell text-center h-auto">
+        <div class="my-5">
+            <h1 class="text-primary">Active Campaigns ({{campaigns.length}})</h1>
+        </div>
+        <div class="my-2 fs-4 text-light text-center">
+            Show your <i><a href="/profile" class="link-light">QR code</a></i> to participate.
+        </div>
+    </div>
+    <div class="card page-modal">
+        <div class="card-body">
+            <div class="p-2">{{#each campaigns}}</div>
+            <h4 class="card-title">{{name}}</h4>
+            <div class="py-2 fs-3">{{#each customerProgress}}
+                <span draggable="true">💰</span>
+                <span draggable="true">{{/each}}{{#each stampsNeeded}}<span draggable="true">📦</span>{{/each}}</span>
+            </div>
+            <p class="my-1 py-1 text-primary">
+            <span>
+                {{currentStampsAll.length}}
+                {{#if totalStampsNeeded}}/{{totalStampsNeeded}}{{/if}} total stamps
+            </span>
+            </p>
+            <p class="text-secondary h-auto p-3">{{description}}</p>
+            <h3 class="fs-5">
+                <b>Rewards ({{endReward.length}})</b>
+            </h3>
+            <div class="gjs-row">
+                <div class="gjs-cell">
+                    <div class="py-1">{{#each endReward}}</div>
+                    <p class="mb-2">{{name}}
+                    </p>
+                    <p>
+                        <span><u>{{itemDiscount}}</u></span>
+                    </p>
+                    <p>
+                        {{#if customerPoints}}
+                        <b>{{customerPoints}}</b> points
+                        {{/if}}
+                    </p>
+                    <p>{{description}}</p>
+                    <p class="text-warning">{{requirement}}</p>
+                    <div>{{/each}}</div>
+                </div>
+            </div>
+            <div class="gjs-row campaign-dates">
+                <div class="text-left gjs-cell" style="text-align: left">
+                    <p class="m-0 p-2 h-50">Starting {{start}}</p>
+                    <p class="m-0 p-2 h-50">{{#if end}} Ending {{end}} {{/if}}</p>
+                </div>
+            </div>
+            <div>{{/each}}
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    background-color: black;
+  }
+
+  body::before {
+    background: linear-gradient(
+            rgba(0, 0, 0, 0.4),
+            rgba(0, 0, 0, 0.4)
+    ), url(https://images.unsplash.com/photo-1525193612562-0ec53b0e5d7c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1470&q=80);
+    background-position-y: center;
+    background-position-x: right;
+    content: "";
+    position: fixed;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    display: block;
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+    -webkit-filter: blur(3px);
+    filter: blur(3px);
+  }
+
+  @supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
+    .page-modal {
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      background-color: rgba(255, 255, 255, 0.5);
+    }
+  }
+
+  .gjs-row {
+    display: table;
+    padding: 10px;
+    width: 100%;
+  }
+
+  .gjs-cell {
+    width: 8%;
+    display: table-cell;
+    height: 75px;
+  }
+
+  .page-modal {
+    text-align: center;
+    margin: 10px auto;
+    width: 90%;
+    border-radius: 7px;
+    color: rgb(47, 47, 47);
+    max-width: 700px;
+  }
+
+  .campaign-dates {
+    color: rgb(85, 85, 85);
+    margin: 0 0 -40px -8px;
+    padding: 10px 10px 0 0;
+    font-size: 14px;
+  }
+
+  @media (max-width: 768px) {
+    .gjs-cell {
+      width: 100%;
+      display: block;
+    }
+  }
+</style>
+</html>
