@@ -4,6 +4,7 @@ import { useUserFormInitialValues } from "../modules/userForm"
 import { ON_PAGE_RENDER_MODULES } from "../modules"
 import { Helmet } from "react-helmet"
 import { getPageStaticFile } from "../services/pageService"
+import { BASE_URL } from "../config/axios"
 
 interface PageViewProps {
   page: Page
@@ -40,12 +41,19 @@ function PageHead({ page }: PageViewProps) {
     const fileName = 'main.js'
     getPageStaticFile(pageId, fileName)
       .then(it => setScript(it.data))
-      .catch(() => console.log(`Failed to load external static head file: ${fileName}`))
+      .catch(err => console.log(`Failed to load external static head file: ${fileName}`, err))
   }, [pageId])
 
   return (
     <Helmet>
       <script>{script}</script>
+
+      <link
+        rel="stylesheet"
+        href={`${BASE_URL}/page/${pageId}/static/main.css`}
+        crossOrigin="anonymous"
+      />
+
     </Helmet>
   )
 }
