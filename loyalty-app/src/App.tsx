@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import './App.css'
 import { getPageHtml, getPages } from "./services/pageService"
-import Page, { ERROR_HTML } from "./model/Page"
+import Page, { EMPTY_PAGE_HTML, ERROR_HTML } from "./model/Page"
 import PageView from "./components/PageView"
 import { profileRequest, registerRequest } from "./services/userService"
 import { BrowserRouter as Router, Redirect, Route, Switch } from "react-router-dom"
@@ -95,7 +95,7 @@ function App() {
   const fetchHtml = async (page: Page) => {
     try {
       const res = await getPageHtml(page._id)
-      page.html = res.data
+      page.html = res.data || EMPTY_PAGE_HTML
     } catch (err) {
       console.log(err)
       page.html = ERROR_HTML
