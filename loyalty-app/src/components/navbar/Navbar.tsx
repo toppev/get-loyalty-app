@@ -1,11 +1,11 @@
 import React, { useEffect } from "react"
 import { NavLink, useLocation } from "react-router-dom"
 import { useMediaQuery } from 'react-responsive'
-import Page from "../model/Page"
-import PageIcon from "./PageIcon"
+import Page from "../../model/Page"
+import PageIcon from "../page/PageIcon"
 
 import './Navbar.css'
-import { BASE_URL } from "../config/axios"
+import { BASE_URL } from "../../config/axios"
 
 interface NavbarProps {
   pages: Page[]

@@ -1,5 +1,5 @@
 import React from "react"
-import Page from "../model/Page"
+import Page from "../../model/Page"
 
 interface PageIconProps extends React.HTMLProps<HTMLDivElement> {
   page: Page

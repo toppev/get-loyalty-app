@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react"
-import Page, { LOADING_HTML } from "../model/Page"
-import { useUserFormInitialValues } from "../modules/userForm"
-import { ON_PAGE_RENDER_MODULES } from "../modules"
+import Page, { LOADING_HTML } from "../../model/Page"
+import { useUserFormInitialValues } from "../../modules/userForm"
+import { ON_PAGE_RENDER_MODULES } from "../../modules"
 import { Helmet } from "react-helmet"
-import { getPageStaticFile } from "../services/pageService"
-import { BASE_URL } from "../config/axios"
+import { getPageStaticFile } from "../../services/pageService"
+import { BASE_URL } from "../../config/axios"
 
 interface PageViewProps {
   page: Page
