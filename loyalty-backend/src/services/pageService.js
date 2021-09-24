@@ -88,7 +88,9 @@ async function uploadPage(pageId, { html, css }) {
   if (res.error) {
     throw new StatusError(`Invalid placeholders. ${res.error}`, 400)
   }
-  // IDEA: link the css instead of inlining for performance benefits
+  // TODO: remove the inline CSS if possible
+  //  Note that it looks ugly at the moment without it as the CSS loads after the page
+  //  Find a solution to that. (Longer loading screen?)
   const tmpl = `${html}<style>${css}</style>`
   const inlineHtml = juice(tmpl)
 
