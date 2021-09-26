@@ -12,6 +12,15 @@
   color: orangered;
 }
 
+#pages {
+  min-height: 100vh;
+  width: 100%;
+}
+#pages > div {
+  min-height: 100vh;
+}
+
+
 .page-view {
   width: 100%;
   max-width: max(900px, 55%);

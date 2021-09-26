@@ -44,6 +44,9 @@ function PageHead({ page }: PageViewProps) {
       .catch(err => console.log(`Failed to load external static head file: ${fileName}`, err))
   }, [pageId])
 
+  // TODO: Figure out how the scripts/CSS should be handled
+  //  as the desktop pages work differently now and this is inconsistent
+  //  and ensure the script stuff works correctly overall
   return (
     <Helmet>
       <script>{script}</script>

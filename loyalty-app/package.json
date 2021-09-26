@@ -23,6 +23,7 @@
     "react-responsive": "^8.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^4.0.3",
+    "react-swipeable-views": "^0.14.0",
     "typescript": "^3.7.5"
   },
   "scripts": {
@@ -47,6 +48,7 @@
     ]
   },
   "devDependencies": {
+    "@types/react-swipeable-views": "^0.13.1",
     "autoprefixer": "^9",
     "dotenv": "^8.2.0",
     "eslint-plugin-react-hooks": "^4.2.0",

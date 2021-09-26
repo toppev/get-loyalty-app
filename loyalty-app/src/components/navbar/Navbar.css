@@ -1,5 +1,15 @@
+/** Common */
+
+.navlink {
+  cursor: pointer;
+  width: 100%;
+}
+
+/** Mobile */
+
 .mobile-navbar {
-  display: table;
+  display: flex;
+  justify-content: space-evenly;
   background-color: #333;
   position: fixed;
   bottom: 0;
@@ -30,10 +40,12 @@
 .navlink-mobile {
   border: solid #212121 1px;
   padding: 4px;
+  height: 45px;
+  display: table-cell;
+  vertical-align: middle;
 }
 
-
-/** Start of desktop UI */
+/** Desktop UI */
 
 .desktop-navbar {
   margin: 5%;
@@ -45,7 +57,8 @@
 
 .desktop-navbar .active {
   border-radius: 5px 5px 0 0;
-  background-color: #eeeef3;
+  background-color: rgba(238, 238, 243, 0.8);
+  backdrop-filter: blur(10px);
 }
 
 .desktop-navbar .active span {

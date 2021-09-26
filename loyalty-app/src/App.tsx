@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import './App.css'
 import { getPageHtml, getPages } from "./services/pageService"
 import Page, { EMPTY_PAGE_HTML, ERROR_HTML } from "./model/Page"
-import PageView from "./components/page/PageView"
-import { profileRequest, registerRequest } from "./services/userService"
-import { BrowserRouter as Router, Redirect, Route, Switch } from "react-router-dom"
+import { BrowserRouter as Router } from "react-router-dom"
 import { BASE_URL } from "./config/axios"
 import { AxiosResponse } from "axios"
 import { claimCoupon } from "./services/couponService"
 import { Helmet } from "react-helmet"
 import { AppContext, AppContextInterface, defaultAppContext } from './AppContext'
 import NotificationHandler from "./components/notification/NotificationHandler"
-import Navbar from "./components/navbar/Navbar"
 import { ReferrerDialog } from "./modules/Referrer"
+import useIsMobile from "./hooks/useIsMobile"
+import { useLoginHook } from "./hooks/useLoginHook"
+import Pages from "./components/page/Pages"
 
 function App() {
 
@@ -20,6 +20,8 @@ function App() {
 
   const [error, setError] = useState<string | undefined>()
   const [pages, setPages] = useState<Page[]>([])
+
+  const isMobile = useIsMobile()
 
   const updatePage = (page: Page) => setPages(prev => {
     let newPages = [...prev]
@@ -32,24 +34,6 @@ function App() {
     return newPages
   })
 
-  // Authentication
-  useEffect(() => {
-    profileRequest()
-      .then(onLogin)
-      .catch(err => {
-        // TODO: Option to login on other responses?
-        const status = err?.response?.status
-        if (status === 401 || status === 403 || status === 404) {
-          registerRequest()
-            .then(onLogin)
-            .catch(_err => setError('Could not register a new account. Something went wrong :('))
-        } else {
-          setError(`Something went wrong :(\n${err.response?.body || err.toString()}`)
-        }
-      })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
   const onLogin = (res: AxiosResponse) => {
     setContextState({ ...contextState, user: res.data })
     const query = new URLSearchParams(window.location.search)
@@ -60,6 +44,8 @@ function App() {
       .then(loadPages)
       .catch(err => setError(err?.response.body?.message || err.toString()))
   }
+
+  const { error: loginError } = useLoginHook({ onLogin })
 
   // Load pages
   const loadPages = () => {
@@ -106,6 +92,8 @@ function App() {
 
   const firstPagePath = window.location.origin + "/" + (pages.length ? pages[0].pathname : "")
 
+  const anyError = error || loginError
+
   return (
     <Router>
       <AppContext.Provider value={contextState}>
@@ -114,19 +102,14 @@ function App() {
             <link id="favicon" rel="icon" href={`${BASE_URL}/business/icon`} type="image/x-icon"/>
           </Helmet>
 
-          {error && <p className="ErrorMessage">Error: {error}</p>}
+          {anyError && <p className="ErrorMessage">Error: {anyError}</p>}
 
-          <Navbar pages={pages || []}/>
-          <ReferrerDialog user={contextState.user} referUrl={`${firstPagePath}?coupon=referral?referrer=${contextState.user?.id}`}/>
-          <Switch>
-            {pages.map(page => (
-              <Route exact path={`/${page.pathname}`} key={page._id}>
-                <PageView page={page}/>
-              </Route>
-            ))}
-            {pages.length > 0 &&
-            <Redirect to={{ pathname: pages[0].pathname, search: window.location.search }}/>}
-          </Switch>
+          <Pages pages={pages} mobileView={isMobile}/>
+
+          <ReferrerDialog
+            user={contextState.user}
+            referUrl={`${firstPagePath}?coupon=referral?referrer=${contextState.user?.id}`}
+          />
           <NotificationHandler onRefresh={refreshHtmlPages}/>
         </div>
       </AppContext.Provider>
