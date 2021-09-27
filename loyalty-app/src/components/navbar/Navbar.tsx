@@ -43,25 +43,26 @@ export default function Navbar(props: NavbarProps) {
     </nav>
   ) : (
     <nav className="desktop-navbar">
-      <a href={pages[0].pathname + window.location.search}>
-        <img src={`${BASE_URL}/business/icon?size=180`} width="180" alt="" className="navbar-logo"/>
-      </a>
-      <hr className="navbar-hr"/>
-      {pages?.map(page => (
-        <button
-          key={page._id}
-          className={"navlink navlink-desktop " + (isActive(page) ? 'active' : '')}
-          onClick={() => setCurrentPage(page)}
-        >
-          <div className="flex">
-            <PageIcon page={page}/>
-            <span className="navlink-page-name">
-              {page.pathname.replace("-", " ")}
-            </span>
-          </div>
-        </button>
-      ))}
-
+      <div className="desktop-navbar-container">
+        <a href={pages[0].pathname + window.location.search}>
+          <img src={`${BASE_URL}/business/icon?size=180`} width="180" alt="" className="navbar-logo"/>
+        </a>
+        <hr className="navbar-hr"/>
+        {pages?.map(page => (
+          <button
+            key={page._id}
+            className={"navlink navlink-desktop " + (isActive(page) ? 'active' : '')}
+            onClick={() => setCurrentPage(page)}
+          >
+            <div className="flex">
+              <PageIcon page={page}/>
+              <span className="navlink-page-name">
+                {page.pathname.replace("-", " ")}
+              </span>
+            </div>
+          </button>
+        ))}
+      </div>
     </nav>
   )
 }

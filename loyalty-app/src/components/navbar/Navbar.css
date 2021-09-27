@@ -51,8 +51,13 @@
   margin: 5%;
   display: grid;
   height: fit-content;
-  min-width: 270px;
+  min-width: calc(270px + 3%);
   font-weight: bolder;
+}
+
+.desktop-navbar-container {
+  position: fixed;
+  min-width: 270px;
 }
 
 .desktop-navbar .active {
