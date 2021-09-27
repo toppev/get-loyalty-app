@@ -12,6 +12,8 @@ const scanService = require('./scanService')
 const pollingService = require('./pollingService')
 const { validateHandlebars } = require("../helpers/handlebars")
 const logger = require("../util/logger")
+const mongoose = require("mongoose")
+const mime = require("mime-types")
 
 module.exports = {
   createPage,
@@ -234,24 +236,18 @@ async function renderPageView(pageId, user) {
   return template(context)
 }
 
-async function uploadStaticFile(pageId, jsCode, fileName) {
-  validateStaticFileName(fileName)
+async function uploadStaticFile(pageId, jsCode, fileName, { contentType }) {
+  if (!fileName) {
+    fileName = new mongoose.mongo.ObjectId()
+  }
   const dir = `page_${pageId}/`
-  await fileService.upload(dir + fileName, jsCode)
+  await fileService.upload(dir + fileName, jsCode, { contentType: mime.lookup(fileName) || contentType })
   // Refresh the page for the page owner to automatically see changes
   await pollingService.refreshOwner({ message: '[Editor]\nChanges detected' })
+  return fileName
 }
 
 async function getStaticFile(pageId, fileName) {
-  validateStaticFileName(fileName)
   const dir = `page_${pageId}`
-  const upload = await fileService.getUpload(dir + '/' + fileName)
-  return upload
-}
-
-function validateStaticFileName(fileName) {
-  // Just to be sure it's safe for now
-  if (!['main.js', 'index.html', 'main.css'].includes(fileName)) {
-    throw new StatusError(`Unsupported static file: ${fileName}`, 403)
-  }
+  return fileService.getUpload(dir + '/' + fileName)
 }

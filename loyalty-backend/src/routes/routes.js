@@ -9,7 +9,6 @@ const page = require('./controllers/pageController')
 const coupon = require('./controllers/couponController')
 const scan = require('./controllers/scanController')
 const notifications = require('./controllers/pushNotificationController')
-const files = require('./controllers/fileController')
 
 // Kinda useless? or is it?
 const requireLogin = (req, res, next) => {
@@ -45,7 +44,6 @@ router.use('/customer/:userId', requireLogin, customer)
 router.use('/coupon', requireLogin, coupon)
 router.use('/scan', requireLogin, scan)
 router.use('/notifications', requireLogin, notifications)
-router.use('/file', files)
 
 
 const statusData = {

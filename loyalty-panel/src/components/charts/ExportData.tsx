@@ -1,24 +1,8 @@
-import {
-  Box,
-  Button,
-  Collapse,
-  createStyles,
-  Divider,
-  FormControlLabel,
-  makeStyles,
-  Paper,
-  Radio,
-  RadioGroup,
-  Theme,
-  Typography
-} from "@material-ui/core"
-import React, { useState } from "react"
+import { Box, Button, createStyles, FormControlLabel, makeStyles, Paper, Radio, RadioGroup, Theme, Typography } from "@material-ui/core"
+import React from "react"
 import DownloadIcon from '@material-ui/icons/GetApp'
 import { backendURL, get } from "../../config/axios"
-import KeyIcon from '@material-ui/icons/VpnKey'
 import { downloadFile } from "../../util/download"
-import CopyToClipboard from "../common/CopyToClipboarad"
-import LinkIcon from "@material-ui/icons/Link"
 
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({

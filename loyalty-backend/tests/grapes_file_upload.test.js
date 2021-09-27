@@ -5,6 +5,7 @@ const app = require('../app')
 const api = require('supertest')(app)
 const { initDatabase, closeDatabase } = require('./testUtils')
 
+const testPageData = { gjs: { "gjs-components": '["stuff"]', "gjs-style": '["more stuff"]' } }
 const businessParams = { email: "example@email.com", public: { address: 'this is an address' } }
 const userParams = { email: "example@email.com", password: "password123" }
 let userId
@@ -27,11 +28,19 @@ describe('fileController', () => {
     // Setting the cookie
     cookie = res.headers['set-cookie']
     await businessService.createBusiness(businessParams, userId)
+
+    // Create a page for this test
+    const pageCreate = await api
+      .post(`/page`)
+      .set('Cookie', cookie)
+      .send(testPageData)
+      .expect(200)
+    testPageData.id = pageCreate.body._id
   })
 
   it('upload and get file', async () => {
     const uploadRes = await api
-      .post(`/file/upload`)
+      .post(`/page/${testPageData.id}/upload-static`)
       .type('multipart/form-data')
       .attach('file', 'testresources/icon-192x192.png')
       .set('Cookie', cookie)
@@ -39,7 +48,7 @@ describe('fileController', () => {
     const fileURL = uploadRes.body?.data?.[0]
     console.log(fileURL)
     expect(fileURL).toBeDefined()
-    expect(fileURL.startsWith(process.env.PUBLIC_URL + '/file'))
+    expect(fileURL.startsWith(process.env.PUBLIC_URL + '/page'))
 
     const getRes = await api
       .get(fileURL.substring((process.env.PUBLIC_URL).length))

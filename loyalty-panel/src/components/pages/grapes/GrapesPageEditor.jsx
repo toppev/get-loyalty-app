@@ -32,7 +32,7 @@ function propsAreEqual(prev, next) {
 function GrapesPageEditor(props) {
 
   const url = `${backendURL}/page`
-  const uploadUrl = `${backendURL}/file/upload`
+  const uploadUrl = `${backendURL}/page/${props.page._id}/upload-static`
 
   const placeholderContext = usePlaceholderContext()
 

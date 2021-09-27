@@ -78,19 +78,6 @@ function getTemplates(req, res, next) {
     .catch(err => next(err))
 }
 
-function getThumbnail(req, res, next) {
-  const pageId = req.params.pageId
-  pageService.getThumbnail(pageId)
-    .then(file => {
-      if (!file) res.sendStatus(404)
-      else {
-        res.contentType(file.contentType)
-        res.send(file.data)
-      }
-    })
-    .catch(err => next(err))
-}
-
 async function getHtml(req, res, next) {
   try {
     const { pageId } = req.params
@@ -117,6 +104,7 @@ async function getHtml(req, res, next) {
     const user = req.user || exampleUser
 
     const html = await pageService.renderPageView(pageId, user)
+    res.set('Cache-control', 'no-cache')
     res.send(html)
     next()
   } catch (error) {
@@ -125,14 +113,17 @@ async function getHtml(req, res, next) {
 }
 
 function uploadStaticFile(req, res, next) {
-  const fileSizeLimit = 1024 * 2 // KB
-  const busboy = new Busboy({ headers: req.headers, limits: { fileSize: (1024 * fileSizeLimit) } })
+  const fileSizeLimit = 4 // MB
+  const busboy = new Busboy({ headers: req.headers, limits: { fileSize: (1024 * 1024 * fileSizeLimit) } })
   busboy.on('file', (fieldName, file, filename, encoding, mimetype) => {
-    file.on('limit', () => res.status(400).json({ message: `Max file size: ${fileSizeLimit}KB` }))
+    file.on('limit', () => res.status(400).json({ message: `Max file size: ${fileSizeLimit}MB` }))
     file.on('data', (data) => {
       const pageId = req.params.pageId
-      pageService.uploadStaticFile(pageId, data, req.query.fileName)
-        .then(() => res.sendStatus(200))
+      pageService.uploadStaticFile(pageId, data, req.query.fileName, { contentType: mimetype })
+        .then(fileId => {
+          const fileURL = `${process.env.PUBLIC_URL}/page/${pageId}/static/${fileId}`
+          res.json({ success: true, data: [fileURL] })
+        })
         .catch(err => next(err))
     })
   })
@@ -143,12 +134,21 @@ async function getStaticFile(req, res, next) {
   const pageId = req.params.pageId
   const { fileName } = req.params
   pageService.getStaticFile(pageId, fileName)
-    .then(file => {
-      if (!file) res.sendStatus(404)
-      else {
-        res.contentType(file.contentType)
-        res.send(file.data)
-      }
-    })
+    .then(file => serveStatic(res, file))
     .catch(err => next(err))
+}
+
+function getThumbnail(req, res, next) {
+  const pageId = req.params.pageId
+  pageService.getThumbnail(pageId)
+    .then(file => serveStatic(res, file))
+    .catch(err => next(err))
+}
+
+function serveStatic(res, file) {
+  if (!file) res.sendStatus(404)
+  else {
+    res.contentType(file.contentType)
+    res.send(file.data)
+  }
 }
