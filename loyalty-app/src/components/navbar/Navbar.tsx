@@ -44,7 +44,7 @@ export default function Navbar(props: NavbarProps) {
   ) : (
     <nav className="desktop-navbar">
       <div className="desktop-navbar-container">
-        <a href={pages[0].pathname + window.location.search}>
+        <a className="desktop-navbar-icon" href={pages[0].pathname + window.location.search}>
           <img src={`${BASE_URL}/business/icon?size=180`} width="180" alt="" className="navbar-logo"/>
         </a>
         <hr className="navbar-hr"/>

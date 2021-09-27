@@ -48,16 +48,20 @@
 /** Desktop UI */
 
 .desktop-navbar {
-  margin: 5%;
+  padding: 5%;
   display: grid;
   height: fit-content;
-  min-width: calc(270px + 3%);
   font-weight: bolder;
 }
 
 .desktop-navbar-container {
   position: fixed;
   min-width: 270px;
+}
+
+.desktop-navbar-icon {
+  width: 270px;
+  height: 210px;
 }
 
 .desktop-navbar .active {
