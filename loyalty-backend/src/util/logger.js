@@ -31,6 +31,7 @@ const logger = {
     console.log(dateStr(), "IMPORTANT", message.join(' '))
   },
 
+  dateStr,
 }
 
 module.exports = logger

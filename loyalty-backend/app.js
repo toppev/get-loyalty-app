@@ -12,6 +12,7 @@ const cors = require('cors')
 const routes = require('./src/routes/routes')
 
 const morgan = require('morgan')
+const logger = require("./src/util/logger")
 
 const isTesting = process.env.NODE_ENV === 'test'
 
@@ -23,13 +24,14 @@ if (!isTesting) {
     useFindAndModify: false
   }, (err) => {
     if (err) throw err
-    console.log("Connected to the mongo database")
+    logger.info("Connected to the mongo database")
     const port = 3001
     app.listen(port, () => {
-      console.log('Listening on port ' + port)
+      logger.info('Listening on port ' + port)
     })
   })
-  app.use(morgan('":method :url" :status (len: :res[content-length] - :response-time[0] ms) ":user-agent"', {}))
+  morgan.token('loggerDate', logger.dateStr)
+  app.use(morgan(':loggerDate ":method :url" :status (len: :res[content-length] - :response-time[0] ms) ":user-agent"', {}))
 }
 
 app.disable("x-powered-by")
@@ -56,7 +58,7 @@ const origins = [
   'http://localhost:3002',
   'http://localhost:3000' // Just so dev setups can access templates at api.getloyalty.app/...
 ].map(it => it.startsWith("http") ? it : `https://${it}`)
-console.log(`Allowed origins (${origins.length}): ${origins}`)
+logger.important(`Allowed origins (${origins.length}): ${origins}`)
 
 app.use(cors(function (req, callback) {
   const origin = req.header('Origin')
