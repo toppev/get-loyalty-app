@@ -48,6 +48,7 @@
 /** Desktop UI */
 
 .desktop-navbar {
+  min-width: 420px;
   padding: 5%;
   display: grid;
   height: fit-content;

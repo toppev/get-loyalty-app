@@ -171,6 +171,37 @@ describe('Logged in user with permissions can', () => {
     expect(res.text).toEqual(fileAsString)
   })
 
+  it('upload common JS/CSS files', async () => {
+    await api
+      .post(`/page/common/upload-static?fileName=main.js`)
+      .type('multipart/form-data')
+      .attach('file', 'testresources/common_main.js')
+      .set('Cookie', cookie)
+      .expect(200)
+
+    await api
+      .post(`/page/common/upload-static?fileName=main.css`)
+      .type('multipart/form-data')
+      .attach('file', 'testresources/common_main.css')
+      .set('Cookie', cookie)
+      .expect(200)
+
+    const mainJsRes = await api
+      .get(`/page/common/static/main.js`)
+      .expect(200)
+    expect(mainJsRes.headers['content-type']).toBe('application/javascript; charset=utf-8')
+    const commonJSString = await fs.promises.readFile('testresources/common_main.js', 'utf8')
+    expect(mainJsRes.text).toEqual(commonJSString)
+
+    const commonCSSRes = await api
+      .get(`/page/common/static/main.css`)
+      .expect(200)
+    expect(commonCSSRes.headers['content-type']).toBe('text/css; charset=utf-8')
+    const commonCSSString = await fs.promises.readFile('testresources/common_main.css', 'utf8')
+    expect(commonCSSRes.text).toEqual(commonCSSString)
+  })
+
+
 })
 
 afterAll(() => {
