@@ -6,20 +6,15 @@
 import { Notification } from "../components/notification/PopupNotification"
 import { useContext, useState } from "react"
 import { AppContext } from "../AppContext"
+import client from "../config/axios"
 
 function subscribeMessage(userId: string, identifier: string) {
-  return fetch(`${process.env.REACT_APP_POLLING_API_URL}/${identifier}_${userId}`, {
-    "body": "{}",
-    "method": "POST",
-  })
+  return client.post(`${process.env.REACT_APP_POLLING_API_URL}/${identifier}_${userId}`, {})
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function unsubscribeMessage(userId: string, identifier: string) {
-  return fetch(`${process.env.REACT_APP_POLLING_API_URL}/${identifier}_${userId}`, {
-    "body": "{}",
-    "method": "DELETE",
-  })
+  return client.delete(`${process.env.REACT_APP_POLLING_API_URL}/${identifier}_${userId}`)
 }
 
 // Don't use state because this works better
@@ -41,14 +36,13 @@ function useSubscribe(identifiers: string[]) {
       if ((status >= 200 && status < 300) || status === 408 || status === 504) {
         resub(id)
         if (res.headers.get('content-length') !== "0") {
-          res.json().then(data => {
-            if (data.message) {
-              if (data.id) data.id = Math.random()
-              setNotification(data)
-            } else {
-              console.log('Failed to parse a notification from the response.', data)
-            }
-          })
+          const data = res.data
+          if (data.message) {
+            if (data.id) data.id = Math.random()
+            setNotification(data)
+          } else {
+            console.error('Failed to parse a notification from the response.', data)
+          }
         }
       }
     })
