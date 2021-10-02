@@ -29,9 +29,10 @@ export default function (editor) {
   saveBtn.style.marginTop = '5px'
   saveBtn.className = `${stylePrefix}btn-prim ${stylePrefix}btn-import`
   saveBtn.onclick = () => {
-    const code = codeViewer.editor.getValue()
+    const code = codeViewer.editor.getValue().trim()
     editor.DomComponents.getWrapper().set('content', '')
-    editor.setComponents(code.trim())
+    editor.setComponents(code)
+    editor.setStyle(code)
     modal.close()
   }
 
