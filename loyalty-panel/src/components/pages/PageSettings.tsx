@@ -1,16 +1,14 @@
-import { Box, Button, Paper, TextField, Typography, useMediaQuery, useTheme } from "@material-ui/core"
+import { Box, Paper, TextField, Typography, useMediaQuery, useTheme } from "@material-ui/core"
 import StageSelector from "./StageSelector"
 import { Page, PUBLISHED } from "./Page"
-import { DEFAULT_MAIN_JS_URL, getPageScript, updatePage, uploadPageStaticFile } from "../../services/pageService"
+import { updatePage } from "../../services/pageService"
 import PageIcon from "./PageIcon"
 import IconSelector from "./grapes/IconSelector"
-import React, { Suspense, useState } from "react"
+import React, { useState } from "react"
 import { usePageStyles } from "./PagesPage"
 import { RequestHandler } from "../../hooks/useRequest"
-import EditIcon from "@material-ui/icons/Edit"
 import { debounce } from "lodash"
-
-const CodeMirror = React.lazy(() => import("./codemirror/CodeMirror"))
+import { EditFileButton, FileEditor } from "./FileEditor"
 
 
 interface PageSettingsProps {
@@ -24,11 +22,7 @@ export default function ({ pageOpen, requests }: PageSettingsProps) {
   const smallScreen = useMediaQuery(theme.breakpoints.down('sm'))
   const classes = usePageStyles()
 
-  const [codeMirrorContent, setCodeMirrorContent] = useState<string | undefined>()
-
-  const uploadScript = (content: string) => {
-    return uploadPageStaticFile(pageOpen._id, 'main.js', new Blob([content], { type: 'text/plain' }))
-  }
+  const [fileContent, setFileContent] = useState<string | undefined>()
 
   const sendPageUpdate = debounce(function () {
     requests.performRequest(
@@ -86,42 +80,19 @@ export default function ({ pageOpen, requests }: PageSettingsProps) {
         <div className={`${classes.settingsCardDiv} ${classes.center}`}>
           <Typography className={classes.iconTitle} variant="h6">Scripts</Typography>
           <div>
-            <Button
-              variant="outlined"
-              color="secondary"
-              size="small"
-              endIcon={<EditIcon/>}
-              style={{
-                fontSize: '16px',
-                padding: '0px 20px',
-                textTransform: 'none'
-              }}
-              onClick={() => {
-                getPageScript(pageOpen._id)
-                  .then(content => {
-                    setCodeMirrorContent(content)
-                  })
-                  .catch(err => {
-                    console.log(err)
-                    requests.error = err
-                  })
-              }}
-            >main.js</Button>
+            <EditFileButton
+              fileName="main.js"
+              pageId={pageOpen._id}
+              openEditor={setFileContent}
+            />
           </div>
         </div>
-        {codeMirrorContent !== undefined &&
-        <Suspense fallback={<div className={classes.loading}>Loading...</div>}>
-          <CodeMirror
-            open
-            initialValue={codeMirrorContent}
-            defaultValueURL={DEFAULT_MAIN_JS_URL}
-            onChange={(_editor, _data, content) => {
-              Math.random() > 0.9 && uploadScript(content)
-            }}
-            saveContent={async (content) => [200, 201].includes((await uploadScript(content)).status)}
-            onClose={() => setCodeMirrorContent(undefined)}
-          />
-        </Suspense>}
+        <FileEditor
+          fileName="main.js"
+          pageId={pageOpen._id}
+          fileContent={fileContent}
+          onClose={() => setFileContent(undefined)}
+        />
       </Paper>
     </Box>
   )

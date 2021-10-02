@@ -6,8 +6,10 @@ import CloseButton from "../../common/button/CloseButton"
 import "codemirror/lib/codemirror.css"
 import "codemirror/theme/material.css"
 import "codemirror/mode/javascript/javascript"
+import "codemirror/mode/css/css"
 import "codemirror/addon/hint/show-hint"
 import "codemirror/addon/hint/javascript-hint"
+import "codemirror/addon/hint/css-hint"
 import "codemirror/addon/hint/show-hint.css"
 import "codemirror/keymap/sublime"
 import "codemirror/addon/edit/closebrackets"
@@ -42,9 +44,10 @@ interface CodeMirrorProps {
   onClose: () => any
   onChange: (editor: any, data: any, value: string) => any
   saveContent: (content: string) => Promise<boolean>
+  codeMode: "javascript" | "css"
 }
 
-export default function ({ open, onClose, initialValue, onChange, saveContent, defaultValueURL }: CodeMirrorProps) {
+export default function ({ open, onClose, initialValue, onChange, saveContent, defaultValueURL, codeMode }: CodeMirrorProps) {
 
   const classes = useStyles()
 
@@ -92,7 +95,7 @@ export default function ({ open, onClose, initialValue, onChange, saveContent, d
         <CodeMirror
           value={content}
           options={{
-            mode: 'javascript',
+            mode: codeMode,
             theme: 'material',
             lineWrapping: true,
             smartIndent: true,

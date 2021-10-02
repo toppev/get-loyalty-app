@@ -1,7 +1,7 @@
 import { DEMO_URL, get, multipartPost, post } from "../config/axios"
 import { Page } from "../components/pages/Page"
 
-const DEFAULT_MAIN_JS_URL = '/templates/main.js'
+const STATIC_FILE_TEMPLATE_URL = '/templates/'
 
 function listPages() {
   const subUrl = `/page`
@@ -47,18 +47,19 @@ function uploadPageStaticFile(pageId: any, fileName: string, file: any) {
 }
 
 /**
- * Get the main.js if it's already there. Otherwise, return the template
+ * Get the static file if it's already there. Otherwise, return the template (if it exists)
  */
-async function getPageScript(pageId: any): Promise<string> {
+async function getPageStaticFileOrTemplate(pageId: any, fileName: string, templateName?: string): Promise<string> {
   return new Promise((resolve, reject) => {
-    getPageStaticFile(pageId, 'main.js')
+    getPageStaticFile(pageId, fileName)
       .then(res => resolve(res.data))
       .catch(err => {
         if (err.response.status !== 404) {
           reject(err)
         } else {
           // return the template if non exists yet
-          fetch(DEFAULT_MAIN_JS_URL)
+          // use fetch for convenience
+          fetch(STATIC_FILE_TEMPLATE_URL + (templateName || fileName))
             .then(it => resolve(it.text()))
             .catch(e => reject(e))
         }
@@ -75,6 +76,6 @@ export {
   uploadHtmlCss,
   getPageStaticFile,
   uploadPageStaticFile,
-  getPageScript,
-  DEFAULT_MAIN_JS_URL
+  getPageStaticFileOrTemplate,
+  STATIC_FILE_TEMPLATE_URL
 }

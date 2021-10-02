@@ -35,6 +35,7 @@ import URLSelectorDialog from "./URLSelectorDialog"
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft'
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight'
 import PageSettings from './PageSettings'
+import { EditFileButton, FileEditor } from "./FileEditor"
 
 const PageEditor = React.lazy(() => import('./grapes/PageEditor'))
 
@@ -93,8 +94,7 @@ export const usePageStyles = makeStyles((theme: Theme) =>
       margin: '15px',
       textAlign: 'center'
     },
-    activeCard: {
-    },
+    activeCard: {},
     inactiveCard: {
       backgroundColor: '#dcdcdc'
     },
@@ -154,9 +154,13 @@ export default function () {
 
   const classes = usePageStyles()
 
+  // TODO: needs refactoring
+
   const [pageOpen, setPageOpen] = useState<Page | null>(null)
   const [templateSelectorOpen, setTemplateSelectorOpen] = useState(false)
   const [urlSelectorOpen, setUrlSelectorOpen] = useState(false)
+
+  const [editingFile, setEditingFile] = useState<{ content: string, fileName: string, templateName: string } | undefined>()
 
   const { error: listError, loading: listLoading, response } = useRequest(listPages)
   const [pages, setPages] = useResponseState<Page[]>(response, [], res => res.data.map((it: any) => new Page(it)))
@@ -256,6 +260,32 @@ export default function () {
               )
             }}
           />
+          <PageCard
+            className={`${classes.card} ${classes.center} ${classes.templateSelectorCard}`}
+            page={new Page({
+              _id: '3',
+              name: 'Common Static Files',
+              description: 'These files are loaded on every page immediately. This is a good place for common styling and customization.'
+            })}
+            displayId={false}
+            displayStage={false}
+            actions={(
+              <>
+                <EditFileButton
+                  fileName="main.js"
+                  templateName="common_main.js"
+                  pageId="common"
+                  openEditor={content => setEditingFile({ content, fileName: "main.js", templateName: "common_main.js"})}
+                />
+                <EditFileButton
+                  fileName="main.css"
+                  templateName="common_main.css"
+                  pageId="common"
+                  openEditor={content => setEditingFile({ content, fileName: "main.css", templateName: "common_main.css"})}
+                />
+              </>
+            )}
+          />
         </Box>
         <Divider className={classes.actionCardsDivider}/>
 
@@ -328,6 +358,13 @@ export default function () {
         </Suspense>
       </div>}
 
+      <FileEditor
+        fileName={editingFile?.fileName || ""}
+        templateName={editingFile?.templateName}
+        pageId="common"
+        fileContent={editingFile?.content}
+        onClose={() => setEditingFile(undefined)}
+      />
     </div>
   )
 }
