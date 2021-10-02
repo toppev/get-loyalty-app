@@ -1,8 +1,9 @@
 import { Button, ButtonProps } from "@material-ui/core"
 import EditIcon from "@material-ui/icons/Edit"
-import React, { Suspense } from "react"
+import React, { Suspense, useCallback } from "react"
 import { getPageStaticFileOrTemplate, STATIC_FILE_TEMPLATE_URL, uploadPageStaticFile } from "../../services/pageService"
 import { usePageStyles } from "./PagesPage"
+import { debounce } from "lodash";
 
 const CodeMirror = React.lazy(() => import("./codemirror/CodeMirror"))
 
@@ -53,9 +54,13 @@ export function FileEditor({ pageId, fileName, templateName, fileContent, onClos
 
   const classes = usePageStyles()
 
-  const uploadScript = (content: string) => {
-    return uploadPageStaticFile(pageId, fileName, new Blob([content], { type: 'text/plain' }))
-  }
+  const uploadContent = (content: string) => uploadPageStaticFile(pageId, fileName, new Blob([content], { type: 'text/plain' }))
+
+    console.log(fileName, "asdasd")
+  const debounceUpload = useCallback(debounce((content: string) => {
+    console.log(fileName, "cb")
+    uploadContent(content)
+  }, 2000, { leading: true }), [uploadContent])
 
   return (
     <>
@@ -66,15 +71,11 @@ export function FileEditor({ pageId, fileName, templateName, fileContent, onClos
           initialValue={fileContent}
           codeMode={fileName.endsWith(".css") ? "css" : "javascript"}
           defaultValueURL={STATIC_FILE_TEMPLATE_URL + (templateName || "invalid_template")}
-          onChange={(_editor, _data, content) => {
-            // TODO: fix below or optimize
-            // Math.random() > 0.9 && uploadScript(content)
-            uploadScript(content)
+          onChange={(_editor, _data, content) => debounceUpload(content)}
+          saveContent={async (content) => {
+            return [200, 201].includes((await uploadContent(content)).status)
           }}
-          saveContent={async (content) => [200, 201].includes((await uploadScript(content)).status)}
           onClose={() => {
-            // TODO: fix or optimize above
-            // uploadScript(content)
             onClose()
           }}
         />
