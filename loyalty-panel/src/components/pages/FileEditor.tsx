@@ -3,7 +3,7 @@ import EditIcon from "@material-ui/icons/Edit"
 import React, { Suspense, useCallback } from "react"
 import { getPageStaticFileOrTemplate, STATIC_FILE_TEMPLATE_URL, uploadPageStaticFile } from "../../services/pageService"
 import { usePageStyles } from "./PagesPage"
-import { debounce } from "lodash";
+import { debounce } from "lodash"
 
 const CodeMirror = React.lazy(() => import("./codemirror/CodeMirror"))
 
@@ -56,9 +56,7 @@ export function FileEditor({ pageId, fileName, templateName, fileContent, onClos
 
   const uploadContent = (content: string) => uploadPageStaticFile(pageId, fileName, new Blob([content], { type: 'text/plain' }))
 
-    console.log(fileName, "asdasd")
   const debounceUpload = useCallback(debounce((content: string) => {
-    console.log(fileName, "cb")
     uploadContent(content)
   }, 2000, { leading: true }), [uploadContent])
 

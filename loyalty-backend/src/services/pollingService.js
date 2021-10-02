@@ -22,7 +22,8 @@ function sendToUser(userId, data, type = '') {
       'Polling-Authentication': process.env.POLLING_AUTHENTICATION
     }
   }).catch(err => {
-    logger.error(`Failed to poll user`, err)
+    logger.error(`Failed to poll user:`, err.message)
+    logger.debug(err)
   })
 }
 

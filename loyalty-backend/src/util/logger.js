@@ -1,3 +1,5 @@
+const DEBUG_ENABLED = process.env.LOG_LEVEL?.toLowerCase() === "debug"
+
 const dateStr = () => {
   const date = new Date()
   return date.getFullYear() + "/" +
@@ -29,6 +31,10 @@ const logger = {
 
   important: function (...message) {
     console.log(dateStr(), "IMPORTANT", message.join(' '))
+  },
+
+  debug(data) {
+    DEBUG_ENABLED && console.log(dateStr(), "DEBUG", data)
   },
 
   dateStr,
