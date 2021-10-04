@@ -63,7 +63,7 @@ PageDataSchema.pre('save', async function () {
   if (this.pathname.startsWith('/')) {
     this.pathname = this.pathname.substring(1)
   }
-  if (!this.pageIndex) {
+  if (this.pageIndex === undefined || this.pageIndex === null) {
     this.pageIndex = await getPagesCount()
   }
 })

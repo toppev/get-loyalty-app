@@ -13,7 +13,7 @@ type RequestWithCallback = {
 }
 
 export interface RequestHandler {
-  loading: boolean|undefined
+  loading: boolean | undefined
   error: any,
   response: any,
   execute: any,
@@ -69,7 +69,7 @@ export default function useRequest(
     if (requestContext.request) {
       setLoading(true)
       requestContext.request()
-        .then((res: AxiosResponse) => {
+        .then(res => {
           setResponse(res)
           requestContext.callback && requestContext.callback(res)
         })
@@ -102,6 +102,7 @@ export default function useRequest(
     error: error,
     response,
     execute,
+    /** FIXME: this cannot be used for multiple requests if they happen without re-rendering. NOT SAFE!*/
     performRequest
   }
 

@@ -173,20 +173,19 @@ export default function () {
   const error = listError || otherRequests.error
   const loading = listLoading // Showing load on otherRequests looks annoying
 
-  const movePage = (page: Page, direction: "right" | "left") => {
+  const movePage = async (page: Page, direction: "right" | "left") => {
     const modifier = direction === "right" ? 1 : -1
     const other = sortedPages[sortedPages.indexOf(page) + modifier]
     let newSlot = other.pageIndex
-    // FIXME
-    // If the order is messed (same index), add +1/-1 to newSlot
-    // It might skip 1 but whatever
     if (newSlot === page.pageIndex) {
       newSlot += modifier
     }
     other.pageIndex = page.pageIndex
     page.pageIndex = newSlot
-    otherRequests.performRequest(() => updatePage(page, false))
-    otherRequests.performRequest(() => updatePage(other, false))
+    await updatePage(page, false)
+    await updatePage(other, false)
+    // Bad workaround to force a update
+    setPages([...pages])
   }
 
   return error ? (<RetryButton error={error}/>) : (
@@ -275,13 +274,13 @@ export default function () {
                   fileName="main.js"
                   templateName="common_main.js"
                   pageId="common"
-                  openEditor={content => setEditingFile({ content, fileName: "main.js", templateName: "common_main.js"})}
+                  openEditor={content => setEditingFile({ content, fileName: "main.js", templateName: "common_main.js" })}
                 />
                 <EditFileButton
                   fileName="main.css"
                   templateName="common_main.css"
                   pageId="common"
-                  openEditor={content => setEditingFile({ content, fileName: "main.css", templateName: "common_main.css"})}
+                  openEditor={content => setEditingFile({ content, fileName: "main.css", templateName: "common_main.css" })}
                 />
               </>
             )}
