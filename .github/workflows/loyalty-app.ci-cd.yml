@@ -1,10 +1,33 @@
-name: loyalty-app (CI) build and push
+# Test and build & push the docker image
+
+name: loyalty-app (PWA) tests
+
 on:
+  pull_request:
+    paths:
+      - 'loyalty-app/**'
   push:
-    branches:
-      - 'develop'
+    paths:
+      - 'loyalty-app/**'
+
 jobs:
-  docker-master:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - name: Install
+        run: yarn install
+        working-directory: loyalty-app
+      - name: Test
+        run: yarn test
+        working-directory: loyalty-app
+  push-docker:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/develop'
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -25,3 +48,4 @@ jobs:
           context: ./loyalty-app
           push: true
           tags: ${{ secrets.DOCKER_REGISTRY_URL }}/loyalty-app:develop
+

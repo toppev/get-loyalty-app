@@ -1,14 +1,35 @@
-name: loyalty-panel s3-deploy
+name: loyalty-panel test and deploy
 
 on:
+  pull_request:
+    paths:
+      - 'loyalty-panel/**'
   push:
     paths:
       - 'loyalty-panel/**'
-    branches:
-      - master
 
 jobs:
-  build:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - name: Authenticate with GitHub package registry
+        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.READ_ORG_PACKAGES }}" > ~/.npmrc
+      - name: NPM CI
+        run: npm ci
+        working-directory: loyalty-panel
+      - name: Test
+        run: npm test
+        env:
+          CI: true
+        working-directory: loyalty-panel
+  deploy-s3:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/master'
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
