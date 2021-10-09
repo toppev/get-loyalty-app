@@ -236,12 +236,12 @@ async function renderPageView(pageId, user) {
   return template(context)
 }
 
-async function uploadStaticFile(pageId, jsCode, fileName, { contentType }) {
+async function uploadStaticFile(pageId, data, fileName, { contentType }) {
   if (!fileName) {
     fileName = new mongoose.mongo.ObjectId()
   }
   const dir = `page_${pageId}/`
-  await fileService.upload(dir + fileName, jsCode, { contentType: mime.lookup(fileName) || contentType })
+  await fileService.upload(dir + fileName, data, { contentType: mime.lookup(fileName) || contentType })
   // Refresh the page for the page owner to automatically see changes
   await pollingService.refreshOwner({ message: '[Editor]\nChanges detected' })
   return fileName
