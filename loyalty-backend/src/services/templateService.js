@@ -2,6 +2,7 @@ const request = require('request')
 const pageService = require('./pageService')
 const fileService = require('../services/fileService')
 const logger = require("../util/logger")
+const axios = require("axios")
 
 const PAGE_API_URL = 'https://demo.getloyalty.app/api/page'
 
@@ -34,23 +35,13 @@ async function loadDefaultTemplates() {
  * Fetch all templates from the API. Returns empty list if it fails
  */
 async function getTemplates() {
-  return new Promise((resolve, _reject) => {
-    // TODO: replace with axios
-    request.get(`${PAGE_API_URL}/templates`, {}, (err, _res, body) => {
-      if (err) {
-        logger.error("Error getting templates", err)
-        resolve([])
-      } else {
-        try {
-          resolve(JSON.parse(body))
-        } catch (e) {
-          logger.error("Error getting templates", e)
-          resolve([])
-        }
-      }
-    })
-  })
-
+  try {
+    const res = await axios.get(`${PAGE_API_URL}/templates`)
+    return res.data
+  } catch (err) {
+    logger.error("Error getting templates", err)
+  }
+  return []
 }
 
 /**
