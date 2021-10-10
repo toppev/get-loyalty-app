@@ -25,7 +25,15 @@ async function upload(name, data, { visibility, contentType } = {}) {
   }, { upsert: true })
 }
 
+async function getUploads(dir, { visibility } = {}) {
+  return FileUpload.find({
+    _id: new RegExp(`^${dir}/`),
+    visibility: visibility || 'public'
+  })
+}
+
 module.exports = {
-  getUpload,
   upload,
+  getUpload,
+  getUploads,
 }

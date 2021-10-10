@@ -136,7 +136,19 @@ async function getThumbnail(pageId) {
 
 // IDEA: permission/plan based templates?
 async function getTemplates() {
-  return await PageData.find({ template: true })
+  const pages = await PageData.find({ template: true })
+  const templates = await Promise.all(pages.map(async page => {
+    const dir = `page_${page._id}`
+    const uploads = await fileService.getUploads(dir)
+    return { page, uploads }
+  }))
+  const commonUploads = await fileService.getUploads('page_common')
+  return {
+    templates,
+    common: {
+      uploads: commonUploads
+    }
+  }
 }
 
 async function getPageContext(user) {

@@ -201,7 +201,6 @@ describe('Logged in user with permissions can', () => {
     expect(commonCSSRes.text).toEqual(commonCSSString)
   })
 
-
 })
 
 afterAll(() => {
