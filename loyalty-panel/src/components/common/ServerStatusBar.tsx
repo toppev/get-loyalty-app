@@ -21,13 +21,13 @@ export function ServerStatusBar() {
   const [serverState, setServerState] = useState<StatusBarState>({ severity: 'info', message: 'Loading status...' })
 
   const checkStatus = () => {
-    incrementDelay++
+    if (incrementDelay <= 10) incrementDelay++
     waitForServer(data => {
       setServerState({ severity: "success", message: "Your server is online since " + (new Date(data.onlineSince).toLocaleString()) })
       setTimeout(checkStatus, 10_000 + (incrementDelay * 5000))
     }, () => {
       setServerState({ severity: "error", message: "Your server could not be reached." })
-      // #waitForServer automatically reattempts
+      incrementDelay = 0 // reset
     })
   }
 

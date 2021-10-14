@@ -231,6 +231,7 @@ function ServerSettingsForm() {
 
   const loading = serverInfo.loading || updateRequest.loading
   const error = serverInfo.error || updateRequest.error
+  const initialValues = serverInfo?.response?.data
 
   // Needed for askNotifications menu
   const pageRequest = useRequest(listPages)
@@ -245,6 +246,7 @@ function ServerSettingsForm() {
     }
     return errors
   }
+
 
   return (
     <div>
@@ -264,7 +266,7 @@ function ServerSettingsForm() {
 
       {!serverInfo.loading &&
       <Formik
-        initialValues={serverInfo?.response?.data}
+        initialValues={initialValues}
         validateOnBlur
         validate={validateForm}
         onSubmit={(values, actions) => {
@@ -281,8 +283,13 @@ function ServerSettingsForm() {
             updateRequest.performRequest(
               () => updateServer(values),
               () => {
-                actions.setSubmitting(false)
-                setPopupOpen(false)
+                // Make sure everything is up
+                setTimeout(() => {
+                  actions.setSubmitting(false)
+                  setPopupOpen(false)
+                  // IDEA: Trigger an update in the ServerStatusBar instead of reloading?
+                  window.location.reload()
+                }, 5000)
               },
               () => {
                 actions.setSubmitting(false)
@@ -357,7 +364,7 @@ function ServerSettingsForm() {
                 ))}
                 {pages.filter(it => it.isDiscarded()).map(page => (
                   <MenuItem key={page._id} value={page.pathname}>
-                    {`On "/${page.pathname}" page`}
+                    {`On "${page.pathname}" page`}
                   </MenuItem>
                 ))}
               </Select>
