@@ -79,10 +79,11 @@
   display: table-cell;
   text-decoration: inherit;
   text-align: center;
-  font-size: 18px;
+  font-size: 24px;
   text-decoration: none;
   margin-left: 12px;
-  color: #647fac;
+  color: #c2d0eb;
+  font-weight: bold;
 }
 
 .desktop-navbar .active .pageIcon svg {
