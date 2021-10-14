@@ -1,15 +1,4 @@
-import {
-  Box,
-  Button,
-  createStyles,
-  LinearProgress,
-  makeStyles,
-  Paper,
-  Theme,
-  Typography,
-  useMediaQuery,
-  useTheme
-} from "@material-ui/core"
+import { Box, Button, createStyles, LinearProgress, makeStyles, Paper, Theme, Typography, useMediaQuery, useTheme } from "@material-ui/core"
 import LockIcon from '@material-ui/icons/Lock'
 import MailOutlineIcon from '@material-ui/icons/MailOutline'
 import clsx from 'clsx'
@@ -77,15 +66,14 @@ interface EmailFormProps {
   user: User
 }
 
+type EmailValues = { email: string };
+
 function EmailForm({ user }: EmailFormProps) {
 
   const classes = useStyles()
-
-  const [canSubmit, setCanSubmit] = useState(false)
-
   const context = useContext(AppContext)
 
-  type EmailValues = { email: string };
+  const [canSubmit, setCanSubmit] = useState(false)
 
   const validate = ({ email }: EmailValues) => {
     const errors: FormikErrors<User> = {}
@@ -96,13 +84,13 @@ function EmailForm({ user }: EmailFormProps) {
     return errors
   }
 
-  const initials: EmailValues = { email: user.email }
+  const initialValues: EmailValues = { email: user.email }
 
   const { error, performRequest, loading } = useRequest()
 
   return (
     <Formik
-      initialValues={initials}
+      initialValues={initialValues}
       validateOnBlur
       validate={validate}
       onSubmit={(value, actions) => {

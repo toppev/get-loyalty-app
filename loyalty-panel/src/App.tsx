@@ -71,10 +71,14 @@ export default function () {
         })
         .catch(err => {
           console.log(err.response?.data || err)
-          const commonError = 'Something went wrong...\nPerhaps our servers are down :(' +
-            '\nPlease try refreshing the page or clearing cookies and logging in.'
+          if (!context.user.email?.trim()) {
+            setLoginDialog(true)
+            return
+          }
 
           const alertAndOpenLogin = (data: any) => {
+            const commonError = 'Something went wrong...\nPerhaps our servers are down :(' +
+              '\nPlease try refreshing the page or clearing cookies and logging in.'
             window.alert(data?.message || commonError)
             setLoginDialog(true)
           }

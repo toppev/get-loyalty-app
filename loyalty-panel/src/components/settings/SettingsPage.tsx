@@ -146,27 +146,27 @@ export default function () {
               <Form>
                 <div className={classes.fieldDiv}>
                   {Object.keys(translations).map(k => {
-                      const { plural, singular, placeholder } = translations[k]
-                      const both = plural && singular
-                      return (
-                        <div key={k}>
-                          {plural && <TextField
-                            className={classes.field}
-                            name={`config.translations.${k}.plural`}
-                            type="text"
-                            label={`"${k}" translation ${both ? "(plural)" : ""}`}
-                            placeholder={placeholder}
-                          />}
-                          {singular && <TextField
-                            className={classes.field}
-                            name={`config.translations.${k}.singular`}
-                            type="text"
-                            label={`"${k}" translation ${both ? "(singular)" : ""}`}
-                            placeholder={placeholder}
-                          />}
-                        </div>
-                      )
-                    }
+                    const { plural, singular, placeholder } = translations[k]
+                    const both = plural && singular
+                    return (
+                      <div key={k}>
+                        {plural && <TextField
+                          className={classes.field}
+                          name={`config.translations.${k}.plural`}
+                          type="text"
+                          label={`"${k}" translation ${both ? "(plural)" : ""}`}
+                          placeholder={placeholder}
+                        />}
+                        {singular && <TextField
+                          className={classes.field}
+                          name={`config.translations.${k}.singular`}
+                          type="text"
+                          label={`"${k}" translation ${both ? "(singular)" : ""}`}
+                          placeholder={placeholder}
+                        />}
+                      </div>
+                    )
+                  }
                   )}
                 </div>
                 <SaveChangesSnackbar
