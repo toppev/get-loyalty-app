@@ -25,8 +25,8 @@ async function emailPasswordReset(email, token, redirectUrl) {
   const mailOptions = {
     from: config.email,
     to: email,
-    subject: config.emailSubject,
-    text: config.emailText.replace('{url}', url),
+    subject: config.resetPassword.emailSubject,
+    text: config.resetPassword.emailText.replace('{url}', url),
   }
 
   transporter.sendMail(mailOptions, (error, info) => {

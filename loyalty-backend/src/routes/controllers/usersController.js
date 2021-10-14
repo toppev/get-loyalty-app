@@ -63,7 +63,7 @@ function logout(req, res, next) {
 }
 
 function forgotPassword(req, res, next) {
-  userService.forgotPassword(req.body.email)
+  userService.forgotPassword(req.body.email, req.body.redirectUrl)
     .then(() => res.json({
       message: 'A link to reset your password has been emailed if the email exists.'
     }))

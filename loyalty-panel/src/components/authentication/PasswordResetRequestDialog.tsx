@@ -81,7 +81,7 @@ export default function (props: PasswordResetRequestDialogProps) {
                 setButtonDisabled(false)
               }
 
-              forgotPassword(email.trim())
+              forgotPassword(email.trim(), window.location.href)
                 .then(_res => setMessage('We have emailed you a password request link if the email exists.'))
                 .catch(err => onError(err, validBackendURL() ? '' : 'Could not find your server.'))
             }}
@@ -93,7 +93,7 @@ export default function (props: PasswordResetRequestDialogProps) {
 }
 
 
-async function forgotPassword(email: string) {
+async function forgotPassword(email: string, redirectUrl?: string) {
   await ensureServerAPI(email)
-  return post('/user/forgotpassword', { email })
+  return post('/user/forgotpassword', { email, redirectUrl })
 }
