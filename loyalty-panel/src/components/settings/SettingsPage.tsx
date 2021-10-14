@@ -362,7 +362,7 @@ function ServerSettingsForm() {
                     {v.name}
                   </MenuItem>
                 ))}
-                {pages.filter(it => it.isDiscarded()).map(page => (
+                {pages.filter(it => !it.isDiscarded()).map(page => (
                   <MenuItem key={page._id} value={page.pathname}>
                     {`On "${page.pathname}" page`}
                   </MenuItem>
