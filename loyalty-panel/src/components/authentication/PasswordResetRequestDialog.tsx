@@ -1,10 +1,22 @@
 import React, { useEffect, useState } from "react"
-import { Button, createStyles, Dialog, DialogContent, InputAdornment, makeStyles, TextField, Theme, Typography } from "@material-ui/core"
+import {
+  Button,
+  createStyles,
+  Dialog,
+  DialogContent,
+  InputAdornment,
+  makeStyles,
+  TextField,
+  Theme,
+  Typography,
+  useTheme
+} from "@material-ui/core"
 import CloseButton from "../common/button/CloseButton"
 import EmailIcon from '@material-ui/icons/Email'
 import { post, validBackendURL } from "../../config/axios"
 import { isEmail } from "../../util/validate"
 import { ensureServerAPI } from "../../services/serverService"
+import SendIcon from "@material-ui/icons/Send"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -33,10 +45,11 @@ interface PasswordResetRequestDialogProps {
 
 export default function (props: PasswordResetRequestDialogProps) {
 
+  const theme = useTheme()
   const classes = useStyles()
 
   const [email, setEmail] = useState(props.initialEmail || '')
-  const [message, setMessage] = useState<string | undefined>()
+  const [message, setMessage] = useState<{ message: string, color: string } | undefined>()
   const [buttonText, setButtonText] = useState('Email reset link')
   const [buttonDisabled, setButtonDisabled] = useState(false)
 
@@ -65,25 +78,36 @@ export default function (props: PasswordResetRequestDialogProps) {
         </div>
         <div className={classes.paper}>
           <div>
-            <Typography variant="caption">{message}</Typography>
+            <Typography variant="caption" style={{ color: message?.color || '' }}>{message?.message || ''}</Typography>
           </div>
           <Button
             size="small"
             variant="contained"
             disabled={buttonDisabled}
+            startIcon={(<SendIcon/>)}
             onClick={() => {
               setButtonText('Sending...')
               setButtonDisabled(true)
 
               const onError = (err: any, errMsg: string = '') => {
-                setMessage(`An error occurred. ${errMsg}. ${err?.response?.data?.message || `(Code ${err?.response?.status || -1}`})`)
+                setMessage({
+                  message: `An error occurred. ${errMsg}. ${err?.response?.data?.message || '(ErrorCode: ' + (err?.response?.status || -1)})`,
+                  color: theme.palette.error.main
+                })
                 setButtonText('Try again')
                 setButtonDisabled(false)
               }
 
               forgotPassword(email.trim(), window.location.href)
-                .then(_res => setMessage('We have emailed you a password request link if the email exists.'))
-                .catch(err => onError(err, validBackendURL() ? '' : 'Could not find your server.'))
+                .then(_res => {
+                  setMessage({
+                    message: 'We have emailed you a password request link if the email exists.',
+                    color: theme.palette.success.main
+                  })
+                  setButtonText('Email sent!')
+                  setTimeout(() => setButtonDisabled(false), 5000) // If they entered wrong email, for example
+                })
+                .catch(err => onError(err, validBackendURL() ? '' : 'Oops... Could not find your server.'))
             }}
           >{buttonText}</Button>
         </div>
