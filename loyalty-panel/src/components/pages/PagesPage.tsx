@@ -210,7 +210,7 @@ export default function () {
           <TemplateSelectorDialog
             open={templateSelectorOpen}
             onClose={() => setTemplateSelectorOpen(false)}
-            onSelect={(page) => {
+            onSelect={page => {
               // Create a new page using the same page
               // Basically just creates a "personal" clone (without description)
               page.description = ''

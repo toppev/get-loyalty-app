@@ -26,7 +26,8 @@ module.exports = {
   getThumbnail,
   getTemplates,
   renderPageView,
-  getStaticFile
+  getStaticFile,
+  cloneUploads
 }
 
 async function createPage(pageParam) {
@@ -38,8 +39,11 @@ async function createPage(pageParam) {
   }) >= limit) {
     throw new StatusError('Plan limit reached', 402)
   }
-  const newPage = new PageData(pageParam)
-  return newPage.save()
+  const newPage = await (new PageData(pageParam)).save()
+  if (pageParam.uploads?.length) {
+    await cloneUploads(pageParam.uploads, newPage.id)
+  }
+  return newPage
 }
 
 async function savePage(id, pageData, gjsOnly) {
@@ -262,4 +266,20 @@ async function uploadStaticFile(pageId, data, fileName, { contentType }) {
 async function getStaticFile(pageId, fileName) {
   const dir = `page_${pageId}`
   return fileService.getUpload(dir + '/' + fileName)
+}
+
+/**
+ * Clone the given uploads for the given page (so it has them after)
+ */
+async function cloneUploads(uploads, pageId) {
+  await Promise.all(uploads.map(async entry => {
+    const actualFileName = entry._id.toString().split('/').pop()
+    await uploadStaticFile(
+      pageId,
+      entry.data,
+      actualFileName,
+      { contentType: entry.contentType }
+    )
+    logger.info(`Cloned upload ${actualFileName} (${entry.contentType}) for the page ${pageId}`)
+  }))
 }

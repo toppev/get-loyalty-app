@@ -10,6 +10,7 @@ class Page {
   template: boolean
   externalURL?: string
   gjs: any
+  uploads: any[] | undefined
 
   constructor(data: any) {
     this._id = data._id || data.id
@@ -22,6 +23,7 @@ class Page {
     this.externalURL = data.externalURL
     this.template = data.template
     this.gjs = data.gjs
+    this.uploads = data.uploads
   }
 
   isPublished() {

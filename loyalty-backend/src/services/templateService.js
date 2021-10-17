@@ -17,16 +17,13 @@ async function loadDefaultTemplates(pageIds = DEFAULT_PAGES) {
     // Pages
     await Promise.all(templates.map(async template => {
       if (pageIds.includes(template.page.id)) {
-        const page = await pageService.createPage(template)
-        if (template.uploads?.length) {
-          await cloneUploads(template.uploads, page.id)
-        }
-        logger.info(`Template ${template.page.id} loaded`)
+        await pageService.createPage(template)
+        logger.info(`Template ${template.page.name} loaded`)
       }
     }))
 
     // Common files
-    await cloneUploads(common?.uploads || [], 'common')
+    await pageService.cloneUploads(common?.uploads || [], 'common')
   } catch (e) {
     logger.error(`Failed to load/save default templates`, e)
   }
@@ -44,19 +41,6 @@ async function getTemplateData() {
     logger.error("Error getting templates", err)
   }
   return []
-}
-
-async function cloneUploads(uploads, pageId) {
-  await Promise.all(uploads.map(async entry => {
-    const actualFileName = entry._id.toString().split('/').pop()
-    await pageService.uploadStaticFile(
-      pageId,
-      entry.data,
-      actualFileName,
-      { contentType: entry.contentType }
-    )
-    logger.info(`Cloned upload ${actualFileName} (${entry.contentType}) for the page ${pageId}`)
-  }))
 }
 
 module.exports = {
