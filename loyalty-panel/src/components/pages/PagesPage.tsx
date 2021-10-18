@@ -224,7 +224,6 @@ export default function () {
               )
             }}
           />
-
           <PageCard
             className={`${classes.card} ${classes.center} ${classes.templateSelectorCard}`}
             page={new Page({
@@ -481,7 +480,11 @@ function TemplateSelectorDialog({ open, onClose, onSelect }: TemplateSelectorDia
     errorMessage: 'Failed to load template pages'
   })
   useEffect(loadTemplates, [open])
-  const [templates] = useResponseState<Page[]>(response, [], res => res.data.map((d: any) => new Page(d)))
+  const [templates] = useResponseState<Page[]>(
+    response,
+    [],
+    res => res?.data?.templates?.map((d: any) => new Page(d)) || []
+  )
 
   const selectTemplate = (page: Page) => {
     console.log(page)
