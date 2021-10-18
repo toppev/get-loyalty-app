@@ -101,7 +101,7 @@ export default function (props: PasswordResetRequestDialogProps) {
 
               const onError = (err: any, errMsg: string = '') => {
                 setMessage({
-                  message: `An error occurred. ${errMsg}. ${err?.response?.data?.message || '(ErrorCode: ' + (err?.response?.status || -1)})`,
+                  message: `An error occurred. ${errMsg}. ${err?.response?.data?.message || 'ErrorCode: ' + (err?.response?.status || -1)}`,
                   color: theme.palette.error.main
                 })
                 setButtonText('Try again')

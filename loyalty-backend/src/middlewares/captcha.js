@@ -32,7 +32,7 @@ function verifyCAPTCHAOnRegister(req, res, next) {
 function verifyCAPTCHAOnPasswordReset(req, res, next) {
   if (process.env.NODE_ENV === 'test') return next()
   const pwResetCaptcha = process.env.PASSWORD_RESET_CAPTCHA
-  if (pwResetCaptcha && pwResetCaptcha !== 'false') return next()
+  if (!pwResetCaptcha || pwResetCaptcha === 'false') return next()
   verifyCaptcha(req.body.token)
     .then(next)
     .catch(next)
