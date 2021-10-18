@@ -11,7 +11,7 @@ RUN npm install --only=production
 RUN rm -f ~/.npmrc
 
 COPY . /app
-RUN npm build
+RUN npm run build
 
 FROM nginx:stable-alpine
 # Copy build and nginx config
