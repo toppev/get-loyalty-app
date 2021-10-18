@@ -1,7 +1,7 @@
-const request = require("request")
 const StatusError = require("../util/statusError")
 const User = require("../models/user")
 const logger = require("../util/logger")
+const { post } = require("axios")
 
 // "IF_EMPTY" to verify only if there are no users yet (e.g creating the first user)
 // "ALL" to verify all requests (whatever uses this middleware)
@@ -20,29 +20,38 @@ const checkEmpty = () => {
 }
 checkEmpty()
 
-function verifyCAPTCHA(req, res, next) {
+function verifyCAPTCHAOnRegister(req, res, next) {
   if (process.env.NODE_ENV === 'test') return next()
   if (captchaMode === "DISABLED" || (captchaMode === "IF_EMPTY" && !isEmptyServer)) return next()
   if (isEmptyServer) checkEmpty()
+  verifyCaptcha(req.body.token)
+    .then(next)
+    .catch(next)
+}
 
-  const token = req.body.token
-  if (!token) return next(new StatusError('Empty captcha token', 400))
+function verifyCAPTCHAOnPasswordReset(req, res, next) {
+  if (process.env.NODE_ENV === 'test') return next()
+  const pwResetCaptcha = process.env.PASSWORD_RESET_CAPTCHA
+  if (pwResetCaptcha && pwResetCaptcha !== 'false') return next()
+  verifyCaptcha(req.body.token)
+    .then(next)
+    .catch(next)
+}
 
+async function verifyCaptcha(token) {
+  if (!token) throw new StatusError('Empty captcha token', 400)
   const secret = process.env.CAPTCHA_SECRET_KEY
   const url = `https://www.google.com/recaptcha/api/siteverify?secret=${secret}&response=${token}`
-
-  // TODO replace with axios
-  request.post({ url }, function (error, response, body) {
-    if (JSON.parse(body).success === true) {
-      next()
-    } else {
-      next(error || new StatusError('Invalid CAPTCHA token', 400))
-      logger.important("Captcha validation error", { error, body, secretLength: secret.length, token: token })
-    }
-  })
-
+  const res = await post(url,)
+  if (res.data.success === true) {
+    logger.info("Captcha verified")
+  } else {
+    logger.important("Captcha validation error", { res: res.data, secretLength: secret.length, token: token })
+    throw new StatusError('Invalid CAPTCHA token', 400)
+  }
 }
 
 module.exports = {
-  verifyCAPTCHA
+  verifyCAPTCHAOnRegister,
+  verifyCAPTCHAOnPasswordReset
 }

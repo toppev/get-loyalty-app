@@ -168,62 +168,63 @@ function ResetPassword({ user, title, highlight }: ResetPasswordProps) {
   const { loading, error, performRequest } = useRequest()
 
   return (
-
-    <Formik
-      initialValues={{ password: "", repeatPassword: "" }}
-      validate={validate}
-      onSubmit={(values, actions) => {
-        performRequest(
-          () => updateUser(user._id, { password: values.password }),
-          () => {
-            actions.setSubmitting(false)
-            setSuccess(true)
-            context.setUser({
-              ...user, hasPassword: true
+    <div id="change-password">
+      <Formik
+        initialValues={{ password: "", repeatPassword: "" }}
+        validate={validate}
+        onSubmit={(values, actions) => {
+          performRequest(
+            () => updateUser(user._id, { password: values.password }),
+            () => {
+              actions.setSubmitting(false)
+              setSuccess(true)
+              context.setUser({
+                ...user, hasPassword: true
+              })
             })
-          })
-      }}
-    >
-      {({ submitForm }) => {
-        return (
-          <Paper className={highlight ? clsx(classes.paper, classes.highlight) : classes.paper}>
-            <Typography
-              variant="h6"
-              align="center">
-              {title}
-            </Typography>
-            {success && <Alert severity="success">Password changed successfully!</Alert>}
-            <Form>
-              <TextField
-                className={classes.field}
-                name="password"
-                type="password"
-                label="New Password"
-                required
-              />
-              <TextField
-                className={classes.field}
-                name="repeatPassword"
-                type="password"
-                label="Repeat Password"
-                required
-              />
-              <Button
-                className={classes.passwordBtn}
-                disabled={loading || !canSubmit}
-                onClick={submitForm}
-                startIcon={(<LockIcon/>)}
-                variant="contained"
-              >{title}</Button>
-            </Form>
-            <RetryButton error={error}/>
-            <div style={{ marginTop: '10px' }}>
-              {loading && <LinearProgress/>}
-            </div>
-          </Paper>
-        )
-      }}
-    </Formik>
+        }}
+      >
+        {({ submitForm }) => {
+          return (
+            <Paper className={highlight ? clsx(classes.paper, classes.highlight) : classes.paper}>
+              <Typography
+                variant="h6"
+                align="center">
+                {title}
+              </Typography>
+              {success && <Alert severity="success">Password changed successfully!</Alert>}
+              <Form>
+                <TextField
+                  className={classes.field}
+                  name="password"
+                  type="password"
+                  label="New Password"
+                  required
+                />
+                <TextField
+                  className={classes.field}
+                  name="repeatPassword"
+                  type="password"
+                  label="Repeat Password"
+                  required
+                />
+                <Button
+                  className={classes.passwordBtn}
+                  disabled={loading || !canSubmit}
+                  onClick={submitForm}
+                  startIcon={(<LockIcon/>)}
+                  variant="contained"
+                >{title}</Button>
+              </Form>
+              <RetryButton error={error}/>
+              <div style={{ marginTop: '10px' }}>
+                {loading && <LinearProgress/>}
+              </div>
+            </Paper>
+          )
+        }}
+      </Formik>
+    </div>
   )
 
 }

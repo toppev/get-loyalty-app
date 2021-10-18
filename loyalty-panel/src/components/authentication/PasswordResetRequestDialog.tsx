@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import {
   Button,
   createStyles,
@@ -17,6 +17,7 @@ import { post, validBackendURL } from "../../config/axios"
 import { isEmail } from "../../util/validate"
 import { ensureServerAPI } from "../../services/serverService"
 import SendIcon from "@material-ui/icons/Send"
+import ReCAPTCHA from "react-google-recaptcha";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -55,6 +56,15 @@ export default function (props: PasswordResetRequestDialogProps) {
 
   useEffect(() => setButtonDisabled(!isEmail(email)), [email])
 
+  const recaptchaRef = useRef(null)
+
+  const getCaptchaToken = (): Promise<string> => {
+    // @ts-ignore
+    recaptchaRef.current.reset()
+    // @ts-ignore
+    return recaptchaRef.current.executeAsync()
+  }
+
   return (
     <Dialog open={props.open} fullWidth className={classes.dialog}>
       <CloseButton onClick={props.onClose}/>
@@ -85,7 +95,7 @@ export default function (props: PasswordResetRequestDialogProps) {
             variant="contained"
             disabled={buttonDisabled}
             startIcon={(<SendIcon/>)}
-            onClick={() => {
+            onClick={async () => {
               setButtonText('Sending...')
               setButtonDisabled(true)
 
@@ -98,7 +108,10 @@ export default function (props: PasswordResetRequestDialogProps) {
                 setButtonDisabled(false)
               }
 
-              forgotPassword(email.trim(), window.location.href)
+              const token = await getCaptchaToken()
+              let redirectUrl = window.location.href
+              if (!redirectUrl.endsWith("/account")) redirectUrl += "/account#change-password"
+              forgotPassword(email.trim(), token, redirectUrl)
                 .then(_res => {
                   setMessage({
                     message: 'We have emailed you a password request link if the email exists.',
@@ -110,6 +123,11 @@ export default function (props: PasswordResetRequestDialogProps) {
                 .catch(err => onError(err, validBackendURL() ? '' : 'Oops... Could not find your server.'))
             }}
           >{buttonText}</Button>
+          <ReCAPTCHA
+            ref={recaptchaRef}
+            size="invisible"
+            sitekey={process.env.REACT_APP_CAPTCHA_SITE_KEY!!}
+          />
         </div>
       </DialogContent>
     </Dialog>
@@ -117,7 +135,7 @@ export default function (props: PasswordResetRequestDialogProps) {
 }
 
 
-async function forgotPassword(email: string, redirectUrl?: string) {
+async function forgotPassword(email: string, token: string, redirectUrl?: string) {
   await ensureServerAPI(email)
-  return post('/user/forgotpassword', { email, redirectUrl })
+  return post('/user/forgotpassword', { email, token, redirectUrl })
 }

@@ -4,12 +4,13 @@ import { get, setBackendUrl } from "../../config/axios"
 import { AxiosResponse } from "axios"
 import { profileRequest } from "../../services/authenticationService"
 
-
+// TODO: remove? unnecessary?
 export default function (callback?: (res: AxiosResponse) => any, onError?: (err: any) => any) {
 
-  const resetCode = useQuery().get('passwordReset')
+  const queryParams = useQuery()
+  const resetCode = queryParams.get('passwordReset')
   // To easily "login" if we know the API address
-  const API_ADDRESS = useQuery().get('api_address')
+  const API_ADDRESS = queryParams.get('api_address')
 
   useEffect(() => {
     if (API_ADDRESS) {

@@ -4,6 +4,7 @@ const ResetPassword = require('../models/passwordReset')
 const crypto = require('crypto')
 const customerService = require("./customerService")
 const Business = require("../models/business")
+const logger = require("../util/logger")
 
 module.exports = {
   getAll,
@@ -42,6 +43,8 @@ async function forgotPassword(email, redirectUrl) {
       await reset.save()
       await emailPasswordReset(email, token, redirectUrl)
     }
+  } else {
+    logger.important("forgotPassword user was not found:", email)
   }
 }
 

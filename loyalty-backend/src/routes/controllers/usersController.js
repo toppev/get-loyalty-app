@@ -5,7 +5,7 @@ const StatusError = require('../../util/statusError')
 
 const permit = require('../../middlewares/permitMiddleware')
 const authenticator = require('../../middlewares/authenticator')
-const { verifyCAPTCHA } = require('../../middlewares/captcha')
+const { verifyCAPTCHAOnRegister, verifyCAPTCHAOnPasswordReset } = require('../../middlewares/captcha')
 
 const validation = require('../../helpers/bodyFilter')
 const logger = require("../../util/logger")
@@ -13,10 +13,10 @@ const userValidator = validation.validate(validation.userValidator)
 
 // Not logged in, no perms
 router.get('/resetpassword/:token', resetPassword)
-router.post('/forgotpassword', forgotPassword)
+router.post('/forgotpassword', verifyCAPTCHAOnPasswordReset, forgotPassword)
 router.post('/login', authenticator, login)
 router.post('/login/:loginService', authenticator, login)
-router.post('/register', userValidator, verifyCAPTCHA, register)
+router.post('/register', userValidator, verifyCAPTCHAOnRegister, register)
 // Use the jwt
 router.get('/profile', getCurrent)
 router.post('/logout', logout)
@@ -65,7 +65,7 @@ function logout(req, res, next) {
 function forgotPassword(req, res, next) {
   userService.forgotPassword(req.body.email, req.body.redirectUrl)
     .then(() => res.json({
-      message: 'A link to reset your password has been emailed if the email exists.'
+      message: 'A link to reset your password has been emailed if the email exists. Please check the spam folder too.'
     }))
     .catch(err => next(err))
 }

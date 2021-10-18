@@ -20,7 +20,7 @@ async function emailPasswordReset(email, token, redirectUrl) {
   if (process.env.NODE_ENV === 'test') return
 
   const redirect = redirectUrl || process.env.APP_ORIGIN.split(',')[0]
-  const url = `${process.env.PUBLIC_URL}/user/resetpassword/${token}?redirect${redirect}`
+  const url = `${process.env.PUBLIC_URL}/user/resetpassword/${token}?redirect=${redirect}`
 
   const mailOptions = {
     from: config.email,
@@ -33,7 +33,7 @@ async function emailPasswordReset(email, token, redirectUrl) {
     if (error) {
       logger.error('Failed to email password reset', error)
     } else {
-      logger.important('Password reset email was sent to ' + email + '\nInfo: ' + info)
+      logger.important('Password reset email was sent to ' + email + '\nInfo: ' + JSON.stringify(info, 2))
     }
   })
 }

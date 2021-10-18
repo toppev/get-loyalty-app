@@ -9,7 +9,7 @@ async function getOrCreateServer(data: { email: string, token?: string }, create
     return { created: true }
   }
   const res = await post(`${SERVER_API_URL}/server/get_or_create/?create=${create}`, data, true)
-  setBackendUrl(res.data.apiendpoint)
+  setBackendUrl(res.data.staticAPIAddress)
   return { created: res.status === 201, ...res }
 }
 
@@ -21,7 +21,7 @@ async function ensureServerAPI(email: string) {
     throw new Error('Invalid backend URL')
   }
   const res = await post(`${SERVER_API_URL}/server/get_or_create/?create=false`, { email }, true)
-  setBackendUrl(res.data.apiendpoint)
+  setBackendUrl(res.data.staticAPIAddress)
 }
 
 function updateServer(data: ServerSettings) {
