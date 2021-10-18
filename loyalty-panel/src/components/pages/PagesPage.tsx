@@ -1,41 +1,20 @@
-import {
-  Box,
-  Button,
-  ButtonProps,
-  Card,
-  CardActions,
-  CardContent,
-  CardProps,
-  createStyles,
-  Dialog,
-  DialogContent,
-  Divider,
-  Grid,
-  IconButton,
-  LinearProgress,
-  makeStyles,
-  TextField,
-  Theme,
-  Tooltip,
-  Typography
-} from '@material-ui/core'
+import { Box, Button, createStyles, Divider, IconButton, LinearProgress, makeStyles, Theme } from '@material-ui/core'
 import EditIcon from '@material-ui/icons/Edit'
 import WebIcon from '@material-ui/icons/Web'
-import React, { Suspense, useEffect, useState } from 'react'
-import { backendURL, post } from '../../config/axios'
-import CloseButton from '../common/button/CloseButton'
-import IdText from '../common/IdText'
+import React, { Suspense, useState } from 'react'
+import { backendURL } from '../../config/axios'
 import RetryButton from '../common/button/RetryButton'
 import { Page } from './Page'
 import useRequest from "../../hooks/useRequest"
 import useResponseState from "../../hooks/useResponseState"
-import { createPage, deletePage, listPages, listTemplates, updatePage } from "../../services/pageService"
-import PreviewPage from "./PreviewPage"
+import { createPage, deletePage, listPages, updatePage } from "../../services/pageService"
 import URLSelectorDialog from "./URLSelectorDialog"
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft'
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight'
 import PageSettings from './PageSettings'
 import { EditFileButton, FileEditor } from "./FileEditor"
+import PageCard from './PageCard'
+import { TemplateSelectorDialog } from "./TemplateSelector"
 
 const PageEditor = React.lazy(() => import('./grapes/PageEditor'))
 
@@ -364,197 +343,5 @@ export default function () {
         onClose={() => setEditingFile(undefined)}
       />
     </div>
-  )
-}
-
-interface PageCardProps extends CardProps {
-  page: Page
-  editableName?: boolean
-  actions?: React.ReactNode
-  displayId?: boolean
-  displayStage?: boolean
-  image?: string
-}
-
-function PageCard(props: PageCardProps) {
-
-  const { editableName, page, actions, displayId = true, displayStage = true, image, ...otherProps } = props
-
-  const classes = usePageStyles()
-
-  const [editing, setEditing] = useState(false)
-
-  const submitNameChange = () => {
-    setEditing(false)
-    const url = `${backendURL}/page/${page._id}`
-    post(url, { name: page.name }, true)
-      .catch(err => {
-        // Show notification?
-        console.log(`Failed to rename page: ${err}`)
-      })
-  }
-
-  const backgroundImageCss = image ? {
-    backgroundImage: `url(${image})`,
-  } : {}
-
-  return (
-    <Card className={classes.card} {...otherProps}>
-      <div className={classes.cardContentDiv}>
-        <div className={classes.backgroundImage} style={backgroundImageCss}/>
-        <CardContent className={`${classes.cardContent} ${classes.center}`}>
-          <TextField
-            disabled={!editing}
-            className={classes.pageNameField}
-            defaultValue={page.name}
-            margin="dense"
-            name="name"
-            type="text"
-            inputProps={{ min: 0, style: { textAlign: 'center', color: '#292929' } }}
-            InputProps={{
-              className: classes.pageName,
-              disableUnderline: !editing,
-              endAdornment: editableName ? (
-                <Tooltip
-                  enterDelay={750}
-                  leaveDelay={100}
-                  title={
-                    <React.Fragment>
-                      <Typography>{`Rename`}</Typography>
-                      The name of the page is not shown to customers.
-                    </React.Fragment>
-                  }
-                >
-                  <div>
-                    <IconButton
-                      className={classes.editPageNameBtn}
-                      onClick={() => editing ? submitNameChange() : setEditing(true)}
-                    >
-                      <EditIcon/>
-                    </IconButton>
-                  </div>
-                </Tooltip>
-              ) : null,
-            }}
-            onChange={(e) => page.name = e.target.value}
-            onBlur={() => submitNameChange()}
-            onKeyPress={(ev) => {
-              if (ev.key === 'Enter') {
-                ev.preventDefault()
-                submitNameChange()
-              }
-            }}
-          />
-          <br/>
-          <span className={classes.pageDesc}>{page.description}</span>
-        </CardContent>
-      </div>
-      <CardActions className={`${classes.cardActions} hoverable`}>
-        {<p style={{ color: 'grey' }}>{page.template ? "Template page" : ""}</p>}
-        {displayStage &&
-        <Typography variant="h6">
-          Stage:
-          <span className={page.isPublished() ? classes.published : classes.unpublished}> {page.stage}</span>
-        </Typography>}
-        {actions}
-        {displayId && <IdText id={page._id}/>}
-      </CardActions>
-    </Card>
-  )
-}
-
-interface TemplateSelectorDialogProps {
-  open: boolean
-  onClose: () => any
-  onSelect: (page: Page) => any
-}
-
-function TemplateSelectorDialog({ open, onClose, onSelect }: TemplateSelectorDialogProps) {
-
-  const classes = usePageStyles()
-
-  const [previewPage, setPreviewPage] = useState<Page | undefined>()
-
-  const { error, loading, response, execute: loadTemplates } = useRequest(listTemplates, {
-    performInitially: false,
-    errorMessage: 'Failed to load template pages'
-  })
-  useEffect(loadTemplates, [open])
-  const [templates] = useResponseState<Page[]>(
-    response,
-    [],
-    res => res?.data?.templates?.map((d: any) => new Page(d)) || []
-  )
-
-  const selectTemplate = (page: Page) => {
-    console.log(page)
-    onSelect(page)
-    setPreviewPage(undefined)
-  }
-
-  const blankPage = new Page({
-    _id: 'blank_page',
-    name: 'Blank Page',
-    description: 'Start from scratch with a blank page.'
-  })
-
-  const TemplateActions = (page: Page) => (
-    <>
-      <Button
-        className={classes.actionButton}
-        disabled={page._id?.length !== 24}
-        color="primary"
-        variant="contained"
-        onClick={() => setPreviewPage(page)}
-      >Preview Template</Button>
-      <SelectTemplateButton onClick={() => selectTemplate(page)}/>
-    </>
-  )
-
-  return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="md" className={classes.templateDialog}>
-      <div className={classes.templateList}>
-        <>
-          {loading && <LinearProgress/>}
-          <CloseButton onClick={onClose}/>
-          <DialogContent>
-            <Grid container direction="row" alignItems="center">
-              {[...templates, blankPage].filter(page => !page.isDiscarded()).map((page: Page) => (
-                <Grid item xs={12} sm={6} key={page._id}>
-                  <PageCard
-                    displayStage={false}
-                    page={page}
-                    image={`${backendURL}/page/${page._id}/thumbnail`}
-                    actions={TemplateActions(page)}
-                  />
-                </Grid>
-              ))}
-              <RetryButton error={error}/>
-            </Grid>
-            <PreviewPage
-              page={previewPage}
-              onClose={() => setPreviewPage(undefined)}
-              actions={(
-                <SelectTemplateButton onClick={() => selectTemplate(previewPage!!)}/>
-              )}
-            />
-          </DialogContent>
-        </>
-      </div>
-    </Dialog>
-  )
-}
-
-function SelectTemplateButton(props: ButtonProps) {
-
-  const classes = usePageStyles()
-
-  return (
-    <Button
-      className={classes.actionButton}
-      color="primary"
-      variant="contained"
-      {...props}
-    >Select this template</Button>
   )
 }
