@@ -68,5 +68,6 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ./loyalty-panel
+          build-args: NPM_TOKEN=${{secrets.READ_ORG_PACKAGES}}
           push: true
           tags: ${{ secrets.DOCKER_REGISTRY_URL }}/loyalty-panel:develop
