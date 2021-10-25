@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "test": "jest --forceExit --runInBand",
-    "start": "node ./build/app.ts",
+    "start": "node ./build/app.js",
     "dev": "ts-node-dev --transpile-only app.ts"
   },
   "author": "",

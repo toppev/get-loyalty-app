@@ -5,20 +5,35 @@
 # docker run loyalty_backend
 FROM node:16-alpine as builder
 
-WORKDIR /usr/src/app
-COPY package*.json .npmrc ./
-
 ARG NPM_TOKEN
+
+WORKDIR /usr/src/app
+COPY . .
 
 # ~/.npmrc is used to authenticate, different from the project level .npmrc
 RUN echo //npm.pkg.github.com/:_authToken=${NPM_TOKEN} > ~/.npmrc
 
-# Don't install devDependencies
-RUN npm install --only=production
+RUN npm install
 RUN npm run build
 RUN rm -f ~/.npmrc
 
-COPY . .
-EXPOSE 3001
 
+
+#
+# Second stage
+#
+FROM node:16-alpine
+
+ARG NPM_TOKEN
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+COPY --from=builder /usr/src/app/build ./build
+
+RUN echo //npm.pkg.github.com/:_authToken=${NPM_TOKEN} > ~/.npmrc
+RUN npm install --only=production
+RUN rm -f ~/.npmrc
+
+EXPOSE 3001
 CMD [ "npm", "start"]
