@@ -125,8 +125,8 @@ async function createScreenshot(pageId) {
     // TODO: Stop DDoSing our servers :(
     await pageScreenshot.takeScreenshot(pagePath, fileName)
   } catch (err) {
-    if (err) {
-      logger.error(`Failed to create a screenshot (${err.message})`, err)
+    if (err instanceof Error) {
+      logger.error(`Failed to create a screenshot (${err?.message})`, err)
     }
   }
   return fileName
@@ -164,7 +164,6 @@ async function getPageContext(user) {
     //
     const dateOpts = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
 
-    await customerService.populateUser(user)
     // FIXME: hacky, required for handlebar placeholders to work
     const userInfo = JSON.parse(JSON.stringify(await customerService.getCustomerInfo(user)))
     userInfo.rewards = (userInfo.customerData.rewards || []).map(reward => {
@@ -177,6 +176,7 @@ async function getPageContext(user) {
       return {
         ...used,
         // FIXME: used.dateUsed is string because of the JSON.parse(JSON.stringify(...))
+        // @ts-ignore
         dateUsed: new Date(used.dateUsed).toLocaleDateString(undefined, dateOpts),
       }
     })
@@ -222,7 +222,7 @@ async function getPageContext(user) {
         }
         return lvl
       })
-    const nextLevel = customerLevels.find(lvl => lvl.requiredPoints > currentLevel.requiredPoints)
+    const nextLevel = customerLevels.find(lvl => lvl.requiredPoints > currentLevel?.requiredPoints)
 
     return {
       user: userInfo,

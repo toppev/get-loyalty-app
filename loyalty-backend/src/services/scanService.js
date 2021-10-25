@@ -36,7 +36,6 @@ async function parseScanString(scanStr) {
   if (!user) {
     throw new StatusError('User not found', 404)
   }
-  await customerService.populateUser(user)
   const rewardId = split[1]
   return { user, userId, rewardId }
 }
@@ -96,7 +95,7 @@ async function getScan(scanStr) {
     const currentCampaigns = await campaignService.getOnGoingCampaigns(true)
     // Campaigns the user can (possibly) receive. I.e has not received and the campaign limits haven't been reached
     const campaigns = await asyncFilter(currentCampaigns, campaign => {
-      return campaignService.canReceiveCampaignRewards(userId, campaign, () => true)
+      return campaignService.canReceiveCampaignRewards(userId, campaign)
         .catch(err => {
           if (err && err.name !== 'StatusError') throw err
         })
@@ -214,7 +213,7 @@ async function useScan(scanStr, data) {
         }
       }
     } catch (err) {
-      if (err.name !== 'StatusError') {
+      if (err instanceof Error && err.name !== 'StatusError') {
         logger.error(`User not eligible to participate in a campaign because an error occurred`, err)
       }
       // IDEA: should we return reasons why the customer was not eligible?

@@ -13,8 +13,7 @@ export default {
   searchCustomers,
   rewardAllCustomers,
   updateCustomerLevel,
-  getCurrentLevel,
-  populateUser
+  getCurrentLevel
 }
 
 /**
@@ -169,11 +168,6 @@ const userPopulateSchema = {
   }]
 }
 
-async function populateUser(user) {
-  return user
-  // return user.populate && user.populate(userPopulateSchema).execPopulate()
-}
-
 async function rewardAllCustomers(reward) {
   const customers = await _listCustomers()
   await Promise.all(customers.map(it => addReward(it, reward, true)))
@@ -186,7 +180,7 @@ async function rewardAllCustomers(reward) {
  * otherwise 500. 0 for unlimited
  * @param search the string to search, if no limit is given, only the first 500 will be searched
  */
-async function searchCustomers(limit, search = undefined) {
+async function searchCustomers(limit, search = "") {
   // FIXME: this could be a lot better
   const trueLimit = limit === undefined ? (search ? 500 : 100) : limit
   let users = await _listCustomers().limit(trueLimit)
@@ -215,7 +209,7 @@ async function updateCustomerLevel(user, business) {
   }
 
   const newRewards = []
-  if (currentLevel) {
+  if (currentLevel?.rewards) {
     for (const reward of currentLevel.rewards) {
       if (!hasReceived(reward)) {
         await addReward(user, reward, false)
@@ -235,6 +229,10 @@ async function updateCustomerLevel(user, business) {
 
 }
 
+/**
+ *
+ * @return {any}
+ */
 function getCurrentLevel(levels, points) {
   let currentLevel = undefined
   levels.forEach(lvl => {

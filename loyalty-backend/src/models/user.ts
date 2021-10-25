@@ -255,8 +255,8 @@ const autoPopulate = function (this: UserDocument, next) {
   next()
 }
 
-userSchema.pre('findOne', autoPopulate)
-userSchema.pre('find', autoPopulate)
+userSchema.pre(/findOne/, autoPopulate)
+userSchema.pre(/find/, autoPopulate)
 
 const User = model<UserDocument>('User', userSchema)
 export default User

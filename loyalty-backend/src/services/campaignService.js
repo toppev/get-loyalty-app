@@ -131,7 +131,7 @@ async function byCouponCode(couponCode) {
  * @param campaign the campaign object
  * @param answerQuestion see #isEligible
  */
-async function canReceiveCampaignRewards(userId, campaign, answerQuestion = undefined) {
+async function canReceiveCampaignRewards(userId, campaign, answerQuestion = () => true) {
   const now = Date.now()
   if (campaign.start > now) {
     throw Error('The campaign has not started yet')
@@ -178,7 +178,7 @@ async function isEligible(user, campaign, answerQuestion) {
     return true
   }
   return !requirements.some(req => {
-    // Return true if the user is not eligible
+    // Return true below if the user is not eligible
     const campaignType = campaignTypes[req.type]
     if (campaignType && campaignType.requirement) {
       // @ts-ignore FIXME in the loyalty-campaigns package
