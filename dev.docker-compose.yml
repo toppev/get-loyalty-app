@@ -10,7 +10,6 @@ services:
         NPM_TOKEN: ${NPM_TOKEN}
     volumes:
       - ./loyalty-backend:/usr/src/app
-      - backenddata:/usr/src/app/uploads
     ports:
       - '3001:3001'
     image: localhost:5000/loyalty_backend
@@ -47,5 +46,4 @@ services:
 
 
 volumes:
-  backenddata:
   dbdata:
