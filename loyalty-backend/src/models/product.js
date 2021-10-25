@@ -1,7 +1,7 @@
-const mongoose = require('mongoose')
-const { Schema } = mongoose
-const validator = require('validator')
+import mongoose from "mongoose"
+import validator from "validator"
 
+const { Schema } = mongoose
 const productSchema = new Schema({
   name: {
     type: String,
@@ -31,4 +31,4 @@ const productSchema = new Schema({
   toObject: { virtuals: true }
 })
 
-module.exports = mongoose.model('Product', productSchema)
+export default mongoose.model('Product', productSchema)

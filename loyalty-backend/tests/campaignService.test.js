@@ -1,5 +1,6 @@
-const { initDatabase, closeDatabase } = require('./testUtils')
-const Campaign = require('../src/models/campaign')
+import { closeDatabase, initDatabase } from "./testUtils"
+
+import Campaign from "../src/models/campaign"
 
 beforeAll(async () => {
   await initDatabase('campaignService')
@@ -8,7 +9,7 @@ beforeAll(async () => {
 describe('campaign', () => {
 
 
-  it('', async () => {
+  it('creates a stamp campaign', async () => {
     await new Campaign({ name: 'test campaign', requirements: [{ type: 'stamps', values: [10] }] }).save()
     const campaign = (await Campaign.find())[0]
     expect(campaign.totalStampsNeeded).toBe(10)

@@ -1,6 +1,6 @@
-const Category = require('../models/category')
+import Category from "../models/category"
 
-module.exports = {
+export default {
   create,
   find,
   findById
@@ -9,13 +9,15 @@ module.exports = {
 
 /**
  * Create a new category
- * @param {any} categoryParam the initial params, "official" key is always false in the returned category object
+ * @param categoryParam the initial params, "official" key is always false in the returned category object
  * @return the created campaign
  */
 async function create(categoryParam) {
-  const category = new Category(categoryParam)
-  // Won't use this for creating the official categories so just force it here
-  category.official = false
+  const category = new Category({
+    ...categoryParam,
+    // Won't use this for creating the official categories so just force it here
+    official: false
+  })
   await category.save()
   return category
 }

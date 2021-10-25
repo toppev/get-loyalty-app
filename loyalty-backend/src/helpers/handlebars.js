@@ -1,6 +1,6 @@
-const handlebars = require("handlebars")
+import handlebars from "handlebars"
 
-module.exports = {
+export {
   validateHandlebars
 }
 

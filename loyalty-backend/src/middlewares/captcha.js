@@ -1,7 +1,8 @@
-const StatusError = require("../util/statusError")
-const User = require("../models/user")
-const logger = require("../util/logger")
-const { post } = require("axios")
+import StatusError from "../util/statusError"
+import User from "../models/user"
+import logger from "../util/logger"
+import axios from "axios"
+
 
 // "IF_EMPTY" to verify only if there are no users yet (e.g creating the first user)
 // "ALL" to verify all requests (whatever uses this middleware)
@@ -42,16 +43,16 @@ async function verifyCaptcha(token) {
   if (!token) throw new StatusError('Empty captcha token', 400)
   const secret = process.env.CAPTCHA_SECRET_KEY
   const url = `https://www.google.com/recaptcha/api/siteverify?secret=${secret}&response=${token}`
-  const res = await post(url,)
+  const res = await axios.post(url,)
   if (res.data.success === true) {
     logger.info("Captcha verified")
   } else {
-    logger.important("Captcha validation error", { res: res.data, secretLength: secret.length, token: token })
+    logger.important("Captcha validation error", { res: res.data, secretLength: secret?.length, token: token })
     throw new StatusError('Invalid CAPTCHA token', 400)
   }
 }
 
-module.exports = {
+export {
   verifyCAPTCHAOnRegister,
   verifyCAPTCHAOnPasswordReset
 }

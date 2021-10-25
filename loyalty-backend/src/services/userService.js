@@ -1,12 +1,14 @@
-const User = require('../models/user')
-const { emailPasswordReset } = require('../helpers/mailer')
-const ResetPassword = require('../models/passwordReset')
-const crypto = require('crypto')
-const customerService = require("./customerService")
-const Business = require("../models/business")
-const logger = require("../util/logger")
+import User from "../models/user"
+import { emailPasswordReset } from "../helpers/mailer"
 
-module.exports = {
+import ResetPassword from "../models/passwordReset"
+import crypto from "crypto"
+import customerService from "./customerService"
+import Business from "../models/business"
+import logger from "../util/logger"
+import StatusError from "../util/statusError"
+
+export default {
   getAll,
   getById,
   create,
@@ -56,15 +58,15 @@ async function forgotPassword(email, redirectUrl) {
  */
 async function resetPassword(token) {
   if (!token) {
-    throw 'No token parameter specified.'
+    throw new StatusError('No token parameter specified.', 400)
   }
   const request = await ResetPassword.findByToken(token)
   if (!request) {
-    throw 'Invalid password reset request link.'
+    throw new StatusError('Invalid password reset request link.', 400)
   }
   const minutes = 60
-  if (request.updatedAt < Date.now() - minutes * 60 * 1000) {
-    throw 'Password reset request expired.'
+  if (request.updatedAt < new Date(Date.now() - minutes * 60 * 1000)) {
+    throw new StatusError('Password reset request expired.', 400)
   }
   ResetPassword.deleteOne({ id: request.id })
   return await User.findById(request.userId)
@@ -129,7 +131,7 @@ async function create(userParam) {
 async function update(id, updateParam) {
   const user = await User.findById(id)
   Object.assign(user, updateParam)
-  return user.save()
+  return user?.save()
 }
 
 /**

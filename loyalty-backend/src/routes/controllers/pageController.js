@@ -1,8 +1,10 @@
-const router = require('express').Router({ mergeParams: true })
-const pageService = require('../../services/pageService')
-const permit = require('../../middlewares/permitMiddleware')
-const validation = require('../../helpers/bodyFilter')
-const Busboy = require("busboy")
+import { Router } from "express"
+import pageService from "../../services/pageService"
+import permit from "../../middlewares/permitMiddleware"
+import validation from "../../helpers/bodyFilter"
+import Busboy from "busboy"
+
+const router = Router({ mergeParams: true })
 const pageValidator = validation.validate(validation.pageValidator)
 
 // Get templates (no html/css only other data)
@@ -28,7 +30,7 @@ router.post('/:pageId', permit('page:save'), pageValidator, savePage)
 // Creating a new page
 router.post('/', permit('page:create'), pageValidator, createPage)
 
-module.exports = router
+export default router
 
 function createPage(req, res, next) {
   pageService.createPage(req.body)

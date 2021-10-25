@@ -1,9 +1,11 @@
-const fs = require('fs')
-const businessService = require('../src/services/businessService')
-const User = require('../src/models/user')
-const app = require('../app')
-const api = require('supertest')(app)
-const { initDatabase, closeDatabase } = require('./testUtils')
+import fs from "fs"
+import businessService from "../src/services/businessService"
+import User from "../src/models/user"
+import app from "../app"
+import supertest from "supertest"
+import { closeDatabase, initDatabase } from "./testUtils"
+
+const api = supertest(app)
 
 const testPageData = { gjs: { "gjs-components": '["stuff"]', "gjs-style": '["more stuff"]' } }
 const businessParams = { email: "example@email.com", public: { address: 'this is an address' } }

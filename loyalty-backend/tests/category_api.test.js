@@ -1,7 +1,10 @@
-const { initDatabase, closeDatabase } = require('./testUtils')
-const Category = require('../src/models/category')
-const app = require('../app')
-const api = require('supertest')(app)
+import { closeDatabase, initDatabase } from "./testUtils"
+
+import Category from "../src/models/category"
+import app from "../app"
+import supertest from "supertest"
+
+const api = supertest(app)
 
 let testCategory
 

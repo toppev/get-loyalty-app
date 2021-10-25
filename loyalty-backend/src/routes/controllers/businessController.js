@@ -1,10 +1,12 @@
-const router = require('express').Router()
-const Busboy = require('busboy')
-const businessService = require('../../services/businessService')
-const customerService = require('../../services/customerService')
-const campaignService = require('../../services/campaignService')
-const permit = require('../../middlewares/permitMiddleware')
-const validation = require('../../helpers/bodyFilter')
+import { Router } from "express"
+import Busboy from "busboy"
+import businessService from "../../services/businessService"
+import customerService from "../../services/customerService"
+import campaignService from "../../services/campaignService"
+import permit from "../../middlewares/permitMiddleware"
+import validation from "../../helpers/bodyFilter"
+
+const router = Router()
 const businessValidator = validation.validate(validation.businessValidator)
 
 // Get the business who owns the current site
@@ -22,7 +24,7 @@ router.get('/customers', permit('customer:list'), listCustomers)
 router.get('/reward/list', permit('reward:list'), listRewards)
 router.post('/reward/all', permit('reward:customers'), rewardCustomers)
 
-module.exports = router
+export default router
 
 function createBusiness(req, res, next) {
   businessService.createBusiness(req.body, req.user.id)

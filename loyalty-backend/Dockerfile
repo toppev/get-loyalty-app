@@ -3,7 +3,7 @@
 # Example usage:
 # docker build . -t loyalty_backend --build-arg NPM_TOKEN=ajd12ydliauwdt
 # docker run loyalty_backend
-FROM node:14-alpine
+FROM node:16-alpine as builder
 
 WORKDIR /usr/src/app
 COPY package*.json .npmrc ./
@@ -15,7 +15,9 @@ RUN echo //npm.pkg.github.com/:_authToken=${NPM_TOKEN} > ~/.npmrc
 
 # Don't install devDependencies
 RUN npm install --only=production
+RUN npm run build
 RUN rm -f ~/.npmrc
+
 COPY . .
 EXPOSE 3001
 

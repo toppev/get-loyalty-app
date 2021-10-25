@@ -1,15 +1,17 @@
-const router = require('express').Router()
-const users = require('./controllers/usersController')
-const customer = require('./controllers/customerController')
-const products = require('./controllers/productController')
-const campaigns = require('./controllers/campaignController')
-const business = require('./controllers/businessController')
-const category = require('./controllers/categoryController')
-const page = require('./controllers/pageController')
-const coupon = require('./controllers/couponController')
-const scan = require('./controllers/scanController')
-const notifications = require('./controllers/pushNotificationController')
+import { Router } from "express"
+import users from "./controllers/usersController"
+import customer from "./controllers/customerController"
+import products from "./controllers/productController"
+import campaigns from "./controllers/campaignController"
+import business from "./controllers/businessController"
+import category from "./controllers/categoryController"
+import page from "./controllers/pageController"
+import coupon from "./controllers/couponController"
+import scan from "./controllers/scanController"
+import notifications from "./controllers/pushNotificationController"
+import express_unless from "express-unless"
 
+const router = Router()
 // Kinda useless? or is it?
 const requireLogin = (req, res, next) => {
   if (req.isAuthenticated()) {
@@ -17,7 +19,7 @@ const requireLogin = (req, res, next) => {
   }
   res.status(401).json({ message: "Forbidden: this route requires logging in" })
 }
-requireLogin.unless = require('express-unless')
+requireLogin.unless = express_unless
 
 router.use('/user', requireLogin.unless({
   path: [
@@ -58,4 +60,4 @@ router.get('/status', (req, res) => {
   res.status(200).json(statusData)
 })
 
-module.exports = router
+export default router

@@ -1,7 +1,8 @@
-const { initDatabase, closeDatabase } = require('./testUtils')
-const User = require('../src/models/user')
-const Business = require('../src/models/business')
-const customerService = require('../src/services/customerService')
+import { closeDatabase, initDatabase } from "./testUtils"
+
+import User from "../src/models/user"
+import Business from "../src/models/business"
+import customerService from "../src/services/customerService"
 
 beforeAll(async () => {
   await initDatabase('customerService')

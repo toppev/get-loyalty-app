@@ -1,7 +1,7 @@
-const StatusError = require("../util/statusError")
-const logger = require("../util/logger")
+import StatusError from "../util/statusError"
+import logger from "../util/logger"
 
-function errorHandler(err, req, res, _next) {
+export default function errorHandler(err, req, res, _next) {
   if (!(err instanceof StatusError)) logger.error("HTTPStatusError", err)
   logger.info(`${err.status || 500} - ${err} - ${req.originalUrl} - ${req.method} - ${req.ip}`)
   const status = err.status || 400
@@ -36,5 +36,3 @@ function errorHandler(err, req, res, _next) {
     message: 'An error occurred.'
   })
 }
-
-module.exports = errorHandler

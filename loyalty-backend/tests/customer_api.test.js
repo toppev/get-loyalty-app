@@ -1,8 +1,11 @@
-const { initDatabase, closeDatabase } = require('./testUtils')
-const businessService = require('../src/services/businessService')
-const User = require('../src/models/user')
-const app = require('../app')
-const api = require('supertest')(app)
+import { closeDatabase, initDatabase } from "./testUtils"
+
+import businessService from "../src/services/businessService"
+import User from "../src/models/user"
+import app from "../app"
+import supertest from "supertest"
+
+const api = supertest(app)
 
 const businessParam = { email: "customer.test.business@email.com", public: { address: 'this is an address' } }
 const userParams = { email: "customer.test@email.com", password: "password123" }
@@ -21,7 +24,7 @@ beforeAll(async () => {
   cookie = res.headers['set-cookie']
   // Create new business
   // TODO: maybe use service instead of requests
-  const res2 = await api
+  await api
     .post('/business/create')
     .send(businessParam)
     .set('Cookie', cookie)

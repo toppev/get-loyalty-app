@@ -1,14 +1,15 @@
-const router = require('express').Router()
-const userService = require('../../services/userService')
-const businessService = require('../../services/businessService')
-const StatusError = require('../../util/statusError')
+import { Router } from "express"
+import userService from "../../services/userService"
+import businessService from "../../services/businessService"
+import StatusError from "../../util/statusError"
+import permit from "../../middlewares/permitMiddleware"
+import authenticator from "../../middlewares/authenticator"
+import { verifyCAPTCHAOnPasswordReset, verifyCAPTCHAOnRegister } from "../../middlewares/captcha"
 
-const permit = require('../../middlewares/permitMiddleware')
-const authenticator = require('../../middlewares/authenticator')
-const { verifyCAPTCHAOnRegister, verifyCAPTCHAOnPasswordReset } = require('../../middlewares/captcha')
+import validation from "../../helpers/bodyFilter"
+import logger from "../../util/logger"
 
-const validation = require('../../helpers/bodyFilter')
-const logger = require("../../util/logger")
+const router = Router()
 const userValidator = validation.validate(validation.userValidator)
 
 // Not logged in, no perms
@@ -27,7 +28,7 @@ router.patch('/', permit('user:update'), userValidator, update)
 router.delete('/:userId', permit('user:delete'), deleteUser)
 router.get('/:userId', permit('user:get'), getById)
 
-module.exports = router
+export default router
 
 function login(req, res, next) {
   businessService.getOwnBusiness(req.user)

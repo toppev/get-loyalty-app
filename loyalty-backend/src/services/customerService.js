@@ -1,6 +1,6 @@
-const User = require('../models/user')
+import User from "../models/user"
 
-module.exports = {
+export default {
   addPurchase,
   updateCustomer,
   updateCustomerProperties,
@@ -41,11 +41,12 @@ async function getCustomerInfo(user) {
 
 /**
  * Update customerData object. Returns the new object.
- * @param {id} userId value of the user's `_id` to query by
+ * @param userId value of the user's `_id` to query by
  * @param {Object} updated the updates to perform. Values of this object are copied to current object
  */
 async function updateCustomer(userId, updated) {
   const user = await User.findById(userId)
+  if (!user) throw Error(`User ${userId} was not found`)
   const data = Object.assign(user.customerData, updated)
   await user.save()
   return data
@@ -54,7 +55,7 @@ async function updateCustomer(userId, updated) {
 
 /**
  * Update customerData's "properties" object. Returns the new properties object.
- * @param {id} userId value of the user's `_id` to query by
+ * @param userId value of the user's `_id` to query by
  * @param {Object} updateProperties the updates to perform. Values of this object are copied to current properties.
  */
 async function updateCustomerProperties(userId, updateProperties) {
@@ -63,11 +64,12 @@ async function updateCustomerProperties(userId, updateProperties) {
 
 /**
  * Add a new purchase. The user's all purchases in the given business.
- * @param {ObjectId|string} userId value of the user's `_id` to query by
+ * @param userId value of the user's `_id` to query by
  * @param {object} purchase the new purchase
  */
 async function addPurchase(userId, purchase) {
   const user = await User.findById(userId)
+  if (!user) throw Error(`User ${userId} was not found`)
   user.customerData.purchases.push(purchase)
   await user.save()
   return user.customerData.purchases
@@ -107,6 +109,7 @@ async function useReward(user, customerData, reward) {
  */
 async function updateRewards(userId, newRewards) {
   const user = await User.findById(userId)
+  if (!user) throw Error(`User ${userId} was not found`)
   const customerData = user.customerData
   customerData.rewards = newRewards
   await user.save()
@@ -120,6 +123,7 @@ async function updateRewards(userId, newRewards) {
  */
 async function deleteReward(userId, rewardId) {
   const user = await User.findById(userId)
+  if (!user) throw Error(`User ${userId} was not found`)
   const customerData = user.customerData
   const newRewards = customerData.rewards.filter(reward => reward.id.toString() !== rewardId)
   if (newRewards.length !== customerData.rewards.length) {
@@ -166,27 +170,27 @@ const userPopulateSchema = {
 }
 
 async function populateUser(user) {
-  return user.populate && user.populate(userPopulateSchema).execPopulate()
+  return user
+  // return user.populate && user.populate(userPopulateSchema).execPopulate()
 }
 
 async function rewardAllCustomers(reward) {
   const customers = await _listCustomers()
-  await Promise.all(customers.map(it => addReward(it, reward)))
+  await Promise.all(customers.map(it => addReward(it, reward, true)))
   return { rewarded: customers.length }
 }
 
 /**
  * List customers of the business
  * @param limit maximum number of customers to return, defaults to 100 first if "search" is not specified,
- * otherwise500. 0 for unlimited
+ * otherwise 500. 0 for unlimited
  * @param search the string to search, if no limit is given, only the first 500 will be searched
  */
-async function searchCustomers(limit, search) {
-  // If searching, get first 500 customers and filter, otherwise return first 100
-  // might fix later
-  // FIXME: could be a lot better
-  let users = await _listCustomers().limit(limit || search ? 500 : 100)
-  if (search && search.trim().length) {
+async function searchCustomers(limit, search = undefined) {
+  // FIXME: this could be a lot better
+  const trueLimit = limit === undefined ? (search ? 500 : 100) : limit
+  let users = await _listCustomers().limit(trueLimit)
+  if (search?.trim()?.length) {
     users = users.filter(u => JSON.stringify(u).toLowerCase().includes(search))
   }
   return Promise.all(users.map(u => getCustomerInfo(u)))
@@ -197,7 +201,7 @@ async function searchCustomers(limit, search) {
  * Saves the user if new rewards were given.
  * @param user the user
  * @param business the business
- * @return {currentLevel, points, newRewards} currentLevel may be undefined
+ * @return Promise<{currentLevel, points, newRewards}> currentLevel may be undefined
  */
 async function updateCustomerLevel(user, business) {
   const customerData = user.customerData

@@ -1,23 +1,31 @@
-require('dotenv').config({
-  path: process.env.NODE_ENV === "production" ? '.env' : 'dev.env'
+import dotenv from "dotenv"
+import express from "express"
+
+// @ts-ignore
+import errorHandler from "./src/middlewares/errorHandler"
+import planUpdater from "./src/config/planUpdateScheduler"
+import passportConf from "./src/config/passport"
+import logger from "./src/util/logger"
+import morgan from "morgan"
+import session from "./src/config/sessionConfig"
+import routes from "./src/routes/routes"
+import cors from "cors"
+import cookieParser from "cookie-parser"
+import passport from "passport"
+import mongoose from "mongoose"
+import parser from "body-parser"
+
+const envFile = process.env.NODE_ENV === "production" ? '.env' : 'dev.env'
+console.log(`Loading env vars from "${envFile}"...`)
+dotenv.config({
+  path: envFile
 })
 
-const express = require('express')
 const app = express()
-const parser = require('body-parser')
-const mongoose = require('mongoose')
-const passport = require('passport')
-const cookieParser = require('cookie-parser')
-const cors = require('cors')
-const routes = require('./src/routes/routes')
-
-const morgan = require('morgan')
-const logger = require("./src/util/logger")
-
 const isTesting = process.env.NODE_ENV === 'test'
 
 if (!isTesting) {
-  mongoose.connect(process.env.MONGO_URI, {
+  mongoose.connect(process.env.MONGO_URI || '', {
     useCreateIndex: true,
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -49,11 +57,11 @@ app.use(parser.json({
 }))
 
 let frontendOrigin = process.env.APP_ORIGIN || process.env.PUBLIC_URL
-if (frontendOrigin && !frontendOrigin.startsWith("https://")) {
+if (frontendOrigin && !/https?:\/\//.test(frontendOrigin)) {
   frontendOrigin = `https://${frontendOrigin}`
 }
 const origins = [
-  ...(frontendOrigin ? frontendOrigin.split(',') : ['no_app_origin']),
+  ...(frontendOrigin ? frontendOrigin.split(',') : ['no_app_origin_set']),
   'https://panel.getloyalty.app',
   'http://localhost:3002',
   'http://localhost:3000' // Just so dev setups can access templates at api.getloyalty.app/...
@@ -74,16 +82,15 @@ app.use(cors(function (req, callback) {
   callback(null, options)
 }))
 
-require('./src/config/passport')
-const session = require('./src/config/sessionConfig')
-app.use(session.sessionHandler)
+passportConf.initConfig()
+app.use(session.sessionHandler())
 app.use(session.customSessionConfig)
 app.use(passport.initialize())
 app.use(passport.session())
 
-require('./src/config/planUpdateScheduler')
+planUpdater.init()
 
 app.use(routes)
-app.use(require('./src/middlewares/errorHandler'))
+app.use(errorHandler)
 
-module.exports = app
+export default app

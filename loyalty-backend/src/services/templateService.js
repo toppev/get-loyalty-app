@@ -1,6 +1,6 @@
-const pageService = require('./pageService')
-const logger = require("../util/logger")
-const axios = require("axios")
+import pageService from "./pageService"
+import logger from "../util/logger"
+import axios from "axios"
 
 const PAGE_API_URL = 'https://demo.getloyalty.app/api/page'
 
@@ -43,6 +43,6 @@ async function getTemplateData() {
   return []
 }
 
-module.exports = {
+export {
   loadDefaultTemplates,
 }

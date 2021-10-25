@@ -1,9 +1,12 @@
-const { initDatabase, closeDatabase } = require('./testUtils')
-const businessService = require('../src/services/businessService')
-const categoryService = require('../src/services/categoryService')
-const User = require('../src/models/user')
-const app = require('../app')
-const api = require('supertest')(app)
+import { closeDatabase, initDatabase } from "./testUtils"
+
+import businessService from "../src/services/businessService"
+import categoryService from "../src/services/categoryService"
+import User from "../src/models/user"
+import app from "../app"
+import supertest from "supertest"
+
+const api = supertest(app)
 
 const businessParams = { email: "example@email.com", public: { address: 'this is an address' } }
 const userParams = { email: "example@email.com", password: "password123" }

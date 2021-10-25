@@ -1,21 +1,22 @@
-const PageData = require('../models/page')
-const fileService = require('./fileService')
-const juice = require('juice')
-const pageScreenshot = require('./pageScreenshot')
-const Business = require("../models/business")
-const handlebars = require("handlebars")
-const StatusError = require('../util/statusError')
-const customerService = require('./customerService')
-const campaignService = require('./campaignService')
-const productService = require('./productService')
-const scanService = require('./scanService')
-const pollingService = require('./pollingService')
-const { validateHandlebars } = require("../helpers/handlebars")
-const logger = require("../util/logger")
-const mongoose = require("mongoose")
-const mime = require("mime-types")
+import PageData from "../models/page"
+import fileService from "./fileService"
+import juice from "juice"
+import pageScreenshot from "./pageScreenshot"
+import Business from "../models/business"
+import handlebars from "handlebars"
+import StatusError from "../util/statusError"
+import customerService from "./customerService"
+import campaignService from "./campaignService"
+import productService from "./productService"
+import scanService from "./scanService"
+import pollingService from "./pollingService"
+import { validateHandlebars } from "../helpers/handlebars"
 
-module.exports = {
+import logger from "../util/logger"
+import mongoose from "mongoose"
+import mime from "mime-types"
+
+export default {
   createPage,
   savePage,
   loadPage,
@@ -91,8 +92,8 @@ async function getPublicPage() {
 async function uploadPage(pageId, { html, css }) {
   if (!css) css = ""
   const res = await validateHandlebars(html)
-  if (res.error) {
-    throw new StatusError(`Invalid placeholders. ${res.error}`, 400)
+  if (res !== true) {
+    throw new StatusError(`Invalid placeholders. ${res?.error || 'Unknown error.'}`, 400)
   }
   // TODO: remove the inline CSS if possible
   //  Note that it looks ugly at the moment without it as the CSS loads after the page
@@ -132,7 +133,7 @@ async function createScreenshot(pageId) {
 }
 
 async function getThumbnail(pageId) {
-  const file = fileService.getUpload(`page_${pageId}/screenshot.jpg`)
+  const file = await fileService.getUpload(`page_${pageId}/screenshot.jpg`)
   if (file?.data) {
     return file
   }
@@ -257,7 +258,11 @@ async function uploadStaticFile(pageId, data, fileName, { contentType }) {
     fileName = new mongoose.mongo.ObjectId()
   }
   const dir = `page_${pageId}/`
-  await fileService.upload(dir + fileName, data, { contentType: mime.lookup(fileName) || contentType })
+  await fileService.upload(
+    dir + fileName, data,
+    // @ts-ignore
+    { contentType: mime.lookup(fileName) || contentType }
+  )
   // Refresh the page for the page owner to automatically see changes
   await pollingService.refreshOwner({ message: '[Editor]\nChanges detected' })
   return fileName

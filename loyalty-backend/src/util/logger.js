@@ -40,4 +40,4 @@ const logger = {
   dateStr,
 }
 
-module.exports = logger
+export default logger

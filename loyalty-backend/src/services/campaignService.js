@@ -1,10 +1,10 @@
-const Campaign = require('../models/campaign')
-const Business = require('../models/business')
-const StatusError = require('../util/statusError')
-const userService = require('./userService')
-const campaignTypes = require('@toppev/getloyalty-campaigns')
+import Campaign from "../models/campaign"
+import Business from "../models/business"
+import StatusError from "../util/statusError"
+import userService from "./userService"
+import campaignTypes from "@toppev/getloyalty-campaigns"
 
-module.exports = {
+export default {
   getAllCampaigns,
   getOnGoingCampaigns,
   getById,
@@ -72,7 +72,7 @@ async function create(campaign) {
 
 /**
  * Update an existing campaign. Returns the updated product
- * @param {ObjectId|string} campaignId the campaign's _id value
+ * @param campaignId the campaign's _id value
  * @param {Object} updatedCampaign the object with the values to update
  */
 async function update(campaignId, updatedCampaign) {
@@ -89,7 +89,6 @@ async function update(campaignId, updatedCampaign) {
 
 /**
  * Ensures the referral campaign has correct couponCode
- * @param campaign {Campaign}
  */
 function checkReferralOnEdit(campaign) {
   if (isRequirement(campaign, campaignTypes.referral)) {
@@ -100,10 +99,7 @@ function checkReferralOnEdit(campaign) {
 }
 
 /**
- *
- * @param campaign {Campaign}
- * @param campaignType {campaignType}
- * @return {boolean}
+ * @return boolean whether the campaignType is a requirement of the campaign
  */
 function isRequirement(campaign, campaignType) {
   if (!campaign || !campaign.requirements || !campaignType) return false
@@ -113,7 +109,7 @@ function isRequirement(campaign, campaignType) {
 
 /**
  * Delete an existing campaign from the database
- * @param {ObjectId|string} campaignId the campaign's _id value
+ * @param campaignId the campaign's _id value
  */
 async function deleteCampaign(campaignId) {
   return await Campaign.findByIdAndDelete(campaignId)
@@ -135,7 +131,7 @@ async function byCouponCode(couponCode) {
  * @param campaign the campaign object
  * @param answerQuestion see #isEligible
  */
-async function canReceiveCampaignRewards(userId, campaign, answerQuestion) {
+async function canReceiveCampaignRewards(userId, campaign, answerQuestion = undefined) {
   const now = Date.now()
   if (campaign.start > now) {
     throw Error('The campaign has not started yet')
@@ -149,6 +145,7 @@ async function canReceiveCampaignRewards(userId, campaign, answerQuestion) {
       throw new StatusError('The campaign has run out of rewards :(', 410)
     }
     const user = await userService.getById(userId)
+    if (!user) throw new StatusError(`User not found: ${userId}`, 404)
     const eligible = await isEligible(user, campaign, answerQuestion)
     if (!eligible) {
       throw new StatusError('You are not (currently) eligible for the reward.', 403)
@@ -170,9 +167,9 @@ async function canReceiveCampaignRewards(userId, campaign, answerQuestion) {
  * For example, the user has enough purchases or the purchase was a specific product (see answerQuestion param).
  * Ignores campaign dates etc. Only checks the requirements.
  *
- * @param {User} user the user
- * @param {Campaign} campaign the campaign
- * @param {Function<boolean>} answerQuestion callback to answer whether the specified requirement question got a
+ * @param user the user
+ * @param campaign the campaign
+ * @param answerQuestion callback to answer whether the specified requirement question got a
  * truthy answer. The callback gets the type (string) as an argument.
  */
 async function isEligible(user, campaign, answerQuestion) {
@@ -184,6 +181,7 @@ async function isEligible(user, campaign, answerQuestion) {
     // Return true if the user is not eligible
     const campaignType = campaignTypes[req.type]
     if (campaignType && campaignType.requirement) {
+      // @ts-ignore FIXME in the loyalty-campaigns package
       if (!campaignType.requirement({ values: req.values, user, customerData: user.customerData })) {
         return true
       }

@@ -1,8 +1,9 @@
-const router = require('express').Router()
-const productService = require('../../services/productService')
-const permit = require('../../middlewares/permitMiddleware')
+import { Router } from "express"
+import productService from "../../services/productService"
+import permit from "../../middlewares/permitMiddleware"
+import validation from "../../helpers/bodyFilter"
 
-const validation = require('../../helpers/bodyFilter')
+const router = Router()
 const productValidator = validation.validate(validation.productValidator)
 
 router.post('/', permit('product:create'), productValidator, addProduct)
@@ -11,7 +12,7 @@ router.delete('/:productId', permit('product:delete'), deleteProduct)
 router.get('/all', permit('product:list'), getAll)
 router.get('/:productId', permit('product:get'), getById)
 
-module.exports = router
+export default router
 
 function addProduct(req, res, next) {
   productService.create(req.body)

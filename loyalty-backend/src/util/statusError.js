@@ -1,7 +1,7 @@
 /** Error with a message and a status code */
-const logger = require("./logger")
+import logger from "./logger"
 
-class StatusError extends Error {
+export default class StatusError extends Error {
 
   constructor(message, status) {
     super(message)
@@ -14,5 +14,3 @@ class StatusError extends Error {
   }
 
 }
-
-module.exports = StatusError

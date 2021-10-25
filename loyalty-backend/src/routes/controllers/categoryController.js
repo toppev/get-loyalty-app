@@ -1,13 +1,14 @@
-const router = require('express').Router()
-const categoryService = require('../../services/categoryService')
+import { Router } from "express"
+import categoryService from "../../services/categoryService"
 
+const router = Router()
 // Doesn't really need validation at the moment, categoryService#create makes sure it's not official category
 // mongoose handles validating data types/NoSQL injection
 router.post('/', createCategory)
 router.get('/:categoryId', findById)
 router.get('/', find)
 
-module.exports = router
+export default router
 
 function createCategory(req, res, next) {
   categoryService.create(req.body)

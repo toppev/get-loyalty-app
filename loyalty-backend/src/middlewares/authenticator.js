@@ -1,11 +1,10 @@
-const passport = require('passport')
-const StatusError = require('../util/statusError')
-
+import passport from "passport"
+import StatusError from "../util/statusError"
 
 /**
  * Middleware to login using req.params.loginService parameter or 'local' strategy
  */
-module.exports = (req, res, next) => {
+export default (req, res, next) => {
   const service = req.params.loginService || 'local'
 
   passport.authenticate(service, function (err, user, info) {

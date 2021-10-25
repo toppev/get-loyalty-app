@@ -1,15 +1,18 @@
-const { initDatabase, closeDatabase } = require('./testUtils')
-const businessService = require('../src/services/businessService')
-const User = require('../src/models/user')
-const Page = require('../src/models/page')
-const app = require('../app')
-const fs = require("fs")
-const pageService = require("../src/services/pageService")
-const api = require('supertest')(app)
-const FileUpload = require('../src/models/fileUpload')
-const { loadDefaultTemplates } = require("../src/services/templateService")
-const axios = require("axios")
+import { closeDatabase, initDatabase } from "./testUtils"
 
+
+import businessService from "../src/services/businessService"
+import User from "../src/models/user"
+import Page from "../src/models/page"
+import app from "../app"
+import fs from "fs"
+import pageService from "../src/services/pageService"
+import supertest from "supertest"
+import FileUpload from "../src/models/fileUpload"
+import { loadDefaultTemplates } from "../src/services/templateService"
+import axios from "axios"
+
+const api = supertest(app)
 const businessParams = { email: "example@email.com", public: { address: 'this is an address' } }
 
 beforeAll(async () => {

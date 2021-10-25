@@ -5,13 +5,17 @@
     "es6": true,
     "jest/globals": true
   },
-  "extends": "eslint:recommended",
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
   "globals": {
     "Atomics": "readonly",
     "SharedArrayBuffer": "readonly"
   },
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "ecmaVersion": 2021
+    "ecmaVersion": 2020
   },
   "rules": {
     "no-unused-vars": [
@@ -29,9 +33,17 @@
     "semi": [
       "warn",
       "never"
-    ]
+    ],
+    "@typescript-eslint/ban-ts-comment": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-empty-interface": "off",
+    "@typescript-eslint/no-empty-function": "off"
   },
   "plugins": [
-    "jest"
+    "jest",
+    "@typescript-eslint"
+  ],
+  "ignorePatterns": [
+    "scripts/*.js"
   ]
 }

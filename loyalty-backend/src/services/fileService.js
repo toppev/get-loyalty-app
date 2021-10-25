@@ -1,9 +1,13 @@
-const FileUpload = require('../models/fileUpload')
-const mime = require('mime-types')
-const StatusError = require("../util/statusError")
-const logger = require("../util/logger")
+import FileUpload from "../models/fileUpload"
+import mime from "mime-types"
+import StatusError from "../util/statusError"
+import logger from "../util/logger"
 
-async function getUpload(name, { visibility } = {}) {
+const defaultOptions = {
+  visibility: 'public'
+}
+
+async function getUpload(name, { visibility } = defaultOptions) {
   const uploadsCountLimit = 100
   if (await FileUpload.countDocuments({}) > uploadsCountLimit) {
     const err = "Max uploads reached. Contact support."
@@ -16,23 +20,23 @@ async function getUpload(name, { visibility } = {}) {
   }
 }
 
-async function upload(name, data, { visibility, contentType } = {}) {
+async function upload(name, data, options = { ...defaultOptions, contentType: mime.lookup(name) || ''}) {
   return FileUpload.findOneAndUpdate({ _id: name }, {
     _id: name,
     data: data,
-    contentType: contentType || mime.lookup(name),
-    visibility: visibility || 'public'
+    contentType: options.contentType || mime.lookup(name),
+    visibility: options.visibility || 'public'
   }, { upsert: true })
 }
 
-async function getUploads(dir, { visibility } = {}) {
+async function getUploads(dir, { visibility } = defaultOptions) {
   return FileUpload.find({
     _id: new RegExp(`^${dir}/`),
     visibility: visibility || 'public'
   })
 }
 
-module.exports = {
+export default {
   upload,
   getUpload,
   getUploads,

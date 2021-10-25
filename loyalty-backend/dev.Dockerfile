@@ -1,6 +1,9 @@
 # Dev Dockerfile
 
-FROM node:14
+# Should be same platform if run in non-container mode
+# Otherwise sharp module (for example) will complain of different binaries, so don't use alpine
+# or remove node_modules/sharp (as same files are mounted in dev mode)
+FROM node:16
 
 WORKDIR /usr/src/app
 COPY package*.json .npmrc ./

@@ -1,12 +1,16 @@
-const fs = require('fs')
-const businessService = require('../src/services/businessService')
-const campaignService = require('../src/services/campaignService')
-const User = require('../src/models/user')
-const Category = require('../src/models/category')
-const Product = require('../src/models/product')
-const app = require('../app')
-const api = require('supertest')(app)
-const { initDatabase, closeDatabase } = require('./testUtils')
+import { closeDatabase, initDatabase } from "./testUtils"
+
+import fs from "fs"
+import businessService from "../src/services/businessService"
+import campaignService from "../src/services/campaignService"
+import User from "../src/models/user"
+import Category from "../src/models/category"
+import Product from "../src/models/product"
+import app from "../app"
+import supertest from "supertest"
+
+const api = supertest(app)
+
 
 const userParams = { email: "example@email.com", password: "password123" }
 let userId
@@ -34,7 +38,7 @@ describe('Logged in user can', () => {
 
   it('create business', async () => {
     const businessParam = { email: 'example2@email.com' }
-    const res = await api
+    await api
       .post('/business/create')
       .send(businessParam)
       .set('Cookie', cookie)

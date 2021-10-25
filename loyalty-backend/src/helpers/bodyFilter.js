@@ -3,14 +3,14 @@
  * e.g changing owner of a product or changing the business account's plan or user role
  */
 
-const StatusError = require('../util/statusError')
+import StatusError from "../util/statusError"
 
 /**
  * If the user doesn't have the given permission the filter will remove fields from the request that the user is not
  * allowed to modify. In some cases the validator may throw an error. For example, if the property is allowed by
  * it's value is not (e.g a role)
  *
- * @param filter {function(reqBody: {})}
+ * @param filter {function({}): any}
  * @param bypassPermission bypass permission, by default "validation:bypass"
  */
 function validateWith(filter, bypassPermission = "validation:bypass") {
@@ -70,7 +70,7 @@ const pushNotificationValidator = (notification) => {
 const pageValidator = (page) => {
 }
 
-module.exports = {
+export default {
   validate: validateWith,
   userValidator,
   businessValidator,

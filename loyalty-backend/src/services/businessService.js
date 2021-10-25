@@ -1,13 +1,12 @@
-const Business = require('../models/business')
-const User = require('../models/user')
-const fileService = require('../services/fileService')
-const StatusError = require('../util/statusError')
-const templateService = require('./templateService')
-const iconService = require('./iconService')
-const logger = require("../util/logger")
+import Business from "../models/business"
+import User from "../models/user"
+import fileService from "../services/fileService"
+import StatusError from "../util/statusError"
+import * as templateService from "./templateService"
+import iconService from "./iconService"
+import logger from "../util/logger"
 
-
-module.exports = {
+export default {
   getOwnBusiness,
   getBusinessOwnerUser,
   createBusiness,
@@ -30,7 +29,6 @@ async function getOwnBusiness(user) {
   if (user.role === 'business') {
     return (await Business.findOne()).id
   }
-  return
 }
 
 /**
@@ -59,7 +57,11 @@ async function createBusiness(businessParam, userId) {
   const business = new Business(businessParam)
   await business.save()
   await setUserRole(userId, 'business')
-  templateService.loadDefaultTemplates().then()
+  if (process.env.NODE_ENV === 'test') {
+    logger.info("Not loading default templates because NODE_ENV=test")
+  } else {
+    templateService.loadDefaultTemplates().then()
+  }
   return business
 }
 
@@ -94,7 +96,7 @@ async function update(updateParam) {
  * @example {role: 'user', business: '5e38360f3afaeaff8581e78a'}
  *
  * @param {any} userId the user's _id field
- * @param {string} role the role as a string
+ * @param role the role as a string
  */
 async function setUserRole(userId, role) {
   const user = await User.findById(userId)

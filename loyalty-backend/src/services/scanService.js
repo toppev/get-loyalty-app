@@ -1,12 +1,13 @@
-const userService = require('./userService')
-const StatusError = require('../util/statusError')
-const Business = require('../models/business')
-const customerService = require('./customerService')
-const campaignService = require('./campaignService')
-const pollingService = require('./pollingService')
-const format = require('../util/stringUtils').format
-const { asyncFilter } = require('../util/asyncFilter')
-const logger = require("../util/logger")
+import userService from "./userService"
+import StatusError from "../util/statusError"
+import Business from "../models/business"
+import customerService from "./customerService"
+import campaignService from "./campaignService"
+import pollingService from "./pollingService"
+import { format } from "../util/stringUtils"
+import { asyncFilter } from "../util/asyncFilter"
+
+import logger from "../util/logger"
 
 const POLLING_IDENTIFIERS = pollingService.IDENTIFIERS
 
@@ -95,9 +96,10 @@ async function getScan(scanStr) {
     const currentCampaigns = await campaignService.getOnGoingCampaigns(true)
     // Campaigns the user can (possibly) receive. I.e has not received and the campaign limits haven't been reached
     const campaigns = await asyncFilter(currentCampaigns, campaign => {
-      return campaignService.canReceiveCampaignRewards(userId, campaign, () => true).catch(err => {
-        if (err.name !== 'StatusError') throw err
-      })
+      return campaignService.canReceiveCampaignRewards(userId, campaign, () => true)
+        .catch(err => {
+          if (err && err.name !== 'StatusError') throw err
+        })
     })
     otherData.campaigns = campaigns
 
@@ -128,7 +130,9 @@ async function getScan(scanStr) {
   return { questions, ...otherData }
 }
 
-function addQuestions(questions, categories, products, requirements, { categoryQuestion, productQuestion } = {}) {
+
+function addQuestions(questions, categories, products, requirements, options = {}) {
+  const { categoryQuestion, productQuestion } = options
   if (categories && categories.length) {
     questions.push({
       id: IDENTIFIERS.CATEGORIES,
@@ -245,7 +249,7 @@ function _sendRewardsMessage(userId, business, newRewards) {
 }
 
 
-module.exports = {
+export default {
   getScan,
   useScan,
   toScanCode

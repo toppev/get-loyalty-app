@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   emailService: process.env.MAILER_SERVICE || "gmail",
   email: process.env.MAILER_EMAIL || "your.email@gmail.com",
   emailPassword: process.env.MAILER_PASSWORD || "password123",

@@ -1,6 +1,6 @@
-const mongoose = require('mongoose')
+import mongoose from "mongoose"
 
-module.exports = {
+export {
   initDatabase,
   closeDatabase,
 }

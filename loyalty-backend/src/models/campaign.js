@@ -1,6 +1,9 @@
-const mongoose = require('mongoose')
-const rewardSchema = require('./reward')
-const campaignTypes = require('@toppev/getloyalty-campaigns')
+// @ts-nocheck
+// FIXME: correct typing
+import mongoose from "mongoose"
+import rewardSchema from "./reward"
+import campaignTypes from "@toppev/getloyalty-campaigns"
+
 const { Schema } = mongoose
 
 
@@ -15,7 +18,7 @@ const requirementSchema = new Schema({
   question: {
     type: String,
     default: function () {
-      let campaignType = campaignTypes[this.type]
+      const campaignType = campaignTypes[this.type]
       return campaignType ? campaignType.question : null
     }
   }
@@ -96,4 +99,4 @@ campaignSchema.virtual("totalStampsNeeded").get(function () {
   return parseInt(req.values[0], 10)
 })
 
-module.exports = mongoose.model('Campaign', campaignSchema)
+export default mongoose.model('Campaign', campaignSchema)

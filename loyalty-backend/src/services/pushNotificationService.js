@@ -1,12 +1,12 @@
-const PushNotification = require('../models/pushNotification')
-const Business = require('../models/business')
-const customerService = require('../services/customerService')
-const webpushService = require('../services/webpushService')
-const StatusError = require('../util/statusError')
-const User = require("../models/user")
-const logger = require("../util/logger")
+import PushNotification from "../models/pushNotification"
+import Business from "../models/business"
+import customerService from "../services/customerService"
+import webpushService from "../services/webpushService"
+import StatusError from "../util/statusError"
+import User from "../models/user"
+import logger from "../util/logger"
 
-module.exports = {
+export default {
   addSubscription,
   getPushNotificationHistory,
   sendPushNotification,

@@ -1,8 +1,8 @@
-const Product = require('../models/product')
-const Business = require('../models/business')
-const StatusError = require('../util/statusError')
+import Product from "../models/product"
+import Business from "../models/business"
+import StatusError from "../util/statusError"
 
-module.exports = {
+export default {
   getAllProducts: getAll,
   getById,
   create,

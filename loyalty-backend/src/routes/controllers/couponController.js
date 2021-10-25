@@ -1,20 +1,21 @@
 /**
  * This is a controller handles when a customer scans a coupon QR code.
  */
-const router = require('express').Router()
-const customerService = require('../../services/customerService')
-const campaignService = require('../../services/campaignService')
-const User = require('../../models/user')
-const StatusError = require("../../util/statusError")
-const campaignTypes = require('@toppev/getloyalty-campaigns')
-const logger = require("../../util/logger")
+import { Router } from "express"
+import customerService from "../../services/customerService"
+import campaignService from "../../services/campaignService"
+import User from "../../models/user"
+import StatusError from "../../util/statusError"
+import campaignTypes from "@toppev/getloyalty-campaigns"
+import logger from "../../util/logger"
 
+const router = Router()
 // Claim a coupon reward
 // Simple coupon: /coupon/<coupon>
 // or referral: /coupon/referral?referrer=<userId>
 router.post('/:coupon', getCoupon)
 
-module.exports = router
+export default router
 
 async function getCoupon(req, res, next) {
   try {
@@ -27,6 +28,7 @@ async function getCoupon(req, res, next) {
     } else {
       if (await campaignService.canReceiveCampaignRewards(userId, campaign)) {
         const user = await User.findById(userId)
+        if (!user) throw Error(`User ${userId} was not found`)
         let rewards
         if (referrer) {
           rewards = (await handleReferralCode(user, campaign, referrer)).userRewards
@@ -72,26 +74,24 @@ async function handleReferralCode(user, campaign, referrer) {
   if (user.referrer) throw new StatusError("You have already be referred by someone", 403)
   if (referrer === user.id) throw new StatusError("Can not refer yourself", 403)
   user.referrer = referrer
-  if (referrerUser) {
-    const referralLimit = user.maxRefers
-    if (referrerUser.referrerFor && referrerUser.referrerFor.length >= referralLimit) {
-      throw new StatusError(`The user has reached the limit of ${referralLimit} referrals`, 403)
-    }
-    // register referrer/referrerFor (I know consistency is a thing but doesn't matter here)
-    if (!referrerUser.referrerFor) referrerUser.referrerFor = [user.id]
-    else referrerUser.referrerFor.push(user.id)
+  const referralLimit = user.maxRefers
+  if (referrerUser.referrerFor && referrerUser.referrerFor.length >= referralLimit) {
+    throw new StatusError(`The user has reached the limit of ${referralLimit} referrals`, 403)
+  }
+  // register referrer/referrerFor (I know consistency is a thing but doesn't matter here)
+  if (!referrerUser.referrerFor) referrerUser.referrerFor = [user.id]
+  else referrerUser.referrerFor.push(user.id)
 
-    const rewardScanner = rewardUsers === "referred" || rewardUsers === "both"
-    const rewardReferrer = rewardUsers === "referrer" || rewardUsers === "both"
-    let userRewards = rewardScanner ? await customerService.addCampaignRewards(user, campaign) : []
-    let referrerRewards = rewardReferrer ? await customerService.addCampaignRewards(referrerUser, campaign) : []
+  const rewardScanner = rewardUsers === "referred" || rewardUsers === "both"
+  const rewardReferrer = rewardUsers === "referrer" || rewardUsers === "both"
+  let userRewards = rewardScanner ? await customerService.addCampaignRewards(user, campaign) : []
+  let referrerRewards = rewardReferrer ? await customerService.addCampaignRewards(referrerUser, campaign) : []
 
-    await user.save()
-    await referrerUser.save()
+  await user.save()
+  await referrerUser.save()
 
-    return {
-      userRewards,
-      referrerRewards
-    }
+  return {
+    userRewards,
+    referrerRewards
   }
 }

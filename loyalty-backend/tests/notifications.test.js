@@ -1,11 +1,14 @@
-const { initDatabase, closeDatabase } = require('./testUtils')
-const PushNotification = require('../src/models/pushNotification')
-const Business = require('../src/models/business')
-const User = require('../src/models/user')
-const notificationService = require('../src/services/pushNotificationService')
-const businessService = require('../src/services/businessService')
-const app = require('../app')
-const api = require('supertest')(app)
+import { closeDatabase, initDatabase } from "./testUtils"
+
+import PushNotification from "../src/models/pushNotification"
+import Business from "../src/models/business"
+import User from "../src/models/user"
+import notificationService from "../src/services/pushNotificationService"
+import businessService from "../src/services/businessService"
+import supertest from "supertest"
+import app from "../app"
+
+const api = supertest(app)
 
 beforeAll(async () => {
   await initDatabase('notification')
@@ -87,6 +90,7 @@ describe('user can', () => {
       .send(testNotification)
       .set('Cookie', cookie)
       .expect(400)
+    expect(res.body.message).toBeDefined()
   })
 
   it('get notifications', async () => {

@@ -1,10 +1,11 @@
 // Every request here has a userId param
 // businessController can list customers
-const router = require('express').Router({ mergeParams: true })
-const customerService = require('../../services/customerService')
-const permit = require('../../middlewares/permitMiddleware')
+import { Router } from "express"
+import customerService from "../../services/customerService"
+import permit from "../../middlewares/permitMiddleware"
+import validation from "../../helpers/bodyFilter"
 
-const validation = require('../../helpers/bodyFilter')
+const router = Router({ mergeParams: true })
 const propertiesValidator = validation.validate(validation.customerPropertiesValidator)
 const rewardValidator = validation.validate(validation.rewardValidator)
 
@@ -14,12 +15,12 @@ router.post('/reward', permit('reward:give'), rewardValidator, giveReward)
 router.patch('/properties', permit('customer:update'), propertiesValidator, updateCustomerProperties)
 router.get('/', permit('customer:get'), getCustomerData)
 
-module.exports = router
+export default router
 
 // Rewards
 function giveReward(req, res, next) {
   const { userId } = req.params
-  customerService.addReward(userId, req.body)
+  customerService.addReward(userId, req.body, true)
     .then(data => res.json({ rewards: data }))
     .catch(err => next(err))
 }

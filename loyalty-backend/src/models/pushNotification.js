@@ -1,4 +1,5 @@
-const mongoose = require('mongoose')
+import mongoose from "mongoose"
+
 const { Schema } = mongoose
 
 const notificationSchema = new Schema({
@@ -27,4 +28,4 @@ const notificationSchema = new Schema({
   toObject: { virtuals: true }
 })
 
-module.exports = mongoose.model('PushNotification', notificationSchema)
+export default mongoose.model('PushNotification', notificationSchema)

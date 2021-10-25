@@ -1,11 +1,10 @@
 /** Controller for QR code scans */
-const POLLING_IDENTIFIERS = require('../../services/pollingService').IDENTIFIERS
+import { Router } from "express"
+import permit from "../../middlewares/permitMiddleware"
+import scanService from "../../services/scanService"
+import pollingService from "../../services/pollingService"
 
-const router = require('express').Router()
-const permit = require('../../middlewares/permitMiddleware')
-const scanService = require('../../services/scanService')
-const pollingService = require('../../services/pollingService')
-
+const router = Router()
 // The :scan consist of <userId>:<rewardId> or just the userId
 // Might change later even though the QR code reader performance difference is not huge
 // Therefore, use scanService#parseScanString to parse it
@@ -15,7 +14,7 @@ router.get('/:scan', permit('scan:get'), getScan)
 // Confirm purchase/use reward
 router.post('/:scan', permit('scan:use'), useScan)
 
-module.exports = router
+export default router
 
 function getScan(req, res, next) {
   const { scan } = req.params
@@ -24,7 +23,7 @@ function getScan(req, res, next) {
     .catch(err => {
       next(err)
       // Notify user that the request failed
-      pollingService.sendToUser(scan.split(':')[0], { message: 'Scan failed!', refresh: false }, POLLING_IDENTIFIERS.SCAN)
+      pollingService.sendToUser(scan.split(':')[0], { message: 'Scan failed!', refresh: false }, pollingService.IDENTIFIERS.SCAN)
     })
 }
 

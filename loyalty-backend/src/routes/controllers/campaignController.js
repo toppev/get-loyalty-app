@@ -1,9 +1,9 @@
-const router = require('express').Router({ mergeParams: true })
-const campaignService = require('../../services/campaignService')
+import { Router } from "express"
+import campaignService from "../../services/campaignService"
+import permit from "../../middlewares/permitMiddleware"
+import validation from "../../helpers/bodyFilter"
 
-const permit = require('../../middlewares/permitMiddleware')
-
-const validation = require('../../helpers/bodyFilter')
+const router = Router({ mergeParams: true })
 const campaignValidator = validation.validate(validation.campaignValidator)
 
 router.post('/', permit('campaign:create'), campaignValidator, addCampaign)
@@ -46,4 +46,4 @@ function getAll(req, res, next) {
     .catch(err => next(err))
 }
 
-module.exports = router
+export default router

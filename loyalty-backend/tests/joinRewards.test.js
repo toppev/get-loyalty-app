@@ -1,8 +1,11 @@
-const { initDatabase } = require('./testUtils')
-const userService = require('../src/services/userService')
-const app = require('../app')
-const Business = require("../src/models/business")
-const api = require('supertest')(app)
+import { initDatabase } from "./testUtils"
+
+import userService from "../src/services/userService"
+import app from "../app"
+import Business from "../src/models/business"
+import supertest from "supertest"
+
+const api = supertest(app)
 
 const levels = [{
   name: 'test',

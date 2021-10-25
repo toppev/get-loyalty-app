@@ -1,12 +1,10 @@
-const role = require('../src/models/role')
-const mongoose = require('mongoose')
-
-const Business = require('../src/models/business')
-const userService = require('../src/services/userService')
-const customerService = require('../src/services/customerService')
-const productService = require('../src/services/productService')
-const campaignService = require('../src/services/campaignService')
-
+import role from "../src/models/role"
+import mongoose from "mongoose"
+import Business from "../src/models/business"
+import userService from "../src/services/userService"
+import customerService from "../src/services/customerService"
+import productService from "../src/services/productService"
+import campaignService from "../src/services/campaignService"
 // Params for the first business
 const params = { reqParams: {} }
 // Params for the other business

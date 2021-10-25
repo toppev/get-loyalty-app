@@ -1,10 +1,11 @@
-const { get } = require("axios")
-const fileService = require('./fileService')
+import axios from "axios"
+
+import fileService from "./fileService"
 
 const BASE_URL = process.env.SS_BASE_URL || 'http://localhost:3001'
 const SERVICE_URL = process.env.SS_SERVICE_URL || 'http://localhost:3005'
 
-module.exports = {
+export default {
   takeScreenshot
 }
 
@@ -20,6 +21,6 @@ async function takeScreenshot(path, fileName, fullUrl = false) {
     return
   }
   const url = fullUrl ? path : BASE_URL + path
-  const res = await get(`${SERVICE_URL}?url=${url}`)
+  const res = await axios.get(`${SERVICE_URL}?url=${url}`)
   await fileService.upload(fileName, res.data)
 }

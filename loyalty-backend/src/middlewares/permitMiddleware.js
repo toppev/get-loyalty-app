@@ -1,4 +1,4 @@
-module.exports = function permit(operation, params) {
+export default function permitMiddleware(operation, params) {
   return (req, res, next) => {
     if (!req.user) {
       res.status(403).json({ message: "Forbidden: login required" })

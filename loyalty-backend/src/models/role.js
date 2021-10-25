@@ -73,7 +73,7 @@ function _canOperation(permits, operation, params) {
   return permits[operation](params)
 }
 
-module.exports = {
+export default {
   roles,
   hasPermission,
 }

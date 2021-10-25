@@ -1,15 +1,16 @@
-const router = require('express').Router({ mergeParams: true })
-const permit = require('../../middlewares/permitMiddleware')
-const pushNotificationService = require('../../services/pushNotificationService')
+import { Router } from "express"
+import permit from "../../middlewares/permitMiddleware"
+import pushNotificationService from "../../services/pushNotificationService"
+import validator from "../../helpers/bodyFilter"
 
-const validator = require('../../helpers/bodyFilter')
+const router = Router({ mergeParams: true })
 const notificationValidator = validator.validate(validator.pushNotificationValidator)
 
 router.post('/subscribe', subscribe)
 router.get('/', permit('notification:list'), getNotifications)
 router.post('/', permit('notification:send'), notificationValidator, sendNotifications)
 
-module.exports = router
+export default router
 
 function getNotifications(req, res, next) {
   pushNotificationService.getPushNotificationInfo()

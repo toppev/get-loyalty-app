@@ -1,15 +1,12 @@
-const webpush = require('web-push')
-const logger = require("../util/logger")
-
-// TODO: add in .env.example
-const vapidPublicKey = process.env.VAPID_PUBLIC_KEY
-const vapidPrivateKey = process.env.VAPID_PRIVATE_KEY
+import webpush from "web-push"
+import logger from "../util/logger"
+const vapidPublicKey = process.env.VAPID_PUBLIC_KEY || 'no_vapid_public_key_set'
+const vapidPrivateKey = process.env.VAPID_PRIVATE_KEY || 'no_vapid_private_key_set'
 // e.g mailto:email@example.com or a URL
-let vapidSubject = process.env.VAPID_CONTACT
+let vapidSubject = process.env.VAPID_CONTACT || 'no_vapid_contact_set'
 
 if (process.env.NODE_ENV !== 'test') {
   try {
-
     webpush.setVapidDetails(
       vapidSubject,
       vapidPublicKey,
@@ -55,7 +52,7 @@ async function sendNotification(users, payload) {
       if (statusCode === 201) {
         sent++
       } else {
-        logger.severe(`Failed to send a push notification. Received ${statusCode} ${body && body.message}`)
+        logger.severe(`Failed to send a push notification. Received (status ${statusCode}): ${body}`)
         failed++
       }
     } catch (err) {
@@ -71,6 +68,6 @@ async function sendNotification(users, payload) {
 
 }
 
-module.exports = {
+export default {
   sendNotification
 }

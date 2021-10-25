@@ -1,6 +1,6 @@
-const sharp = require('sharp')
-const toIco = require('to-ico')
-const fileService = require('../services/fileService')
+import sharp from "sharp"
+import toIco from "to-ico"
+import fileService from "../services/fileService"
 
 /**
  *
@@ -28,7 +28,7 @@ async function generateFavicon(buffer, output) {
   await fileService.upload(output, result)
 }
 
-module.exports = {
+export default {
   generateFavicon,
   resizeToPNG
 }

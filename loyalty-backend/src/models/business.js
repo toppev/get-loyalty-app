@@ -1,8 +1,8 @@
-const mongoose = require('mongoose')
-const { Schema } = mongoose
-const rewardSchema = require('./reward')
-const defaultCustomerLevels = require('../config/defaultLevels')
+import mongoose from "mongoose"
+import rewardSchema from "./reward"
+import defaultCustomerLevels from "../config/defaultLevels"
 
+const { Schema } = mongoose
 const configSchema = new Schema({
   translations: {
     points: {
@@ -160,12 +160,15 @@ const businessSchema = new Schema({
   }
 }, {
   // Max collection size is 5MB and only one document is allowed
-  capped: true,
-  size: 5242880,
-  max: 1,
+  /* TODO: convert exiting?
+  capped: {
+    size: 5 * 1024 * 1024,
+    max: 1,
+  },
+   */
   toJSON: { virtuals: true },
   toObject: { virtuals: true },
 })
 
 const Business = mongoose.model('Business', businessSchema)
-module.exports = Business
+export default Business

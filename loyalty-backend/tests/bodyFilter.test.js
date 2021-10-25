@@ -1,5 +1,4 @@
-const validators = require('../src/helpers/bodyFilter')
-
+import validators from "../src/helpers/bodyFilter"
 // USER
 describe('user', () => {
 

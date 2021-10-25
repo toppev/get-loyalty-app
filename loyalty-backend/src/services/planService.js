@@ -1,13 +1,13 @@
-const businessService = require('./businessService')
-const _ = require('lodash')
-const axios = require("axios")
-const logger = require("../util/logger")
+import businessService from "./businessService"
+import _ from "lodash"
+import axios from "axios"
+import logger from "../util/logger"
 
 const SERVER_KEY = process.env.SERVER_KEY || 'testing'
 if (SERVER_KEY === 'testing') logger.info(`Using test SERVER_KEY: ${SERVER_KEY}`)
 const USER_PLAN_API = `https://api.getloyalty.app/servers/plan/current?key=${SERVER_KEY}&fallback=default`
 
-module.exports = {
+export default {
   updateUserPlan
 }
 
@@ -38,6 +38,7 @@ async function updateUserPlan() {
 }
 
 async function getUserPlan(email) {
+  // @ts-ignore
   const res = await axios({
     method: "get",
     url: USER_PLAN_API,
@@ -61,6 +62,6 @@ function planHasChanged(oldPlan, newPlan) {
     logger.info(`Plans (${name}/${type}) are equal, not updating.`)
     return false
   }
-  logger.important("Plan updated from", JSON.stringify(oldObj, 2), "to", JSON.stringify(newObj, 2))
+  logger.important("Plan updated from", JSON.stringify(oldObj, null, 2), "to", JSON.stringify(newObj, null, 2))
   return true
 }

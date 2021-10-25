@@ -1,4 +1,7 @@
-const mongoose = require('mongoose')
+// @ts-nocheck
+// FIXME: correct typing
+import mongoose from "mongoose"
+
 const { Schema } = mongoose
 
 const UNNAMED_PAGE = 'unnamed'
@@ -69,4 +72,4 @@ PageDataSchema.pre('save', async function () {
 })
 
 const PageData = mongoose.model('PageData', PageDataSchema)
-module.exports = PageData
+export default PageData

@@ -1,9 +1,13 @@
-const { initDatabase, closeDatabase } = require('./testUtils')
-const userService = require('../src/services/userService')
-const User = require('../src/models/user')
-const ResetPassword = require('../src/models/passwordReset')
-const app = require('../app')
-const api = require('supertest')(app)
+import { closeDatabase, initDatabase } from "./testUtils"
+
+
+import userService from "../src/services/userService"
+import User from "../src/models/user"
+import ResetPassword from "../src/models/passwordReset"
+import app from "../app"
+import supertest from "supertest"
+
+const api = supertest(app)
 
 const userParams = { email: "example@email.com", password: "password123" }
 let userId
@@ -47,7 +51,7 @@ describe('Not logged in user should', () => {
   })
 
   it('resetPassword', async () => {
-    const buffer = require('crypto').randomBytes(16)
+    const buffer = (await import('crypto')).randomBytes(16)
     const token = buffer.toString('hex')
     const reset = new ResetPassword({ token, userId })
     await reset.save()
