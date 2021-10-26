@@ -68,7 +68,7 @@ A simple app to scan customer QR codes and confirm purchases and rewards.
 ### Technologies
 - [Flutter](https://flutter.dev/)
 
-## loyalty-backend
+## Backend
 
 The backend of the loyalty app (one per app). Uses MongoDB as the database for users, campaigns, pages etc.
 

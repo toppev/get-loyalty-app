@@ -5,10 +5,10 @@ name: Backend test
 on:
   pull_request:
     paths:
-      - 'loyalty-backend/**'
+      - 'backend/**'
   push:
     paths:
-      - 'loyalty-backend/**'
+      - 'backend/**'
 
 jobs:
   test:
@@ -29,17 +29,17 @@ jobs:
         run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.READ_ORG_PACKAGES }}" > ~/.npmrc
       - name: NPM CI
         run: npm ci
-        working-directory: loyalty-backend
+        working-directory: backend
       - name: Build
         run: npm run build --if-present
-        working-directory: loyalty-backend
+        working-directory: backend
       - name: Test
         run: npm test
         env:
           CI: true
           # A random string for testing
           JWT_SECRET: "D943E42E91D22C87621BAB73F866EDAA0FA0178B25C98EC54C254F897A609F5C"
-        working-directory: loyalty-backend
+        working-directory: backend
     services:
       mongodb:
         image: mongo:4.2.3
@@ -66,7 +66,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
-          context: ./loyalty-backend
+          context: ./backend
           push: true
           tags: ${{ secrets.DOCKER_REGISTRY_URL }}/loyalty-backend:develop
           build-args: |

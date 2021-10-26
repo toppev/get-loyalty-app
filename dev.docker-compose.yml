@@ -4,17 +4,17 @@ services:
     container_name: loyalty_backend
     restart: always
     build:
-      context: ./loyalty-backend
+      context: backend
       dockerfile: dev.Dockerfile
       args:
         NPM_TOKEN: ${NPM_TOKEN}
     volumes:
-      - ./loyalty-backend:/usr/src/app
+      - ./backend:/usr/src/app
     ports:
       - '3001:3001'
     image: localhost:5000/loyalty_backend
     env_file:
-      - loyalty-backend/dev.env
+      - backend/dev.env
   mongo:
     container_name: mongo-loyalty-db
     image: mongo
