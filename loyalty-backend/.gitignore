@@ -30,7 +30,7 @@ src/react-app-env.d.ts
 *.iml
 
 # Custom stuff
-!loyalty-panel/.env
+!panel/.env
 logs/
 uploads/
 loyalty-app/public/manifest.json

@@ -3,10 +3,10 @@ name: loyalty-panel test and deploy
 on:
   pull_request:
     paths:
-      - 'loyalty-panel/**'
+      - 'panel/**'
   push:
     paths:
-      - 'loyalty-panel/**'
+      - 'panel/**'
 
 jobs:
   test:
@@ -21,12 +21,12 @@ jobs:
         run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.READ_ORG_PACKAGES }}" > ~/.npmrc
       - name: NPM CI
         run: npm ci
-        working-directory: loyalty-panel
+        working-directory: panel
       - name: Test
         run: npm test
         env:
           CI: true
-        working-directory: loyalty-panel
+        working-directory: panel
   deploy-s3:
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/master'
     needs: test
@@ -43,10 +43,10 @@ jobs:
         run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.READ_ORG_PACKAGES }}" > ~/.npmrc
       - name: Install and build
         run: npm install && npm run build
-        working-directory: loyalty-panel
+        working-directory: panel
       - name: Deploy to S3 bucket
         run: aws s3 sync ./build s3://panel-getloyaltyapp --delete
-        working-directory: loyalty-panel
+        working-directory: panel
   push-docker-dev:
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/develop'
     needs: test
@@ -67,7 +67,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
-          context: ./loyalty-panel
+          context: ./panel
           build-args: NPM_TOKEN=${{secrets.READ_ORG_PACKAGES}}
           push: true
           tags: ${{ secrets.DOCKER_REGISTRY_URL }}/loyalty-panel:develop

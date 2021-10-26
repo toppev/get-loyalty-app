@@ -23,7 +23,7 @@ services:
   panel:
     container_name: loyalty-panel
     build:
-      context: ./loyalty-panel
+      context: panel
       dockerfile: dev.Dockerfile
       args:
         NPM_TOKEN: ${NPM_TOKEN}
@@ -31,7 +31,7 @@ services:
       - '3002:3002'
     stdin_open: true
     volumes:
-      - ./loyalty-panel:/usr/src/app
+      - ./panel:/usr/src/app
   pwa-app:
     container_name: loyalty-pwa-app
     build:

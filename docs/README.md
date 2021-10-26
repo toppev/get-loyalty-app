@@ -37,7 +37,7 @@ install requirements (such as NPM, Yarn and MongoDB) manually.
 
 For developing the scanner-app see instructions [here](/scanner-app/README.md).
 
-## loyalty-panel
+## Panel
 
 The control/management panel where you create the campaigns, pages etc.
 
