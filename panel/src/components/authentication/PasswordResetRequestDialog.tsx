@@ -110,7 +110,8 @@ export default function (props: PasswordResetRequestDialogProps) {
 
               const token = await getCaptchaToken()
               let redirectUrl = window.location.href
-              if (!redirectUrl.endsWith("/account")) redirectUrl += "/account#change-password"
+              if(!redirectUrl.endsWith("/")) redirectUrl += "/"
+              if (!redirectUrl.endsWith("/account")) redirectUrl += "account#change-password"
               forgotPassword(email.trim(), token, redirectUrl)
                 .then(_res => {
                   setMessage({
