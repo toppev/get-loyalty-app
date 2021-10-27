@@ -2,6 +2,7 @@ import allRequirements from "@toppev/getloyalty-campaigns"
 import { Campaign, Requirement } from "./Campaign"
 import React, { useState } from "react"
 import {
+  Box,
   Button,
   createStyles,
   FormControlLabel,
@@ -28,6 +29,7 @@ import RetryButton from "../common/button/RetryButton"
 import { createCampaign, updateCampaign } from "../../services/campaignService"
 import { isAlphanumeric } from "../../util/validate"
 import RewardManager from "../rewards/RewardManager"
+import { styled } from '@material-ui/styles'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -65,11 +67,15 @@ const useStyles = makeStyles((theme: Theme) =>
     newRewardBtn: {},
   }))
 
+const CustomDatePicker = styled(KeyboardDatePicker)({
+  '& label': {
+    whiteSpace: 'nowrap',
+  }
+})
 
 export interface CampaignFormProps {
   initialCampaign?: Campaign,
   onSubmitted: (campaign: Campaign) => any
-
 }
 
 const emptyCampaign = new Campaign({ id: "new_campaign", name: "", description: "" })
@@ -185,25 +191,28 @@ export default function ({ initialCampaign, onSubmitted }: CampaignFormProps) {
                 label={<span style={{ color: '#636363' }}>Continuous (no end date)</span>}
               />
             </RadioGroup>
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <KeyboardDatePicker
-                margin="normal"
-                label="Campaign start date (dd/MM/yyyy)"
-                format="dd/MM/yyyy"
-                value={startDate}
-                onChange={(date) => date && setStartDate(date)}
-              />
-              <KeyboardDatePicker
-                disabled={!isDates}
-                disablePast={!campaign.end}
-                margin="normal"
-                label="Campaign end date (dd/MM/yyyy)"
-                format="dd/MM/yyyy"
-                value={endDate}
-                onChange={(date) => date && setEndDate(date)}
-              />
-            </MuiPickersUtilsProvider>
-
+            <Box display="flex" flexWrap="wrap" justifyContent="flex-start" style={{ gap: '25px' }}>
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <CustomDatePicker
+                  margin="normal"
+                  label="Campaign start date (dd/MM/yyyy)"
+                  format="dd/MM/yyyy"
+                  value={startDate}
+                  showTodayButton
+                  onChange={date => date && setStartDate(date)}
+                />
+                <CustomDatePicker
+                  disabled={!isDates}
+                  disablePast={!campaign.end}
+                  margin="normal"
+                  label="Campaign end date (dd/MM/yyyy)"
+                  format="dd/MM/yyyy"
+                  value={endDate}
+                  showTodayButton
+                  onChange={date => date && setEndDate(date)}
+                />
+              </MuiPickersUtilsProvider>
+            </Box>
             <Typography variant="h6" className={classes.typography}>Campaign Type(s)</Typography>
             <p className={classes.tip}>
             Specify when this campaign is valid. In other words, select requirements
