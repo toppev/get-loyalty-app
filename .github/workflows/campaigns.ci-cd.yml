@@ -6,10 +6,10 @@ name: loyalty-campaigns test and publish
 on:
   pull_request:
     paths:
-      - 'loyalty-campaigns/**'
+      - 'campaigns/**'
   push:
     paths:
-      - 'loyalty-campaigns/**'
+      - 'campaigns/**'
   release:
     types: [created]
 
