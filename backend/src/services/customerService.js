@@ -183,7 +183,7 @@ async function rewardAllCustomers(reward) {
 async function searchCustomers(limit, search = "") {
   // FIXME: this could be a lot better
   const trueLimit = limit === undefined ? (search ? 500 : 100) : limit
-  let users = await _listCustomers().limit(trueLimit)
+  let users = await _listCustomers().limit(Math.max(0, trueLimit))
   if (search?.trim()?.length) {
     users = users.filter(u => JSON.stringify(u).toLowerCase().includes(search))
   }
