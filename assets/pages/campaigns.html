@@ -1,3 +1,12 @@
+<!--
+  The default campaigns page.
+
+  This is only for development.
+  The elements inside <body> tag (without the <body> tag) and <style> tag (including the <style> tag) can be copied as the actual page html.
+
+  See ./panel/public/templates/common_main.css for common CSS classes etc.
+  See ./panel/public/templates/common_main.js for common scripts
+ -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -79,6 +88,15 @@
     box-sizing: border-box;
   }
 
+  .campaign-dates {
+    color: rgb(85, 85, 85);
+    margin: 0 0 -40px -8px;
+    padding: 10px 10px 0 0;
+    font-size: 14px;
+  }
+
+
+  /** COPIED HERE FOR DEVELOPMENT ONLY */
   body {
     background-color: black;
     min-height: 1050px;
@@ -131,13 +149,8 @@
     border-radius: 7px;
     color: rgb(47, 47, 47);
     max-width: 700px;
+    /* background-color: rgba(189, 188, 188, 0.85); /* Fallback */
   }
 
-  .campaign-dates {
-    color: rgb(85, 85, 85);
-    margin: 0 0 -40px -8px;
-    padding: 10px 10px 0 0;
-    font-size: 14px;
-  }
 </style>
 </html>
