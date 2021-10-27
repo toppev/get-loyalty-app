@@ -58,17 +58,22 @@ async function forgotPassword(email, redirectUrl) {
  */
 async function resetPassword(token) {
   if (!token) {
-    throw new StatusError('No token parameter specified.', 400)
+    throw new StatusError('The password reset link is invalid. The token parameter is missing.', 400)
   }
   const request = await ResetPassword.findByToken(token)
   if (!request) {
-    throw new StatusError('Invalid password reset request link.', 400)
+    throw new StatusError('The password reset request link is invalid. Please check that you copied it correctly.', 400)
   }
   const minutes = 60
   if (request.updatedAt < new Date(Date.now() - minutes * 60 * 1000)) {
-    throw new StatusError('Password reset request expired.', 400)
+    throw new StatusError('The password reset request has expired.', 400)
   }
-  ResetPassword.deleteOne({ id: request.id })
+  if (request.usedAt) {
+    throw new StatusError('The password reset link has already been used.', 400)
+  }
+  // @ts-ignore
+  request.usedAt = Date.now()
+  await request.save()
   return await User.findById(request.userId)
 }
 

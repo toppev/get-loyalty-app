@@ -5,6 +5,7 @@ export interface IPasswordReset {
   userId: Schema.Types.ObjectId,
   createdAt: Date
   updatedAt: Date
+  usedAt: Date
 }
 
 interface PasswordResetDocument extends IPasswordReset, Document {
@@ -23,6 +24,10 @@ const resetModel = new Schema<PasswordResetDocument, PasswordResetModel>({
     type: Schema.Types.ObjectId,
     ref: 'User',
     required: true
+  },
+  usedAt: {
+    type: Date,
+    default: undefined
   }
 }, {
   timestamps: true,

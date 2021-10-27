@@ -55,10 +55,15 @@ describe('Not logged in user should', () => {
     const token = buffer.toString('hex')
     const reset = new ResetPassword({ token, userId })
     await reset.save()
+    expect(reset.usedAt).toBeUndefined()
     const res = await api
       .get('/user/resetPassword/' + token)
       .expect(200)
     expect(res.body.success).toEqual(true)
+    const afterReset = await ResetPassword.findOne({token})
+    console.log(afterReset)
+    expect(afterReset.usedAt).toBeTruthy()
+    expect(new Date(afterReset.usedAt).getTime()).toBeLessThanOrEqual(Date.now())
   })
 
   it('login (local)', async () => {
