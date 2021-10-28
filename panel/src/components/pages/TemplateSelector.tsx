@@ -31,7 +31,7 @@ export function TemplateSelectorDialog({ open, onClose, onSelect }: TemplateSele
   const [templates] = useResponseState<Page[]>(
     response,
     [],
-    res => res?.data?.templates?.map((d: any) => new Page(d)) || []
+    res => res.data?.templates?.map((d: any) => new Page(d.page)) || []
   )
 
   const selectTemplate = (page: Page) => {
