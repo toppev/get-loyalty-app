@@ -11,42 +11,46 @@ import PreviewPage from "./PreviewPage"
 import { usePageStyles } from "./PagesPage"
 import PageCard from "./PageCard"
 
+type TemplatePage = Page & { uploads: any[] }
+
 interface TemplateSelectorDialogProps {
   open: boolean
   onClose: () => any
-  onSelect: (page: Page) => any
+  onSelect: (page: TemplatePage) => any
 }
 
 export function TemplateSelectorDialog({ open, onClose, onSelect }: TemplateSelectorDialogProps) {
 
   const classes = usePageStyles()
 
-  const [previewPage, setPreviewPage] = useState<Page | undefined>()
+  const [previewPage, setPreviewPage] = useState<TemplatePage | undefined>()
 
   const { error, loading, response, execute: loadTemplates } = useRequest(listTemplates, {
     performInitially: false,
     errorMessage: 'Failed to load template pages'
   })
   useEffect(loadTemplates, [open])
-  const [templates] = useResponseState<Page[]>(
+  const [templates] = useResponseState<TemplatePage[]>(
     response,
     [],
-    res => res.data?.templates?.map((d: any) => new Page(d.page)) || []
+    res => res.data?.templates?.map((template: any) => new Page({ ...template.page, uploads: template.uploads })) || []
   )
 
-  const selectTemplate = (page: Page) => {
+  const selectTemplate = (page: TemplatePage) => {
     console.log(page)
     onSelect(page)
     setPreviewPage(undefined)
   }
 
-  const blankPage = new Page({
+  // @ts-ignore
+  const blankPage: TemplatePage = new Page({
     _id: 'blank_page',
     name: 'Blank Page',
-    description: 'Start from scratch with a blank page.'
+    description: 'Start from scratch with a blank page.',
+    uploads: []
   })
 
-  const TemplateActions = (page: Page) => (
+  const TemplateActions = (page: TemplatePage) => (
     <>
       <Button
         className={classes.actionButton}
@@ -67,7 +71,7 @@ export function TemplateSelectorDialog({ open, onClose, onSelect }: TemplateSele
           <CloseButton onClick={onClose}/>
           <DialogContent>
             <Grid container direction="row" alignItems="center">
-              {[...templates, blankPage].filter(page => !page.isDiscarded()).map((page: Page) => (
+              {[...templates, blankPage].filter(page => !page.isDiscarded()).map(page => (
                 <Grid item xs={12} sm={6} key={page._id}>
                   <PageCard
                     displayStage={false}

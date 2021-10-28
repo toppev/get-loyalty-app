@@ -31,7 +31,7 @@ export default {
   cloneUploads
 }
 
-async function createPage(pageParam) {
+async function createPage(templatePage) {
   const business = await Business.findOne()
   const limit = business.plan.limits.pagesTotal
   if (limit !== -1 && await PageData.countDocuments({
@@ -40,9 +40,10 @@ async function createPage(pageParam) {
   }) >= limit) {
     throw new StatusError('Plan limit reached', 402)
   }
+  const { uploads, ...pageParam } = templatePage
   const newPage = await (new PageData(pageParam)).save()
-  if (pageParam.uploads?.length) {
-    await cloneUploads(pageParam.uploads, newPage.id)
+  if (uploads?.length) {
+    await cloneUploads(uploads, newPage.id)
   }
   return newPage
 }
