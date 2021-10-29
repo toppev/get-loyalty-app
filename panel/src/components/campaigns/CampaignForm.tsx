@@ -19,7 +19,7 @@ import CategorySelector from "../categories/CategorySelector"
 import ProductSelector from "../products/ProductSelector"
 import SaveIcon from "@material-ui/icons/Save"
 import IdText from "../common/IdText"
-import { KeyboardDatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers"
+import { KeyboardDateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers"
 import Reward from "../rewards/Reward"
 import DateFnsUtils from "@date-io/date-fns"
 import SelectProductsButton from "../products/button/SelectProductsButton"
@@ -67,7 +67,7 @@ const useStyles = makeStyles((theme: Theme) =>
     newRewardBtn: {},
   }))
 
-const CustomDatePicker = styled(KeyboardDatePicker)({
+const CustomDatePicker = styled(KeyboardDateTimePicker)({
   '& label': {
     whiteSpace: 'nowrap',
   }

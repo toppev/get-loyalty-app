@@ -22,7 +22,7 @@ export default function HelpTooltip({ title, text, size }: SimpleTooltipProps) {
         </React.Fragment>
       }
     >
-      <HelpIcon fontSize={size || "small"}/>
+      <HelpIcon fontSize={size || "small"} style={{marginLeft: '10px'}}/>
     </Tooltip>
   )
 }

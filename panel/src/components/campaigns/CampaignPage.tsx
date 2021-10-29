@@ -57,12 +57,13 @@ export default function () {
       />
       {(loading || otherRequests.loading) && <LinearProgress/>}
       <Grid className={classes.container} spacing={4} container direction="row" alignItems="flex-start">
-        {campaigns.length === 0 && !loading &&
-        <p className={classes.noCampaigns}>You don't have any campaigns. Create one by clicking the button
-          above.</p>}
+        {
+          campaigns.length === 0 && !loading &&
+          <p className={classes.noCampaigns}>You don't have any campaigns. Create one by clicking the buttonabove.</p>
+        }
 
         {campaigns.map(campaign => (
-          <Grid item xs={12} md={6} lg={3} key={campaign.id}>
+          <Grid item xs={12} md={6} lg={4} key={campaign.id}>
             <CampaignPaper
               campaign={campaign}
               startEditing={() => {
