@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import SwipeableViews from "react-swipeable-views"
 import PageView from "./PageView"
 import Navbar from "../navbar/Navbar"
@@ -16,19 +16,33 @@ export default function Pages(props: PagesProps) {
 
   const [pageIndex, setPageIndex] = useState(0)
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const pageName = params.get('page')?.toLowerCase()
+    const page = pages?.findIndex(it => it.pathname?.toLowerCase() === pageName)
+    if (page >= 0 && pageIndex !== page) setCurrentPage(page)
+  }, [pages, pageIndex])
+
+  const setCurrentPage = (index: number) => {
+    const newPath = pages[index]?.pathname
+    setPageIndex(index)
+    // @ts-ignore
+    window.history.replaceState(null, null, "?page=" + newPath)
+  }
+
   return (
     <>
       <Navbar
         mobileNavbar={mobileView}
         pages={pages || []}
         currentPageIndex={pageIndex}
-        setCurrentPageIndex={setPageIndex}
+        setCurrentPageIndex={setCurrentPage}
       />
       <div id="pages">
         <SwipeableViews
           enableMouseEvents
           index={pageIndex}
-          onChangeIndex={setPageIndex}
+          onChangeIndex={setCurrentPage}
         >
           {pages.map(page => (
             <PageView key={page._id} page={page}/>
