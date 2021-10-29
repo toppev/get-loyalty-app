@@ -1,5 +1,4 @@
-import { closeDatabase, initDatabase } from "./testUtils"
-
+import { closeDatabase, initDatabase, sleep } from "./testUtils"
 
 import userService from "../src/services/userService"
 import User from "../src/models/user"
@@ -60,8 +59,7 @@ describe('Not logged in user should', () => {
       .get('/user/resetPassword/' + token)
       .expect(200)
     expect(res.body.success).toEqual(true)
-    const afterReset = await ResetPassword.findOne({token})
-    console.log(afterReset)
+    const afterReset = await ResetPassword.findOne({ token })
     expect(afterReset.usedAt).toBeTruthy()
     expect(new Date(afterReset.usedAt).getTime()).toBeLessThanOrEqual(Date.now())
   })
@@ -168,6 +166,7 @@ describe('userService', () => {
 * Only site admins can do it anyway. Might implement later
 */
 
-afterAll(() => {
+afterAll(async () => {
+  await sleep(2000)
   closeDatabase()
 })

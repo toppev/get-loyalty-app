@@ -3,6 +3,7 @@ import mongoose from "mongoose"
 export {
   initDatabase,
   closeDatabase,
+  sleep
 }
 
 async function initDatabase(identifier) {
@@ -19,4 +20,8 @@ async function initDatabase(identifier) {
 
 function closeDatabase() {
   mongoose.connection.close()
+}
+
+function sleep(millis) {
+  return new Promise(resolve => setTimeout(resolve, millis))
 }
