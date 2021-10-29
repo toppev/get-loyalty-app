@@ -74,6 +74,7 @@ export default function (editor) {
     }
   })
 
+  editor.Panels.removeButton('options', 'export-template')
   editor.Panels.addButton('options', [{
     id: 'edit',
     className: 'fa fa-edit',
