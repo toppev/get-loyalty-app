@@ -86,8 +86,9 @@ export default function ({ page }: PageEditorProps) {
       </div>
       {error && <Alert className={classes.error} severity="error">{error}</Alert>}
 
-      {!!page.externalURL ?
-        <p className={classes.notEditable}>Can not edit content of pages with external URL</p> :
+      {page?.externalPage?.url ?
+        <p className={classes.notEditable}>Can not edit content of pages with external URL</p>
+        :
         <GrapesPageEditor
           page={page}
           _id={page._id}

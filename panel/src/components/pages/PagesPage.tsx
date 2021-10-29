@@ -229,7 +229,7 @@ export default function () {
             onClose={() => setUrlSelectorOpen(false)}
             onSubmit={url => {
               otherRequests.performRequest(
-                () => createPage(new Page({ name: 'New page', id: 'new_page', externalURL: url })),
+                () => createPage(new Page({ name: 'New page', id: 'new_page', externalPage: url})),
                 (res) => {
                   setUrlSelectorOpen(false)
                   setPages([...pages, new Page(res.data)])

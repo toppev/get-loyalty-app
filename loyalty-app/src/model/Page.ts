@@ -6,7 +6,10 @@ interface Page {
   _id: string
   pathname: string
   icon?: string
-  externalURL?: string
+  externalPage?: {
+    url: string,
+    urlType: string
+  }
   html?: string
 }
 

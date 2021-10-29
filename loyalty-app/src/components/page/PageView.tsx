@@ -13,16 +13,25 @@ interface PageViewProps {
 export default function PageView(props: PageViewProps) {
 
   const { page } = props
-  const { externalURL, pathname: title } = page
+  const { externalPage, pathname: title } = page
 
   const html = page.html || LOADING_HTML
 
   useEffect(() => ON_PAGE_RENDER_MODULES.forEach(it => it({ page })), [html, page])
   useUserFormInitialValues()
 
-  return externalURL ? (
+  const externalUrlType = externalPage?.urlType
+  const externalUrl = externalPage?.url
+
+  if (externalUrlType === "external_link") {
+    if (externalUrl && window.confirm(`You're about to navigate to external page ${externalUrl}`)) {
+      window.open(externalUrl, '_blank')
+    }
+  }
+
+  return externalUrlType === 'iframe' ? (
     <div className="page-holder">
-      <iframe title={title} height="100%" width="100%" frameBorder="0" src={externalURL}/>
+      <iframe title={title} height="100%" width="100%" frameBorder="0" src={externalUrl}/>
     </div>
   ) : (
     <>
@@ -37,6 +46,8 @@ function PageHead({ page }: PageViewProps) {
 
   const [script, setScript] = useState("")
 
+  // FIXME: currently all scripts are always loaded, maybe we should only load it once the specific page is opened
+
   useEffect(() => {
     const fileName = 'main.js'
     getPageStaticFile(pageId, fileName)
@@ -44,9 +55,6 @@ function PageHead({ page }: PageViewProps) {
       .catch(err => console.log(`Failed to load external static head file: ${fileName}`, err))
   }, [pageId])
 
-  // TODO: Figure out how the scripts/CSS should be handled
-  //  as the desktop pages work differently now and this is inconsistent
-  //  and ensure the script stuff works correctly overall
   return (
     <Helmet>
       <script>{script}</script>

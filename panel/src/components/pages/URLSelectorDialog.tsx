@@ -1,12 +1,15 @@
-import { Button, createStyles, Dialog, DialogContent, TextField, Theme } from "@material-ui/core"
+import { Button, createStyles, Dialog, DialogContent, FormControlLabel, Radio, RadioGroup, TextField, Theme } from "@material-ui/core"
 import CloseButton from "../common/button/CloseButton"
 import { makeStyles } from "@material-ui/core/styles"
 import React, { useState } from "react"
 import { isDomain } from "../../util/validate"
+import HelpTooltip from "../common/HelpTooltip"
+
+type ExternalPage = { url: string, urlType: string }
 
 interface URLSelectorDialogProps {
   open: boolean,
-  onSubmit: (url: string) => any
+  onSubmit: (urlPage: ExternalPage) => any
   onClose: () => any
 }
 
@@ -17,7 +20,11 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '320px'
     },
     selectBtn: {
-      marginTop: '10px'
+      marginTop: '10px',
+    },
+    urlTypes: {
+      margin: '15px 0',
+      textAlign: 'start',
     },
     dialogContent: {
       padding: '25px 15px',
@@ -26,9 +33,21 @@ const useStyles = makeStyles((theme: Theme) =>
   }))
 
 
+type URL_TYPE = { id: string, name: string, description?: string }
+
+const URL_TYPES: URL_TYPE[] = [{
+  id: 'external_link',
+  name: 'External link'
+}, {
+  id: 'iframe',
+  name: 'Embedded (iframe)',
+  description: 'All sites may not work and the user usually does not get logged in.'
+}]
+
 export default function (props: URLSelectorDialogProps) {
 
   const [url, setUrl] = useState('')
+  const [urlType, setUrlType] = useState(URL_TYPES[0].id)
 
   const classes = useStyles()
 
@@ -39,7 +58,8 @@ export default function (props: URLSelectorDialogProps) {
         <div>
           <TextField
             className={classes.urlField}
-            label="Insert url here"
+            label="Insert the URL here"
+            placeholder="https://example.com/mybusiness"
             multiline
             rows={1}
             rowsMax={5}
@@ -47,13 +67,26 @@ export default function (props: URLSelectorDialogProps) {
             onChange={(e) => setUrl(e.target.value)}
           />
         </div>
+        <div className={classes.urlTypes}>
+          <RadioGroup
+            value={urlType}
+            onChange={(e, val) => setUrlType(val)}
+          >
+            {URL_TYPES.map(it => (
+              <div key={it.id}>
+                <FormControlLabel value={it.id} control={<Radio/>} label={it.name}/>
+                {it.description && <HelpTooltip title={it.name} text={it.description}/>}
+              </div>
+            ))}
+          </RadioGroup>
+        </div>
         <Button
           disabled={!url || !isDomain(url)} // A simple check is enough
           className={classes.selectBtn}
           variant="contained"
           color="primary"
-          onClick={() => props.onSubmit(url)}
-        >Select</Button>
+          onClick={() => props.onSubmit({ url, urlType })}
+        >Add URL</Button>
       </DialogContent>
     </Dialog>
   )

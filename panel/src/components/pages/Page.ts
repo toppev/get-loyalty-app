@@ -8,7 +8,7 @@ class Page {
   pageIndex: number
   pathname: string
   template: boolean
-  externalURL?: string
+  externalPage?: { url: string, urlType: string }
   gjs: any
   uploads: any[] | undefined
 
@@ -20,7 +20,7 @@ class Page {
     this.icon = data.icon
     this.pageIndex = data.pageIndex
     this.pathname = data.pathname
-    this.externalURL = data.externalURL
+    this.externalPage = data.externalPage
     this.template = data.template
     this.gjs = data.gjs
     this.uploads = data.uploads

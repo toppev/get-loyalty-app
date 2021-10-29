@@ -5,8 +5,6 @@ import React, { useContext, useState } from "react"
 import AppContext, { Business } from "../../context/AppContext"
 import SaveChangesSnackbar from "../common/SaveChangesSnackbar"
 import { TextField } from "formik-material-ui"
-import HelpIcon from "@material-ui/icons/Help"
-import Tooltip from "@material-ui/core/Tooltip"
 import { updateBusiness } from "../../services/businessService"
 import useRequest from "../../hooks/useRequest"
 import RetryButton from "../common/button/RetryButton"
@@ -14,6 +12,7 @@ import { isEmail } from "../../util/validate"
 import IdText from "../common/IdText"
 import CustomerLevelView from "./levels/CustomerLevelView"
 import IconUploadForm from "./IconUploadForm"
+import HelpTooltip from "../common/HelpTooltip"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -28,7 +27,6 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {
       padding: '25px',
       flex: '1 1 0px',
-
     },
     field: {
       width: '100%',
@@ -47,9 +45,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     sectionTypography: {
       color: 'gray'
-    },
-    helpIcon: {
-      marginLeft: '20px'
     },
     infoText: {
       fontSize: '11px'
@@ -119,18 +114,10 @@ export default function () {
                 <Paper className={classes.paper}>
                   <Typography className={classes.sectionTypography} variant="h6" align="center">
                     Public Information (optional)
-                    <Tooltip
-                      enterDelay={200}
-                      leaveDelay={300}
-                      title={
-                        <React.Fragment>
-                          <Typography>Public information</Typography>
-                          Include public information that anyone can see.
-                        </React.Fragment>
-                      }
-                    >
-                      <HelpIcon className={classes.helpIcon}/>
-                    </Tooltip>
+                    <HelpTooltip
+                      title="Public Information"
+                      text=" Include public information that anyone can see."
+                    />
                   </Typography>
                   <Form>
                     <TextField

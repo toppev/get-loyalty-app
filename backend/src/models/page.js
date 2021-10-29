@@ -35,8 +35,14 @@ const PageDataSchema = new Schema({
   },
   // Optional url for external pages
   // e.g if the business already has a page, they can use it
-  externalURL: {
-    type: String
+  externalPage: {
+    url: {
+      type: String,
+    },
+    urlType: {
+      type: String,
+      enum: [null, 'iframe', 'external_link'],
+    },
   },
   pageIndex: {
     type: Number,

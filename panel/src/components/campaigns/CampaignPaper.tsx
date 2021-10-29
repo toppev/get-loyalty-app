@@ -3,10 +3,9 @@ import React from "react"
 import { Campaign } from "./Campaign"
 import RewardItem from "../rewards/RewardItem"
 import { format, plural } from "../common/StringUtils"
-import Tooltip from "@material-ui/core/Tooltip"
-import HelpOutlineIcon from '@material-ui/icons/HelpOutline'
 import { RenderList } from "../common/RenderList"
 import allRequirements from "@toppev/getloyalty-campaigns"
+import HelpTooltip from "../common/HelpTooltip"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -35,9 +34,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     detail: {
       color: theme.palette.grey[600]
-    },
-    helpIcon: {
-      marginLeft: '20px'
     },
     buttonsDiv: {
       textAlign: 'center'
@@ -106,8 +102,7 @@ export default function (props: CampaignPaperProps) {
                     return (
                       <p key={val}>{valueTypes[index]?.name || 'unknown'}: <b>{val}</b></p>
                     )
-                  }
-                  )}
+                  })}
                 </div>}
               </li>
             ))}
@@ -131,19 +126,10 @@ export default function (props: CampaignPaperProps) {
       </p>
       <br/>
       <p>Per purchase points: <b>{campaign.transactionPoints}</b>
-        <Tooltip
-          enterDelay={200}
-          leaveDelay={300}
-          title={
-            <React.Fragment>
-              <Typography>Transaction/purchase points</Typography>
-              Points the customer earns every time they make a purchase that is compliant with this
-              campaign
-            </React.Fragment>
-          }
-        >
-          <HelpOutlineIcon fontSize="small" className={classes.helpIcon}/>
-        </Tooltip>
+        <HelpTooltip
+          title="Transaction/purchase points"
+          text="Points the customer earns every time they make a purchase that is compliant with this campaign"
+        />
       </p>
       <p style={{ visibility: campaign.couponCode?.length ? 'visible' : 'hidden' }}>
         Coupon Code: <span className={classes.couponCode}>{campaign.couponCode}</span>
