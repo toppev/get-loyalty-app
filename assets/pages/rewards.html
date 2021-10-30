@@ -1,9 +1,8 @@
-<h1 class="text-primary" id="i41z">Your Rewards ({{customerRewards.unused}})</h1>
-<div id="id6ip">Show the QR code to use the reward.
-</div>
+<h1 class="page-title">Your Rewards ({{customerRewards.unused}})</h1>
+<div class="page-text">Show the QR code to use the reward.</div>
 <div id="isx5t">
     {{#unless user.rewards}}
-        <b>You don&#039;t have any rewards.</b>
+    <b>You don&#039;t have any rewards.</b>
     {{/unless}}
 </div>
 <div id="i0ci" class="gjs-row">
@@ -15,7 +14,7 @@
                     <u>{{name}}</u>
                 </b>
             </p>
-            <div type="text" name="QR Code" data-qrcode="{{scanCode}}" id="iwn9o"></div>
+            <div data-qrcode="{{scanCode}}" id="iwn9o"></div>
             <p id="ip9ez">{{description}}</p>
             <p id="ivr2q">{{itemDiscount}}</p>
             <p id="iqyhu">{{requirement}}</p>
@@ -49,6 +48,10 @@
     </div>
 </div>
 <style>
+
+  /* For development only */
+  @import "../../panel/public/templates/common_main.css";
+
   * {
     box-sizing: border-box;
   }
@@ -71,13 +74,6 @@
     width: 8%;
     display: table-cell;
     height: 75px;
-  }
-
-  #i41z {
-    text-align: center;
-    margin: 50px 0 25px;
-    font-size: 26px;
-    letter-spacing: 1px;
   }
 
   #i3ys {
@@ -128,13 +124,6 @@
     margin: auto;
   }
 
-  #id6ip {
-    padding: 10px;
-    text-align: center;
-    font-size: 14px;
-    color: rgb(113, 113, 113);
-  }
-
   #ie7b5 {
     text-align: center;
   }
@@ -183,9 +172,4 @@
     }
   }
 
-  @media (max-width: 480px) {
-    #i41z {
-      padding: 10px;
-    }
-  }
 </style>

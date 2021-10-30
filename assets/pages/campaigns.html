@@ -1,17 +1,13 @@
-<div class="page">
-    <div class="text-center h-auto">
-        <div class="py-4">
-            <h1 class="text-primary">Active Campaigns ({{campaigns.length}})</h1>
-        </div>
-        <div class="my-2 fs-4 text-light text-center">
-            Show your
-            <i><a href="/page=profile" class="link-light">QR code</a></i> to participate.
-        </div>
+<div>
+    <h1 class="page-title">Active Campaigns ({{campaigns.length}})</h1>
+    <div class="page-text">
+        Show your
+        <i><a href="/?page=profile" class="link-light">QR code</a></i> to participate.
     </div>
     <div class="card page-modal my-3">
         <div class="card-body">
             <div class="p-2">{{#each campaigns}}</div>
-            <h2 class="card-title text-secondary" >{{name}}</h2>
+            <h2 class="card-title text-secondary">{{name}}</h2>
             <div class="py-2 fs-3">{{#each customerProgress}}
                 <span draggable="true">💰</span>
                 <span draggable="true">{{/each}}{{#each stampsNeeded}}<span draggable="true">📦</span>{{/each}}</span>
@@ -53,6 +49,10 @@
     </div>
 </div>
 <style>
+
+  /* For development only */
+  @import "../../panel/public/templates/common_main.css";
+
   * {
     box-sizing: border-box;
   }

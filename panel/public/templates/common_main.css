@@ -1,12 +1,18 @@
+/* Import custom fonts here */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@600&display=swap');
+
+/** Background and other stuff */
+
 body {
   background-color: black !important;
   min-height: 1050px;
+  text-align: center; /* By default everything is centered */
 }
 
 body::before {
   background: linear-gradient(
           rgba(0, 0, 0, 0.5),
-          rgba(0, 0, 0, 0.5)
+          rgba(0, 0, 0, 0.5) /* Change the url below to change the background image */
   ), url(https://images.unsplash.com/photo-1525193612562-0ec53b0e5d7c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1470&q=80);
   background-position-y: center;
   background-position-x: right;
@@ -23,18 +29,29 @@ body::before {
   filter: blur(4px);
 }
 
-.gjs-row {
-  display: table;
-  padding: 10px;
-  width: 100%;
+/* Generic class styles */
+
+/* For example, "Campaigns", "Your Profile" etc page titles */
+.page-title {
+  color: #9b9bff;
+  font-size: 28px;
+  padding-top: 30px;
+  padding-bottom: 20px;
 }
 
-.gjs-cell {
-  width: 8%;
-  display: table-cell;
-  height: 75px;
+/* Common text on page. Usually on top of the background*/
+.page-text {
+  color: #c0c0c0;
+  font-size: 20px;
 }
 
+/* Smaller text on top of the background. */
+.page-small-text {
+  color: #a2a2a2;
+  font-size: 14px;
+}
+
+/* Modal/card/paper on the pages. For example, the grayish cards on the campaigns page. */
 .page-modal {
   text-align: center;
   margin: 10px auto;
@@ -43,4 +60,8 @@ body::before {
   color: rgb(47, 47, 47);
   max-width: 700px;
   background-color: rgba(189, 188, 188, 0.85) !important;
+}
+
+/** This class name is just used by the app to identify the element which user can click to prompt for enabling push notifications. */
+.enable-notifications {
 }

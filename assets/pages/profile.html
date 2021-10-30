@@ -1,16 +1,14 @@
 <div id="iorn" class="gjs-row">
-    <h1 class="py-3 text-primary">Your Profile</h1>
-    <div id="ib8ww" class="gjs-row hide-notifications enable-notifications">
-        <div id="ivn0e" class="gjs-cell enable-notifications">
-            <p id="ibb93" class="enable-notifications">Enable push notifications to receive notifications of our latest deals!</p>
-            <br/>
-            <button id="i4txe" class="enable-notifications"><b>Enable Notifications</b></button>
-        </div>
+    <h1 class="page-title">Your Profile</h1>
+    <div class="page-modal hide-notifications enable-notifications">
+        <p id="ibb93" class="enable-notifications">Enable push notifications to receive notifications of our latest deals!</p>
+        <br/>
+        <button class="btn btn-primary enable-notifications"><b>Enable Notifications</b></button>
     </div>
     <div id="iplef" class="gjs-row">
         <div id="iq6ll" class="gjs-cell">
-            <div type="text" name="QR Code" data-qrcode="{{ user.id }}" id="ixpfe"></div>
-            <div class="text-light" id="i057b">Show this QR code when making a purchase to earn rewards!</div>
+            <div data-qrcode="{{ user.id }}" id="ixpfe"></div>
+            <div class="page-text">Show this QR code when making a purchase to earn rewards!</div>
         </div>
     </div>
     <div id="i5af" class="gjs-row">
@@ -40,7 +38,7 @@
                             <div class="my-2">
                                 <div>
                                     <input required type="checkbox" id="tos-privacy-accept" name="acceptTosPrivacy" value="true"/>
-                                    <label style="color: #cccccc;" for="tos-privacy-accept" class="form-check-label">I accept
+                                    <label for="tos-privacy-accept" class="page-small-text form-check-label">I accept
                                         <a draggable="true" data-highlightable="1" href="https://getloyalty.app/terms">terms of service</a>
                                         <span> and </span>
                                         <a draggable="true" data-highlightable="1" href="https://getloyalty.app/privacy">privacy policy</a>
@@ -56,174 +54,86 @@
     </div>
 </div>
 </div>
-<style>* {
-  box-sizing: border-box;
-}
+<style>
 
-body {
-  margin: 0;
-}
+  /* For development only */
+  @import "../../panel/public/templates/common_main.css";
 
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-}
-
-.gjs-row {
-  display: table;
-  padding: 10px;
-  width: 100%;
-}
-
-.gjs-cell {
-  width: 8%;
-  display: table-cell;
-  height: 75px;
-}
-
-.enable-notifications {
-  color: rgb(56, 56, 56);
-  font-size: 14px;
-  min-height: auto;
-  margin: 0 auto;
-  padding: 5px;
-  border-top-width: 0;
-  border-right-width: 0;
-  border-bottom-width: 0;
-  border-left-width: 0;
-  border-top-style: solid;
-  border-right-style: solid;
-  border-bottom-style: solid;
-  border-left-style: solid;
-  border-top-color: rgb(56, 56, 56);
-  border-right-color: rgb(56, 56, 56);
-  border-bottom-color: rgb(56, 56, 56);
-  border-left-color: rgb(56, 56, 56);
-  border-image-source: initial;
-  border-image-slice: initial;
-  border-image-repeat: initial;
-}
-
-#iorn {
-  text-align: center;
-  padding: 10px 10px 150px;
-}
-
-#ixpfe {
-  width: 70%;
-  margin: 0 auto;
-  padding: 10px 0;
-}
-
-#i057b {
-  padding: 10px;
-  color: rgb(102, 102, 102);
-}
-
-#i5af {
-  padding: 30px 10px;
-  margin: 0;
-  text-align: center;
-}
-
-#iplef {
-  padding: 10px;
-}
-
-#i2fd1 {
-  text-align: left;
-  padding: 25px 10px;
-  margin: 10px 0 0;
-}
-
-#ig5e4 {
-  margin: 0 0 20px;
-}
-
-#tos-privacy-accept {
-  font-size: 14px;
-  margin: 3px 3px 3px 4px;
-}
-
-#iuhie {
-  color: rgb(122, 122, 122);
-}
-
-#i9cx7 {
-  padding: 5px 0;
-}
-
-#birthday-selector {
-  padding: 4px;
-}
-
-#ib8ww {
-  max-width: 470px;
-  margin: 0 auto;
-  border-top-width: 1px;
-  border-right-width: 1px;
-  border-bottom-width: 1px;
-  border-left-width: 1px;
-  border-top-style: solid;
-  border-right-style: solid;
-  border-bottom-style: solid;
-  border-left-style: solid;
-  border-top-color: rgb(206, 189, 214);
-  border-right-color: rgb(206, 189, 214);
-  border-bottom-color: rgb(206, 189, 214);
-  border-left-color: rgb(206, 189, 214);
-  border-image-source: initial;
-  border-image-slice: initial;
-  border-image-repeat: initial;
-  border-radius: 5px;
-  background-color: rgb(245, 225, 255);
-}
-
-#ivn0e {
-  padding: 25px 0 10px;
-}
-
-#i4txe {
-  background-color: mediumturquoise;
-  border-radius: 4px;
-  padding: 6px 20px;
-  margin: 0;
-  cursor: pointer;
-  border-top-width: 1px;
-  border-right-width: 1px;
-  border-bottom-width: 1px;
-  border-left-width: 1px;
-  border-top-style: solid;
-  border-right-style: solid;
-  border-bottom-style: solid;
-  border-left-style: solid;
-  border-top-color: rgb(187, 187, 187);
-  border-right-color: rgb(187, 187, 187);
-  border-bottom-color: rgb(187, 187, 187);
-  border-left-color: rgb(187, 187, 187);
-  border-image-source: initial;
-  border-image-slice: initial;
-  border-image-repeat: initial;
-  overflow-x: visible;
-  overflow-y: visible;
-  text-decoration-line: none;
-  text-decoration-style: initial;
-  text-decoration-color: initial;
-}
-
-#ibb93 {
-  padding: 2px 10px;
-  color: rgb(24, 109, 198);
-  font-size: 14px;
-}
-
-@media (max-width: 768px) {
-  .gjs-cell {
-    width: 100%;
-    display: block;
+  * {
+    box-sizing: border-box;
   }
-}
+
+  body {
+    margin: 0;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+  }
+
+  .gjs-row {
+    display: table;
+    padding: 10px;
+    width: 100%;
+  }
+
+  .gjs-cell {
+    width: 8%;
+    display: table-cell;
+    height: 75px;
+  }
+
+  #iorn {
+    text-align: center;
+    padding: 10px 10px 150px;
+  }
+
+  #ixpfe {
+    width: 70%;
+    margin: 0 auto;
+    padding: 10px 0;
+  }
+
+
+  #i5af {
+    padding: 30px 10px;
+    margin: 0;
+    text-align: center;
+  }
+
+  #iplef {
+    padding: 10px;
+  }
+
+  #i2fd1 {
+    text-align: left;
+    padding: 25px 10px;
+    margin: 10px 0 0;
+  }
+
+  #tos-privacy-accept {
+    font-size: 14px;
+    margin: 3px 3px 3px 4px;
+  }
+
+  #birthday-selector {
+    padding: 4px;
+  }
+
+  #ibb93 {
+    padding: 2px 10px;
+    color: rgb(24, 109, 198);
+    font-size: 14px;
+  }
+
+  @media (max-width: 768px) {
+    .gjs-cell {
+      width: 100%;
+      display: block;
+    }
+  }
 </style>
