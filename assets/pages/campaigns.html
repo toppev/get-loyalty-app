@@ -1,8 +1,7 @@
 <div class="page">
     <div class="text-center h-auto">
         <div class="py-4">
-            <h1 class="text-primary">Active Campaigns ({{campaigns.length}})
-            </h1>
+            <h1 class="text-primary">Active Campaigns ({{campaigns.length}})</h1>
         </div>
         <div class="my-2 fs-4 text-light text-center">
             Show your
@@ -12,59 +11,72 @@
     <div class="card page-modal my-3">
         <div class="card-body">
             <div class="p-2">{{#each campaigns}}</div>
-            <h4 class="card-title">{{name}}</h4>
+            <h2 class="card-title text-secondary" >{{name}}</h2>
             <div class="py-2 fs-3">{{#each customerProgress}}
                 <span draggable="true">💰</span>
                 <span draggable="true">{{/each}}{{#each stampsNeeded}}<span draggable="true">📦</span>{{/each}}</span>
             </div>
-            <p class="my-1 py-1 text-primary">
-                <span>
+            <p class="my-1 py-1 text-primary font-weight-bold">
+                <span style="font-weight: bold">
                     {{currentStampsAll.length}}{{#if totalStampsNeeded}}/{{totalStampsNeeded}}{{/if}} total stamps
                 </span>
             </p>
-            <p class="text-secondary h-auto p-3">{{description}}</p>
-            <h3 class="fs-5">
+            <p class="text-light h-auto p-3">{{description}}</p>
+            <hr/>
+            <h3 class="mt-2 fs-5 text-secondary">
                 <b>Rewards ({{endReward.length}})</b>
             </h3>
             <div class="gjs-row">
                 <div class="gjs-cell">
                     <div class="py-1">{{#each endReward}}</div>
-                    <p class="mb-2">{{name}}</p>
-                    <p>
-                        <span><u>{{itemDiscount}}</u></span>
-                    </p>
-                    <p>
-                        {{#if customerPoints}}
-                        <b>{{customerPoints}}</b> points
-                        {{/if}}
-                    </p>
-                    <p>{{description}}
-                    </p>
-                    <p class="text-warning">{{requirement}}</p>
+                    <div class="mb-2">
+                        <u class="reward-title">
+                            <span class="text-primary"><b>{{itemDiscount}}</b></span> - <span class="text-secondary">{{name}}</span>
+                        </u>
+                        <p class="text-secondary">{{description}}</p>
+                        <p class="text-points">
+                            {{#if customerPoints}}
+                            <b>+{{customerPoints}}</b> extra points!
+                            {{/if}}
+                        </p>
+                        <p class="text-warning">{{requirement}}</p>
+                    </div>
                     <div>{{/each}}</div>
                 </div>
             </div>
             <div class="gjs-row campaign-dates">
-                <div class="text-left gjs-cell">
-                    <p class="m-0 p-2 h-50">Starting {{start}}</p>
-                    <p class="m-0 p-2 h-50">{{#if end}} Ending {{end}} {{/if}}</p>
-                </div>
+                <p>Starting {{start}}</p>
+                <p>{{#if end}} Ending {{end}} {{/if}}</p>
             </div>
             <div>{{/each}}</div>
         </div>
     </div>
 </div>
-<style>* {
-  box-sizing: border-box;
-}
+<style>
+  * {
+    box-sizing: border-box;
+  }
 
-body {
-  margin: 0;
-}
+  body {
+    margin: 0;
+    font-size: 100%; /* Increase/decrease font sizes here */
+  }
 
-.campaign-dates {
-  color: rgb(85, 85, 85);
-  margin: 0 0 0 -8px;
-  font-size: 14px;
-}
+  .text-points {
+    color: rgb(38 255 0);
+    font-size: 20px;
+  }
+
+  .campaign-dates {
+    color: rgb(85, 85, 85);
+    margin: 20px 0 -10px -10px;
+    font-size: 14px;
+    text-align: left;
+  }
+
+  .reward-title {
+    font-size: 20px;
+    text-decoration-thickness: from-font;
+    text-underline-position: under;
+  }
 </style>
