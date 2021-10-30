@@ -1,6 +1,5 @@
 import PageData from "../models/page"
 import fileService from "./fileService"
-import juice from "juice"
 import pageScreenshot from "./pageScreenshot"
 import Business from "../models/business"
 import handlebars from "handlebars"
@@ -96,14 +95,9 @@ async function uploadPage(pageId, { html, css }) {
   if (res !== true) {
     throw new StatusError(`Invalid placeholders. ${res?.error || 'Unknown error.'}`, 400)
   }
-  // TODO: remove the inline CSS if possible
-  //  Note that it looks ugly at the moment without it as the CSS loads after the page
-  //  Find a solution to that. (Longer loading screen?)
-  const tmpl = `${html}<style>${css}</style>`
-  const inlineHtml = juice(tmpl)
 
   const dir = `page_${pageId}`
-  await fileService.upload(dir + '/index.html', inlineHtml)
+  await fileService.upload(dir + '/index.html', html)
   await fileService.upload(dir + '/main.css', css)
 
   // Refresh the page for the page owner to automatically see changes

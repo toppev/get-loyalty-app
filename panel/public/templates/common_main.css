@@ -59,7 +59,7 @@ body::before {
   border-radius: 7px;
   color: rgb(47, 47, 47);
   max-width: 700px;
-  background-color: rgba(189, 188, 188, 0.85) !important;
+  background-color: rgba(200, 215, 230, 0.80) !important;
 }
 
 /** This class name is just used by the app to identify the element which user can click to prompt for enabling push notifications. */
