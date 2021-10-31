@@ -131,21 +131,33 @@ describe('Logged in user with permissions can', () => {
   })
 
   // language=HTML
-  const expectedPage = `
+  const expectedHtml = `
     <div>
-      <h1 style="color: red;">Hello ${userParams.email}!</h1>
+      <h1>Hello ${userParams.email}!</h1>
       <br>
       <p>This is a test with åäö</p>
     </div>
   `
+  // language=CSS
+  const expectedCSS = `
+    h1 {
+      color: red;
+    }
+  `
 
 
   it('get page html with placeholder', async () => {
-    const res = await api
+    const htmlRes = await api
       .get(`/page/${testPageData.id}/html`)
       .set('Cookie', cookie)
       .expect(200)
-    expect(res.text).toBe(expectedPage)
+    expect(htmlRes.text).toBe(expectedHtml)
+
+    const cssRes = await api
+      .get(`/page/${testPageData.id}/static/main.css`)
+      .set('Cookie', cookie)
+      .expect(200)
+    expect(cssRes.text).toBe(expectedCSS)
   })
 
   it('upload the JavaScript file', async () => {
