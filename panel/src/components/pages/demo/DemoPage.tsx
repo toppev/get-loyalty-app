@@ -78,7 +78,7 @@ export default function () {
             Scan the QR code or share the link to try on other devices
           </Typography>
           <Typography className={classes.secondTypography} variant="h6">
-            This is what you would see as a customer. Only published sites will be displayed. Some features
+            This is what you would see as a customer. Only published pages will be displayed. Some features
             (for example, enabling push notifications) do not work in this embedded demo. Open the link on
             your phone for better experience.
           </Typography>

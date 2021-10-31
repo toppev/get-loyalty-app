@@ -1,6 +1,6 @@
 <div id="iorn" class="gjs-row">
     <h1 class="page-title">Your Profile</h1>
-    <div class="page-modal hide-notifications enable-notifications">
+    <div class="p-3 page-modal hide-notifications enable-notifications">
         <p id="ibb93" class="page-smaller-text enable-notifications">Enable push notifications to receive notifications of our latest
             deals!</p>
         <br/>
@@ -12,43 +12,42 @@
             <div class="page-text">Show this QR code when making a purchase to earn rewards!</div>
         </div>
     </div>
-    <div id="i5af" class="gjs-row">
-        <div id="i0vw" class="gjs-cell">
-            <h2 class="text-light">Email &amp; Birthday</h2>
-            <div id="i2fd1" class="gjs-row">
-                <div id="ix5tz" class="gjs-cell">
-                    <div>
-                        <form id="user-form">
+    <hr class="text-secondary" style="margin: 50px 0"/>
+    <div>
+        <h2 class="text-light">Your Information</h2>
+        <div id="i2fd1" class="gjs-row">
+            <div id="ix5tz" class="gjs-cell">
+                <div>
+                    <form id="user-form">
+                        <div>
+                            <label for="user-email" class="text-light">Email</label>
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">@</span>
+                            </div>
+                            <input type="email" class="form-control" id="user-email" name="email" value=""
+                                   placeholder="email@example.com"/>
+                        </div>
+                        <div>
+                            <label for="birthday-selector" class="text-light">Birthday</label>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="date" class="form-control" id="birthday-selector" name="birthday" autocomplete="bday"
+                                   min="1900-01-01" max="2010-12-31"/>
+                        </div>
+                        <div class="my-3">
                             <div>
-                                <label for="user-email" class="text-light">Email</label>
+                                <input required type="checkbox" id="tos-privacy-accept" name="acceptTosPrivacy" value="true"/>
+                                <label for="tos-privacy-accept" class="page-small-text form-check-label">I accept
+                                    <a draggable="true" data-highlightable="1" href="https://getloyalty.app/terms">terms of service</a>
+                                    <span> and </span>
+                                    <a draggable="true" data-highlightable="1" href="https://getloyalty.app/privacy">privacy policy</a>
+                                </label>
                             </div>
-                            <div class="input-group mb-2">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">@</span>
-                                </div>
-                                <input type="email" class="form-control" id="user-email" name="email" value=""
-                                       placeholder="email@example.com"/>
-                            </div>
-                            <div>
-                                <label for="birthday-selector" class="text-light">Birthday</label>
-                            </div>
-                            <div class="input-group mb-2">
-                                <input type="date" class="form-control" id="birthday-selector" name="birthday" autocomplete="bday"
-                                       min="1900-01-01" max="2010-12-31"/>
-                            </div>
-                            <div class="my-2">
-                                <div>
-                                    <input required type="checkbox" id="tos-privacy-accept" name="acceptTosPrivacy" value="true"/>
-                                    <label for="tos-privacy-accept" class="page-small-text form-check-label">I accept
-                                        <a draggable="true" data-highlightable="1" href="https://getloyalty.app/terms">terms of service</a>
-                                        <span> and </span>
-                                        <a draggable="true" data-highlightable="1" href="https://getloyalty.app/privacy">privacy policy</a>
-                                    </label>
-                                </div>
-                                <button class="btn btn-primary my-2 pv-2">Save</button>
-                            </div>
-                        </form>
-                    </div>
+                            <button class="btn btn-primary my-2 pv-4">Save</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -99,13 +98,6 @@
     padding: 10px 0;
   }
 
-
-  #i5af {
-    padding: 30px 10px;
-    margin: 0;
-    text-align: center;
-  }
-
   #iplef {
     padding: 10px;
   }
@@ -113,7 +105,7 @@
   #i2fd1 {
     text-align: left;
     padding: 25px 10px;
-    margin: 10px 0 0;
+    margin: 20px 0 0;
   }
 
   #tos-privacy-accept {

@@ -48,7 +48,7 @@ export default function ({ pageOpen, requests }: PageSettingsProps) {
                 return false
               }}/>
           </div>
-          <p className={classes.info}>Published sites are visible to anyone vising the site</p>
+          <p className={classes.info}>Published pages are visible to anyone vising the site</p>
         </div>
       </Paper>
       <Paper className={classes.card}>
