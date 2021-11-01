@@ -30,22 +30,27 @@ function useSubscribe(identifiers: string[]) {
       return
     }
     subscribedTo.push(id)
-    subscribeMessage(user.id, id).then(res => {
-      const { status } = res
-      // Resubscribe on success or timeout
-      if ((status >= 200 && status < 300) || status === 408 || status === 504) {
-        resub(id)
-        if (res.headers.get('content-length') !== "0") {
-          const data = res.data
-          if (data.message) {
-            if (data.id) data.id = Math.random()
-            setNotification(data)
-          } else {
-            console.error('Failed to parse a notification from the response.', data)
+    subscribeMessage(user.id, id)
+      .then(res => {
+        const { status } = res
+        // Resubscribe on success or timeout
+        if ((status >= 200 && status < 300) || status === 408 || status === 504) {
+          resub(id)
+          if (res.headers.get('content-length') !== "0") {
+            const data = res.data
+            if (data.message) {
+              if (data.id) data.id = Math.random()
+              setNotification(data)
+            } else {
+              console.error('Failed to parse a notification from the response.', data)
+            }
           }
         }
-      }
-    })
+      })
+      .catch(err => {
+        const status = err?.response?.status
+        if ([408, 504].includes(status)) resub(id)
+      })
   }
 
   const resub = (id: string) => {
