@@ -7,7 +7,7 @@
         <button class="btn btn-primary enable-notifications"><b>Enable Notifications</b></button>
     </div>
     <div id="iplef" class="gjs-row">
-        <div id="iq6ll" class="gjs-cell">
+        <div id="profile-qr-container" class="gjs-cell">
             <div data-qrcode="{{ user.id }}" id="ixpfe"></div>
             <div class="page-text">Show this QR code when making a purchase to earn rewards!</div>
         </div>
@@ -63,18 +63,6 @@
     box-sizing: border-box;
   }
 
-  body {
-    margin: 0;
-  }
-
-  * {
-    box-sizing: border-box;
-  }
-
-  body {
-    margin: 0;
-  }
-
   .gjs-row {
     display: table;
     padding: 10px;
@@ -121,6 +109,14 @@
     padding: 2px 10px;
     color: rgb(24, 109, 198);
     font-size: 14px;
+  }
+
+  #profile-qr-container {
+    height: 300px;
+  }
+
+  #user-registration {
+    margin-bottom: 200px;
   }
 
   @media (max-width: 768px) {
