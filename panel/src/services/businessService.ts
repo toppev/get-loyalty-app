@@ -5,7 +5,7 @@ function createBusiness(params?: any) {
   return post('/business/create', params)
 }
 
-function getBusiness(businessId: string) {
+function getBusiness() {
   return get(`/business`)
 }
 

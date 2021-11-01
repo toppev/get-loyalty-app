@@ -4,6 +4,12 @@ import defaultCustomerLevels from "../config/defaultLevels"
 
 const { Schema } = mongoose
 const configSchema = new Schema({
+  userRegistration: {
+    dialogEnabled: {
+      type: Boolean,
+      default: false
+    },
+  },
   translations: {
     points: {
       singular: {

@@ -11,8 +11,10 @@ import { AppContext, AppContextInterface, defaultAppContext } from './AppContext
 import NotificationHandler from "./components/notification/NotificationHandler"
 import { ReferrerDialog } from "./modules/Referrer"
 import useIsMobile from "./hooks/useIsMobile"
-import { useLoginHook } from "./hooks/useLoginHook"
+import { LoginData, useLoginHook } from "./hooks/useLoginHook"
 import Pages from "./components/page/Pages"
+import { getBusiness } from "./services/businessService"
+import RegisterForm from "./components/user/RegisterForm";
 
 function App() {
 
@@ -20,6 +22,7 @@ function App() {
 
   const [error, setError] = useState<string | undefined>()
   const [pages, setPages] = useState<Page[]>([])
+  const [registerForm, setRegisterForm] = useState(false)
 
   const isMobile = useIsMobile()
 
@@ -34,7 +37,7 @@ function App() {
     return newPages
   })
 
-  const onLogin = (res: AxiosResponse) => {
+  const onLogin = (res: AxiosResponse, data: LoginData) => {
     setContextState({ ...contextState, user: res.data })
     const query = new URLSearchParams(window.location.search)
     const couponCode = query.get('coupon') || query.get('code')
@@ -43,6 +46,12 @@ function App() {
     checkCoupon()
       .then(loadPages)
       .catch(err => setError(err?.response.body?.message || err.toString()))
+    if (data.isRegistration) {
+      // This could be optimized
+      // I.e., get only one field or the login form HTML (and empty if disabled)
+      getBusiness()
+        .then(res => setRegisterForm(res.data.config.userRegistration.dialogEnabled))
+    }
   }
 
   const { error: loginError } = useLoginHook({ onLogin })
@@ -103,6 +112,8 @@ function App() {
           </Helmet>
 
           {anyError && <p className="ErrorMessage">Error: {anyError}</p>}
+
+          {registerForm && <RegisterForm pages={pages}/>}
 
           <Pages pages={pages} mobileView={isMobile}/>
 

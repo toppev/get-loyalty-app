@@ -29,6 +29,9 @@ export interface BusinessConfig {
   translations: {
     [key: string]: Translation
   },
+  userRegistration: {
+    dialogEnabled: boolean
+  }
 }
 
 export interface Translation {
@@ -76,6 +79,9 @@ export const defaultAppContext: AppContextInterface = {
     _id: "123132",
     categories: [],
     config: {
+      userRegistration: {
+        dialogEnabled: false,
+      },
       translations: {
         points: {
           plural: "POINTS!!!",

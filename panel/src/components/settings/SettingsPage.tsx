@@ -4,11 +4,17 @@ import {
   createStyles,
   Dialog,
   DialogContent,
+  Divider,
+  FormControl,
+  FormControlLabel,
   FormHelperText,
+  FormLabel,
   Input,
   LinearProgress,
   MenuItem,
   Paper,
+  Radio,
+  RadioGroup,
   Select,
   Theme,
   Typography,
@@ -79,6 +85,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     info: {
       margin: '15px 7px'
+    },
+    registrationField: {
+      maxWidth: '400px'
     }
   }))
 
@@ -86,18 +95,44 @@ export default function () {
 
   const classes = useStyles()
 
-  const context = useContext(AppContext)
-
-  const [saved, setSaved] = useState(true)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [error, setError] = useState('') // For future use
 
   const theme = useTheme()
+
+  const bigScreen = useMediaQuery(theme.breakpoints.up('md'))
+
+  return (
+    <div style={{ marginBottom: '100px' }}>
+      <Typography
+        variant="h5"
+        className={classes.typography}
+      >Your loyalty app pages</Typography>
+      {error.length > 0 && <Alert severity="error">{error}</Alert>}
+      <Box display="flex" flexDirection={bigScreen ? "row" : "column"}>
+
+        <Paper className={classes.paper}>
+          <ConfigSettings/>
+        </Paper>
+
+        <Paper className={classes.paper}>
+          <ServerSettingsForm/>
+        </Paper>
+      </Box>
+    </div>
+  )
+}
+
+function ConfigSettings() {
+
+  const classes = useStyles()
   const request = useRequest()
+  const context = useContext(AppContext)
+
+  const [saved, setSaved] = useState(true)
 
   const { business } = context
-  const { translations } = business.config
-  const bigScreen = useMediaQuery(theme.breakpoints.up('md'))
+  const { translations, userRegistration } = business.config
 
   // If changed will update the state so the snackbar opens
   const validateAndSnackbar = (value: Business) => {
@@ -109,81 +144,88 @@ export default function () {
     return errors
   }
 
+  const registrationFormField = "config.userRegistration.dialogEnabled"
+
   return (
     <div>
-      <Typography
-        variant="h5"
-        className={classes.typography}
-      >Your loyalty app pages</Typography>
-      {error.length > 0 && <Alert severity="error">{error}</Alert>}
-      <Box display="flex" flexDirection={bigScreen ? "row" : "column"}>
-        <Paper className={classes.paper}>
-          <Typography className={classes.sectionTypography} variant="h6" align="center">
-            Translations
-          </Typography>
-          <p className={classes.description}
-          >You can translate messages and other things here.</p>
-          <Formik
-            initialValues={business}
-            validateOnBlur
-            validate={validateAndSnackbar}
-            onSubmit={(updatedBusiness, actions) => {
-              console.log('sending')
-              actions.setSubmitting(true)
+      <Typography className={classes.sectionTypography} variant="h6" align="center">
+        Translations
+      </Typography>
+      <p className={classes.description}>You can translate messages and other things here.</p>
+      <Formik
+        initialValues={business}
+        validateOnBlur
+        validate={validateAndSnackbar}
+        onSubmit={(updatedBusiness, actions) => {
+          console.log('sending')
+          actions.setSubmitting(true)
 
-              request.performRequest(
-                () => updateBusiness(updatedBusiness),
-                (res) => {
-                  setSaved(true)
-                  context.setBusiness(res.data)
-                  actions.setSubmitting(false)
-                },
-                () => actions.setSubmitting(false)
-              )
-            }}
-          >
-            {({ submitForm, isSubmitting }) => (
-              <Form>
-                <div className={classes.fieldDiv}>
-                  {Object.keys(translations).map(k => {
-                    const { plural, singular, placeholder } = translations[k]
-                    const both = plural && singular
-                    return (
-                      <div key={k}>
-                        {plural && <TextField
-                          className={classes.field}
-                          name={`config.translations.${k}.plural`}
-                          type="text"
-                          label={`"${k}" translation ${both ? "(plural)" : ""}`}
-                          placeholder={placeholder}
-                        />}
-                        {singular && <TextField
-                          className={classes.field}
-                          name={`config.translations.${k}.singular`}
-                          type="text"
-                          label={`"${k}" translation ${both ? "(singular)" : ""}`}
-                          placeholder={placeholder}
-                        />}
-                      </div>
-                    )
-                  }
-                  )}
-                </div>
-                <SaveChangesSnackbar
-                  open={!saved}
-                  buttonDisabled={isSubmitting}
-                  onSave={submitForm}
-                />
-              </Form>
+          request.performRequest(
+            () => updateBusiness(updatedBusiness),
+            (res) => {
+              setSaved(true)
+              context.setBusiness(res.data)
+              actions.setSubmitting(false)
+            },
+            () => actions.setSubmitting(false)
+          )
+        }}
+      >
+        {formik => (
+          <Form>
+            <div className={classes.fieldDiv}>
+              {Object.keys(translations).map(k => {
+                const { plural, singular, placeholder } = translations[k]
+                const both = plural && singular
+                return (
+                  <div key={k}>
+                    {plural && <TextField
+                      className={classes.field}
+                      name={`config.translations.${k}.plural`}
+                      type="text"
+                      label={`"${k}" translation ${both ? "(plural)" : ""}`}
+                      placeholder={placeholder}
+                    />}
+                    {singular && <TextField
+                      className={classes.field}
+                      name={`config.translations.${k}.singular`}
+                      type="text"
+                      label={`"${k}" translation ${both ? "(singular)" : ""}`}
+                      placeholder={placeholder}
+                    />}
+                  </div>
+                )
+              })}
+            </div>
 
-            )}
-          </Formik>
-        </Paper>
+            <Divider style={{ margin: '35px 0' }}/>
 
-        <Paper className={classes.paper}>
-          <ServerSettingsForm/>
-        </Paper>
-      </Box>
+            <Typography className={classes.sectionTypography} variant="h6" align="center">
+              User Registration
+            </Typography>
+            <div className={classes.fieldDiv}>
+              <div>
+                <FormControl component="fieldset">
+                  <FormLabel component="legend">Enable Registration Form</FormLabel>
+                  <RadioGroup
+                    name={registrationFormField}
+                    value={formik.values.config.userRegistration.dialogEnabled.toString()}
+                    onChange={e => formik.setFieldValue(registrationFormField, e.target.value)}
+                  >
+                    <FormControlLabel value="true" control={<Radio/>} label="Enabled"/>
+                    <FormControlLabel value="false" control={<Radio/>} label="Disabled"/>
+                  </RadioGroup>
+                </FormControl>
+              </div>
+            </div>
+            <SaveChangesSnackbar
+              open={!saved}
+              buttonDisabled={formik.isSubmitting}
+              onSave={formik.submitForm}
+            />
+          </Form>
+        )}
+      </Formik>
     </div>
   )
 }

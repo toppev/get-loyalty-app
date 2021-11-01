@@ -42,7 +42,7 @@ function onLoginOrAccountCreate(context: AppContextInterface, res: AxiosResponse
   if (!res.data.businessOwner) {
     create()
   } else {
-    getBusiness(res.data.businessOwner)
+    getBusiness()
       .then(businessResponse => setBusiness(businessResponse.data))
       .catch(err => {
         console.log(err)
