@@ -38,7 +38,7 @@ export default function ({ level, startEditing, onDelete }: CustomerLevelProps) 
       <b>Required points: {level.requiredPoints} </b>
       <RenderList
         list={level.rewards}
-        title="End Rewards:"
+        title="Level Rewards:"
         emptyString="none"
         renderAll={items => items.map(item => <RewardItem key={item.id} reward={item}/>)}
       />

@@ -9,12 +9,12 @@ import { AppContext } from "../AppContext"
 import client from "../config/axios"
 
 function subscribeMessage(userId: string, identifier: string) {
-  return client.post(`${process.env.REACT_APP_POLLING_API_URL}/${identifier}_${userId}`, {})
+  return client.post(`${process.env.REACT_APP_POLLING_API_URL}/${identifier}_${userId}`, {}, { withCredentials: false })
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function unsubscribeMessage(userId: string, identifier: string) {
-  return client.delete(`${process.env.REACT_APP_POLLING_API_URL}/${identifier}_${userId}`)
+  return client.delete(`${process.env.REACT_APP_POLLING_API_URL}/${identifier}_${userId}`, { withCredentials: false })
 }
 
 // Don't use state because this works better

@@ -80,8 +80,8 @@ export default function () {
           <div className={classes.info}>
             <p>Create or import existing products from a .csv file here.</p>
             <Tip>
-              You don't have to create all products.
-              You can create generic products, for example "Pizza", "Vegan burgers" or "Men's haircut".
+              You don't have to create all products (or none at all!).
+              You can also just create generic products that you need in your campaigns/rewards, for example "Pizza", "Vegan burgers" or "Men's haircut".
             </Tip>
           </div>
 
@@ -132,8 +132,8 @@ export default function () {
 
           <p className={classes.noProducts}>
             {filteredProducts.length === 0 && (products.length === 0
-              ? "You don't have any products"
-              : "No products found"
+                ? "You don't have any products"
+                : "No products found"
             )}
           </p>
 
