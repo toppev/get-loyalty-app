@@ -132,14 +132,13 @@ function ConfigSettings() {
   const [saved, setSaved] = useState(true)
 
   const { business } = context
-  const { translations, userRegistration } = business.config
+  const { translations } = business.config
 
   // If changed will update the state so the snackbar opens
   const validateAndSnackbar = (value: Business) => {
     const errors: FormikErrors<Business> = {}
     if (!_.isEqual(value, business)) {
       setSaved(false)
-      console.log(value, business)
     }
     return errors
   }
@@ -157,7 +156,6 @@ function ConfigSettings() {
         validateOnBlur
         validate={validateAndSnackbar}
         onSubmit={(updatedBusiness, actions) => {
-          console.log('sending')
           actions.setSubmitting(true)
 
           request.performRequest(
