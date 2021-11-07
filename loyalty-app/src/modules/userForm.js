@@ -1,6 +1,6 @@
 import client from "../config/axios"
 import { AppContext } from "../AppContext"
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
 
 const getUserForm = () => document.getElementById(`user-form`)
 
@@ -12,39 +12,43 @@ const getSubmitBtn = () => document.getElementById(`user-form-submit`)
 
 export function useUserFormInitialValues() {
   const { user } = useContext(AppContext)
-  if (!user) return
 
-  // Handle default values
+  useEffect(() => {
+    if (!user) return
 
-  const ef = getEmailField()
-  if (ef) ef.value = user.email || ""
+    // Handle default values
 
-  if (user.birthday) {
-    const bd = new Date(Date.parse(user.birthday)).toISOString()
-    const bf = getBirthdayField()
-    // e.g 1999-02-16
-    if (bf) {
-      bf.value = bd.slice(0, 10)
-      // Disable birthday field to prevent changing it again
-      bf.disabled = true
+    const ef = getEmailField()
+    if (ef) ef.value = user.email || ""
+
+    if (user.birthday) {
+      const bd = new Date(Date.parse(user.birthday)).toISOString()
+      const bf = getBirthdayField()
+      // e.g 1999-02-16
+      if (bf) {
+        bf.value = bd.slice(0, 10)
+        // Disable birthday field to prevent changing it again
+        bf.disabled = true
+      }
     }
-  }
 
-  // Handle form submission
-  const form = getUserForm()
-  if (form) {
-    form.onsubmit = e => {
-      e.preventDefault()
-      if (form?.reportValidity() !== false) {
-        if (user.businessOwner) {
-          window.alert("Your email would have been updated but because you're the owner of this business" +
-            " it would cause problems.\n\nUpdate your email: panel.getloyalty.app/account")
-        } else {
-          submitChanges()
+    // Handle form submission
+    const form = getUserForm()
+    if (form) {
+      form.onsubmit = e => {
+        e.preventDefault()
+        if (form?.reportValidity() !== false) {
+          if (user.businessOwner) {
+            window.alert("Your email would have been updated but because you're the owner of this business" +
+              " it would cause problems.\n\nUpdate your email: panel.getloyalty.app/account")
+            getSubmitBtn().disabled = true
+          } else {
+            submitChanges()
+          }
         }
       }
     }
-  }
+  })
 }
 
 function submitChanges() {

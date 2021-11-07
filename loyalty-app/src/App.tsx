@@ -116,6 +116,7 @@ function App() {
 
           {anyError && <p className="ErrorMessage">Error: {anyError}</p>}
 
+          {/* Before the pages so userForm element ids work correctly even if the pages have the same ids */}
           {registerForm && <RegisterForm pages={pages}/>}
 
           <Pages pages={pages} mobileView={isMobile}/>
