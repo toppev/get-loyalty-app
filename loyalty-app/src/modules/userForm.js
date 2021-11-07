@@ -2,13 +2,13 @@ import client from "../config/axios"
 import { AppContext } from "../AppContext"
 import { useContext } from "react"
 
-const getUserForm = () => document.querySelector(`#user-form`)
+const getUserForm = () => document.getElementById(`user-form`)
 
 const getEmailField = () => document.getElementById("user-email")
 const getBirthdayField = () => document.getElementById("birthday-selector")
 const getNewsLetterCheckbox = () => document.getElementById("user-form-newsletter")
 
-const getSubmitBtn = () => document.querySelector(`#user-form-submit`)
+const getSubmitBtn = () => document.getElementById(`user-form-submit`)
 
 export function useUserFormInitialValues() {
   const { user } = useContext(AppContext)
@@ -25,7 +25,7 @@ export function useUserFormInitialValues() {
     // e.g 1999-02-16
     if (bf) {
       bf.value = bd.slice(0, 10)
-      // Disable birthday field to prevent abuse
+      // Disable birthday field to prevent changing it again
       bf.disabled = true
     }
   }

@@ -20,9 +20,10 @@ code {
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba(150, 150, 150, 0.25);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(20, 20, 20, 0.5);
+  background: rgba(180, 180, 180, 0.25);
+  border-radius: 10px;
 }

@@ -14,7 +14,8 @@ import useIsMobile from "./hooks/useIsMobile"
 import { LoginData, useLoginHook } from "./hooks/useLoginHook"
 import Pages from "./components/page/Pages"
 import { getBusiness } from "./services/businessService"
-import RegisterForm from "./components/user/RegisterForm";
+import RegisterForm from "./components/user/RegisterForm"
+import { useUserFormInitialValues } from "./modules/userForm"
 
 function App() {
 
@@ -23,6 +24,8 @@ function App() {
   const [error, setError] = useState<string | undefined>()
   const [pages, setPages] = useState<Page[]>([])
   const [registerForm, setRegisterForm] = useState(false)
+
+  useUserFormInitialValues()
 
   const isMobile = useIsMobile()
 
