@@ -8,8 +8,6 @@ const getEmailField = () => document.getElementById("user-email")
 const getBirthdayField = () => document.getElementById("birthday-selector")
 const getNewsLetterCheckbox = () => document.getElementById("user-form-newsletter")
 
-const getSubmitBtn = () => document.getElementById(`user-form-submit`)
-
 export function useUserFormInitialValues() {
   const { user } = useContext(AppContext)
   if (!user) return
@@ -41,7 +39,7 @@ export function useUserFormInitialValues() {
           if (user.businessOwner) {
             window.alert("Your email would have been updated but because you're the owner of this business" +
               " it would cause problems.\n\nUpdate your email: panel.getloyalty.app/account")
-            getSubmitBtn().disabled = true
+            toggleForm(true)
           } else {
             submitChanges()
           }
@@ -51,9 +49,13 @@ export function useUserFormInitialValues() {
   }, 1000)
 }
 
+function toggleForm(disabled) {
+  const submitBtns = getUserForm()?.querySelectorAll('button[type="submit"]')
+  Array.from(submitBtns).forEach(it => it.disabled = disabled)
+}
+
 function submitChanges() {
-  const submitBtn = getSubmitBtn()
-  submitBtn.disabled = true
+  toggleForm(true)
 
   client.patch('/user', {
     email: getEmailField().value,
@@ -61,7 +63,7 @@ function submitChanges() {
     acceptAll: true,
     newsLetter: getNewsLetterCheckbox()?.value,
   }).catch(err => {
-    submitBtn.disabled = false
+    toggleForm(false)
 
     const msg = err.response?.data?.message
     if (msg) {

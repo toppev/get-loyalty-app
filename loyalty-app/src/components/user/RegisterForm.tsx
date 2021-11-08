@@ -18,7 +18,9 @@ export default function RegisterForm({ pages }: LoginFormProps) {
 
   return (
     <div
-      className="fixed text-gray-500 flex items-center justify-center overflow-auto z-50 backdrop-blur-sm bg-opacity-40 left-0 right-0 top-0 bottom-0">
+      className="fixed text-gray-500 flex items-center justify-center overflow-auto z-50 bg-opacity-40 left-0 right-0 top-0 bottom-0"
+      style={{backdropFilter: 'blur(4px)'}}
+    >
       <div
         className="bg-white text-gray-500 m-3 h-96 rounded-xl shadow-2xl p-6 md:w-6/12"
         dangerouslySetInnerHTML={{ __html: html }}
@@ -60,7 +62,7 @@ const DEFAULT_REGISTRATION = `
                                 <a draggable="true" data-highlightable="1" href="https://getloyalty.app/privacy">privacy policy</a>
                             </label>
                         </div>
-                        <button class="btn btn-primary my-2 pv-4">Register</button>
+                        <button class="btn btn-primary my-2 pv-4" type="submit">Register</button>
                     </div>
                 </form>
             </div>
