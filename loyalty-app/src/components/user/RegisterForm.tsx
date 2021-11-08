@@ -14,9 +14,10 @@ export default function RegisterForm({ pages }: LoginFormProps) {
   const html = registerPage?.html || document.getElementById("user-registration")?.innerHTML || DEFAULT_REGISTRATION
 
   return (
-    <div className="fixed text-gray-500 flex items-center justify-center overflow-auto z-50 bg-black bg-opacity-40 left-0 right-0 top-0 bottom-0">
+    <div
+      className="fixed text-gray-500 flex items-center justify-center overflow-auto z-50 backdrop-blur-sm bg-opacity-40 left-0 right-0 top-0 bottom-0">
       <div
-        className="bg-white m-3 h-80 rounded-xl shadow-2xl p-6 md:w-6/12"
+        className="bg-white text-gray-500 m-3 h-96 rounded-xl shadow-2xl p-6 md:w-6/12"
         dangerouslySetInnerHTML={{ __html: html }}
       />
     </div>
