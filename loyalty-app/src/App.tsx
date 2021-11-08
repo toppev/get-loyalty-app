@@ -18,7 +18,9 @@ import RegisterForm from "./components/user/RegisterForm"
 
 function App() {
 
-  const [contextState, setContextState] = useState<AppContextInterface>(defaultAppContext)
+  const initContext = defaultAppContext
+  initContext.set = data => setContextState(prev => ({ ...prev, data }))
+  const [contextState, setContextState] = useState<AppContextInterface>(initContext)
 
   const [error, setError] = useState<string | undefined>()
   const [pages, setPages] = useState<Page[]>([])
@@ -26,9 +28,14 @@ function App() {
 
   const isMobile = useIsMobile()
 
+  // If user exists in context but does not have email, open the registration form if not already
+  if (contextState.user?.id && !contextState.user.email && !registerForm) {
+    isRegistrationFormEnabled().then(res => setRegisterForm(res))
+  }
+
   const updatePage = (page: Page) => setPages(prev => {
-    let newPages = [...prev]
-    let index = prev.findIndex(old => old._id === page._id)
+    const newPages = [...prev]
+    const index = prev.findIndex(old => old._id === page._id)
     if (index !== -1) {
       newPages[index] = page
     } else {
@@ -37,8 +44,8 @@ function App() {
     return newPages
   })
 
-  const onLogin = (res: AxiosResponse, data: LoginData) => {
-    setContextState({ ...contextState, user: res.data })
+  const onLogin = (res: AxiosResponse, _data: LoginData) => {
+    contextState.set({ user: res.data })
     const query = new URLSearchParams(window.location.search)
     const couponCode = query.get('coupon') || query.get('code')
     const referrer = query.get('referrer')
@@ -46,12 +53,6 @@ function App() {
     checkCoupon()
       .then(loadPages)
       .catch(err => setError(err?.response.body?.message || err.toString()))
-    // Either did not register now or does not have email (e.g., refresh) = prompt dialog
-    if (data.isRegistration || !res.data.email) {
-      // This could be optimized
-      // I.e., get only one field or the login form HTML (and empty if disabled)
-      isRegistrationFormEnabled().then(res => setRegisterForm(res))
-    }
   }
 
   const { error: loginError } = useLoginHook({ onLogin })
@@ -75,7 +76,8 @@ function App() {
 
   const refreshHtmlPages = (refreshPages = pages) => {
     if (refreshPages.length) {
-      const fetchRest = (excludeId?: string) => refreshPages.forEach(it => it._id !== excludeId && fetchHtml(it))
+      const fetchRest = (excludeId?: string) =>
+        refreshPages.forEach(it => it._id !== excludeId && fetchHtml(it))
       // Attempt fetching only the current page first for better performance
       const path = window.location.pathname.substring(1) // e.g "/home" -> "home"
       const current = refreshPages.find(page => page.pathname === path) || refreshPages[0]

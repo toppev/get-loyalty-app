@@ -9,7 +9,8 @@ const getBirthdayField = () => document.getElementById("birthday-selector")
 const getNewsLetterCheckbox = () => document.getElementById("user-form-newsletter")
 
 export function useUserFormInitialValues() {
-  const { user } = useContext(AppContext)
+  const context = useContext(AppContext)
+  const { user } = context
   if (!user) return
 
   // FIXME: just a temp fix
@@ -41,6 +42,7 @@ export function useUserFormInitialValues() {
             toggleForm(true)
           } else {
             submitChanges()
+              .then(res => res.data && context.set({ user: res.data }))
           }
         }
       }
@@ -53,21 +55,21 @@ function toggleForm(disabled) {
   Array.from(submitBtns).forEach(it => it.disabled = disabled)
 }
 
-function submitChanges() {
+async function submitChanges() {
   toggleForm(true)
-
-  client.patch('/user', {
-    email: getEmailField().value,
-    birthday: new Date(getBirthdayField().value),
-    acceptAll: true,
-    newsLetter: getNewsLetterCheckbox()?.value,
-  }).catch(err => {
+  try {
+    return await client.patch('/user', {
+      email: getEmailField().value,
+      birthday: new Date(getBirthdayField().value),
+      acceptAll: true,
+      newsLetter: getNewsLetterCheckbox()?.value,
+    })
+  } catch (err) {
     toggleForm(false)
-
     const msg = err.response?.data?.message
     if (msg) {
       // FIXME: show the error somewhere else
       window.alert(msg)
     }
-  })
+  }
 }

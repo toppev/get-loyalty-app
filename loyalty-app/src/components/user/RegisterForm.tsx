@@ -22,7 +22,7 @@ export default function RegisterForm({ pages }: LoginFormProps) {
       style={{backdropFilter: 'blur(4px)'}}
     >
       <div
-        className="bg-gray-800 text-gray-500 m-3 h-96 rounded-xl shadow-2xl p-6 md:w-6/12"
+        className="bg-gray-800 text-gray-500 m-3 h-96 rounded-xl shadow-2xl p-8 md:w-6/12"
         dangerouslySetInnerHTML={{ __html: html }}
       />
     </div>
@@ -54,7 +54,7 @@ const DEFAULT_REGISTRATION = `
                                min="1900-01-01" max="2010-12-31"/>
                     </div>
                     <div class="my-3">
-                        <div>
+                        <div style="white-space: nowrap;">
                             <input required type="checkbox" id="tos-privacy-accept" name="acceptTosPrivacy" value="true"/>
                             <label for="tos-privacy-accept" class="page-small-text form-check-label">I accept
                                 <a draggable="true" data-highlightable="1" href="https://getloyalty.app/terms">terms of service</a>
