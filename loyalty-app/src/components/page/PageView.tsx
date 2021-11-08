@@ -18,6 +18,7 @@ export default function PageView(props: PageViewProps) {
   const html = page.html || LOADING_HTML
 
   useEffect(() => ON_PAGE_RENDER_MODULES.forEach(it => it({ page })), [html, page])
+  useUserFormInitialValues()
 
   const externalUrlType = externalPage?.urlType
   const externalUrl = externalPage?.url

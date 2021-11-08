@@ -1,6 +1,6 @@
 import client from "../config/axios"
 import { AppContext } from "../AppContext"
-import { useContext, useEffect } from "react"
+import { useContext } from "react"
 
 const getUserForm = () => document.getElementById(`user-form`)
 
@@ -12,12 +12,11 @@ const getSubmitBtn = () => document.getElementById(`user-form-submit`)
 
 export function useUserFormInitialValues() {
   const { user } = useContext(AppContext)
+  if (!user) return
 
-  useEffect(() => {
-    if (!user) return
-
+  // FIXME: just a temp fix
+  setTimeout(() => {
     // Handle default values
-
     const ef = getEmailField()
     if (ef) ef.value = user.email || ""
 
@@ -34,6 +33,7 @@ export function useUserFormInitialValues() {
 
     // Handle form submission
     const form = getUserForm()
+    console.log("debug", { isUser: !!user, ef, form })
     if (form) {
       form.onsubmit = e => {
         e.preventDefault()
@@ -48,7 +48,7 @@ export function useUserFormInitialValues() {
         }
       }
     }
-  })
+  }, 1000)
 }
 
 function submitChanges() {

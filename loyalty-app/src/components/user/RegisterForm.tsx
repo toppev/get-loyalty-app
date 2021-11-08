@@ -1,11 +1,14 @@
 import React from 'react'
 import Page from "../../model/Page"
+import { useUserFormInitialValues } from "../../modules/userForm"
 
 interface LoginFormProps {
   pages: Page[]
 }
 
 export default function RegisterForm({ pages }: LoginFormProps) {
+
+  useUserFormInitialValues()
 
   // Can be configured by setting pathname to "register"
   const registerPage = pages.find(it => it.pathname === "register")
