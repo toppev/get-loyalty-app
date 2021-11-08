@@ -13,7 +13,7 @@ import { ReferrerDialog } from "./modules/Referrer"
 import useIsMobile from "./hooks/useIsMobile"
 import { LoginData, useLoginHook } from "./hooks/useLoginHook"
 import Pages from "./components/page/Pages"
-import { getBusinessPublic } from "./services/businessService"
+import { isRegistrationFormEnabled } from "./services/businessService"
 import RegisterForm from "./components/user/RegisterForm"
 import { useUserFormInitialValues } from "./modules/userForm"
 
@@ -49,11 +49,11 @@ function App() {
     checkCoupon()
       .then(loadPages)
       .catch(err => setError(err?.response.body?.message || err.toString()))
-    if (data.isRegistration) {
+    // Either did not register now or does not have email (e.g., refresh) = prompt dialog
+    if (data.isRegistration || !res.data.email) {
       // This could be optimized
       // I.e., get only one field or the login form HTML (and empty if disabled)
-      getBusinessPublic()
-        .then(res => setRegisterForm(res.data.config.userRegistration.dialogEnabled))
+      isRegistrationFormEnabled().then(res => setRegisterForm(res))
     }
   }
 
