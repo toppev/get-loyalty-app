@@ -22,7 +22,7 @@ export default function RegisterForm({ pages }: LoginFormProps) {
       style={{backdropFilter: 'blur(4px)'}}
     >
       <div
-        className="bg-white text-gray-500 m-3 h-96 rounded-xl shadow-2xl p-6 md:w-6/12"
+        className="bg-gray-800 text-gray-500 m-3 h-96 rounded-xl shadow-2xl p-6 md:w-6/12"
         dangerouslySetInnerHTML={{ __html: html }}
       />
     </div>

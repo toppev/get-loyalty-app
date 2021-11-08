@@ -31,7 +31,6 @@ export function useUserFormInitialValues() {
 
     // Handle form submission
     const form = getUserForm()
-    console.log("debug", { isUser: !!user, ef, form })
     if (form) {
       form.onsubmit = e => {
         e.preventDefault()

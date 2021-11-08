@@ -4,6 +4,7 @@ const EMPTY_PAGE_HTML = `<h1 class="ErrorMessage">Oops.. The page looks empty.</
 
 interface Page {
   _id: string
+  hidden: boolean
   pathname: string
   icon?: string
   externalPage?: {

@@ -44,11 +44,16 @@ export default function Pages(props: PagesProps) {
           index={pageIndex}
           onChangeIndex={setCurrentPage}
         >
-          {pages.map(page => (
+          {filterPages(pages).map(page => (
             <PageView key={page._id} page={page}/>
           ))}
         </SwipeableViews>
       </div>
     </>
   )
+}
+
+function filterPages(pages: Page[]): Page[] {
+  const excluded = ['registration']
+  return pages.filter(it => !it.hidden && !excluded.includes(it.pathname))
 }
