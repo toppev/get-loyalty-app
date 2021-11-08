@@ -13,7 +13,7 @@ import { ReferrerDialog } from "./modules/Referrer"
 import useIsMobile from "./hooks/useIsMobile"
 import { LoginData, useLoginHook } from "./hooks/useLoginHook"
 import Pages from "./components/page/Pages"
-import { getBusiness } from "./services/businessService"
+import { getBusinessPublic } from "./services/businessService"
 import RegisterForm from "./components/user/RegisterForm"
 import { useUserFormInitialValues } from "./modules/userForm"
 
@@ -52,7 +52,7 @@ function App() {
     if (data.isRegistration) {
       // This could be optimized
       // I.e., get only one field or the login form HTML (and empty if disabled)
-      getBusiness()
+      getBusinessPublic()
         .then(res => setRegisterForm(res.data.config.userRegistration.dialogEnabled))
     }
   }

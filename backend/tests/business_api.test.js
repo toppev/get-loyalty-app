@@ -63,6 +63,8 @@ describe('Logged in user can', () => {
       .expect(200)
     expect(publicReq.body.email).toBeUndefined()
     expect(publicReq.body.public.address).toBe(business.public.address)
+    expect(publicReq.body.config.userRegistration.dialogEnabled).toBeDefined()
+    expect(publicReq.body.config.userRegistration.dialogEnabled).toBe(false)
   })
 
   it('get business self', async () => {

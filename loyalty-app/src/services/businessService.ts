@@ -1,9 +1,9 @@
 import client from "../config/axios"
 
-async function getBusiness() {
-  return client.get(`/business`)
+async function getBusinessPublic() {
+  return client.get(`/business/public`)
 }
 
 export {
-  getBusiness
+  getBusinessPublic
 }

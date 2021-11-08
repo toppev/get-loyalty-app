@@ -117,7 +117,7 @@ async function setUserRole(userId, role) {
  * Get the public available information, anything in the business's ´public´ field
  */
 async function getPublicInformation() {
-  return Business.findOne().select('public')
+  return Business.findOne().select('public config.userRegistration.dialogEnabled')
 }
 
 async function getIcon(size) {
