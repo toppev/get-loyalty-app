@@ -19,7 +19,7 @@ import RegisterForm from "./components/user/RegisterForm"
 function App() {
 
   const initContext = defaultAppContext
-  initContext.set = data => setContextState(prev => ({ ...prev, data }))
+  initContext.set = data => setContextState(prev => ({ ...prev, ...data }))
   const [contextState, setContextState] = useState<AppContextInterface>(initContext)
 
   const [error, setError] = useState<string | undefined>()
