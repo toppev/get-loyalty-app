@@ -46,6 +46,7 @@ const DEFAULT_REGISTRATION = `
                         <input type="email" class="form-control" id="user-email" name="email" value=""
                                placeholder="email@example.com"/>
                     </div>
+                    <!-- Enable for birthday field
                     <div>
                         <label for="birthday-selector" class="text-light">Birthday</label>
                     </div>
@@ -53,6 +54,7 @@ const DEFAULT_REGISTRATION = `
                         <input type="date" class="form-control" id="birthday-selector" name="birthday" autocomplete="bday"
                                min="1900-01-01" max="2010-12-31"/>
                     </div>
+                    -->
                     <div class="my-3">
                         <div style="white-space: nowrap;">
                             <input required type="checkbox" id="tos-privacy-accept" name="acceptTosPrivacy" value="true"/>

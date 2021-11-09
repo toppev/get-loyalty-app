@@ -58,9 +58,10 @@ function toggleForm(disabled) {
 async function submitChanges() {
   toggleForm(true)
   try {
+    const bdField = getBirthdayField()
     return await client.patch('/user', {
       email: getEmailField().value,
-      birthday: new Date(getBirthdayField().value),
+      birthday: bdField ? new Date(bdField.value) : null,
       acceptAll: true,
       newsLetter: getNewsLetterCheckbox()?.value,
     })
