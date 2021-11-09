@@ -29,8 +29,12 @@ function App() {
   const isMobile = useIsMobile()
 
   // If user exists in context but does not have email, open the registration form if not already
-  if (contextState.user?.id && !contextState.user.email && !registerForm) {
-    isRegistrationFormEnabled().then(res => setRegisterForm(res))
+  if (contextState.user?.id && !contextState.user.email) {
+    if (!registerForm) {
+      isRegistrationFormEnabled().then(res => setRegisterForm(res))
+    }
+  } else {
+    setRegisterForm(false)
   }
 
   const updatePage = (page: Page) => setPages(prev => {
