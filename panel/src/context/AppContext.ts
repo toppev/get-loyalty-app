@@ -56,9 +56,10 @@ export interface CustomerLevel {
   rewards: Reward[]
   requiredPoints?: number
   color?: string
-  toStay: {
-    /** Time (in millis) to get the required points before a downgrade */
+  pointsFee: {
+    // Every x millis
     period: number
+    // y points will be withdrawn
     points: number
   }
 }

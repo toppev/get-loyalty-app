@@ -8,7 +8,7 @@ import { updateBusiness } from "../../../services/businessService"
 import NewButton from "../../common/button/NewButton"
 import RetryButton from "../../common/button/RetryButton"
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles((_theme: Theme) =>
   createStyles({
     newBtn: {},
   }))
@@ -45,7 +45,7 @@ export default function () {
         name="New Level"
         buttonProps={{
           className: classes.newBtn,
-          onClick: () => setEditing({ name: "", rewards: [] })
+          onClick: () => setEditing({ name: "", rewards: [], pointsFee: { period: 0, points: 0 } })
         }}
       />
       <Box display="flex" flexWrap="wrap">
