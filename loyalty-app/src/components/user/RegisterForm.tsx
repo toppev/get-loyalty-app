@@ -14,12 +14,12 @@ export default function RegisterForm({ pages }: LoginFormProps) {
   const registerPage = pages.find(it => it.pathname === "register")
 
   // Otherwise try finding the element or default to the default form
-  const html = registerPage?.html || document.getElementById("user-registration")?.innerHTML || DEFAULT_REGISTRATION
+  const html = registerPage?.html || DEFAULT_REGISTRATION
 
   return (
     <div
       className="fixed text-gray-500 flex items-center justify-center overflow-auto z-50 bg-opacity-40 left-0 right-0 top-0 bottom-0"
-      style={{backdropFilter: 'blur(4px)'}}
+      style={{ backdropFilter: 'blur(4px)' }}
     >
       <div
         className="bg-gray-800 text-gray-500 m-3 h-96 rounded-xl shadow-2xl p-8 md:w-6/12"
