@@ -33,7 +33,7 @@ function App() {
     if (!registerForm) {
       isRegistrationFormEnabled().then(res => setRegisterForm(res))
     }
-  } else {
+  } else if (registerForm) {
     setRegisterForm(false)
   }
 
