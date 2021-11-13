@@ -47,6 +47,10 @@ export interface IUser {
       auth: string
       endpoint: string
     },
+    customerLevel: {
+      currentLevel: any
+      since: Date
+    }
     properties: {
       points: number
     }
@@ -182,6 +186,9 @@ const userSchema = new Schema<UserDocument>({
       token: { type: String },
       auth: { type: String },
       endpoint: { type: String },
+    },
+    customerLevel: {
+      since: { type: Date, default: Date.now }
     },
     // Other customer properties that business can modify freely
     properties: {

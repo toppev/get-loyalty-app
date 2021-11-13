@@ -1,4 +1,5 @@
 import User from "../models/user"
+import logger from "../util/logger"
 
 export default {
   addPurchase,
@@ -13,7 +14,8 @@ export default {
   searchCustomers,
   rewardAllCustomers,
   updateCustomerLevel,
-  getCurrentLevel
+  getCurrentLevel,
+  checkCustomerLevelExpires
 }
 
 /**
@@ -218,6 +220,7 @@ async function updateCustomerLevel(user, business) {
     }
   }
   if (newRewards.length) {
+    user.customerData.customerLevel.since = Date.now()
     await user.save()
   }
   return {
@@ -225,6 +228,32 @@ async function updateCustomerLevel(user, business) {
     points,
     /** New rewards with original (therefore "wrong" ids) */
     newRewards
+  }
+
+}
+
+async function checkCustomerLevelExpires(user, business) {
+  const levels = business.public.customerLevels
+  const currentPoints = user.customerData.properties.points
+  const currentLevel = getCurrentLevel(levels, currentPoints)
+  const { pointsFee } = currentLevel
+  const levelReachedMillis = user.customerData.customerLevel.since.getTime() || 0
+  const toStayPeriodMillis = pointsFee.period
+
+  if (toStayPeriodMillis && Date.now() - levelReachedMillis > toStayPeriodMillis) {
+    if (pointsFee.points > 0) {
+      const newPoints = currentPoints - pointsFee.points
+      user.customerData.properties.points = newPoints
+      user.customerData.customerLevel.since = Date.now()
+      await user.save()
+
+      logger.info(`User ${user.id} / ${user.email} customer level downgraded`, JSON.stringify({
+        previousPoints: currentPoints,
+        newPoints,
+        previousLevel: currentLevel?.name,
+        newLevel: getCurrentLevel(levels, newPoints)?.name,
+      }))
+    }
   }
 
 }

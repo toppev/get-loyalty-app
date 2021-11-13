@@ -1,4 +1,5 @@
-import { closeDatabase, initDatabase } from "./testUtils"
+import defaultCustomerLevels from "../src/config/defaultLevels"
+import { closeDatabase, initDatabase, sleep } from "./testUtils"
 
 import User from "../src/models/user"
 import Business from "../src/models/business"
@@ -10,7 +11,7 @@ beforeAll(async () => {
 
 describe('customer level', () => {
 
-  it('', async () => {
+  it('updates correctly', async () => {
     const reward1 = { name: 'level test reward', itemDiscount: 'free' }
     const reward2 = { name: 'second level test reward', itemDiscount: 'free' }
     const level1 = {
@@ -52,6 +53,54 @@ describe('customer level', () => {
     expect(res.newRewards.length).toEqual(0)
   })
 
+  const mockCustomerLevelData = async (customerLevelSince) => {
+    const business = {
+      public: { customerLevels: defaultCustomerLevels }
+    }
+    business.public.customerLevels[1].pointsFee = {
+      points: 25,
+      period: 1000 * 60 * 60 * 24 * 30
+    }
+    const user = await new User({
+      customerData: {
+        customerLevel: {
+          since: customerLevelSince,
+        },
+        properties: {
+          points: 200
+        }
+      }
+    }).save()
+
+    return {
+      business,
+      user
+    }
+  }
+
+  it('does not withdraw when it should not', async () => {
+    const since = Date.now() - 10_000
+    const { user, business } = await mockCustomerLevelData(since)
+
+    // Should not change
+    await customerService.checkCustomerLevelExpires(user, business)
+    const userById = await User.findById(user.id)
+    expect(userById.customerData.properties.points).toEqual(200)
+    expect(new Date(userById.customerData.customerLevel.since).getTime()).toEqual(since)
+  })
+
+
+  it('withdraw points fee when it should', async () => {
+    const since = Date.now() - 1000 * 60 * 60 * 24 * 30 - 10_000
+    const { user, business } = await mockCustomerLevelData(since)
+
+    // Should change
+    await customerService.checkCustomerLevelExpires(user, business)
+    const userById = await User.findById(user.id)
+    await sleep(20)
+    expect(userById.customerData.properties.points).toEqual(175)
+    expect(new Date(userById.customerData.customerLevel.since).getTime()).toBeGreaterThan(since)
+  })
 
 })
 

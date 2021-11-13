@@ -39,14 +39,6 @@ describe('business', () => {
     },
     public: {
       address: 'Country Street 69 something',
-      openingHours: [{
-        dayOfWeek: 1,
-        opens: '9:00',
-        closes: '18:00',
-        validFrom: new Date().toISOString(),
-        // skip for now
-        //validThrough:
-      }],
       customerLevels: [
         { name: 'Silver', requiredPoints: 200 },
         { name: 'Gold', requiredPoints: 500, },

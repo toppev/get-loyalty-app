@@ -113,6 +113,17 @@ const customerLevelSchema = new Schema({
     type: Schema.Types.Number,
     default: 0,
   },
+  /** A "fee" if the customer per period if the customer does not get to the next level */
+  pointsFee: {
+    points: {
+      type: Schema.Types.Number,
+      default: 0
+    },
+    period: {
+      type: Schema.Types.Number,
+      default: 0
+    }
+  },
   // IDEA: background image?
   color: {
     type: String,

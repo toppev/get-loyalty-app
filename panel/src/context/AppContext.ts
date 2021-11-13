@@ -46,7 +46,6 @@ export interface BusinessPublic {
   description: string
   address: string
   website: string
-  openingHours: OpeningHour[]
   categories: Category[]
   customerLevels: CustomerLevel[]
 }
@@ -57,18 +56,12 @@ export interface CustomerLevel {
   rewards: Reward[]
   requiredPoints?: number
   color?: string
+  toStay: {
+    /** Time (in millis) to get the required points before a downgrade */
+    period: number
+    points: number
+  }
 }
-
-/**
- * @deprecated not used
- */
-export interface OpeningHour {
-  dayOfWeek: number
-  hours: string
-  validFrom: Date
-  validThrough: Date
-}
-
 
 export const defaultAppContext: AppContextInterface = {
   setBusiness: () => {
@@ -96,7 +89,6 @@ export const defaultAppContext: AppContextInterface = {
       customerLevels: [],
       description: "a nice business",
       name: "BusinessWithName",
-      openingHours: [],
       website: "https://localhost:3000/somebusiness"
     }
   },
