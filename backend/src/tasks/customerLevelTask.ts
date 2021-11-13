@@ -1,6 +1,6 @@
-import customerService from "src/services/customerService"
-import User from "src/models/user"
-import businessService from "src/services/businessService"
+import customerService from "../services/customerService"
+import User from "../models/user"
+import businessService from "../services/businessService"
 import logger from "../util/logger"
 
 export default function initLevelTask() {
