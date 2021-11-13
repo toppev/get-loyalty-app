@@ -10,6 +10,7 @@ const args = process.argv.slice(2);
 
 const email = args[0]
 const password = args[1]
+const dryRun = args[2]
 ;
 (async () => {
   console.log("Logging in...")
@@ -21,15 +22,21 @@ const password = args[1]
 
   const pageList = await client.get("/page/list", { headers: { Cookie: cookies } })
   const pages = pageList.data
-  console.log('Pages found:', pages.map(it => it.id + ': ' + it.pathname))
+  console.log('Pages found:', pages.map(it => it.id + ': ' + it.pathname + " - " + it.stage))
 
   const updateHtml = async (pageId, html) => {
-    await client.post(`/page/${pageId}/upload`, { html }, { headers: { Cookie: cookies } })
+    if (dryRun) {
+      console.log("dry run: would have updated " + pageId)
+    } else {
+      await client.post(`/page/${pageId}/upload`, { html }, { headers: { Cookie: cookies } })
+    }
   }
 
   for (const page of pages) {
     const path = `../assets/pages/${page.pathname}.html`
-    if (!fs.existsSync(path)) {
+    if (page.stage === "discarded") {
+      console.log(`Skipped ${page.pathname}/${page.id}: page is ${page.stage}`)
+    } else if (!fs.existsSync(path)) {
       console.log(path, "does not exist")
     } else {
       const html = fs.readFileSync(path, "utf8")
