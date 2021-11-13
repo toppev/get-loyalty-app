@@ -14,6 +14,7 @@ import cookieParser from "cookie-parser"
 import passport from "passport"
 import mongoose from "mongoose"
 import parser from "body-parser"
+import initLevelTask from "./src/tasks/customerLevelTask"
 
 const envFile = process.env.NODE_ENV === "production" ? '.env' : 'dev.env'
 console.log(`Loading env vars from "${envFile}"...`)
@@ -25,6 +26,8 @@ const app = express()
 const isTesting = process.env.NODE_ENV === 'test'
 
 if (!isTesting) {
+  initLevelTask()
+
   mongoose.connect(process.env.MONGO_URI || '', {
     useCreateIndex: true,
     useNewUrlParser: true,
