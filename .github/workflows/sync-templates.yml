@@ -1,0 +1,28 @@
+name: sync-templates
+
+on:
+  push:
+    branches:
+      - develop
+      - master
+    paths:
+      - 'assets/pages/**'
+      - 'hack/sync-templates.js'
+
+jobs:
+  sync-templates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16
+      - name: npm i
+        run: npm i axios
+        working-directory: hack
+      - name: Run
+        run: node sync-templates.js ${{ secrets.DEMO_EMAIL }} ${{ secrets.DEMO_PASSWORD }}
+        working-directory: hack

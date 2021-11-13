@@ -90,7 +90,6 @@ async function getPublicPage() {
  * So not exactly same as #uploadStaticFile.
  */
 async function uploadPage(pageId, { html, css }) {
-  if (!css) css = ""
   const res = await validateHandlebars(html)
   if (res !== true) {
     throw new StatusError(`Invalid placeholders. ${res?.error || 'Unknown error.'}`, 400)
@@ -98,7 +97,9 @@ async function uploadPage(pageId, { html, css }) {
 
   const dir = `page_${pageId}`
   await fileService.upload(dir + '/index.html', html)
-  await fileService.upload(dir + '/main.css', css)
+  if (css !== undefined && css !== null) {
+    await fileService.upload(dir + '/main.css', css)
+  }
 
   // Refresh the page for the page owner to automatically see changes
   await pollingService.refreshOwner({ message: '[Editor]\nChanges detected' })
