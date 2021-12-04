@@ -346,7 +346,7 @@ function ServerSettingsForm() {
             <ServerStatusBar/>
             <Form>
               <p className={classes.info}>
-                Create a new DNS <b>A record </b>
+                Create a new DNS <b>CNAME record </b>
                 to <b>{backendURL.replace("https://", "").replace(/\/.*$/, '')} </b>
                 and enter the address for your loyalty app below.
               </p>
