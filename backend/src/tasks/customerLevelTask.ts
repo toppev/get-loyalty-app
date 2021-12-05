@@ -20,12 +20,16 @@ async function checkLevels() {
   logger.info("Starting customer level check...")
 
   const business = await businessService.getBusiness()
-  const users = await User.find()
-  logger.info(`Checking ${users.length} customers`)
+  if (!business) {
+    logger.info("skipping: no business found...")
+  } else {
+    const users = await User.find()
+    logger.info(`Checking ${users.length} customers`)
 
-  for (const user of users) {
-    await customerService.checkCustomerLevelExpires(user, business)
+    for (const user of users) {
+      await customerService.checkCustomerLevelExpires(user, business)
+    }
+
+    logger.info(`Completed customer level check in ${Date.now() - st} ms.`)
   }
-
-  logger.info(`Completed customer level check in ${Date.now() - st} ms.`)
 }
