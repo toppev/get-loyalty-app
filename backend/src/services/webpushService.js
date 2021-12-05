@@ -1,5 +1,6 @@
 import webpush from "web-push"
 import logger from "../util/logger"
+
 const vapidPublicKey = process.env.VAPID_PUBLIC_KEY || 'no_vapid_public_key_set'
 const vapidPrivateKey = process.env.VAPID_PRIVATE_KEY || 'no_vapid_private_key_set'
 // e.g mailto:email@example.com or a URL
@@ -13,7 +14,8 @@ if (process.env.NODE_ENV !== 'test') {
       vapidPrivateKey
     )
   } catch (err) {
-    logger.error("Failed to initialize webpush/vapid", err)
+    logger.error("Failed to initialize webpush/vapid" +
+      JSON.stringify({ vapidPublicKey, privateKeyLength: vapidPrivateKey.length }), err)
   }
 }
 

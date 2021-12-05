@@ -1,7 +1,11 @@
 import dotenv from "dotenv"
-import express from "express"
+const envFile = process.env.NODE_ENV === "production" ? '.env' : 'dev.env'
+console.log(`Loading env vars from "${envFile}"...`)
+dotenv.config({
+  path: envFile
+})
 
-// @ts-ignore
+import express from "express"
 import errorHandler from "./src/middlewares/errorHandler"
 import planUpdater from "./src/config/planUpdateScheduler"
 import passportConf from "./src/config/passport"
@@ -15,12 +19,6 @@ import passport from "passport"
 import mongoose from "mongoose"
 import parser from "body-parser"
 import initLevelTask from "./src/tasks/customerLevelTask"
-
-const envFile = process.env.NODE_ENV === "production" ? '.env' : 'dev.env'
-console.log(`Loading env vars from "${envFile}"...`)
-dotenv.config({
-  path: envFile
-})
 
 const app = express()
 const isTesting = process.env.NODE_ENV === 'test'
