@@ -32,9 +32,22 @@ function propsAreEqual(prev, next) {
 function GrapesPageEditor(props) {
 
   const url = `${backendURL}/page`
-  const uploadUrl = `${backendURL}/page/${props.page._id}/upload-static`
+  const pageId = props.page._id
+  const uploadUrl = `${backendURL}/page/${pageId}/upload-static`
 
   const placeholderContext = usePlaceholderContext()
+
+  // FIXME: this may break the panel page if the css changes something about it :/
+  const pageCSS = [
+    `${backendURL}/page/common/static/main.css`,
+    // will hard code the default ones here for now
+    "https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css",
+    "https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css",
+  ]
+  const pageJS = [
+    `${backendURL}/page/common/static/main.js`,
+    `${backendURL}/page/${pageId}/static/main.js`,
+  ]
 
   useEffect(() => {
     const editor = GrapesJS.init({
@@ -43,8 +56,8 @@ function GrapesPageEditor(props) {
       container: `#page-editor`,
       allowScripts: true,
       canvas: {
-        styles: ["./editorCanvas.css"],
-        scripts: []
+        styles: ["./editorCanvas.css", ...pageCSS],
+        scripts: [...pageJS]
       },
       plugins: [
         gjsBlocksBasic,
@@ -58,8 +71,8 @@ function GrapesPageEditor(props) {
         // stepsBeforeSave: 5,
 
         // Either save or create if undefined
-        urlStore: `${url}/${props.page._id || ""}/?gjsOnly=true`,
-        urlLoad: `${url}/${props.page._id}/?gjsOnly=true`,
+        urlStore: `${url}/${pageId || ""}/?gjsOnly=true`,
+        urlLoad: `${url}/${pageId}/?gjsOnly=true`,
       },
       assetManager: {
         upload: uploadUrl,
