@@ -37,10 +37,9 @@ function GrapesPageEditor(props) {
 
   const placeholderContext = usePlaceholderContext()
 
-  // FIXME: this may break the panel page if the css changes something about it :/
   const pageCSS = [
     `${backendURL}/page/common/static/main.css`,
-    // will hard code the default ones here for now
+    // hard code the default ones here for now
     "https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css",
     "https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css",
   ]
