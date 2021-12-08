@@ -13,15 +13,15 @@ export function UsageLengthChart(props: RetentionChartProps) {
 
   const dayInMS = 1000 * 60 * 60 * 24
   const usageLength = {
-    '> year': { time: dayInMS * 30 * 12, color: 'rgb(58,226,15)' },
-    '> 6 months': { time: dayInMS * 30 * 6, color: 'rgb(58,226,15)' },
-    '> 3 months': { time: dayInMS * 30 * 3, color: 'rgb(58,226,15)' },
-    '> 2 months': { time: dayInMS * 30 * 2, color: 'rgb(77,220,40)' },
-    '> month': { time: dayInMS * 30, color: 'rgb(107,219,79)' },
-    '> 14 days': { time: dayInMS * 14, color: 'rgb(142,238,37)' },
-    '> week': { time: dayInMS * 7, color: 'rgb(235,250,28)' },
-    '>= day': { time: dayInMS, color: 'rgb(255,216,0)' },
-    'once': { time: -1, color: 'rgb(255,111,88)' },
+    '> year': { time: dayInMS * 30 * 12 },
+    '> 6 months': { time: dayInMS * 30 * 6 },
+    '> 3 months': { time: dayInMS * 30 * 3 },
+    '> 2 months': { time: dayInMS * 30 * 2 },
+    '> month': { time: dayInMS * 30 },
+    '> 14 days': { time: dayInMS * 14 },
+    '> week': { time: dayInMS * 7 },
+    '>= day': { time: dayInMS },
+    'once': { time: -1 },
   }
   const usageLengthGroup = new Array(Object.keys(usageLength).length).fill(0)
 
@@ -41,7 +41,7 @@ export function UsageLengthChart(props: RetentionChartProps) {
       label: props.label,
       data: usageLengthGroup,
       fill: false,
-      backgroundColor: Object.values(usageLength).map(it => it.color),
+      backgroundColor: Array(Object.keys(usageLength).length).fill('rgb(255,111,88)'),
       borderColor: 'rgba(255, 99, 132, 0.2)',
     }]
   }
@@ -54,7 +54,7 @@ export function UsageLengthChart(props: RetentionChartProps) {
       </div>
       {/* @ts-ignore  */}
       <Bar data={data} options={COMMON_LINE_CHART_OPTIONS}/>
-      <p className={classes.p} style={{ textAlign: 'center', fontSize: '12px'}}>
+      <p className={classes.p} style={{ textAlign: 'center', fontSize: '12px' }}>
         Low usage retention may suggest that your customers like the idea but do not benefit from using the app.
         <br/>
         Maybe a new campaign or rewards would fix that?
