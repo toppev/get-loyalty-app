@@ -16,6 +16,7 @@
   min-height: 100vh;
   width: 100%;
 }
+
 #pages > div {
   min-height: 100vh;
 }
@@ -23,7 +24,9 @@
 
 .page-view {
   width: 100%;
+  overflow-x: hidden;
   max-width: max(900px, 55%);
+  min-height: 100%;
 }
 
 .page-holder {

@@ -37,6 +37,7 @@ body::before {
 .page-title {
   color: #9b9bff;
   font-size: 28px;
+  font-weight: bold;
   padding-top: 30px;
   padding-bottom: 20px;
 }
