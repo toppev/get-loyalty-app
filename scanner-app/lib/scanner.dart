@@ -57,7 +57,8 @@ class ScannerWidgetState extends State<ScannerWidget> {
 
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
-    controller.scannedDataStream.listen((scanData) async {
+    controller.scannedDataStream.listen((barcode) async {
+      final scanData = barcode.code;
       if (!checkCooldown(scanData)) {
         print('Still on cooldown (scanned $scanData)');
       } else {

@@ -38,7 +38,7 @@ class SessionService {
   _getHeaders() => {..._defaultHeaders, ...headers};
 
   Future<Response> get(String url) async {
-    final response = await http.get(url, headers: _getHeaders()).timeout(_requestTimeout);
+    final response = await http.get(Uri.parse(url), headers: _getHeaders()).timeout(_requestTimeout);
     if (response.statusCode < 200 || response.statusCode >= 300) {
       print('Request to $url failed with status code ${response.statusCode}, '
           'response body: ${response.body}');
@@ -48,7 +48,7 @@ class SessionService {
   }
 
   Future<Response> post(String url, dynamic data) async {
-    final response = await http.post(url, body: data, headers: _getHeaders()).timeout(_requestTimeout);
+    final response = await http.post(Uri.parse(url), body: data, headers: _getHeaders()).timeout(_requestTimeout);
     if (response.statusCode < 200 || response.statusCode >= 300) {
       print('Request to $url failed with status code ${response.statusCode}, '
           'response body: ${response.body}');
@@ -79,11 +79,6 @@ class SessionService {
       }
       _saveValues();
       headers['cookie'] = _generateCookieHeader();
-      // Put 'XSRF-TOKEN' cookie in 'xsrf-token' header
-      final csrf = values['XSRF-TOKEN'];
-      if (csrf != null) {
-        headers['xsrf-token'] = csrf;
-      }
     }
   }
 

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -33,6 +35,12 @@ class _LoginPageState extends State<LoginPage> {
 
   void _passwordListen() {
     _password = _passwordFilter.text.isEmpty ? "" : _passwordFilter.text;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    Timer.run(() => attemptAutoLogin());
   }
 
   @override
@@ -111,11 +119,11 @@ class _LoginPageState extends State<LoginPage> {
                         _password = "";
                       });
                       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ScannerPage()));
-                    } catch (e) {
+                    } catch (e, stacktrace) {
                       showError(
                         context,
-                        message: 'Failed to login. Check credentials and network connection',
-                        error: e.toString(),
+                        message: 'Failed to login. Check credentials and network connection (' + e.toString() + ')',
+                        error: stacktrace.toString(),
                       );
                     } finally {
                       setState(() => buttonDisabled = false);
@@ -127,15 +135,10 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  @override
-  void didChangeDependencies() {
-    attemptAutoLogin();
-    super.didChangeDependencies();
-  }
 
   /// Tries to login using cookies. Redirects if logged in successfully
   void attemptAutoLogin() {
-    var userService = Provider.of<UserService>(context);
+    var userService = Provider.of<UserService>(context, listen: false);
     userService.profile().then((success) {
       if (success != null && success != false) {
         Navigator.of(context).pushReplacement(
