@@ -70,8 +70,6 @@ jobs:
       - name: Build web
         run: flutter build web
         working-directory: scanner-app
-      - name: Checkout
-        uses: actions/checkout@v2
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
@@ -86,6 +84,6 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ./scanner-app
-          file: ./scanner-app/docker/web.Dockerfile'
+          file: ./scanner-app/docker/web.Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_REGISTRY_URL }}/loyalty-scanner-web:latest
