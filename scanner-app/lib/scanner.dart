@@ -64,8 +64,8 @@ class ScannerWidgetState extends State<ScannerWidget> {
       } else {
         var stateText = scanData;
         // The scanned code is userId:rewardId or just userId but be flexible so we can change it without updating the client
-        if (scanData.length < 24 || scanData.length > 50) {
-          stateText = "INVALID: $stateText. Not a loyalty QR code?";
+        if (scanData.length < 24 || scanData.length > 100) {
+          stateText = "INVALID QR code text: \"$stateText\". Not a loyalty QR code?";
         } else {
           setScanning(false);
           scanService.getScan(scanData).then((result) {
@@ -86,11 +86,7 @@ class ScannerWidgetState extends State<ScannerWidget> {
     timer?.cancel();
     timer = Timer(MAX_SCAN_DURATION, () {
       print('Pausing camera automatically');
-      try {
-        setScanning(false);
-      } catch (e) {
-        print('Failed to pause camera: $e');
-      }
+      setScanning(false);
     });
   }
 
@@ -101,10 +97,18 @@ class ScannerWidgetState extends State<ScannerWidget> {
 
     if (scanning) {
       resetTimer();
-      controller.resumeCamera();
+      try {
+        controller.resumeCamera();
+      } catch (e, stacktrace) {
+        print('Failed to resume camera ($e): $stacktrace');
+      }
     } else {
       timer?.cancel();
-      controller.pauseCamera();
+      try {
+        controller.pauseCamera();
+      } catch (e, stacktrace) {
+        print('Failed to resume camera ($e): $stacktrace');
+      }
     }
     widget.onScanToggle(scanning);
   }
