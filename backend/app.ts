@@ -62,7 +62,7 @@ if (frontendOrigin && !/https?:\/\//.test(frontendOrigin)) {
   frontendOrigin = `https://${frontendOrigin}`
 }
 const origins = [
-  ...(frontendOrigin ? frontendOrigin.split(',') : ['no_app_origin_set']),
+  ...(frontendOrigin ? frontendOrigin.split(',').map(it => it.trim()) : ['no_app_origin_set']),
   'https://panel.getloyalty.app',
   'http://localhost:3002',
   'http://localhost:3000' // Just so dev setups can access templates at api.getloyalty.app/...
