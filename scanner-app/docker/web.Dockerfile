@@ -4,9 +4,6 @@
 # ~/scanner-app$ docker build . -t loyalty-scanner-web -f docker/web.Dockerfile && docker run -p 8080:80 loyalty-scanner-web
 FROM nginx:stable-alpine
 
-RUN pwd
-RUN ls -alh
-
 COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
 COPY build/web /usr/share/nginx/html
 

@@ -86,4 +86,5 @@ jobs:
           context: ./scanner-app
           file: ./scanner-app/docker/web.Dockerfile
           push: true
+          no-cache: true
           tags: ${{ secrets.DOCKER_REGISTRY_URL }}/loyalty-scanner-web:latest
