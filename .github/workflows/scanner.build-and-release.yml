@@ -7,6 +7,11 @@ on:
   push:
     paths:
       - 'scanner-app/**'
+    branches:
+      - master
+      - develop # keep for now
+    tags:
+      - 'v*'
 
 jobs:
   test:
