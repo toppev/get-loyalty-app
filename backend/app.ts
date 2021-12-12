@@ -1,10 +1,4 @@
 import dotenv from "dotenv"
-const envFile = process.env.NODE_ENV === "production" ? '.env' : 'dev.env'
-console.log(`Loading env vars from "${envFile}"...`)
-dotenv.config({
-  path: envFile
-})
-
 import express from "express"
 import errorHandler from "./src/middlewares/errorHandler"
 import planUpdater from "./src/config/planUpdateScheduler"
@@ -19,6 +13,12 @@ import passport from "passport"
 import mongoose from "mongoose"
 import parser from "body-parser"
 import initLevelTask from "./src/tasks/customerLevelTask"
+
+const envFile = process.env.NODE_ENV === "production" ? '.env' : 'dev.env'
+console.log(`Loading env vars from "${envFile}"...`)
+dotenv.config({
+  path: envFile
+})
 
 const app = express()
 const isTesting = process.env.NODE_ENV === 'test'
@@ -62,11 +62,11 @@ if (frontendOrigin && !/https?:\/\//.test(frontendOrigin)) {
   frontendOrigin = `https://${frontendOrigin}`
 }
 const origins = [
-  ...(frontendOrigin ? frontendOrigin.split(',').map(it => it.trim()) : ['no_app_origin_set']),
+  ...(frontendOrigin ? frontendOrigin.split(',') : ['no_app_origin_set']),
   'https://panel.getloyalty.app',
   'http://localhost:3002',
   'http://localhost:3000' // Just so dev setups can access templates at api.getloyalty.app/...
-].map(it => it.startsWith("http") ? it : `https://${it}`)
+].map(it => it.startsWith("http") ? it : `https://${it.trim()}`)
 logger.important(`Allowed origins (${origins.length}): ${origins}`)
 
 app.use(cors(function (req, callback) {
