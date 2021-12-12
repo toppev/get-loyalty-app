@@ -1,4 +1,4 @@
-name: scanner-app test, build and release apk
+name: scanner-app test, build and release apk and web
 
 on:
   pull_request:
