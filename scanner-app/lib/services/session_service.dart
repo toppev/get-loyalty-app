@@ -35,7 +35,7 @@ class SessionService {
     headers['cookie'] = _generateCookieHeader();
   }
 
-  _getHeaders() => {..._defaultHeaders, ...headers};
+  _getHeaders() => {..._defaultHeaders, ...headers}; // TODO: remove cookie on flutter web or so
 
   Future<Response> get(String url) async {
     final response = await http.get(Uri.parse(url), headers: _getHeaders()).timeout(_requestTimeout);
