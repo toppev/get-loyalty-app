@@ -29,3 +29,4 @@ A few useful resources to get you started:
 
 **Note**: .editorconfig does not override dart plugin/dartfmt line length.
 Please set it to 140 ([IDEA](jetbrains://idea/settings?name=Editor--Code+Style--Dart), File -> Settings -> Editor -> Code Style -> Dart)
+
