@@ -99,6 +99,7 @@ class ScannerWidgetState extends State<ScannerWidget> {
       resetTimer();
       try {
         controller.resumeCamera();
+        widget.onScanToggle(scanning);
       } catch (e, stacktrace) {
         print('Failed to resume camera ($e): $stacktrace');
       }
@@ -106,11 +107,11 @@ class ScannerWidgetState extends State<ScannerWidget> {
       timer?.cancel();
       try {
         controller.pauseCamera();
+        widget.onScanToggle(scanning);
       } catch (e, stacktrace) {
         print('Failed to resume camera ($e): $stacktrace');
       }
     }
-    widget.onScanToggle(scanning);
   }
 
   bool checkCooldown(str) {
