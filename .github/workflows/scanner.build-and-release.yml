@@ -88,3 +88,6 @@ jobs:
           push: true
           no-cache: true
           tags: ${{ secrets.DOCKER_REGISTRY_URL }}/loyalty-scanner-web:latest
+      - name: Restart deployment
+        run: |
+          curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H 'Accept: application/vnd.github.v3.raw' https://api.github.com/repos/toppev/loyalty-setup/contents/scripts/kube-deploy-restart.sh | bash -s loyalty-scanner/frontend-scanner-web ${{ secrets.KUBE_AUTH_TOKEN }}
