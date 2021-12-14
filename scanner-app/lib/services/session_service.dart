@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
@@ -35,7 +36,7 @@ class SessionService {
     headers['cookie'] = _generateCookieHeader();
   }
 
-  _getHeaders() => {..._defaultHeaders, ...headers}; // TODO: remove cookie on flutter web or so
+  _getHeaders() => {..._defaultHeaders, ...(kIsWeb ? {} : headers)}; // TODO: remove cookie on flutter web or so
 
   Future<Response> get(String url) async {
     final response = await http.get(Uri.parse(url), headers: _getHeaders()).timeout(_requestTimeout);
