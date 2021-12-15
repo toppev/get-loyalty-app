@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:http/http.dart';
+import 'package:dio/dio.dart';
 
 import 'session_service.dart';
 
@@ -35,12 +35,13 @@ class UserService {
     print('#getServer() called. Getting the backend URL from $SERVER_API_URL');
     final res = await sessionService.post("$SERVER_API_URL/server/get_or_create/?create=false", json.encode({'email': email}));
     if (res.statusCode != 200) {
-      throw "HTTP status code: ${res.statusCode}. Body: ${res.body}";
+      throw "HTTP status code: ${res.statusCode}. Body: ${res.data}";
     }
-    var body = json.decode(res.body);
+    var body = res.data;
     print(body);
     backendUrl = body['apiendpoint'];
     print('backendUrl set to $backendUrl');
+    sessionService.saveValues();
   }
 
   /// Tries to fetch the current user.
@@ -52,15 +53,28 @@ class UserService {
     return _handleUserResponse(response);
   }
 
+  Future<dynamic> logout() async {
+    final url = '$backendUrl/user/logout';
+    print('#logout() called. Sending request to $url');
+    try {
+      final response = await sessionService.post(url, {});
+      return _handleUserResponse(response);
+    } catch (e, stacktrace) {
+      print("failed to log out $e: $stacktrace");
+    } finally {
+      await sessionService.logout();
+    }
+  }
+
   _handleUserResponse(Response response) {
     if (response.statusCode >= 200 && response.statusCode <= 300) {
-      var body = json.decode(response.body);
+      var body = response.data;
       if (body['businessOwner'] != null) {
         return body;
       }
       throw 'No businesses found. Is it wrong account?';
     } else {
-      var body = json.decode(response.body);
+      var body = response.data;
       throw ('${body['message'] ?? "HTTP status code: ${response.statusCode}.Body: $body"}');
     }
   }

@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'login.dart';
 import 'main.dart';
-import 'services/session_service.dart';
+import 'services/user_service.dart';
 
 class MenuActions {
   static const String Logout = 'Logout';
@@ -16,13 +16,11 @@ class MenuWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var sessionService = Provider.of<SessionService>(context);
-    void choiceAction(String choice) {
+    var userService = Provider.of<UserService>(context);
+    void choiceAction(String choice) async {
       if (choice == MenuActions.Logout) {
         print('Logging out');
-        sessionService.storage.deleteAll();
-        sessionService.headers.clear();
-        sessionService.values.clear();
+        await userService.logout();
         Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (context) => LoginPage(
                   title: APP_TITLE,

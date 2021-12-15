@@ -40,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    Timer.run(() => attemptAutoLogin());
+    new Timer(Duration(milliseconds: 500), () => attemptAutoLogin());
   }
 
   @override
@@ -134,7 +134,6 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-
 
   /// Tries to login using cookies. Redirects if logged in successfully
   void attemptAutoLogin() {

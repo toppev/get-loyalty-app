@@ -88,9 +88,9 @@ class ScanService {
     print('#getScan called. Sending request to $url');
     final response = await sessionService.get(url);
     if (response.statusCode == 200) {
-      return GetScan.fromJson(json.decode(response.body), scannedString: scan);
+      return GetScan.fromJson(response.data, scannedString: scan);
     } else {
-      var body = json.decode(response.body);
+      var body = response.data;
       throw ('${body['message'] ?? "HTTP status code: ${response.statusCode}"}');
     }
   }
@@ -101,9 +101,9 @@ class ScanService {
     print('#useScan called. Sending request to $url, body: $bodyJson');
     final response = await sessionService.post(url, bodyJson);
     if (response.statusCode == 200) {
-      return UseScan.fromJson(json.decode(response.body));
+      return UseScan.fromJson(response.data);
     } else {
-      var body = json.decode(response.body);
+      var body = response.data;
       throw ('${body['message'] ?? "HTTP status code: ${response.statusCode}"}');
     }
   }
