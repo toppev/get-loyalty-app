@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/browser_client.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 
@@ -13,6 +14,7 @@ const _requestTimeout = Duration(seconds: 5);
 
 class SessionService {
   final storage = new FlutterSecureStorage();
+  final client = http.Client();
 
   // Stored values
   Map<String, String> values;
@@ -30,6 +32,12 @@ class SessionService {
   }
 
   init() async {
+    if (client is BrowserClient) {
+      (client as BrowserClient).withCredentials = true;
+      print('is browser client (withCredentials=true)');
+    } else {
+      print('not browser client (withCredentials=false)');
+    }
     values = await storage.readAll();
     backendUrl = values[BACKEND_KEY];
     values.remove(BACKEND_KEY);
@@ -39,7 +47,8 @@ class SessionService {
   _getHeaders() => {..._defaultHeaders, ...(kIsWeb ? {} : headers)}; // TODO: remove cookie on flutter web or so
 
   Future<Response> get(String url) async {
-    final response = await http.get(Uri.parse(url), headers: _getHeaders()).timeout(_requestTimeout);
+    final response = await client.get(Uri.parse(url), headers: _getHeaders()).timeout(_requestTimeout);
+
     if (response.statusCode < 200 || response.statusCode >= 300) {
       print('Request to $url failed with status code ${response.statusCode}, '
           'response body: ${response.body}');
@@ -49,7 +58,7 @@ class SessionService {
   }
 
   Future<Response> post(String url, dynamic data) async {
-    final response = await http.post(Uri.parse(url), body: data, headers: _getHeaders()).timeout(_requestTimeout);
+    final response = await client.post(Uri.parse(url), body: data, headers: _getHeaders()).timeout(_requestTimeout);
     if (response.statusCode < 200 || response.statusCode >= 300) {
       print('Request to $url failed with status code ${response.statusCode}, '
           'response body: ${response.body}');
@@ -67,7 +76,7 @@ class SessionService {
     print('Saved $BACKEND_KEY ($backendUrl) in client storage');
   }
 
-  // Stolen from https://stackoverflow.com/a/53991733
+  // Partly stolen from https://stackoverflow.com/a/53991733
 
   /// Updates the cookies, stores them and generates a new 'cookie' header in
   void _updateCookie(http.Response response) {
