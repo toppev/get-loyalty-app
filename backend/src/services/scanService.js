@@ -180,6 +180,13 @@ async function useScan(scanStr, data) {
   // e.g [{ id: "questionId", options: ["someAnswer"], question: "asd?"}]
   const { answers } = data
 
+  const confirmed = answers.find(e => e.id === IDENTIFIERS.CONFIRM)
+  if (!confirmed || confirmed.toLowerCase().equals("no")) {
+    const message = `The scan was not confirmed, not adding purchase.`
+    logger.info(`${message} (${scanStr})`)
+    return { message, newRewards: [], usedRewards: [] }
+  }
+
   const productQuestion = answers.find(e => e.id === IDENTIFIERS.PRODUCTS)
   const products = productQuestion ? productQuestion.options || [] : []
 
