@@ -181,7 +181,7 @@ async function useScan(scanStr, data) {
   const { answers } = data
 
   const confirmed = answers.find(e => e.id === IDENTIFIERS.CONFIRM)
-  if (!confirmed || confirmed.toLowerCase().equals("no")) {
+  if (!confirmed || confirmed?.options?.[0]?.toLowerCase() === "no") {
     const message = `The scan was not confirmed, not adding purchase.`
     logger.info(`${message} (${scanStr})`)
     return { message, newRewards: [], usedRewards: [] }
