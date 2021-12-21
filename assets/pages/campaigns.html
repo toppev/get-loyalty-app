@@ -1,9 +1,9 @@
-<div>
-    <h1 class="page-title">Active Campaigns ({{campaigns.length}})</h1>
-    <div class="page-text">
-        Show your
-        <i><a href="/?page=profile" class="link-light">QR code</a></i> to participate.
-    </div>
+<h1 class="page-title">Active Campaigns <span class="page-title-amount">({{campaigns.length}})</span></h1>
+<div class="page-text">
+    Show your
+    <i><a href="/?page=profile" class="link-light">QR code</a></i> to participate.
+</div>
+<div class="page-content">
     <div class="card page-modal my-3">
         <div class="card-body">
             <div class="p-2">{{#each campaigns}}</div>
@@ -32,7 +32,7 @@
                         <p class="text-secondary">{{description}}</p>
                         <p class="text-points">
                             {{#if customerPoints}}
-                            <b>+{{customerPoints}}</b> extra points!
+                            <b>+{{customerPoints}}</b> points!
                             {{/if}}
                         </p>
                         <p class="text-warning">{{requirement}}</p>
@@ -76,7 +76,7 @@
 
   .reward-title {
     font-size: 20px;
-    text-decoration-thickness: from-font;
+    text-decoration-thickness: 1px;
     text-underline-position: under;
   }
 </style>

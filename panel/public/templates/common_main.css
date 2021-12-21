@@ -42,6 +42,11 @@ body::before {
   padding-bottom: 20px;
 }
 
+/* Numbers in the page title. E.g., number of rewards */
+.page-title-amount {
+  font-weight: normal;
+}
+
 /* Common text on page. Usually on top of the background*/
 .page-text {
   color: #d2d2d2;

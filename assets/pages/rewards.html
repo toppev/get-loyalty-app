@@ -1,49 +1,51 @@
-<h1 class="page-title">Your Rewards ({{customerRewards.unused}})</h1>
-<div class="page-text">Show the QR code to use the reward.</div>
-<div id="isx5t">
-    {{#unless user.rewards}}
-    <b>You don&#039;t have any rewards.</b>
-    {{/unless}}
-</div>
-<div id="i0ci" class="gjs-row">
-    <div id="ie7b5" class="gjs-cell">
-        <p id="in8w">{{#each user.rewards}}</p>
-        <div id="i3ys" class="card page-modal">
-            <p id="in8k">
-                <b>
-                    <u>{{name}}</u>
-                </b>
-            </p>
-            <div data-qrcode="{{scanCode}}" id="iwn9o"></div>
-            <p id="ip9ez">{{description}}</p>
-            <p id="ivr2q">{{itemDiscount}}</p>
-            <p id="iqyhu">{{requirement}}</p>
-            <p id="iosh8">{{#if customerPoints}} You got {{customerPoints}} points {{/if}}</p>
-            <p id="idi7g">{{#if products}} Products: {{#each products}}{{name}}{{#unless @last}}, {{/unless}}{{/each}}{{/if}}</p>
-            <p id="i6755">{{#if categories}} Categories: {{#each categories}}{{name}}{{#unless @last}}, {{/unless}}{{/each}}{{/if}}</p>
-        </div>
-        <p id="izywz">{{/each}}</p>
+<h1 class="page-title">Your Rewards <span class="page-title-amount">({{customerRewards.unused}})</span></h1>
+<div class="page-content">
+    <div class="page-text">Show the QR code to use the reward.</div>
+    <div id="isx5t">
+        {{#unless user.rewards}}
+        <b>You don&#039;t have any rewards.</b>
+        {{/unless}}
     </div>
-</div>
-<div id="imqvp">{{#if customerRewards.used}} Used Rewards ({{customerRewards.used}}) {{/if}}
-</div>
-<div id="iw7o6" class="gjs-row">
-    <div id="i86j6" class="gjs-cell">
-        <p id="iydvk">{{#each user.usedRewards}}</p>
-        <div class="loyalty-user-reward">
-            <p id="ih2pq">
-                <b>
-                    <span>{{reward.name}}</span>
-                </b>
-            </p>
-            <p id="ikekq">{{reward.description}}</p>
-            <p id="i4c36">
-                <b>{{reward.itemDiscount}}</b>
-            </p>
-            <p id="i6ey5">{{#if customerPoints}} You got {{customerPoints}} points {{/if}}</p>
+    <div id="i0ci" class="gjs-row">
+        <div id="ie7b5" class="gjs-cell">
+            <p id="in8w">{{#each user.rewards}}</p>
+            <div id="i3ys" class="card page-modal">
+                <p id="in8k">
+                    <b>
+                        <u>{{name}}</u>
+                    </b>
+                </p>
+                <div data-qrcode="{{scanCode}}" id="iwn9o"></div>
+                <p id="ip9ez">{{description}}</p>
+                <p id="ivr2q">{{itemDiscount}}</p>
+                <p id="iqyhu">{{requirement}}</p>
+                <p id="iosh8">{{#if customerPoints}} You got {{customerPoints}} points {{/if}}</p>
+                <p id="idi7g">{{#if products}} Products: {{#each products}}{{name}}{{#unless @last}}, {{/unless}}{{/each}}{{/if}}</p>
+                <p id="i6755">{{#if categories}} Categories: {{#each categories}}{{name}}{{#unless @last}}, {{/unless}}{{/each}}{{/if}}</p>
+            </div>
+            <p id="izywz">{{/each}}</p>
         </div>
-        <div id="i4fqm">Used: {{dateUsed}}</div>
-        <p id="irpnj">{{/each}}</p>
+    </div>
+    <div id="imqvp">{{#if customerRewards.used}} Used Rewards ({{customerRewards.used}}) {{/if}}
+    </div>
+    <div id="iw7o6" class="gjs-row">
+        <div id="i86j6" class="gjs-cell">
+            <p id="iydvk">{{#each user.usedRewards}}</p>
+            <div class="loyalty-user-reward">
+                <p id="ih2pq" class="text-primary">
+                    <b>
+                        <span>{{reward.name}}</span>
+                    </b>
+                </p>
+                <p id="ikekq">{{reward.description}}</p>
+                <p id="i4c36">
+                    <b>{{reward.itemDiscount}}</b>
+                </p>
+                <p id="i6ey5">{{#if customerPoints}} You got {{customerPoints}} points {{/if}}</p>
+            </div>
+            <div id="i4fqm">Used: {{dateUsed}}</div>
+            <p id="irpnj">{{/each}}</p>
+        </div>
     </div>
 </div>
 <style>
@@ -129,7 +131,6 @@
 
   #ih2pq {
     font-size: 20px;
-    color: rgba(79, 79, 79, 0.8);
   }
 
   #ikekq {
