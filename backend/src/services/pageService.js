@@ -220,6 +220,7 @@ async function getPageContext(user) {
         return lvl
       })
     const nextLevel = customerLevels.find(lvl => lvl.requiredPoints > currentLevel?.requiredPoints)
+    const currentProgress = nextLevel ? ((points - currentLevel.requiredPoints) / (nextLevel.requiredPoints - currentLevel.requiredPoints)) * 100 : 100
 
     return {
       user: userInfo,
@@ -231,7 +232,10 @@ async function getPageContext(user) {
       birthdayGreeting: user.isBirthday ? business.config.translations.birthdayGreeting : undefined,
       business: business.public,
       customerLevels,
-      currentLevel,
+      currentLevel: {
+        ...currentLevel,
+        progress: Math.round(currentProgress)
+      },
       nextLevel,
       products,
       campaigns,
