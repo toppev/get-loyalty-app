@@ -3,6 +3,8 @@
  * The server sends notification messages via this system. For example, when scanning.
  */
 
+// TODO: refactor to use websockets!!!
+
 import { Notification } from "../components/notification/PopupNotification"
 import { useContext, useState } from "react"
 import { AppContext } from "../AppContext"
@@ -10,11 +12,6 @@ import client from "../config/axios"
 
 function subscribeMessage(userId: string, identifier: string) {
   return client.post(`${process.env.REACT_APP_POLLING_API_URL}/${identifier}_${userId}`, {}, { withCredentials: false })
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function unsubscribeMessage(userId: string, identifier: string) {
-  return client.delete(`${process.env.REACT_APP_POLLING_API_URL}/${identifier}_${userId}`, { withCredentials: false })
 }
 
 // Don't use state because this works better
@@ -32,20 +29,11 @@ function useSubscribe(identifiers: string[]) {
     subscribedTo.push(id)
     subscribeMessage(user.id, id)
       .then(res => {
-        const { status } = res
-        // Resubscribe on success or timeout
-        if ((status >= 200 && status < 300) || status === 408 || status === 504) {
-          resub(id)
-          if (res.headers.get('content-length') !== "0") {
-            const data = res.data
-            if (data.message) {
-              if (data.id) data.id = Math.random()
-              setNotification(data)
-            } else {
-              console.error('Failed to parse a notification from the response.', data)
-            }
-          }
-        }
+        resub(id)
+        const data = res.data
+        console.log('notification data: ', data)
+        if (!data.id) data.id = Math.random()
+        setNotification(data)
       })
       .catch(err => {
         const status = err?.response?.status
