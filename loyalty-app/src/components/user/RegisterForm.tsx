@@ -32,7 +32,7 @@ export default function RegisterForm({ pages }: LoginFormProps) {
 // From the default /profile page
 const DEFAULT_REGISTRATION = `
     <h2 class="text-light">Your Information</h2>
-    <div id="i2fd1" class="gjs-row">
+    <div id="user-settings" class="gjs-row">
         <div id="ix5tz" class="gjs-cell">
             <div>
                 <form id="user-form">

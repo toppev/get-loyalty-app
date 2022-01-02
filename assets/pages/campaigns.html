@@ -7,12 +7,12 @@
     <div class="card page-modal my-3">
         <div class="card-body">
             <div class="p-2">{{#each campaigns}}</div>
-            <h2 class="card-title text-secondary">{{name}}</h2>
+            <h2 class="card-title text-primary">{{name}}</h2>
             <div class="py-2 fs-3">{{#each customerProgress}}
                 <span draggable="true">💰</span>
                 <span draggable="true">{{/each}}{{#each stampsNeeded}}<span draggable="true">📦</span>{{/each}}</span>
             </div>
-            <p class="my-1 py-1 text-primary font-weight-bold">
+            <p class="my-1 py-1 text-secondary font-weight-bold">
                 <span style="font-weight: bold">
                     {{currentStampsAll.length}}{{#if totalStampsNeeded}}/{{totalStampsNeeded}}{{/if}} total stamps
                 </span>
