@@ -21,6 +21,8 @@ router.get('/:pageId/static/:fileName', getStaticFile)
 router.get('/:pageId/thumbnail', getThumbnail)
 // Loading the GJS data
 router.get('/:pageId', permit('page:load'), loadPage)
+// Get context as a JSON (e.g., to view available placeholders etc)
+router.get('/placeholder-context', permit('page:placeholders'), getContext)
 // Uploading html/css (only mongoose validation)
 router.post('/:pageId/upload', permit('page:upload'), uploadPage)
 // Uploading javascript
@@ -77,6 +79,12 @@ function uploadPage(req, res, next) {
 function getTemplates(req, res, next) {
   pageService.getTemplates()
     .then(data => data ? res.json(data) : res.sendStatus(404))
+    .catch(err => next(err))
+}
+
+function getContext(req, res, next) {
+  pageService.getPageContext(req.user)
+    .then(data => res.json(data))
     .catch(err => next(err))
 }
 

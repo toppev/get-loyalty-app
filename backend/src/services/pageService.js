@@ -27,7 +27,8 @@ export default {
   getTemplates,
   renderPageView,
   getStaticFile,
-  cloneUploads
+  cloneUploads,
+  getPageContext
 }
 
 async function createPage(templatePage) {
