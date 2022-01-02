@@ -14,6 +14,8 @@ router.get('/list', permit('page:load'), listPages)
 // Returns public information of the published pages, no need for permissions
 // The customer app uses to list all pages, first should be the homepage
 router.get('/pages', listPublicPages)
+// Get context as a JSON (e.g., to view available placeholders etc)
+router.get('/placeholder-context', permit('page:placeholders'), getContext)
 // Get any html, no perms needed
 router.get('/:pageId/html', getHtml)
 router.get('/:pageId/static/:fileName', getStaticFile)
@@ -21,8 +23,6 @@ router.get('/:pageId/static/:fileName', getStaticFile)
 router.get('/:pageId/thumbnail', getThumbnail)
 // Loading the GJS data
 router.get('/:pageId', permit('page:load'), loadPage)
-// Get context as a JSON (e.g., to view available placeholders etc)
-router.get('/placeholder-context', permit('page:placeholders'), getContext)
 // Uploading html/css (only mongoose validation)
 router.post('/:pageId/upload', permit('page:upload'), uploadPage)
 // Uploading javascript

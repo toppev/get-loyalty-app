@@ -14,6 +14,7 @@ const roles = {
       'page:save': true,
       'page:load': true,
       'page:upload': true,
+      'page:placeholders': true,
       'customer:update': true,
       'customer:get': true,
       'customer:list': true,
