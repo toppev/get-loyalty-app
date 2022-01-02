@@ -21,7 +21,7 @@ jobs:
         with:
           node-version: 16
       - name: npm i
-        run: npm i axios
+        run: npm i axios form-data
         working-directory: hack
       - name: Run
         run: node sync-templates.js ${{ secrets.DEMO_EMAIL }} ${{ secrets.DEMO_PASSWORD }}

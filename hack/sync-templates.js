@@ -1,8 +1,10 @@
+const FormData = require('form-data');
 const axios = require('axios')
 const fs = require('fs')
 
+const API_URL = "https://demo.getloyalty.app/api";
 const client = axios.create({
-  baseURL: "https://demo.getloyalty.app/api",
+  baseURL: API_URL,
   withCredentials: true,
 })
 
@@ -44,5 +46,27 @@ const dryRun = args[2]
       await updateHtml(page.id, html)
     }
   }
+
+  console.log("Syncing static uploads")
+
+  async function uploadPageStaticFile(pageId, fileName, filePath) {
+    const form = new FormData()
+    form.append('file', fs.createReadStream(filePath))
+    await client({
+      url: API_URL + `/page/${pageId}/upload-static/?fileName=${fileName}`,
+      method: 'POST',
+      data: form,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        ...form.getHeaders(),
+        Cookie: cookies,
+      }
+    }).catch(err => console.log(err, err?.response?.data))
+  }
+
+  await uploadPageStaticFile('common', 'main.css', '../panel/public/templates/common_main.css')
+  await uploadPageStaticFile('common', 'main.js', '../panel/public/templates/common_main.js')
+
+  console.log("All done")
 
 })().catch(err => console.log(err, err.response?.data))
