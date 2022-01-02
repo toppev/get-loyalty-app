@@ -25,13 +25,12 @@
         </div>
     </div>
     <!--
-    If id="user-registration" is set, this will be used as the registration form too.
-    Alternatively, page with pathname of "registration" or the premade template in the PWA can be used.
+    A page with pathname of "registration" or the premade template in the PWA can be used.
     -->
-    <div id="user-registration">
+    <div id="registration-form">
         <section class="rounded-md my-36 m-auto h-auto w-11/12 max-w-xl bg-gray-800">
-            <form>
-                <div class="max-w-md w-full bg-gray-900 p-6 space-y-4">
+            <form id="user-form">
+                <div class="rounded-md max-w-md w-full bg-gray-900 p-6 space-y-4">
                     <div class="mb-4">
                         <p class="text-gray-400">Loyalty App</p>
                         <h2 class="text-xl font-bold text-white">Your Information</h2>
@@ -59,14 +58,14 @@
                         </label>
                     </div>
                     <div>
-                        <button class="w-full py-3 bg-blue-600 hover:bg-blue-700 rounded text-sm font-bold text-gray-50 transition duration-200">
+                        <button type="submit" class="w-full py-3 bg-blue-600 hover:bg-blue-700 rounded text-sm font-bold text-gray-50 transition duration-200">
                             Save
                         </button>
                     </div>
                     <!-- TODO: whenever this is added
                     <div class="flex items-center justify-between">
                         <div class="flex flex-row items-center">
-                            <input type="checkbox" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded">
+                            <input id="user-form-newsletter" type="checkbox" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded">
                             <label for="comments" class="ml-2 text-sm font-normal text-gray-400">Subscribe to the news letter</label>
                         </div>
 

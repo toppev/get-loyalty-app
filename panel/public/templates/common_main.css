@@ -73,3 +73,7 @@ body::before {
 /** This class name is just used by the app to identify the element which user can click to prompt for enabling push notifications. */
 .enable-notifications {
 }
+
+.user-form-disabled-item {
+  background-color: #505050 !important
+}

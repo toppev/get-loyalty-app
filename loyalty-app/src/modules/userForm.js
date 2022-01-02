@@ -52,7 +52,12 @@ export function useUserFormInitialValues() {
 
 function toggleForm(disabled) {
   const submitBtns = getUserForm()?.querySelectorAll('button[type="submit"]')
-  Array.from(submitBtns).forEach(it => it.disabled = disabled)
+  Array.from(submitBtns).forEach(it => {
+    it.disabled = disabled
+    // Somewhat a temp fix
+    if (disabled) it.classList.push('user-form-disabled-item')
+    else it.classList.remove('user-form-disabled-item')
+  })
 }
 
 async function submitChanges() {
