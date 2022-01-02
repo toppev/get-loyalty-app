@@ -78,18 +78,17 @@ function App() {
       })
   }
 
-  const refreshHtmlPages = (refreshPages = pages) => {
-    if (refreshPages.length) {
-      const fetchRest = (excludeId?: string) =>
-        refreshPages.forEach(it => it._id !== excludeId && fetchHtml(it))
-      // Attempt fetching only the current page first for better performance
-      const path = window.location.pathname.substring(1) // e.g "/home" -> "home"
-      const current = refreshPages.find(page => page.pathname === path) || refreshPages[0]
-      if (current) {
-        fetchHtml(current).then(() => fetchRest(current._id))
-      } else {
-        fetchRest()
-      }
+  const refreshHtmlPages = (refreshPages: Page[] = pages) => {
+    if (!refreshPages.length) refreshPages = pages
+    const fetchRest = (excludeId?: string) =>
+      refreshPages.forEach(it => it._id !== excludeId && fetchHtml(it))
+    // Attempt fetching only the current page first for better performance
+    const path = window.location.pathname.substring(1) // e.g "/home" -> "home"
+    const current = refreshPages.find(page => page.pathname === path) || refreshPages[0]
+    if (current) {
+      fetchHtml(current).then(() => fetchRest(current._id))
+    } else {
+      fetchRest()
     }
   }
 

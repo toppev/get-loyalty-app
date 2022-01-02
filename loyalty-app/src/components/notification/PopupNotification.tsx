@@ -4,7 +4,6 @@ import './PopupNotification.css'
 
 export interface Notification {
   message: string
-  id: any
   status?: "success" | "error" | "neutral"
   refresh?: boolean
   vibrate?: number | number[] | boolean

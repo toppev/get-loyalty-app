@@ -32,7 +32,6 @@ function useSubscribe(identifiers: string[]) {
         resub(id)
         const data = res.data
         console.log('notification data: ', data)
-        if (!data.id) data.id = Math.random()
         setNotification(data)
       })
       .catch(err => {

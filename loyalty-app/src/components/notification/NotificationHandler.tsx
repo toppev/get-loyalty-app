@@ -3,7 +3,7 @@ import PopupNotification from "./PopupNotification"
 import React from "react"
 
 interface NotificationHandlerProps {
-  onRefresh: (id: any) => any
+  onRefresh: () => any
 }
 
 export default function NotificationHandler(props: NotificationHandlerProps) {
@@ -17,7 +17,7 @@ export default function NotificationHandler(props: NotificationHandlerProps) {
     // Refresh the pages by default if not set to false
     if (refresh !== false) {
       setNotification({ ...notification, refresh: false }) // Avoid refreshing multiple times
-      props.onRefresh(notification.id)
+      props.onRefresh()
     }
     if (vibrate) {
       window.navigator.vibrate(vibrate === true ? 200 : vibrate)

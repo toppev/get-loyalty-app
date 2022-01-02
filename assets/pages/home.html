@@ -15,7 +15,10 @@
     </div>
 
     <div class="flex justify-center items-center text-left">
-        <div class="bg-gray-200 bg-opacity-70 p-10 rounded-lg shadow-md">
+        <div class="m-5 bg-gray-200 bg-opacity-70 py-6 px-12 rounded-lg shadow-md">
+            <p class="text-center text-s text-gray-700 pb-7">
+                Participate in the campaigns to level up and earn rewards.
+            </p>
             <div class="flex justify-between">
                 <div>
                     <h3 class="text-xs uppercase">Current level</h3>
@@ -26,14 +29,19 @@
                     <h2 class="font-bold">{{nextLevel.name}}</h2>
                 </div>
             </div>
-            <div class="mt-4 mb-10">
-                <p class="text-gray-600">{{currentLevel.progress}}% - {{nextLevel.pointsNeeded}} more points needed</p>
-                <div class="bg-gray-400 w-64 h-3 rounded-lg mt-2 overflow-hidden">
-                    <div class="bg-pink-400 w-3/4 h-full rounded-lg shadow-md"></div>
+            <div class="mt-5 mb-8">
+                <p class="text-gray-600"><span class="font-bold">{{currentLevel.progress}}% </span> - {{nextLevel.pointsNeeded}} more points
+                    needed</p>
+                <div class="bg-gray-400 h-3 rounded-lg mt-2">
+                    <div
+                            style="width: {{currentLevel.progress}}%; box-shadow: inset rgb(255 47 100) 2px 0px 5px 4px, rgb(255 47 150) 2px 0px 4px 1px"
+                            class="bg-pink-400 h-full rounded-lg"
+                    ></div>
                 </div>
             </div>
+            {{#if extLevel.rewards}}
             <h3 class="text-xs uppercase">Rewards</h3>
-            <div class="py-1">{{#each endReward}}</div>
+            <div class="py-1">{{#each nextLevel.rewards}}</div>
             <div class="mb-2">
                 <u class="reward-title">
                     <span class="text-primary"><b>{{itemDiscount}}</b></span> - <span class="text-secondary">{{name}}</span>
@@ -47,6 +55,7 @@
                 <p class="text-warning">{{requirement}}</p>
             </div>
             <div>{{/each}}</div>
+            {{/if}}
         </div>
     </div>
 
