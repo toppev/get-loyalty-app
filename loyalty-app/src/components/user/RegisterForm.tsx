@@ -31,43 +31,51 @@ export default function RegisterForm({ pages }: LoginFormProps) {
 
 // From the default /profile page
 const DEFAULT_REGISTRATION = `
-    <h2 class="text-light">Your Information</h2>
-    <div id="user-settings" class="gjs-row">
-        <div id="ix5tz" class="gjs-cell">
-            <div>
-                <form id="user-form">
+        <div id="user-registration">
+        <section class="rounded-md my-36 m-auto h-auto w-11/12 max-w-xl bg-gray-800">
+            <form>
+                <div class="max-w-md w-full bg-gray-900 p-6 space-y-4">
+                    <div class="mb-4">
+                        <p class="text-gray-400">Loyalty App</p>
+                        <h2 class="text-xl font-bold text-white">Your Information</h2>
+                    </div>
                     <div>
-                        <label for="user-email" class="text-light">Email</label>
+                        <input id="user-email"
+                               class="w-full p-3 text-sm bg-gray-50 focus:outline-none border border-gray-200 rounded text-gray-600"
+                               type="text"
+                               placeholder="Email">
                     </div>
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">@</span>
-                        </div>
-                        <input type="email" class="form-control" id="user-email" name="email" value=""
-                               placeholder="email@example.com"/>
-                    </div>
-                    <!-- Enable for birthday field
-                    <div>
-                        <label for="birthday-selector" class="text-light">Birthday</label>
-                    </div>
-                    <div class="input-group mb-3">
-                        <input type="date" class="form-control" id="birthday-selector" name="birthday" autocomplete="bday"
+                    <!-- Uncomment for the birthday selector
+                    <div class="">
+                        <input type="date"
+                               class="w-full p-3 text-sm bg-gray-50 focus:outline-none border border-gray-200 rounded text-gray-600"
+                               id="birthday-selector" name="birthday" autocomplete="bday"
                                min="1900-01-01" max="2010-12-31"/>
                     </div>
                     -->
-                    <div class="my-3">
-                        <div style="white-space: nowrap;">
-                            <input required type="checkbox" id="tos-privacy-accept" name="acceptTosPrivacy" value="true"/>
-                            <label for="tos-privacy-accept" class="page-small-text form-check-label">I accept
-                                <a draggable="true" data-highlightable="1" href="https://getloyalty.app/terms">terms of service</a>
-                                <span> and </span>
-                                <a draggable="true" data-highlightable="1" href="https://getloyalty.app/privacy">privacy policy</a>
-                            </label>
-                        </div>
-                        <button class="btn btn-primary my-2 pv-4" type="submit">Register</button>
+                    <div class="my-2" style="white-space: nowrap;">
+                        <input required type="checkbox" id="tos-privacy-accept" name="acceptTosPrivacy" value="true"/>
+                        <label for="tos-privacy-accept" class="page-small-text form-check-label">I accept
+                            <a draggable="true" data-highlightable="1" href="https://getloyalty.app/terms">terms of service</a>
+                            <span> and </span>
+                            <a draggable="true" data-highlightable="1" href="https://getloyalty.app/privacy">privacy policy</a>
+                        </label>
                     </div>
-                </form>
-            </div>
-        </div>
+                    <div>
+                        <button class="w-full py-3 bg-blue-600 hover:bg-blue-700 rounded text-sm font-bold text-gray-50 transition duration-200">
+                            Register
+                        </button>
+                    </div>
+                    <!-- TODO: whenever this is added
+                    <div class="flex items-center justify-between">
+                        <div class="flex flex-row items-center">
+                            <input type="checkbox" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded">
+                            <label for="comments" class="ml-2 text-sm font-normal text-gray-400">Subscribe to the news letter</label>
+                        </div>
+                    </div>
+                    -->
+                </div>
+            </form>
+        </section>
     </div>
 `
