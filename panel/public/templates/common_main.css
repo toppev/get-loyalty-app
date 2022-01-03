@@ -9,6 +9,7 @@ body {
   background-color: black !important;
   min-height: 1050px;
   text-align: center; /* By default everything is centered */
+  font-size: 100%; /* Increase/decrease font sizes here */
 }
 
 body::before {
@@ -47,6 +48,10 @@ body::before {
   font-weight: normal;
 }
 
+.reward-title {
+  font-size: 18px;
+}
+
 /* Common text on page. Usually on top of the background*/
 .page-text {
   color: #d2d2d2;
@@ -56,7 +61,7 @@ body::before {
 /* Smaller text on top of the background. */
 .page-small-text {
   color: #a2a2a2;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 /* Modal/card/paper on the pages. For example, the grayish cards on the campaigns page. */
@@ -68,6 +73,12 @@ body::before {
   color: rgb(47, 47, 47);
   max-width: 700px;
   background-color: rgba(200, 215, 230, 0.80) !important;
+}
+
+/* The customer points text (e.g., "+200 points") */
+.text-points {
+  color: rgb(41, 231, 8);
+  font-size: 20px;
 }
 
 /** This class name is just used by the app to identify the element which user can click to prompt for enabling push notifications. */

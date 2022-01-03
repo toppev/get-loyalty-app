@@ -329,7 +329,7 @@ function ServerSettingsForm() {
                   setPopupOpen(false)
                   // IDEA: Trigger an update in the ServerStatusBar instead of reloading?
                   window.location.reload()
-                }, 15000)
+                }, 60*1000)
               },
               () => {
                 actions.setSubmitting(false)

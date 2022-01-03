@@ -31,7 +31,6 @@ function useSubscribe(identifiers: string[]) {
       .then(res => {
         resub(id)
         const data = res.data
-        console.log('notification data: ', data)
         setNotification(data)
       })
       .catch(err => {

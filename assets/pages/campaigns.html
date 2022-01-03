@@ -4,32 +4,32 @@
     <i><a href="/?page=profile" class="link-light">QR code</a></i> to participate.
 </div>
 <div class="page-content">
-    <div class="card page-modal my-3">
-        <div class="card-body">
-            <div class="p-2">{{#each campaigns}}</div>
-            <h2 class="card-title text-primary">{{name}}</h2>
-            <div class="py-2 fs-3">{{#each customerProgress}}
-                <span draggable="true">💰</span>
-                <span draggable="true">{{/each}}{{#each stampsNeeded}}<span draggable="true">📦</span>{{/each}}</span>
+    <div class="p-2">{{#each campaigns}}</div>
+    <div class="page-modal my-3">
+        <div class="p-5">
+            <h2 class="card-title text-m">{{name}}</h2>
+            <div class="pt-5" style="font-size: 36px;">
+                {{#each customerProgress}}<span>💰</span>{{/each}}
+                {{#each stampsNeeded}}<span>📦</span>{{/each}}
             </div>
-            <p class="my-1 py-1 text-secondary font-weight-bold">
-                <span style="font-weight: bold">
-                    {{currentStampsAll.length}}{{#if totalStampsNeeded}}/{{totalStampsNeeded}}{{/if}} total stamps
-                </span>
+            <p class="my-1 pb-1 font-bold">
+                {{currentStampsAll.length}}{{#if totalStampsNeeded}}/{{totalStampsNeeded}}{{/if}} total stamps
             </p>
             <p class="text-light h-auto p-3">{{description}}</p>
             <hr/>
-            <h3 class="mt-2 fs-5 text-secondary">
-                <b>Rewards ({{endReward.length}})</b>
-            </h3>
-            <div class="gjs-row">
-                <div class="gjs-cell">
-                    <div class="py-1">{{#each endReward}}</div>
+            <hr class="mb-1" style="border-color: lightgray;"/>
+            <div class="text-left">
+                <h3 class="text-s uppercase font-bold">Rewards</h3>
+                <div class="mt-1 divide-y divide-slate-100">
+                    {{#each endReward}}
                     <div class="mb-2">
-                        <u class="reward-title">
-                            <span class="text-primary"><b>{{itemDiscount}}</b></span> - <span class="text-secondary">{{name}}</span>
-                        </u>
-                        <p class="text-secondary">{{description}}</p>
+                        <div class="reward-title">
+                            <p class="w-max bg-gray-200 p-1 px-2 mr-2 -ml-1 rounded-full text-xs font-medium text-gray-900">
+                                {{itemDiscount}}
+                            </p>
+                            <span class="text-gray-700">{{name}}</span>
+                        </div>
+                        <p class="text-gray-600">{{description}}</p>
                         <p class="text-points">
                             {{#if customerPoints}}
                             <b>+{{customerPoints}}</b> points!
@@ -37,35 +37,18 @@
                         </p>
                         <p class="text-warning">{{requirement}}</p>
                     </div>
-                    <div>{{/each}}</div>
+                    {{/each}}
                 </div>
             </div>
             <div class="gjs-row campaign-dates">
                 <p>Starting {{start}}</p>
                 <p>{{#if end}} Ending {{end}} {{/if}}</p>
             </div>
-            <div>{{/each}}</div>
         </div>
     </div>
+    <div>{{/each}}</div>
 </div>
 <style>
-
-  /* For development only */
-  @import "../../panel/public/templates/common_main.css";
-
-  * {
-    box-sizing: border-box;
-  }
-
-  body {
-    margin: 0;
-    font-size: 100%; /* Increase/decrease font sizes here */
-  }
-
-  .text-points {
-    color: rgb(38 255 0);
-    font-size: 20px;
-  }
 
   .campaign-dates {
     color: rgb(85, 85, 85);
@@ -74,9 +57,4 @@
     text-align: left;
   }
 
-  .reward-title {
-    font-size: 20px;
-    text-decoration-thickness: 1px;
-    text-underline-position: under;
-  }
 </style>
