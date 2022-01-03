@@ -1,39 +1,21 @@
 .notification {
   transition-timing-function: ease-in;
-  transition-duration: 0.3s;
+  transition-duration: 0.4s;
   opacity: 0;
   display: none;
   z-index: 2;
-  width: 80%;
-  max-width: 360px;
-  height: fit-content;
+  width: 85%;
+  max-width: 380px;
   min-height: 9%;
   max-height: 100px;
   left: 0;
   right: 0;
   top: 7%;
-  margin-left: auto;
-  margin-right: auto;
+  margin: auto;
   position: fixed;
-  align-items: center;
-  border: solid #939393 1px;
-  border-radius: 5px;
-  background-color: rgb(30, 200, 220);
-
-  /* Font stuff */
-  font-size: 24px;
-  color: #3c3c3c;
 }
 
 .active {
   opacity: 1;
   display: initial;
-}
-
-.success {
-  background-color: rgb(1, 156, 102);
-}
-
-.error {
-  background-color: rgb(177, 60, 60);
 }
