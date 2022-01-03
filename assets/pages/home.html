@@ -16,7 +16,7 @@
 
     <div class="flex justify-center items-center text-left">
         <div class="m-5 bg-gray-200 bg-opacity-70 py-6 px-12 rounded-lg shadow-md">
-            <h2 class="text-center mb-1 font-bold text-pink-700">
+            <h2 class="text-center mb-1 font-bold text-pink-600">
                 Customer Level
             </h2>
             <p class="text-center text-xs text-gray-700 pb-4">
@@ -44,7 +44,7 @@
             </div>
             {{#if nextLevel.rewards}}
             <hr class="mb-1" style="border-color: lightgray;"/>
-            <h3 class="text-xs uppercase">Next Rewards</h3>
+            <h3 class="text-xs uppercase">Next Rewards:</h3>
             <div class="mt-1 divide-y divide-slate-100">
                 {{#each nextLevel.rewards}}
                 <div class="mb-2">
@@ -52,7 +52,7 @@
                         <p class="w-max bg-gray-200 p-1 px-2 mr-2 -ml-1 rounded-full text-xs font-medium text-gray-900">
                             {{itemDiscount}}
                         </p>
-                        <span class="text-gray-700">{{name}}</span>
+                        <p>{{name}}</p>
                     </div>
                     <p class="text-gray-600">{{description}}</p>
                     <p class="text-points">

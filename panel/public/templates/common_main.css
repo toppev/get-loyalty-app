@@ -49,6 +49,7 @@ body::before {
 }
 
 .reward-title {
+  color: #3c3c3c;
   font-size: 18px;
 }
 
@@ -62,17 +63,6 @@ body::before {
 .page-small-text {
   color: #a2a2a2;
   font-size: 14px;
-}
-
-/* Modal/card/paper on the pages. For example, the grayish cards on the campaigns page. */
-.page-modal {
-  text-align: center;
-  margin: 10px auto;
-  width: 90%;
-  border-radius: 7px;
-  color: rgb(47, 47, 47);
-  max-width: 700px;
-  background-color: rgba(200, 215, 230, 0.80) !important;
 }
 
 /* The customer points text (e.g., "+200 points") */

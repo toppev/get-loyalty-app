@@ -1,13 +1,13 @@
 <h1 class="page-title">Active Campaigns <span class="page-title-amount">({{campaigns.length}})</span></h1>
 <div class="page-text">
     Show your
-    <i><a href="/?page=profile" class="link-light">QR code</a></i> to participate.
+    <i><a href="/?page=profile" class="">QR code</a></i> to participate.
 </div>
 <div class="page-content">
     <div class="p-2">{{#each campaigns}}</div>
-    <div class="page-modal my-3">
-        <div class="p-5">
-            <h2 class="card-title text-m">{{name}}</h2>
+    <div class="m-7 bg-gray-200 bg-opacity-70 p-1 rounded-lg shadow-md my-3">
+        <div class="p-3">
+            <h2 class="card-title text-m font-bold text-pink-600">{{name}}</h2>
             <div class="pt-5" style="font-size: 36px;">
                 {{#each customerProgress}}<span>💰</span>{{/each}}
                 {{#each stampsNeeded}}<span>📦</span>{{/each}}
@@ -27,7 +27,7 @@
                             <p class="w-max bg-gray-200 p-1 px-2 mr-2 -ml-1 rounded-full text-xs font-medium text-gray-900">
                                 {{itemDiscount}}
                             </p>
-                            <span class="text-gray-700">{{name}}</span>
+                            <p>{{name}}</p>
                         </div>
                         <p class="text-gray-600">{{description}}</p>
                         <p class="text-points">
