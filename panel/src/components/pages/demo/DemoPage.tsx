@@ -2,7 +2,7 @@ import { Box, Button, createStyles, Link, makeStyles, Theme, Typography, useMedi
 import LinkIcon from "@material-ui/icons/Link"
 import QRCode from "qrcode.react"
 import React from "react"
-import CopyToClipboard from '../../common/CopyToClipboarad'
+import CopyToClipboard from '../../common/CopyToClipboard'
 import { backendURL } from "../../../config/axios"
 import PreviewIframe from "../../common/PreviewIframe"
 
