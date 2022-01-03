@@ -33,7 +33,7 @@ export function ReferrerDialog({ user, referUrl }) {
   const maxRefers = user?.maxRefers
 
   return open ? (
-    <div className="referral__dialog">
+    <div className="referral__dialog ease-in duration-300">
       <button className="referral__dialog-close" onClick={() => setOpen(false)}>✖</button>
       <h2 className="text-indigo-700 text-opacity-80 text-xl font-bold m-2 mb-4">Your referral code</h2>
 

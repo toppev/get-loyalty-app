@@ -13,7 +13,7 @@
                 {{#each stampsNeeded}}<span>📦</span>{{/each}}
             </div>
             <p class="my-1 pb-1 font-bold">
-                {{currentStampsAll.length}}{{#if totalStampsNeeded}}/{{totalStampsNeeded}}{{/if}} total stamps
+                {{#if totalStampsNeeded}}{{currentStampsAll.length}}/{{totalStampsNeeded}} total stamps{{/if}}
             </p>
             <p class="text-light h-auto p-3">{{description}}</p>
             <hr/>
