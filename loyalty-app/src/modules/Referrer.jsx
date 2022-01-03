@@ -46,7 +46,7 @@ export function ReferrerDialog({ user, referUrl }) {
         </p>}
 
         {tooltip?.length > 0 &&
-        <div className="referral__tooltip">
+        <div className="referral__tooltip ease-in duration-300">
           <span>{tooltip}</span>
         </div>}
         <button
