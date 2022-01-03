@@ -86,6 +86,7 @@ function ValueSelector(valueDescription: { name: string, type: any }, onChange: 
     return (
       <div key={`val_${index}_${name}`}>
         <p>{placeholderText}</p>
+        <b>{name}</b>
         <RadioGroup
           defaultValue={type[0]} // init with first value
           onChange={e => onChange(index, e.target.value)}
