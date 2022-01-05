@@ -22,7 +22,11 @@ export function replaceQRCodes() {
         child.setAttribute("height", svgSize)
         child.setAttribute("width", svgSize)
         // @ts-ignore
-        if (child.style) child.style.maxWidth = svgMaxSize
+        const style = child.style
+        if (style) {
+          style.maxWidth = svgMaxSize
+          style.margin = 'auto'
+        }
       })
     }
   })

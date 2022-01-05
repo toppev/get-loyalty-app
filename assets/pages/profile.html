@@ -1,8 +1,8 @@
 <h1 class="page-title">Your Profile</h1>
-<div class="page-content">
+<div class="page-content grid place-items-center">
     <div class="px-8 py-8">
         <div class="grid gap-8 items-start justify-center">
-            <div class="hide-notifications enable-notifications relative group">
+            <div class="hide-notifications enable-notifications relative group hover:scale-110 duration-500 transform transition">
                 <div class="absolute -inset-0.5 bg-gradient-to-r from-pink-600 to-purple-600 rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
                 <button class="enable-notifications relative px-7 py-2 bg-neutral-300 bg-opacity-50 rounded-lg leading-none flex items-center divide-x divide-gray-600">
                     <span class="flex items-center space-x-5">
@@ -16,8 +16,11 @@
             </div>
 
             <div>
-                <button class="referrer-button my-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
-                    <svg class="inline" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0z" fill="none"/><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                <button class="referrer-button my-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full hover:scale-110 duration-500 transform transition">
+                    <svg class="inline" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
                     <span>Refer a friend</span>
                 </button>
             </div>
@@ -26,8 +29,8 @@
 
 
     <div class="p-1">
-        <div id="profile-qr-container" class="">
-            <div data-qrcode="{{ user.id }}" id="profile-qr-code"></div>
+        <div id="profile-qr-container">
+            <div data-qrcode="{{ user.id }}" id="profile-qr-code" class="hover:scale-110 duration-500 transform transition"></div>
             <div class="page-text">Show this QR code when making a purchase to earn rewards!</div>
         </div>
     </div>
@@ -66,7 +69,7 @@
                     </div>
                     <div>
                         <button type="submit"
-                                class="w-full py-3 bg-blue-600 hover:bg-blue-700 rounded text-sm font-bold text-gray-50 transition duration-200">
+                                class="w-full py-3 bg-blue-600 hover:bg-blue-700 rounded text-sm font-bold text-gray-50 hover:scale-110 duration-500 transform transition">
                             Save
                         </button>
                     </div>
