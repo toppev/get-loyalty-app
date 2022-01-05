@@ -104,8 +104,6 @@ function App() {
     }
   }
 
-  const firstPagePath = window.location.origin + "/" + (pages.length ? pages[0].pathname : "")
-
   const anyError = error || loginError
 
   return (
@@ -125,7 +123,7 @@ function App() {
 
           <ReferrerDialog
             user={contextState.user}
-            referUrl={`${firstPagePath}?coupon=referral?referrer=${contextState.user?.id}`}
+            referUrl={`?coupon=referral?referrer=${contextState.user?.id}`}
           />
           <NotificationHandler onRefresh={refreshHtmlPages}/>
         </div>
