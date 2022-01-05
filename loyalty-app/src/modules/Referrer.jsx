@@ -31,14 +31,18 @@ export function ReferrerDialog({ user, referUrl }) {
 
   const refers = user?.referrerFor?.length
   const maxRefers = user?.maxRefers
+  const allUsed = maxRefers > 0 && refers >= maxRefers
 
-  return open ? (
+  if (!open) return null
+  return (
     <div className="referral__dialog ease-in duration-300">
       <button className="referral__dialog-close" onClick={() => setOpen(false)}>✖</button>
       <h2 className="text-indigo-700 text-opacity-80 text-xl font-bold m-2 mb-4">Your referral code</h2>
 
       <p className="text-gray-500 text-opacity-90 my-4">Tell your friend to scan the code for new rewards.</p>
-      <div className="my-2 flex justify-center" data-qrcode={referUrl}/>
+      {allUsed
+        ? <div className="my-2 flex justify-center" data-qrcode={referUrl}/>
+        : <h2 className="text-red-500 my-3">All referrals used</h2>}
 
       <div>
         {refers !== undefined && <p className="text-md text-opacity-90">
@@ -49,6 +53,7 @@ export function ReferrerDialog({ user, referUrl }) {
         <div className="referral__tooltip ease-in duration-300">
           <span>{tooltip}</span>
         </div>}
+        {!allUsed &&
         <button
           className="referral__copy-clipboard mt-2"
           onClick={() => {
@@ -61,8 +66,9 @@ export function ReferrerDialog({ user, referUrl }) {
           }}
         >⎘ Copy code
         </button>
+        }
       </div>
     </div>
-  ) : null
+  )
 
 }
