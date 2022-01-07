@@ -39,7 +39,7 @@ class UserService {
     }
     var body = res.data;
     print(body);
-    backendUrl = body['apiendpoint'];
+    backendUrl = body['staticAPIAddress'];
     print('backendUrl set to $backendUrl');
     sessionService.saveValues();
   }
