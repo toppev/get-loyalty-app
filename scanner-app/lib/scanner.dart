@@ -90,7 +90,7 @@ class ScannerWidgetState extends State<ScannerWidget> {
     });
   }
 
-  void setScanning(bool scanning, {startCooldown}) {
+  bool setScanning(bool scanning, {startCooldown}) {
     if (startCooldown == true) {
       lastScanned = new DateTime.now().millisecondsSinceEpoch;
     }
@@ -102,6 +102,7 @@ class ScannerWidgetState extends State<ScannerWidget> {
         widget.onScanToggle(scanning);
       } catch (e, stacktrace) {
         print('Failed to resume camera ($e): $stacktrace');
+        return !scanning;
       }
     } else {
       timer?.cancel();
@@ -110,8 +111,10 @@ class ScannerWidgetState extends State<ScannerWidget> {
         widget.onScanToggle(scanning);
       } catch (e, stacktrace) {
         print('Failed to resume camera ($e): $stacktrace');
+        return !scanning;
       }
     }
+    return scanning;
   }
 
   bool checkCooldown(str) {

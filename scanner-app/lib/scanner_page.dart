@@ -58,9 +58,8 @@ class _ScannerPageState extends State<ScannerPage> {
                         margin: EdgeInsets.all(48.0),
                         child: RaisedButton(
                           onPressed: () {
-                            var newState = !isScanning;
+                            var newState = globalKey.currentState.setScanning(!isScanning);
                             setState(() => isScanning = newState);
-                            globalKey.currentState.setScanning(newState);
                             print('Camera state changed: $newState');
                           },
                           color: isScanning ? Colors.redAccent : Colors.green,
