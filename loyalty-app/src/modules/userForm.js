@@ -55,7 +55,7 @@ function toggleForm(disabled) {
   Array.from(submitBtns).forEach(it => {
     it.disabled = disabled
     // Somewhat a temp fix
-    if (disabled) it.classList.push('user-form-disabled-item')
+    if (disabled) it.classList.add('user-form-disabled-item')
     else it.classList.remove('user-form-disabled-item')
   })
 }
