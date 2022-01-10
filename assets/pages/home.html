@@ -4,16 +4,9 @@ For developers:
 - Looking for all placeholders? Visit "https://<your app>.myapp.getloyalty.app/api/page/placeholder-context" when logged in as the business owner
 -->
 
-<h1 class="page-title">Your Business</h1>
+<h1 class="page-title">{{business.name}}</h1>
 <div class="page-content">
-    <div class="page-text my-4">
-        <div class="py-1 mb-2">
-            <hr style="margin: auto; width: 95%"/>
-            <p class="py-3" style="color: aquamarine; font-weight: bold;">{{business.name}}</p>
-            <hr style="margin: auto; width: 95%"/>
-        </div>
-    </div>
-    <div class="page-text m-6 py-2" style="font-size: 18px">
+    <div class="page-text m-2 py-2" style="font-size: 18px">
         <!-- Triple brackets, e.g., {{{placeholder}}} will not escape HTML so we can use <br/> for line breaks, for example. -->
         {{{business.description}}}
     </div>
@@ -71,5 +64,17 @@ For developers:
             {{/if}}
         </div>
     </div>
+
+    {{#if business.address}}
+    <div class="m-6 py-10">
+        <p class="m-3 text-lg text-gray-200">
+            {{business.name}} on Google Maps
+        </p>
+        <div style="width: 100%">
+            <!-- Zoom more or less? Increase/decrease the "&z=16" -->
+            <iframe class="rounded-lg" width="100%" height="400" src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q={{business.address}}({{business.address}})&amp;t=&amp;z=16&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"></iframe>
+        </div>
+    </div>
+    {{/if}}
 
 </div>
