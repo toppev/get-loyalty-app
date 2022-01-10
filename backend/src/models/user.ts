@@ -252,6 +252,7 @@ userSchema.methods.isBirthday = function (this: UserDocument) {
 userSchema.methods.toJSON = function (this: UserDocument) {
   const obj = this.toObject()
   delete obj.password
+  delete obj.authentication
   return obj
 }
 
