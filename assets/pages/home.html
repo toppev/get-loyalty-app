@@ -1,17 +1,21 @@
+<!--
+For developers:
+- these HTML files are processed with handlebars (https://handlebarsjs.com/)
+- Looking for all placeholders? Visit "https://<your app>.myapp.getloyalty.app/api/page/placeholder-context" when logged in as the business owner
+-->
+
 <h1 class="page-title">Your Business</h1>
 <div class="page-content">
     <div class="page-text my-4">
         <div class="py-1 mb-2">
             <hr style="margin: auto; width: 95%"/>
-            <p class="py-3" style="color: aquamarine; font-weight: bold;">This could be your first loyalty app!</p>
+            <p class="py-3" style="color: aquamarine; font-weight: bold;">{{business.name}}</p>
             <hr style="margin: auto; width: 95%"/>
         </div>
-        <p>
-            You can easily customize everything on these pages.
-        </p>
     </div>
-    <div class="page-text my-2 py-2" style="font-size: 16px">
-        Navigate to the other pages to find the example campaigns, rewards and more.
+    <div class="page-text m-6 py-2" style="font-size: 18px">
+        <!-- Triple brackets, e.g., {{{placeholder}}} will not escape HTML so we can use <br/> for line breaks, for example. -->
+        {{{business.description}}}
     </div>
 
     <div class="flex justify-center items-center text-left">
