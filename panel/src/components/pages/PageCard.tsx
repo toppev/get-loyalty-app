@@ -93,7 +93,7 @@ export default function PageCard(props: PageCardProps) {
         {displayStage &&
         <Typography variant="h6">
           Stage:
-          <span className={page.isPublished() ? classes.published : classes.unpublished}> {page.stage}</span>
+          <span className={page.isPublished() ? classes.published : classes.unpublished}> {page.getStageDisplayName()}</span>
         </Typography>}
         {actions}
         {displayId && <IdText id={page._id}/>}

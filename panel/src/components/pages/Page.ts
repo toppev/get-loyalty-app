@@ -37,6 +37,13 @@ class Page {
   discard() {
     this.stage = DISCARDED
   }
+
+  getStageDisplayName() {
+    if (this.stage === UNPUBLISHED) {
+      return this.stage + " (hidden)"
+    }
+    return this.stage
+  }
 }
 
 const UNPUBLISHED = 'unpublished'
