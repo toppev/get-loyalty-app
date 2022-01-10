@@ -15,7 +15,7 @@ router.get('/list', permit('page:load'), listPages)
 // The customer app uses to list all pages, first should be the homepage
 router.get('/pages', listPublicPages)
 // Get context as a JSON (e.g., to view available placeholders etc)
-router.get('/placeholder-context', permit('page:placeholders'), getContext)
+router.get('/placeholder-context', permit('page:placeholders'), getPlaceholderContext)
 // Get any html, no perms needed
 router.get('/:pageId/html', getHtml)
 router.get('/:pageId/static/:fileName', getStaticFile)
@@ -82,9 +82,13 @@ function getTemplates(req, res, next) {
     .catch(err => next(err))
 }
 
-function getContext(req, res, next) {
+function getPlaceholderContext(req, res, next) {
   pageService.getPageContext(req.user)
-    .then(data => res.json(data))
+    .then(data => {
+      // Return formatted JSON
+      res.header("Content-Type",'application/json')
+      res.send(JSON.stringify(data, null, 4))
+    })
     .catch(err => next(err))
 }
 
