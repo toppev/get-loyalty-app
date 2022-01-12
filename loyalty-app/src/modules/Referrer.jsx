@@ -59,7 +59,7 @@ export function ReferrerDialog({ user, referUrl }) {
             copyToClipboard(referUrl)
               .then(() => {
                 // success, display a message
-                setTooltip("Copied to clipboard!")
+                setTooltip("Referral URL copied!")
                 setTimeout(() => setTooltip(undefined), 2000)
               })
           }}

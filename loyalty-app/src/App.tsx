@@ -123,7 +123,7 @@ function App() {
 
           <ReferrerDialog
             user={contextState.user}
-            referUrl={`?coupon=referral?referrer=${contextState.user?.id}`}
+            referUrl={window.location.origin + `?coupon=referral?referrer=${contextState.user?.id}`}
           />
           <NotificationHandler onRefresh={refreshHtmlPages}/>
         </div>

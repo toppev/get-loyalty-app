@@ -187,7 +187,7 @@ export default function LoginForm() {
     const errors: FormikErrors<FormValues> = {}
     setEmail(values.email)
     if (!isEmail(values.email)) {
-      errors.email = 'Invalid email address :/'
+      errors.email = 'Invalid email address'
     }
     if (values.password.length <= 6) {
       errors.password = "That doesn't look like a strong password"
