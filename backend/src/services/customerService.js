@@ -236,6 +236,10 @@ async function checkCustomerLevelExpires(user, business) {
   const levels = business.public.customerLevels
   const currentPoints = user.customerData.properties.points
   const currentLevel = getCurrentLevel(levels, currentPoints)
+  if (!currentLevel) {
+    logger.debug(`${user.id} has no customerLevel`)
+    return
+  }
   const { pointsFee } = currentLevel
   const levelReachedMillis = user.customerData.customerLevel.since.getTime() || 0
   const toStayPeriodMillis = pointsFee.period
