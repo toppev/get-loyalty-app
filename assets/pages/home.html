@@ -30,8 +30,14 @@ For developers:
                 </div>
             </div>
             <div class="mt-5 mb-8">
-                <p class="text-gray-600"><span class="font-bold">{{currentLevel.progress}}% </span> - {{nextLevel.pointsNeeded}} more points
-                    needed</p>
+
+
+                <p class="text-gray-600">
+                    <span class="font-bold">{{currentLevel.progress}}% </span>
+                    {{#if {{nextLevel.pointsNeeded}}}}
+                        <span>- {{nextLevel.pointsNeeded}} more points needed</span>
+                    {{/fi}}
+                </p>
                 <div class="bg-gray-400 h-3 rounded-lg mt-2">
                     <div
                             style="width: {{currentLevel.progress}}%; box-shadow: inset rgb(255 47 100) 2px 0px 5px 4px, rgb(255 47 150) 2px 0px 4px 1px"
@@ -72,7 +78,8 @@ For developers:
         </p>
         <div style="width: 100%">
             <!-- Zoom more or less? Increase/decrease the "&z=16" -->
-            <iframe class="rounded-lg" width="100%" height="400" src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q={{business.address}}({{business.address}})&amp;t=&amp;z=16&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"></iframe>
+            <iframe class="rounded-lg" width="100%" height="400"
+                    src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q={{business.address}}({{business.address}})&amp;t=&amp;z=16&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"></iframe>
         </div>
     </div>
     {{/if}}
