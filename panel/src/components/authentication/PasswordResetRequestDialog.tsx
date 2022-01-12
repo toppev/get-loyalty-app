@@ -106,6 +106,7 @@ export default function (props: PasswordResetRequestDialogProps) {
                 })
                 setButtonText('Try again')
                 setButtonDisabled(false)
+                console.log(err)
               }
 
               const token = await getCaptchaToken()
@@ -121,7 +122,7 @@ export default function (props: PasswordResetRequestDialogProps) {
                   setButtonText('Email sent!')
                   setTimeout(() => setButtonDisabled(false), 5000) // If they entered wrong email, for example
                 })
-                .catch(err => onError(err, validBackendURL() ? '' : 'Oops... Could not find your server.'))
+                .catch(err => onError(err, validBackendURL() ? '' : 'Something went wrong. Please check the email is correct.'))
             }}
           >{buttonText}</Button>
           <ReCAPTCHA
