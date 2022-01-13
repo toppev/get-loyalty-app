@@ -29,6 +29,9 @@ import RetryButton from "../../common/button/RetryButton"
 
 const URL_PREFIX = 'http://localhost:8080'
 
+// FIXME: enable when ready
+const PRODUCT_IMPORT_SUPPORTED = false
+
 let fileId: string | null = null
 
 const readableColumnOptions = ['Product Name', 'Product Description', 'Product Price', 'None (exclude column)']
@@ -159,6 +162,7 @@ export default function ImportProducts(props: ImportProductsProps): ReactElement
       <div className={classes.submitDiv}>
         <Button
           {...props}
+          disabled={!PRODUCT_IMPORT_SUPPORTED}
           aria-haspopup="true"
           variant="contained"
           onClick={toggleDialogOpen}
@@ -309,6 +313,7 @@ function ProductPreview({ open, onClickClose, initialProducts }: PreviewProps) {
           <RetryButton error={error}/>
           <Button
             className={classes.submitButton}
+            disabled={!PRODUCT_IMPORT_SUPPORTED}
             aria-haspopup="true"
             variant="contained"
             onClick={submitProducts}

@@ -38,8 +38,8 @@ const categories = [
     id: 'Business',
     children: [
       { id: 'Overview', icon: <AppsIcon/>, to: '/' },
-      { id: 'Products', icon: <PermMediaOutlinedIcon/>, to: '/products' },
       { id: 'Campaigns', icon: <RedeemIcon/>, to: '/campaigns' },
+      { id: 'Products', icon: <PermMediaOutlinedIcon/>, to: '/products' },
       { id: 'Customers', icon: <PeopleIcon/>, to: '/customers' },
       { id: 'Notifications', icon: <NotificationsActiveIcon/>, to: '/notifications' },
     ],

@@ -98,10 +98,12 @@ export default function () {
   ) : (
     <div>
       <p className={classes.p}>
-        (work in progress)
+        (Work in progress)
+        <br/>
+        This page is going to be revamped in the near future.
       </p>
       <div>
-        <Typography variant="h1" className={classes.title}>A few cool charts</Typography>
+        <Typography variant="h1" className={classes.title}>Charts</Typography>
         {loading && <LinearProgress/>}
         <Box display="flex" flexWrap="wrap">
           {charts.map(it => (
