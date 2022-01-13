@@ -190,10 +190,22 @@ export default function () {
             open={templateSelectorOpen}
             onClose={() => setTemplateSelectorOpen(false)}
             onSelect={page => {
+              if (pages.some(it => it.name === page.name)) {
+                if (!window.confirm(`You already have page "${page.name}". Are you sure you want to add another?`)) {
+                  return
+                }
+              }
+
+              // A temp fix to ensure unique pathname
+              if (pages.some(it => it.pathname === page.pathname)) {
+                page.pathname = page.pathname + pages.length
+              }
+
               // Create a new page using the same page
               // Basically just creates a "personal" clone (without description)
               page.description = ''
               page.template = false
+
               otherRequests.performRequest(
                 () => createPage(page),
                 (res) => {
@@ -229,7 +241,7 @@ export default function () {
             onClose={() => setUrlSelectorOpen(false)}
             onSubmit={url => {
               otherRequests.performRequest(
-                () => createPage(new Page({ name: 'New page', id: 'new_page', externalPage: url})),
+                () => createPage(new Page({ name: 'New page', id: 'new_page', externalPage: url })),
                 (res) => {
                   setUrlSelectorOpen(false)
                   setPages([...pages, new Page(res.data)])
@@ -327,13 +339,13 @@ export default function () {
       </div>
 
       {pageOpen &&
-      <div>
-        <Divider className={classes.divider}/>
-        <PageSettings pageOpen={pageOpen} requests={otherRequests}/>
-        <Suspense fallback={<div className={classes.loading}>Loading editor...</div>}>
-          <PageEditor page={pageOpen}/>
-        </Suspense>
-      </div>}
+        <div>
+          <Divider className={classes.divider}/>
+          <PageSettings pageOpen={pageOpen} requests={otherRequests}/>
+          <Suspense fallback={<div className={classes.loading}>Loading editor...</div>}>
+            <PageEditor page={pageOpen}/>
+          </Suspense>
+        </div>}
 
       <FileEditor
         fileName={editingFile?.fileName || ""}
