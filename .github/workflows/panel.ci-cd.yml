@@ -46,7 +46,7 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
       - name: Authenticate with GitHub package registry
         run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.READ_ORG_PACKAGES }}" > ~/.npmrc
-      - name: Install and build
+      - name: npm ci and build
         run: npm ci && npm run build
         working-directory: panel
       - name: Deploy to S3 bucket
