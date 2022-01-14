@@ -1,12 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'error_dialog.dart';
-import 'menu.dart';
 import 'question_dialog.dart';
 import 'scanner.dart';
-import 'services/scan_service.dart';
+import '../util/error_dialog.dart';
+import '../menu.dart';
+import '../services/scan_service.dart';
 
 const PAUSED = "Start Scanning";
 const SCANNING = "Stop Scanning";
@@ -119,7 +118,7 @@ class _ScannerPageState extends State<ScannerPage> {
 
             return AlertDialog(
                 title: Text(
-                  "Customer used reward: ${reward['name']}",
+                  "The customer wants to use reward: ${reward['name']}",
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 24, color: Colors.black54),
                 ),

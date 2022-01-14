@@ -1,11 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import 'error_dialog.dart';
-import 'scanner_page.dart';
+import 'util/error_dialog.dart';
+import 'scanner/scanner_page.dart';
 import 'services/user_service.dart';
 
 class LoginPage extends StatefulWidget {

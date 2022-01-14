@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
-import 'error_dialog.dart';
-import 'services/scan_service.dart';
+import '../util/error_dialog.dart';
+import '../services/scan_service.dart';
 
 const MAX_SCAN_DURATION = Duration(minutes: 3);
 const SCAN_COOLDOWN = 2500; // In millis
