@@ -17,8 +17,9 @@ Install [flutter](https://flutter.dev/docs/get-started/install).
 
 1. Clone this repository.
 2. Install packages with `flutter pub get`.
-3. Start an AVD or connect your device.
-4. Start the app in development mode with `flutter pub get`.
+3. Run the app
+   1. Run as a web app: `flutter run -d chrome`
+   2. or start an AVD or connect your device and see `flutter run`
 
 A few useful resources to get you started:
 
