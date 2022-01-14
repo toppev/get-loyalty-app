@@ -33,6 +33,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -42,7 +46,7 @@ jobs:
       - name: Authenticate with GitHub package registry
         run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.READ_ORG_PACKAGES }}" > ~/.npmrc
       - name: Install and build
-        run: npm install && npm run build
+        run: npm ci && npm run build
         working-directory: panel
       - name: Deploy to S3 bucket
         run: aws s3 sync ./build s3://panel-getloyaltyapp --delete
