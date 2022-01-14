@@ -98,7 +98,7 @@ export default function () {
   ) : (
     <div>
       <p className={classes.p}>
-        (Work in progress)
+        [Work in progress]
         <br/>
         This page is going to be revamped in the near future.
       </p>
