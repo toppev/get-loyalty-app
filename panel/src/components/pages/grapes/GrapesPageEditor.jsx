@@ -3,6 +3,7 @@ import gjsBlocksBasic from 'grapesjs-blocks-basic'
 import grapesjsTabs from 'grapesjs-tabs'
 import grapesjsTouch from 'grapesjs-touch'
 import grapesjsTuiImageEditor from 'grapesjs-tui-image-editor'
+import { client } from '../../../config/axios'
 import 'grapesjs/dist/css/grapes.min.css'
 import React, { useEffect } from "react"
 import { addPlaceholderBlock, registerListener } from "./blocks/placeholderBlock"
@@ -40,7 +41,6 @@ function GrapesPageEditor(props) {
   const pageCSS = [
     `${backendURL}/page/common/static/main.css`,
     // hard code the default ones here for now
-    "https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css",
     "https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css",
   ]
   const pageJS = [
@@ -49,76 +49,91 @@ function GrapesPageEditor(props) {
   ]
 
   useEffect(() => {
-    const editor = GrapesJS.init({
-      // Auto-saved on exit, see useEffect return cleanup function
-      noticeOnUnload: false,
-      container: `#page-editor`,
-      allowScripts: true,
-      canvas: {
-        styles: ["./editorCanvas.css", ...pageCSS],
-        scripts: [...pageJS]
-      },
-      plugins: [
-        gjsBlocksBasic,
-        grapesjsTabs,
-        grapesjsTouch,
-        grapesjsTuiImageEditor
-      ],
-      storageManager: {
-        type: 'remote',
-        // Doesn't work? FIXME?
-        // stepsBeforeSave: 5,
+    let editor
 
-        // Either save or create if undefined
-        urlStore: `${url}/${pageId || ""}/?gjsOnly=true`,
-        urlLoad: `${url}/${pageId}/?gjsOnly=true`,
-      },
-      assetManager: {
-        upload: uploadUrl,
-        multiUpload: false,
-        // The server should respond with { data: ["https://...image.png] }
-        autoAdd: true
+    async function load() {
+
+      // TODO: handle failures
+      const { data } = await client.get(`${url}/${pageId}/?gjsOnly=true`)
+      const getHtml = async () => {
+        const res = await client.get(`${url}/${pageId}/html`)
+        return res.data
       }
-    })
 
-    editor.on('storage:start:store', () => {
-      uploadHtmlCss(props.page, editor.getHtml(), editor.getCss())
-        .then(() => props.setError())
-        .catch(err => {
-          props.setError(err?.response?.message || `Oops... Something went wrong.
+      editor = GrapesJS.init({
+        // Auto-saved on exit, see useEffect return cleanup function
+        noticeOnUnload: false,
+        container: `#page-editor`,
+        allowScripts: true,
+        canvas: {
+          styles: ["./editorCanvas.css", ...pageCSS],
+          scripts: [...pageJS]
+        },
+        plugins: [
+          gjsBlocksBasic,
+          grapesjsTabs,
+          grapesjsTouch,
+          grapesjsTuiImageEditor
+        ],
+        components: data['gjs-components'] || await getHtml(),
+        style: data['gjs-styles'],
+        storageManager: {
+          type: 'remote',
+          // stepsBeforeSave: 5, // Doesn't work? FIXME?
+          autoload: false, // we load manually and fallback to the raw HTML
+          // urlLoad: `${url}/${pageId}/?gjsOnly=true`,
+          // Either save or create if undefined
+          urlStore: `${url}/${pageId || ""}/?gjsOnly=true`,
+        },
+        assetManager: {
+          upload: uploadUrl,
+          multiUpload: false,
+          // The server should respond with { data: ["https://...image.png] }
+          autoAdd: true
+        }
+      })
+
+      editor.on('storage:start:store', () => {
+        uploadHtmlCss(props.page, editor.getHtml(), editor.getCss())
+          .then(() => props.setError())
+          .catch(err => {
+            props.setError(err?.response?.message || `Oops... Something went wrong.
                     ${`Status code: ${err?.response?.status}` || err}.
                     This may be caused by invalid placeholders.`, editor.store)
-        })
-    })
+          })
+      })
 
-    // Add custom blocks
-    const bm = editor.BlockManager
-    registerListener(editor, props.selectPlaceholder)
+      // Add custom blocks
+      const bm = editor.BlockManager
+      registerListener(editor, props.selectPlaceholder)
 
-    addRichTextEditorPlaceholders(editor, placeholderContext)
+      addRichTextEditorPlaceholders(editor, placeholderContext)
 
-    addCampaignsBlock(bm)
-    addProductsBlock(bm)
-    addUserRewardsBlock(bm)
+      addCampaignsBlock(bm)
+      addProductsBlock(bm)
+      addUserRewardsBlock(bm)
 
-    addQRCodeType(editor)
-    // addQRCodeBlock(bm);
-    addUserQRBlock(bm)
-    addRewardQRBlock(bm)
+      addQRCodeType(editor)
+      // addQRCodeBlock(bm);
+      addUserQRBlock(bm)
+      addRewardQRBlock(bm)
 
-    addPlaceholderBlock(bm)
-    addEnableNotificationsButton(bm)
-    addReferralButton(bm)
+      addPlaceholderBlock(bm)
+      addEnableNotificationsButton(bm)
+      addReferralButton(bm)
 
-    addUserFormBlock(bm)
+      addUserFormBlock(bm)
 
-    codeEditor(editor)
+      codeEditor(editor)
+    }
 
     const saveIfNeeded = () => {
-      if (editor.getDirtyCount()) {
+      if (editor?.getDirtyCount()) {
         editor.store()
       }
     }
+
+    load().then()
 
     // Save when closing
     return function () {

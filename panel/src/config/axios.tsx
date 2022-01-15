@@ -19,7 +19,7 @@ export function validBackendURL() {
   return !backendURL.includes('invalid_url')
 }
 
-export const instance = axios.create({
+export const client = axios.create({
   baseURL: backendURL,
   withCredentials: true,
 })
@@ -27,7 +27,7 @@ export const instance = axios.create({
 const headers = {}
 
 export async function get(path: string, fullPath: boolean = false) {
-  return instance({
+  return client({
     method: 'GET',
     url: fullPath ? path : backendURL + path,
     headers: headers
@@ -38,7 +38,7 @@ export async function get(path: string, fullPath: boolean = false) {
  * Delete, just renamed to remove
  */
 export async function remove(path: string, fullPath: boolean = false) {
-  return instance({
+  return client({
     method: 'DELETE',
     url: fullPath ? path : backendURL + path,
     headers: headers
@@ -46,7 +46,7 @@ export async function remove(path: string, fullPath: boolean = false) {
 }
 
 export async function post(path: string, data: Object, fullPath: boolean = false) {
-  return instance({
+  return client({
     method: 'POST',
     url: fullPath ? path : backendURL + path,
     data: transformDataObjects(data),
@@ -58,7 +58,7 @@ export async function post(path: string, data: Object, fullPath: boolean = false
 }
 
 export async function multipartPost(path: string, data: Object, fullPath: boolean = false) {
-  return instance({
+  return client({
     method: 'POST',
     url: fullPath ? path : backendURL + path,
     data: transformDataObjects(data),
@@ -70,7 +70,7 @@ export async function multipartPost(path: string, data: Object, fullPath: boolea
 }
 
 export async function patch(path: string, data: Object, fullPath: boolean = false) {
-  return instance({
+  return client({
     method: 'PATCH',
     url: fullPath ? path : backendURL + path,
     data: transformDataObjects(data),
@@ -84,7 +84,7 @@ export async function patch(path: string, data: Object, fullPath: boolean = fals
 export async function uploadFile(path: string, file: File, fullPath: boolean = false) {
   const formData = new FormData()
   formData.append('file', file)
-  return instance({
+  return client({
     method: 'POST',
     url: fullPath ? path : backendURL + path,
     data: formData,
