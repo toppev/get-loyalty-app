@@ -1,11 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import 'error_dialog.dart';
-import 'scanner_page.dart';
+import 'util/error_dialog.dart';
+import 'scanner/scanner_page.dart';
 import 'services/user_service.dart';
 
 class LoginPage extends StatefulWidget {
@@ -76,25 +75,27 @@ class _LoginPageState extends State<LoginPage> {
     return new Container(
       child: Padding(
         padding: new EdgeInsets.fromLTRB(paddingLR, paddingTop, paddingLR, 75),
-        child: new Column(
-          children: <Widget>[
-            new Container(
-              child: new TextField(
-                keyboardType: TextInputType.emailAddress,
-                autofillHints: [AutofillHints.email],
-                controller: _emailFilter,
-                decoration: new InputDecoration(labelText: 'Email'),
+        child: new AutofillGroup(
+          child: new Column(
+            children: <Widget>[
+              new Container(
+                child: new TextField(
+                  keyboardType: TextInputType.emailAddress,
+                  autofillHints: [AutofillHints.email],
+                  controller: _emailFilter,
+                  decoration: new InputDecoration(labelText: 'Email'),
+                ),
               ),
-            ),
-            new Container(
-              child: new TextField(
-                autofillHints: [AutofillHints.password],
-                controller: _passwordFilter,
-                decoration: new InputDecoration(labelText: 'Password'),
-                obscureText: true,
-              ),
-            )
-          ],
+              new Container(
+                child: new TextField(
+                  autofillHints: [AutofillHints.password],
+                  controller: _passwordFilter,
+                  decoration: new InputDecoration(labelText: 'Password'),
+                  obscureText: true,
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

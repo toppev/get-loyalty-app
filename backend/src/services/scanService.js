@@ -86,8 +86,8 @@ async function getScan(scanStr) {
 
   if (reward) {
     addQuestions(questions, reward.categories, reward.products, [reward.requirement], {
-      productQuestion: 'Only these products',
-      categoryQuestion: 'Only these categories'
+      productQuestion: 'Reward only applies to these products',
+      categoryQuestion: 'Reward only applies to these categories'
     })
     questions.push({ id: 'success', question: `Use reward "${reward.name}"?`, options: ['Yes', 'No'] })
     otherData.reward = reward
