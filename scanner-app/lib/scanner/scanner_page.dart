@@ -55,13 +55,15 @@ class _ScannerPageState extends State<ScannerPage> {
                     children: <Widget>[
                       Container(
                         margin: EdgeInsets.all(48.0),
-                        child: RaisedButton(
+                        child: ElevatedButton(
                           onPressed: () {
                             var newState = globalKey.currentState.setScanning(!isScanning);
                             setState(() => isScanning = newState);
                             print('Camera state changed: $newState');
                           },
-                          color: isScanning ? Colors.redAccent : Colors.green,
+                          style: ElevatedButton.styleFrom(
+                            primary: isScanning ? Colors.redAccent : Colors.green,
+                          ),
                           child: Text(isScanning ? SCANNING : PAUSED),
                         ),
                       ),
@@ -142,7 +144,7 @@ class _ScannerPageState extends State<ScannerPage> {
                   ),
                 ),
                 actions: [
-                  new FlatButton(
+                  new TextButton(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(

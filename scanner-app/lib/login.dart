@@ -106,9 +106,9 @@ class _LoginPageState extends State<LoginPage> {
     return new Container(
       child: new Column(
         children: <Widget>[
-          new RaisedButton(
+          new ElevatedButton(
             child: new Text(buttonDisabled ? 'Logging in...' : 'Login'),
-            color: Colors.greenAccent,
+            style: ElevatedButton.styleFrom(primary: Colors.greenAccent),
             onPressed: buttonDisabled
                 ? null
                 : () async {

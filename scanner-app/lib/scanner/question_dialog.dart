@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:loyalty_scanner_app/services/scan_service.dart';
 
@@ -28,7 +27,7 @@ class _QuestionDialogWidgetState extends State<QuestionDialogWidget> {
   @override
   void initState() {
     super.initState();
-    answers = new Map.fromIterable(widget.questions, key: (v) => v, value: (v) => new List<String>());
+    answers = new Map.fromIterable(widget.questions, key: (v) => v, value: (v) => []);
   }
 
   @override
@@ -97,12 +96,13 @@ class _QuestionDialogWidgetState extends State<QuestionDialogWidget> {
 
     return Padding(
       padding: const EdgeInsets.all(12.0),
-      child: RaisedButton(
-        color: isAnswer
-            ? negativeAnswer
-                ? Colors.redAccent
-                : Colors.green
-            : Colors.white70,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+            primary: isAnswer
+                ? negativeAnswer
+                    ? Colors.redAccent
+                    : Colors.green
+                : Colors.white70),
         onPressed: () {
           setState(() {
             if (isAnswer) {
