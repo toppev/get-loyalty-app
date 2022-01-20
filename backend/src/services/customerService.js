@@ -94,6 +94,7 @@ async function addReward(userParam, reward, save) {
   if (save !== false) {
     await user.save()
   }
+  logger.info(`User ${user.id}/${user.email} got a new reward: ${reward}`)
   return data.rewards
 }
 
@@ -216,6 +217,8 @@ async function updateCustomerLevel(user, business) {
       if (!hasReceived(reward)) {
         await addReward(user, reward, false)
         newRewards.push(reward)
+      } else {
+        logger.info(`User ${user.id}/${user.email} has already received reward ${reward.name}/${reward.recognition}`)
       }
     }
   }
