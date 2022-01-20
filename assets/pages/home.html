@@ -34,9 +34,9 @@ For developers:
 
                 <p class="text-gray-600">
                     <span class="font-bold">{{currentLevel.progress}}% </span>
-                    {{#if {{nextLevel.pointsNeeded}}}}
+                    {{#if nextLevel.pointsNeeded}}
                         <span>- {{nextLevel.pointsNeeded}} more points needed</span>
-                    {{/fi}}
+                    {{/if}}
                 </p>
                 <div class="bg-gray-400 h-3 rounded-lg mt-2">
                     <div
