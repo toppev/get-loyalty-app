@@ -58,10 +58,6 @@ describe('stamps campaign', () => {
   const purchase1 = { createdAt: Date.now() }
   const purchase2 = { createdAt: (Date.now() - 60000) }
 
-  it('invalid purchase does not trigger', () => {
-    expect(stamps.requirement({ values: ['1'], customerData: { purchases: [] }, campaign: campaign1 })).toBeFalsy()
-  })
-
   it('has 0 purchases, requires 1', () => {
     expect(stamps.requirement({
       values: [1],
