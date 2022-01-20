@@ -57,7 +57,12 @@ module.exports = {
     }, {
       name: 'Referrer validation level',
       type: ["has-purchase", "none"]
-    }]
+    }],
+    requirement: function () {
+      // Referral campaign newer returns success here, otherwise the QR code scans would run it
+      // the referral logic is included in the /coupon endpoint
+      return false
+    }
   },
   customQuestion: {
     name: 'Custom Question',
