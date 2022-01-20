@@ -61,7 +61,10 @@ const dryRun = args[2]
         ...form.getHeaders(),
         Cookie: cookies,
       }
-    }).catch(err => console.log(err, err?.response?.data))
+    }).catch(err => {
+      console.log(err, err?.response?.data)
+      process.exit(1);
+    })
   }
 
   await uploadPageStaticFile('common', 'main.css', '../panel/public/templates/common_main.css')
@@ -69,4 +72,7 @@ const dryRun = args[2]
 
   console.log("All done")
 
-})().catch(err => console.log(err, err.response?.data))
+})().catch(err => {
+  console.log(err, err.response?.data)
+  process.exit(1);
+})
