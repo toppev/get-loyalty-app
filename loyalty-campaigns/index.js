@@ -38,9 +38,10 @@ module.exports = {
       name: 'Stamps to earn the reward',
       type: 5,
     }],
-    requirement: function ({ values, customerData, purchase, campaign }) {
+    // eslint-disable-next-line no-unused-vars
+    requirement: function ({ values, customerData, _purchase, campaign }) {
       const maxStamps = parseInt(values[0], 10)
-      if (!maxStamps || !purchase) {
+      if (!maxStamps) {
         return false
       }
       const duringCampaign = (date) => date > campaign.start && (!campaign.end || date < campaign.end)

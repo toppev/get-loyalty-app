@@ -144,7 +144,7 @@ async function deleteReward(userId, rewardId) {
  * @returns all given rewards (campaign.endReward)
  */
 async function addCampaignRewards(user, campaign) {
-  if (campaign.endReward && campaign.endReward.length) {
+  if (campaign.endReward?.length) {
     for (const reward of campaign.endReward) {
       reward.campaign = campaign.id
       await addReward(user, reward, false)
