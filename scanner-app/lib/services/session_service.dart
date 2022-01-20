@@ -9,7 +9,7 @@ const SERVER_API_URL = "https://api.getloyalty.app/servers";
 const BACKEND_KEY = "backend_url";
 var backendUrl = ""; // http://10.0.2.2:3001 for localhost:3001
 
-const _requestTimeout = Duration(seconds: 5);
+const _requestTimeout = Duration(seconds: 12);
 
 class SessionService {
   final storage = new FlutterSecureStorage();
