@@ -169,14 +169,6 @@ async function useScan(scanStr, data) {
   const business = await Business.findOne()
   const translations = business.config.translations
 
-  let responseMessage
-
-  if (reward) {
-    await customerService.useReward(user, customerData, reward)
-    responseMessage = translations.rewardUsed.singular
-    pollingService.sendToUser(userId, { message: responseMessage, refresh: true }, POLLING_IDENTIFIERS.REWARD_USE)
-  }
-
   // e.g [{ id: "questionId", options: ["someAnswer"], question: "asd?"}]
   const { answers } = data
 
@@ -184,7 +176,16 @@ async function useScan(scanStr, data) {
   if (!confirmed || confirmed?.options?.[0]?.toLowerCase() === "no") {
     const message = `The scan was not confirmed, not adding purchase.`
     logger.info(`${message} (${scanStr})`)
+    pollingService.sendToUser(userId, { message: "The reward was declined.", refresh: true }, POLLING_IDENTIFIERS.REWARD_USE)
     return { message, newRewards: [], usedRewards: [] }
+  }
+
+  let responseMessage
+
+  if (reward) {
+    await customerService.useReward(user, customerData, reward)
+    responseMessage = translations.rewardUsed.singular
+    pollingService.sendToUser(userId, { message: responseMessage, refresh: true }, POLLING_IDENTIFIERS.REWARD_USE)
   }
 
   const productQuestion = answers.find(e => e.id === IDENTIFIERS.PRODUCTS)

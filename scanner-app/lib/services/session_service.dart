@@ -13,7 +13,7 @@ const _requestTimeout = Duration(seconds: 12);
 
 class SessionService {
   final storage = new FlutterSecureStorage();
-  var dio = Dio();
+  final dio = Dio();
 
   // Stored values
   Map<String, String> values;
