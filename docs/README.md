@@ -32,8 +32,11 @@ The screenshots are from the development version and will be updated later.
 
 Prerequisites: [docker](https://docs.docker.com/engine/install/) and [docker-compose](https://docs.docker.com/compose/install/)
 
-Run the `start-dev.sh` script to start the development environment. You can run each service manually as well. In that case, you must
-install requirements (such as NPM, Yarn and MongoDB) manually.
+1. Create `.env` in the root directory.
+2. Add `NPM_TOKEN=<token here>` (a Github token)
+3. Run the `start-dev.sh` script to start the development environment.
+
+You can run each service manually as well. In that case, you must install requirements (such as NPM, Yarn and MongoDB) manually.
 
 For developing the scanner-app see instructions [here](/scanner-app/README.md).
 

@@ -182,7 +182,7 @@ async function isEligible(user, campaign, answerQuestion) {
     const campaignType = campaignTypes[req.type]
     if (campaignType && campaignType.requirement) {
       // @ts-ignore FIXME in the loyalty-campaigns package
-      if (!campaignType.requirement({ values: req.values, user, customerData: user.customerData })) {
+      if (!campaignType.requirement({ values: req.values, user, purchase: {}, customerData: user.customerData })) {
         return true
       }
     }

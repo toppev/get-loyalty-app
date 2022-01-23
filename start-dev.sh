@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# Check README.md for prerequisites
+
 echo "Starting development environment. This may take a few minutes..."
 
 echo "The web apps are available at:"
