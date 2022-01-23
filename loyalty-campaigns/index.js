@@ -39,7 +39,7 @@ module.exports = {
       type: 5,
     }],
     // eslint-disable-next-line no-unused-vars
-    requirement: function ({ values, customerData, _purchase, campaign }) {
+    requirement: function ({ values, customerData, purchase, campaign }) {
       const maxStamps = parseInt(values[0], 10)
       if (!maxStamps) {
         return false

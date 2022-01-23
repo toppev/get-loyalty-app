@@ -18,6 +18,7 @@ export interface User {
 }
 
 export interface Business {
+  plan: any
   _id: string
   categories: string[]
   email: string
@@ -71,6 +72,7 @@ export const defaultAppContext: AppContextInterface = {
   },
   business: {
     _id: "123132",
+    plan: { name: 'none', type: 'none', limits: {} },
     categories: [],
     config: {
       userRegistration: {
