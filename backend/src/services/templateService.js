@@ -16,9 +16,10 @@ async function loadDefaultTemplates(pageIds = DEFAULT_PAGES) {
 
     // Pages
     await Promise.all(templates.map(async template => {
-      if (pageIds.includes(template.page.id)) {
-        await pageService.createPage(template)
-        logger.info(`Template ${template.page.name} loaded`)
+      const { page } = template
+      if (pageIds.includes(page.id)) {
+        await pageService.createPage({ ...page, uploads: template.uploads })
+        logger.info(`Template ${page.name} loaded`)
       }
     }))
 
