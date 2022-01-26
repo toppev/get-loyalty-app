@@ -241,7 +241,7 @@ export default function LoginForm() {
                   <div style={{ textAlign: 'center' }}>
                     <FormControlLabel
                       control={<Checkbox name="acceptAll" size="small"/>}
-                      label={<p style={{ fontSize: '12px' }}>
+                      label={<p style={{ fontSize: '14px' }}>
                         Accept
                         <Link
                           href={privacyLink}
