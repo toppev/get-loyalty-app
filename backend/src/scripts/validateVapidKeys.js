@@ -2,9 +2,8 @@
  * Simple script to debug valid key issues
  */
 
-// Kinda tricky but works, the module does not export the validation functions
-const webpush = require('../node_modules/web-push/src/vapid-helper.js')
-const readlineSync = require('readline-sync')
+import webpush from "web-push/src/vapid-helper.js"
+import readlineSync from "readline-sync"
 
 const publicKey = readlineSync.question('Public key to validate: ')
 try {

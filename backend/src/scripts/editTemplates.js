@@ -1,11 +1,11 @@
-require('dotenv').config()
-const mongoose = require('mongoose')
+import { config } from "dotenv"
+import mongoose from "mongoose"
+import Page from "../models/page"
+import readlineSync from "readline-sync"
 
-const Page = require('../src/models/page')
-
-const readlineSync = require('readline-sync')
-
+config()
 console.log(`Connecting to ${process.env.MONGO_URI}`)
+// @ts-ignore
 mongoose.connect(process.env.MONGO_URI, {
   useCreateIndex: true,
   useNewUrlParser: true,
