@@ -207,8 +207,8 @@ export default function LoginForm() {
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon/>
         </Avatar>
-        <Typography className={classes.title} align="center" variant="h6" color="primary"
-        >Login or create an account</Typography>
+        <Typography className={classes.title} align="center" variant="h5" color="primary"
+        >Login or Register</Typography>
         <Formik
           initialValues={initialValues}
           onSubmit={onFormSubmit}
@@ -234,7 +234,7 @@ export default function LoginForm() {
                     name="password"
                     type="password"
                     label="Password"
-                    autoComplete="password"
+                    autoComplete={"new-password"}
                     required
                   />
 
