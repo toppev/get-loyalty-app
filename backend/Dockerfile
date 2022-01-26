@@ -30,6 +30,7 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 COPY --from=builder /usr/src/app/build ./build
+COPY --from=builder /usr/src/app/scripts ./scripts
 
 RUN echo //npm.pkg.github.com/:_authToken=${NPM_TOKEN} > ~/.npmrc
 RUN npm install --only=production

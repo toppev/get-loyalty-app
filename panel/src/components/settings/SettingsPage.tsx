@@ -305,134 +305,134 @@ function ServerSettingsForm() {
       </Dialog>
 
       {!serverInfo.loading &&
-      <Formik
-        initialValues={initialValues}
-        validateOnBlur
-        validate={validateForm}
-        onSubmit={(values, actions) => {
-          if (window.confirm('This will restart the server and you will not be able to anything for a moment.')) {
-            actions.setSubmitting(true)
-            const appAddress = values?.appAddress?.trim()
-            if (appAddress && !appAddress.startsWith("https://") && !appAddress.startsWith("http://")) {
-              values.appAddress = `https://${values.appAddress}`
-            }
-            if (values.website) {
-              values.website.askNotifications = askNotifications
-            }
-            setPopupOpen(true)
-            updateRequest.performRequest(
-              () => updateServer(values),
-              () => {
-                // Make sure everything is up
-                setTimeout(() => {
+        <Formik
+          initialValues={initialValues}
+          validateOnBlur
+          validate={validateForm}
+          onSubmit={(values, actions) => {
+            if (window.confirm('This will restart the server and you will not be able to anything for a moment.')) {
+              actions.setSubmitting(true)
+              const appAddress = values?.appAddress?.trim()
+              if (appAddress && !appAddress.startsWith("https://") && !appAddress.startsWith("http://")) {
+                values.appAddress = `https://${values.appAddress}`
+              }
+              if (values.website) {
+                values.website.askNotifications = askNotifications
+              }
+              setPopupOpen(true)
+              updateRequest.performRequest(
+                () => updateServer(values),
+                () => {
+                  // Make sure everything is up
+                  setTimeout(() => {
+                    actions.setSubmitting(false)
+                    setPopupOpen(false)
+                    // IDEA: Trigger an update in the ServerStatusBar instead of reloading?
+                    window.location.reload()
+                  }, 60 * 1000)
+                },
+                () => {
                   actions.setSubmitting(false)
                   setPopupOpen(false)
-                  // IDEA: Trigger an update in the ServerStatusBar instead of reloading?
-                  window.location.reload()
-                }, 60*1000)
-              },
-              () => {
-                actions.setSubmitting(false)
-                setPopupOpen(false)
-              }
-            )
-          } else {
-            actions.setSubmitting(false)
-          }
-        }}
-      >
-        {({ submitForm, isSubmitting, values, initialValues }) => (
-          <Paper className={classes.paper}>
-            <ServerStatusBar/>
-            <Form>
-              <p className={classes.info}>
-                Create a new DNS <b>CNAME record </b>
-                to <b>{backendURL.replace("https://", "").replace(/\/.*$/, '')} </b>
-                and enter the address for your loyalty app below.
-              </p>
-              <TextField
-                className={classes.field}
-                placeholder="e.g yourdomain.com/app or app.yourdomain.com"
-                name="appAddress"
-                type="text"
-                label="Loyalty App Address"
-              />
-              <TextField
-                className={classes.field}
-                placeholder={`e.g your business name`}
-                name="website.title"
-                type="text"
-                label="App Title"
-                multiline
-              />
-              <TextField
-                className={classes.field}
-                name="website.description"
-                placeholder="Short description of the app/site"
-                type="text"
-                label="App Description"
-                multiline
-              />
-              <TextField
-                className={classes.field}
-                name="website.keywords"
-                placeholder="Comma separated keywords"
-                type="text"
-                label="App Keywords"
-                multiline
-              />
-              <FormHelperText
-                style={{ marginTop: '10px' }}
-              >Select when the user is asked to enable push notifications</FormHelperText>
-              <Select
-                disabled={isSubmitting}
-                className={classes.field}
-                type="text"
-                defaultValue="disabled"
-                value={askNotifications}
-                onChange={(e) => setAskNotifications(e.target.value as string)}
-                input={<Input/>}
-                inputProps={{
-                  name: 'askNotifications',
-                  id: 'ask-notifications-select',
-                }}
-              >
-                {Object.entries(askNotificationOptions).map(([k, v]) => (
-                  <MenuItem key={k} value={k}>
-                    {v.name}
-                  </MenuItem>
-                ))}
-                {pages.filter(it => !it.isDiscarded()).map(page => (
-                  <MenuItem key={page._id} value={page.pathname}>
-                    {`On "${page.pathname}" page`}
-                  </MenuItem>
-                ))}
-              </Select>
-
-              <p style={{ margin: '18px 0px 6px 0px', color: '#5e5e5e' }}>
-                Changes to some settings may take longer (up to a few hours) to be visible on the
-                website.
-              </p>
-
-              <div>
-                <Button
-                  className={classes.updateButton}
+                }
+              )
+            } else {
+              actions.setSubmitting(false)
+            }
+          }}
+        >
+          {({ submitForm, isSubmitting, values, initialValues }) => (
+            <Paper className={classes.paper}>
+              <ServerStatusBar/>
+              <Form>
+                <p className={classes.info}>
+                  Create a new DNS <b>CNAME record </b>
+                  to <b>{backendURL.replace("https://", "").replace(/\/.*$/, '')} </b>
+                  and enter the address for your loyalty app below.
+                </p>
+                <TextField
+                  className={classes.field}
+                  placeholder="e.g yourdomain.com/app or app.yourdomain.com"
+                  name="appAddress"
+                  type="text"
+                  label="Loyalty App Address"
+                />
+                <TextField
+                  className={classes.field}
+                  placeholder={`e.g your business name`}
+                  name="website.title"
+                  type="text"
+                  label="App Title"
+                  multiline
+                />
+                <TextField
+                  className={classes.field}
+                  name="website.description"
+                  placeholder="Short description of the app/site"
+                  type="text"
+                  label="App Description"
+                  multiline
+                />
+                <TextField
+                  className={classes.field}
+                  name="website.keywords"
+                  placeholder="Comma separated keywords"
+                  type="text"
+                  label="App Keywords"
+                  multiline
+                />
+                <FormHelperText
+                  style={{ marginTop: '10px' }}
+                >Select when the user is asked to enable push notifications</FormHelperText>
+                <Select
                   disabled={isSubmitting}
-                  variant="contained"
-                  size="small"
-                  onClick={() => {
-                    if (!hasDomainChanged(initialValues.appAddress, values.appAddress) || window.confirm(
-                      "WARNING! Changing the domain will log out all users! Your customers may lose their data (e.g points, rewards etc)"
-                    )) {
-                      submitForm()
-                    }
+                  className={classes.field}
+                  type="text"
+                  defaultValue="disabled"
+                  value={askNotifications}
+                  onChange={(e) => setAskNotifications(e.target.value as string)}
+                  input={<Input/>}
+                  inputProps={{
+                    name: 'askNotifications',
+                    id: 'ask-notifications-select',
                   }}
-                >Update & Restart</Button>
-              </div>
-            </Form>
-          </Paper>
-        )}
-      </Formik>
+                >
+                  {Object.entries(askNotificationOptions).map(([k, v]) => (
+                    <MenuItem key={k} value={k}>
+                      {v.name}
+                    </MenuItem>
+                  ))}
+                  {pages.filter(it => !it.isDiscarded()).map(page => (
+                    <MenuItem key={page._id} value={page.pathname}>
+                      {`On "${page.pathname}" page`}
+                    </MenuItem>
+                  ))}
+                </Select>
+
+                <p style={{ margin: '18px 0px 6px 0px', color: '#5e5e5e' }}>
+                  Changes to some settings may take longer (up to a few hours) to be visible on the
+                  website.
+                </p>
+
+                <div>
+                  <Button
+                    className={classes.updateButton}
+                    disabled={isSubmitting}
+                    variant="contained"
+                    size="small"
+                    onClick={() => {
+                      if (!hasDomainChanged(initialValues.appAddress, values.appAddress) || window.confirm(
+                        "WARNING! Changing the domain will log out all users! Your customers may lose their data (e.g points, rewards etc)"
+                      )) {
+                        submitForm()
+                      }
+                    }}
+                  >Update & Restart</Button>
+                </div>
+              </Form>
+            </Paper>
+          )}
+        </Formik>
       }
     </div>
   )
