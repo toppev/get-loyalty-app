@@ -4,9 +4,9 @@
  * Check the new icons manually!
  */
 
-import sharp from "sharp"
-import toIco from "to-ico"
-import fs from "fs"
+const sharp = require("sharp")
+const toIco = require("to-ico")
+const fs = require("fs")
 
 async function resizeToPNG(input, sizes, outputDir, name) {
   const tasks = sizes.map(size => sharp(input).resize(size, size).toFile(`${outputDir}/${name}-${size}.png`))

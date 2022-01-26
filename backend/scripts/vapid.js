@@ -4,7 +4,7 @@
  *  Run with "node scripts/vapid.js"
  */
 
-import webpush from "web-push"
+const webpush = require('web-push')
 
 const vapidKeys = webpush.generateVAPIDKeys()
 
