@@ -3,7 +3,7 @@ import React, { useContext } from "react"
 import { useStyles } from "./AccountPage"
 import AppContext from "../../context/AppContext"
 
-const PLANS_URL = "https://getloyalty.app/#plans"
+const PLANS_URL = "https://getloyalty.app/plans"
 const CONTACT_URL = "https://getloyalty.app/contact"
 
 export function AccountPlan() {
