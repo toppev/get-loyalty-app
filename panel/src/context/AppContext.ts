@@ -80,19 +80,19 @@ export const defaultAppContext: AppContextInterface = {
       },
       translations: {
         points: {
-          plural: "POINTS!!!",
-          singular: "POINT"
+          plural: "",
+          singular: ""
         }
       },
     },
-    email: "asd@adw.dawd",
+    email: "",
     public: {
-      address: "Somestreet 123, Finland",
+      address: "",
       categories: [],
       customerLevels: [],
-      description: "a nice business",
-      name: "BusinessWithName",
-      website: "https://localhost:3000/somebusiness"
+      description: "",
+      name: "",
+      website: ""
     }
   },
   user: {

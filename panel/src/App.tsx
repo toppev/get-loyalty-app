@@ -12,17 +12,22 @@ import { validBackendURL } from "./config/axios"
 import { ErrorBoundary } from "./components/ErrorBoundary"
 import AccountButton from "./components/account/AccountMenu"
 import { getOrCreateServer } from "./services/serverService"
+import LoginPage from './components/authentication/LoginPage'
 
 // Lazy Pages
 const OverviewPage = lazy(() => import('./components/overview/OverviewPage'))
 const ProductPage = lazy(() => import('./components/products/ProductPage'))
+const CampaignPage = lazy(() => import('./components/campaigns/CampaignPage'))
+const CustomerPage = lazy(() => import('./components/customers/CustomerPage'))
+const NotificationsPage = lazy(() => import('./components/notifications/NotificationsPage'))
+
 const PagesPage = lazy(() => import('./components/pages/PagesPage'))
 const DemoPage = lazy(() => import('./components/pages/demo/DemoPage'))
-const AccountPage = lazy(() => import('./components/account/AccountPage'))
-const CustomerPage = lazy(() => import('./components/customers/CustomerPage'))
 const SettingsPage = lazy(() => import('./components/settings/SettingsPage'))
-const CampaignPage = lazy(() => import('./components/campaigns/CampaignPage'))
-const NotificationsPage = lazy(() => import('./components/notifications/NotificationsPage'))
+
+const AccountPage = lazy(() => import('./components/account/AccountPage'))
+// const LoginPage = lazy(() => import('./components/authentication/LoginPage'))
+
 const FeedbackPage = lazy(() => import('./components/feedback/FeedbackPage'))
 const DataAndChartsPage = lazy(() => import('./components/charts/DataAndChartsPage'))
 const NotFoundPage = lazy(() => import('./components/NotFoundPage'))
@@ -38,7 +43,7 @@ export default function () {
 
   const context = defaultAppContext
   context.setUser = user => {
-    setAppContext(prev => ({ ...prev, user }))
+    setAppContext(prev => ({ ...prev, user, loggedIn: !!user?._id }))
   }
   context.setBusiness = business => {
     setAppContext(prev => ({ ...prev, business }))
@@ -115,78 +120,90 @@ export default function () {
     },
   }
 
+  const showNavBar = window.location.pathname !== '/login' // hacky but works
+
   return (<div style={styles.bodyDiv}>
     <CssBaseline/>
     <Router>
       <AppContext.Provider value={appContext}>
-        <Header handleDrawerToggle={handleDrawerToggle}/>
-        <div>
-          <div onClick={() => !notMobile && handleDrawerToggle()}>
-            <Navigator
-              notifications={notifications}
-              handleDrawerToggle={handleDrawerToggle}
-              open={navDrawerOpen}
-            />
-          </div>
-          <AccountButton notifications={notifications}/>
-        </div>
+        {showNavBar && (
+          <>
+            <Header handleDrawerToggle={handleDrawerToggle}/>
+            <div>
+              <div onClick={() => !notMobile && handleDrawerToggle()}>
+                <Navigator
+                  notifications={notifications}
+                  handleDrawerToggle={handleDrawerToggle}
+                  open={navDrawerOpen}
+                />
+              </div>
+              <AccountButton notifications={notifications}/>
+            </div>
+          </>
+        )}
         {loginDialog && <LoginDialog open={loginDialog}/>}
         {showContent &&
-        <ErrorBoundary>
-          <div style={styles.content}>
-            <Suspense
-              fallback={(
-                <div style={styles.loadingDiv}>
-                  <h2>Loading...</h2>
-                </div>
-              )}>
-              <Switch>
-                {/* Business */}
-                <Route exact path="/">
-                  <OverviewPage/>
-                </Route>
-                <Route path="/products">
-                  <ProductPage/>
-                </Route>
-                <Route path="/campaigns">
-                  <CampaignPage/>
-                </Route>
-                <Route path="/customers">
-                  <CustomerPage/>
-                </Route>
-                <Route path="/Notifications">
-                  <NotificationsPage/>
-                </Route>
+          <ErrorBoundary>
+            <div style={styles.content}>
+              <Suspense
+                fallback={(
+                  <div style={styles.loadingDiv}>
+                    <h2>Loading...</h2>
+                  </div>
+                )}>
+                <Switch>
+                  {/* Business */}
+                  <Route exact path="/">
+                    <OverviewPage/>
+                  </Route>
+                  <Route path="/products">
+                    <ProductPage/>
+                  </Route>
+                  <Route path="/campaigns">
+                    <CampaignPage/>
+                  </Route>
+                  <Route path="/customers">
+                    <CustomerPage/>
+                  </Route>
+                  <Route path="/notifications">
+                    <NotificationsPage/>
+                  </Route>
 
-                {/* Pages */}
-                <Route path="/pages">
-                  <PagesPage/>
-                </Route>
-                <Route path="/demo">
-                  <DemoPage/>
-                </Route>
-                <Route path="/settings">
-                  <SettingsPage/>
-                </Route>
+                  {/* Pages */}
+                  <Route path="/pages">
+                    <PagesPage/>
+                  </Route>
+                  <Route path="/demo">
+                    <DemoPage/>
+                  </Route>
+                  <Route path="/settings">
+                    <SettingsPage/>
+                  </Route>
 
-                {/* Other */}
-                <Route path="/data-and-charts">
-                  <DataAndChartsPage/>
-                </Route>
-                <Route path="/feedback">
-                  <FeedbackPage/>
-                </Route>
-                <Route path="/account">
-                  <AccountPage/>
-                </Route>
+                  {/* User */}
+                  <Route path="/account">
+                    <AccountPage/>
+                  </Route>
+                  <Route path="/login">
+                    <LoginPage/>
+                  </Route>
 
-                <Route>
-                  <NotFoundPage/>
-                </Route>
-              </Switch>
-            </Suspense>
-          </div>
-        </ErrorBoundary>}
+                  {/* Other */}
+                  <Route path="/data-and-charts">
+                    <DataAndChartsPage/>
+                  </Route>
+                  <Route path="/feedback">
+                    <FeedbackPage/>
+                  </Route>
+
+                  <Route>
+                    <NotFoundPage/>
+                  </Route>
+
+                </Switch>
+              </Suspense>
+            </div>
+          </ErrorBoundary>}
       </AppContext.Provider>
     </Router>
   </div>)

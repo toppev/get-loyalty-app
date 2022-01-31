@@ -37,6 +37,10 @@ export default function () {
   return (
     <div>
 
+      <Grid item xs={12} md={6}>
+        <AccountPlan/>
+      </Grid>
+
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <EmailForm
@@ -52,9 +56,6 @@ export default function () {
           />
         </Grid>
 
-        <Grid item xs={12} md={6}>
-          <AccountPlan/>
-        </Grid>
       </Grid>
     </div>
   )
