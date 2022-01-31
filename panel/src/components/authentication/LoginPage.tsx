@@ -1,6 +1,5 @@
 import React, { useContext, useEffect } from 'react'
 import { createStyles, makeStyles, Theme } from '@material-ui/core'
-import LoginForm from './LoginForm'
 import { useQuery } from "../../hooks/useQuery"
 import AppContext from "../../context/AppContext"
 import LoginDialog from './LoginDialog'
