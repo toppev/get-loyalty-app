@@ -1,12 +1,12 @@
-require('dotenv').config()
-const mongoose = require('mongoose')
+import { config } from "dotenv"
+import mongoose from "mongoose"
+import User from "../models/user"
+import userService from "../services/userService"
+import readlineSync from "readline-sync"
 
-const User = require('../src/models/user')
-const userService = require('../src/services/userService')
-
-const readlineSync = require('readline-sync')
-
+config()
 console.log(`Connecting to ${process.env.MONGO_URI}`)
+// @ts-ignore
 mongoose.connect(process.env.MONGO_URI, {
   useCreateIndex: true,
   useNewUrlParser: true,

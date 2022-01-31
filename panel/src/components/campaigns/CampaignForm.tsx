@@ -222,8 +222,7 @@ export default function ({ initialCampaign, onSubmitted }: CampaignFormProps) {
 
             {requirements.length !== 0 && <p className={classes.tip}>
             Remember to explain the campaign in the description (or in the name). For example, if you
-            selected "{allRequirements.isBirthday.name}", inform the customer that the campaign is only
-            valid on their birthday.
+            selected "{allRequirements.stamps.name}", inform the customer that they need to visit X times for the reward.
             </p>}
 
             <Typography variant="h6" className={classes.typography}>End Rewards</Typography>

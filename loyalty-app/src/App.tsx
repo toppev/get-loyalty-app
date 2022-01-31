@@ -56,7 +56,7 @@ function App() {
     const checkCoupon = async () => couponCode && claimCoupon(couponCode, referrer)
     checkCoupon()
       .then(loadPages)
-      .catch(err => setError(err?.response.body?.message || err.toString()))
+      .catch(err => setError(err?.response.data?.message || err.toString()))
   }
 
   const { error: loginError } = useLoginHook({ onLogin })
@@ -114,7 +114,7 @@ function App() {
             <link id="favicon" rel="icon" href={`${BASE_URL}/business/icon`} type="image/x-icon"/>
           </Helmet>
 
-          {anyError && <p className="ErrorMessage">Error: {anyError}</p>}
+          {anyError && <p className="ErrorMessage">{anyError}</p>}
 
           {/* Before the pages so userForm element ids work correctly even if the pages have the same ids */}
           {registerForm && <RegisterForm pages={pages}/>}

@@ -22,7 +22,7 @@ export default function RegisterForm({ pages }: LoginFormProps) {
       style={{ backdropFilter: 'blur(4px)' }}
     >
       <div
-        className="bg-gray-800 text-gray-500 m-3 h-96 rounded-xl shadow-2xl p-8 md:w-6/12"
+        className="bg-gray-800 text-gray-500 m-3 rounded-xl shadow-2xl py-10 px-4"
         dangerouslySetInnerHTML={{ __html: html }}
       />
     </div>
@@ -32,7 +32,7 @@ export default function RegisterForm({ pages }: LoginFormProps) {
 // From the default /profile page
 const DEFAULT_REGISTRATION = `
     <div id="registration-form">
-        <section class="rounded-md my-36 m-auto h-auto w-11/12 max-w-xl bg-gray-800">
+        <section class="rounded-md m-auto h-auto w-11/12 max-w-xl bg-gray-800">
             <form id="user-form">
                 <div class="rounded-md max-w-md w-full bg-gray-900 p-6 space-y-4">
                     <div class="mb-4">

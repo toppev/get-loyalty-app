@@ -1,12 +1,12 @@
-require('dotenv').config()
-const mongoose = require('mongoose')
+import { config } from "dotenv"
+import mongoose from "mongoose"
+import Business from "../models/business"
+import defaultCustomerLevels from "../config/defaultLevels"
+import readlineSync from "readline-sync"
 
-const Business = require('../src/models/business')
-const defaultCustomerLevels = require('../src/config/defaultLevels')
-
-const readlineSync = require('readline-sync')
-
+config()
 console.log(`Connecting to ${process.env.MONGO_URI}`)
+// @ts-ignore
 mongoose.connect(process.env.MONGO_URI, {
   useCreateIndex: true,
   useNewUrlParser: true,

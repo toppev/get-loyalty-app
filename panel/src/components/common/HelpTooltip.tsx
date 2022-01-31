@@ -15,6 +15,7 @@ export default function HelpTooltip({ title, text, size }: SimpleTooltipProps) {
     <Tooltip
       enterDelay={200}
       leaveDelay={300}
+      enterTouchDelay={0}
       title={
         <React.Fragment>
           <Typography>{title}</Typography>
