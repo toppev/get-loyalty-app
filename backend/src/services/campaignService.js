@@ -24,7 +24,7 @@ export default {
 async function getAllCampaigns(populate) {
   const res = Campaign.find({})
   if (populate) {
-    res.populate('products categories')
+    res.populate('products categories endReward.categories endReward.products')
   }
   return await res
 }
@@ -33,7 +33,9 @@ async function getAllCampaigns(populate) {
  * Get all campaign rewards from the business's campaigns
  */
 async function getAllRewards() {
-  const rewards = await Campaign.find({}).populate('endReward.categories endReward.products').select('endReward')
+  const rewards = await Campaign.find({})
+    .populate('endReward.categories endReward.products')
+    .select('endReward')
   return [].concat(...rewards.map(it => it.endReward))
 }
 
