@@ -58,8 +58,10 @@ class Question {
 
 class UseScan {
   String message;
-  List<dynamic> newRewards;
-  dynamic usedReward;
+  /// New rewards the customer get from participating (i.e., enough stamps, new customer level)
+  List<Map<String, Object> > newRewards;
+  /// The reward that was used (confirmed GetScan), nullable
+  Map<String, Object> usedReward;
 
   UseScan(this.message, this.newRewards, this.usedReward);
 
@@ -83,6 +85,7 @@ class ScanService {
 
   ScanService(this.sessionService);
 
+  /// Used to get information of the scanned string (i.e., the questions)
   Future<GetScan> getScan(String scan) async {
     var url = '$backendUrl/scan/$scan';
     print('#getScan called. Sending request to $url');
@@ -95,6 +98,7 @@ class ScanService {
     }
   }
 
+  /// Used to "use the reward or campaign" (i.e., answer the questions of the scan)
   Future<UseScan> useScan(String scan, List<Question> answers) async {
     var url = '$backendUrl/scan/$scan';
     final bodyJson = jsonEncode({'answers': answers});
