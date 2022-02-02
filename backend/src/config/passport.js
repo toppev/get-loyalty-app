@@ -58,7 +58,7 @@ function initConfig() {
   passport.serializeUser(async (user, done) => {
     user.authentication.logins.push({})
     await user.save()
-    done(null, { id: user.id, timestamp: Date.now() })
+    done(null, { id: user.id, timestamp: Date.now(), role: user.role })
   })
 
   passport.deserializeUser((serialized, done) => {
