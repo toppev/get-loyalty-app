@@ -29,6 +29,14 @@ const PageDataSchema = new Schema({
     type: Boolean,
     default: false
   },
+  fromTemplate: {
+    type: Schema.Types.ObjectId,
+  },
+  // Whether this page should be automatically updated when the template is changed
+  autoUpdate: {
+    type: Boolean,
+    default: true
+  },
   // the html icon of this page
   icon: {
     type: String

@@ -57,6 +57,13 @@ async function savePage(id, pageData, gjsOnly) {
   } else {
     Object.assign(oldPage, pageData)
   }
+
+  // Disable updating gjs if the page is manually modified
+  if ((gjsOnly || pageData.gjs) && oldPage.autoUpdate) {
+    logger.important(`Automatically disabled page auto-updates of ${id}/${oldPage.name} because the page was manually modified`)
+    oldPage.autoUpdate = false
+  }
+
   return oldPage.save()
 }
 
