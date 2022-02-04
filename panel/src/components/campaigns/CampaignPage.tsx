@@ -10,6 +10,7 @@ import { deleteCampaign, listCampaigns } from "../../services/campaignService"
 import RetryButton from "../common/button/RetryButton"
 import useRequest from "../../hooks/useRequest"
 import useResponseState from "../../hooks/useResponseState"
+import { CampaignTemplatesSelector } from "./CampaignTemplates"
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -36,6 +37,7 @@ export default function () {
 
   const [formCampaign, setFormCampaign] = useState<Campaign | undefined>()
   const [formOpen, setFormOpen] = useState(false)
+  const [templateSelectorOpen, setTemplateSelectorOpen] = useState(false)
 
   const { error, loading, response, execute: fetchCampaigns } = useRequest(listCampaigns, {})
   const [campaigns] = useResponseState<Campaign[]>(response, [], res => res.data.map((it: any) => new Campaign(it)))
@@ -49,17 +51,14 @@ export default function () {
         name="New Campaign"
         buttonProps={{
           className: classes.newBtn,
-          onClick: () => {
-            setFormCampaign(undefined)
-            setFormOpen(true)
-          }
+          onClick: () => setTemplateSelectorOpen(true)
         }}
       />
       {(loading || otherRequests.loading) && <LinearProgress/>}
       <Grid className={classes.container} spacing={4} container direction="row" alignItems="flex-start">
         {
           campaigns.length === 0 && !loading &&
-          <p className={classes.noCampaigns}>You don't have any campaigns. Create one by clicking the buttonabove.</p>
+          <p className={classes.noCampaigns}>You don't have any campaigns. Create one by clicking the button above.</p>
         }
 
         {campaigns.map(campaign => (
@@ -89,7 +88,17 @@ export default function () {
         onSubmitted={_campaign => {
           setFormOpen(false)
           fetchCampaigns()
-        }}/>
+        }}
+      />
+      <CampaignTemplatesSelector
+        open={templateSelectorOpen}
+        onClose={() => setTemplateSelectorOpen(false)}
+        onSelect={campaign => {
+          setTemplateSelectorOpen(false)
+          setFormCampaign(campaign)
+          setFormOpen(true)
+        }}
+      />
     </div>
   )
 }

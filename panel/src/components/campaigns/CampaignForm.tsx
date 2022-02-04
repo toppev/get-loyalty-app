@@ -99,7 +99,7 @@ export default function ({ initialCampaign, onSubmitted }: CampaignFormProps) {
 
   const [productSelectorOpen, setProductSelectorOpen] = useState(false)
 
-  const isEditing = !!initialCampaign
+  const isEditing = initialCampaign?.id?.length === 24 // if valid id, then we are editing and not creating
   const title = isEditing ? 'Edit Campaign' : 'Create Campaign'
 
   const mergeCampaign = (newCampaign: Campaign) => {
@@ -131,7 +131,8 @@ export default function ({ initialCampaign, onSubmitted }: CampaignFormProps) {
             }
           )
         }}
-      >{({ submitForm, isSubmitting }) => (
+      >
+        {({ submitForm, isSubmitting }) => (
           <Form className={classes.form}>
             <TextField
               className={classes.field}
@@ -215,14 +216,14 @@ export default function ({ initialCampaign, onSubmitted }: CampaignFormProps) {
             </Box>
             <Typography variant="h6" className={classes.typography}>Campaign Type(s)</Typography>
             <p className={classes.tip}>
-            Specify when this campaign is valid. In other words, select requirements
-            for this campaign
+              Specify when this campaign is valid. In other words, select requirements
+              for this campaign
             </p>
             <RequirementSelector initialRequirements={requirements} onChange={setRequirements}/>
 
             {requirements.length !== 0 && <p className={classes.tip}>
-            Remember to explain the campaign in the description (or in the name). For example, if you
-            selected "{allRequirements.stamps.name}", inform the customer that they need to visit X times for the reward.
+              Remember to explain the campaign in the description (or in the name). For example, if you
+              selected "{allRequirements.stamps.name}", inform the customer that they need to visit X times for the reward.
             </p>}
 
             <Typography variant="h6" className={classes.typography}>End Rewards</Typography>
@@ -231,9 +232,9 @@ export default function ({ initialCampaign, onSubmitted }: CampaignFormProps) {
 
             <div className={classes.catProdDiv}>
               <p className={classes.tip}>
-              (Optional) Select which categories or products are eligible.
-              If none of the categories/products of this campaign are selected in the scanner app at checkout, the campaign
-              will not be triggered (i.e no rewards or advancing).
+                (Optional) Select which categories or products are eligible.
+                If none of the categories/products of this campaign are selected in the scanner app at checkout, the campaign
+                will not be triggered (i.e no rewards or advancing).
                 <br/>
                 <b>Leave empty for all categories and products (recommended).</b>
               </p>

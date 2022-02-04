@@ -47,6 +47,7 @@ class Campaign {
         return req
       })
     }
+    // @ts-ignore
     delete res.id
     return res
   }
