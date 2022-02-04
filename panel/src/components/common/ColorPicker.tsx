@@ -22,7 +22,11 @@ export default function (props: ColorPickerProps) {
   const classes = useStyles()
 
   return (
-    <Dialog open={props.open} onBackdropClick={() => props.onChange(color)} className={classes.dialog}>
+    <Dialog
+      open={props.open}
+      onClose={() => props.onChange(color)}
+      className={classes.dialog}
+    >
       <CloseButton onClick={() => props.onChange(color)}/>
       <DialogContent>
         <SketchPicker color={color} onChange={(v) => setColor(v.hex)}/>
