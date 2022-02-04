@@ -234,7 +234,7 @@ export default function LoginForm() {
                     name="password"
                     type="password"
                     label="Password"
-                    autoComplete={"new-password"}
+                    autoComplete="password"
                     required
                   />
 
