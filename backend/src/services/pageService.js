@@ -170,12 +170,23 @@ async function getPageContext(user) {
 
     // FIXME: hacky, required for handlebar placeholders to work
     const userInfo = JSON.parse(JSON.stringify(await customerService.getCustomerInfo(user)))
-    userInfo.rewards = (userInfo.customerData.rewards || []).map(reward => {
-      return {
-        scanCode: scanService.toScanCode(user, reward),
-        ...reward,
-      }
-    })
+    userInfo.rewards = []
+    userInfo.expiredRewards = []
+    userInfo.customerData.rewards
+      .map(reward => {
+        return {
+          scanCode: scanService.toScanCode(user, reward),
+          ...reward,
+        }
+      })
+      .forEach(it => {
+        if (!it.expires || new Date(it.expires).getTime() > Date.now()) {
+          userInfo.rewards.push(it)
+        } else {
+          userInfo.expiredRewards.push(it)
+        }
+      })
+
     userInfo.usedRewards = userInfo.customerData.usedRewards.map(used => {
       return {
         ...used,
