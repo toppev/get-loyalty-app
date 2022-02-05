@@ -57,12 +57,15 @@ function toScanCode(user, reward) {
  * @param rewardId
  * @param customerData
  */
-async function validateRewardId(rewardId, customerData) {
+async function validateReward(rewardId, customerData) {
   if (rewardId) {
     // The reward is the entire object, not only the id
     const reward = customerData.rewards.find(r => r._id.equals(rewardId))
     if (!reward) {
       throw new StatusError('Customer selected reward but the reward was not found.')
+    }
+    if (reward.expires && new Date(reward.expires).getTime() < Date.now()) {
+      throw new StatusError(`The reward expired (${new Date(reward.expires).toUTCString()}). You can still let them use the reward (without the loyalty app).`)
     }
     return reward
   }
@@ -77,7 +80,7 @@ async function getScan(scanStr) {
   const questions = []
 
   const userInfo = await customerService.getCustomerInfo(user)
-  const reward = await validateRewardId(rewardId, customerData)
+  const reward = await validateReward(rewardId, customerData)
 
   const otherData = {
     user: userInfo,
@@ -165,7 +168,7 @@ function addQuestions(questions, categories, products, requirements, options = {
 async function useScan(scanStr, data) {
   const { user, userId, rewardId } = await parseScanString(scanStr)
   const customerData = user.customerData
-  const reward = await validateRewardId(rewardId, customerData)
+  const reward = await validateReward(rewardId, customerData)
   const business = await Business.findOne()
   const translations = business.config.translations
 
