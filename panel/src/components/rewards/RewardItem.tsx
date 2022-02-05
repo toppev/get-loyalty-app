@@ -46,7 +46,7 @@ export default function (props: RewardRowProps) {
 
   return (
     <div className={classes.rowDiv}>
-      <Grid container direction="column" justify="space-evenly" alignItems="flex-start">
+      <Grid container direction="column" justifyContent="space-evenly" alignItems="flex-start">
         <Grid item>
           Name: <b>{reward.name}</b>
         </Grid>

@@ -64,7 +64,7 @@ export default function (props: Props) {
                   container
                   spacing={3}
                   direction="row"
-                  justify="center"
+                  justifyContent="center"
                   alignItems="center"
                   key={key}
                 >
