@@ -30,6 +30,7 @@ import { createCampaign, updateCampaign } from "../../services/campaignService"
 import { isAlphanumeric } from "../../util/validate"
 import RewardManager from "../rewards/RewardManager"
 import { styled } from '@material-ui/styles'
+import CustomDatePicker from "../common/CustomDatePicker"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -66,12 +67,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     newRewardBtn: {},
   }))
-
-const CustomDatePicker = styled(KeyboardDateTimePicker)({
-  '& label': {
-    whiteSpace: 'nowrap',
-  }
-})
 
 export interface CampaignFormProps {
   initialCampaign?: Campaign,

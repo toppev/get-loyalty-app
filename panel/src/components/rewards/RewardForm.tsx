@@ -8,6 +8,9 @@ import ProductSelector from "../products/ProductSelector"
 import Reward from "./Reward"
 import { TextField } from "formik-material-ui"
 import SelectProductsButton from "../products/button/SelectProductsButton"
+import { MuiPickersUtilsProvider } from "@material-ui/pickers";
+import DateFnsUtils from "@date-io/date-fns";
+import CustomDatePicker from "../common/CustomDatePicker";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -59,7 +62,9 @@ export default function (props: RewardFormProps) {
   const classes = useStyles()
 
   const reward: Reward = props.initialReward || getEmptyReward()
+
   // not formik fields so keep track of them here
+  const [expiresDate, setExpiresDate] = useState<Date | undefined>(reward.expires)
   const [categories, setCategories] = useState(reward.categories)
   const [products, setProducts] = useState(reward.products)
 
@@ -76,10 +81,13 @@ export default function (props: RewardFormProps) {
         onSubmit={(reward, actions) => {
           // Update categories here
           reward.categories = categories
+          reward.products = products
+          reward.expires = expiresDate
           actions.setSubmitting(false)
           props.onSubmitted(reward)
         }}
-      >{({ submitForm, isSubmitting }) => (
+      >
+        {({ submitForm, isSubmitting }) => (
           <Form className={classes.form}>
             <TextField
               className={classes.field}
@@ -118,8 +126,20 @@ export default function (props: RewardFormProps) {
               placeholder="Customer points to receive"
             />
 
+            <div>
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <CustomDatePicker
+                  margin="normal"
+                  label="Reward expires (dd/MM/yyyy)"
+                  format="dd/MM/yyyy"
+                  value={expiresDate}
+                  onChange={date => date && setExpiresDate(date)}
+                />
+              </MuiPickersUtilsProvider>
+            </div>
+
             <p className={classes.typography}>
-            (Optional) Select which categories or products are included in the discount
+              (Optional) Select which categories or products are included in the discount
             </p>
             <CategorySelector
               className={classes.field}

@@ -25,11 +25,13 @@ export function YesNo({ state }: YesNoProps) {
 }
 
 interface ExpiredProps {
-  date?: Date
+  date?: Date|string
   alt?: string
 }
 
 export function DateExpired({ date, alt }: ExpiredProps) {
+  // @ts-ignore hacky but sometimes this is string .-.
+  date = new Date(date)
 
   const classes = useStyles()
 
