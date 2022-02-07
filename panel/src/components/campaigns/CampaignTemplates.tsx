@@ -1,5 +1,5 @@
 import React from "react"
-import { Box, Button, createStyles, Dialog, DialogContent, makeStyles, Paper, Theme, Typography } from "@material-ui/core"
+import { Box, Button, createStyles, Dialog, DialogContent, Divider, makeStyles, Paper, Theme, Typography } from "@material-ui/core"
 import CloseButton from "../common/button/CloseButton"
 import { Campaign } from "./Campaign"
 
@@ -11,11 +11,11 @@ const useStyles = makeStyles((theme: Theme) =>
     title: {
       fontSize: '18px',
       color: theme.palette.grey[700],
-      marginBottom: '25px',
-      textAlign: 'center'
+      textAlign: 'center',
+      margin: '5px 0'
     },
     item: {
-      marginBottom: '40px',
+      marginBottom: '20px',
       padding: '20px'
     },
     description: {
@@ -26,6 +26,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface CampaignTemplatesSelectorProps {
   open: boolean,
+  campaigns: Campaign[]
   onSelect: (campaign: Campaign) => any
   onClose: () => any
 }
@@ -35,47 +36,71 @@ export function CampaignTemplatesSelector(props: CampaignTemplatesSelectorProps)
   const classes = useStyles()
 
   return (
-    <div>
-      <Dialog open={props.open} maxWidth="sm" fullWidth onClose={props.onClose}>
-        <CloseButton onClick={props.onClose}/>
-        <DialogContent>
-          <div className={classes.content}>
-            <Typography className={classes.title}>
-              Select a template to get started
-            </Typography>
-            <Box display="flex" flexWrap="wrap" alignContent="center" justifyContent="space-around">
-              {templateCampaigns.map(it => {
-                return (
-                  <Paper key={it.name} className={classes.item} elevation={2}>
-                    <Typography style={{ fontSize: '20px' }}>{it.name}</Typography>
-                    <p className={classes.description}>{it.description}</p>
-                    <div style={{ textAlign: 'start' }}>
-                      <Button
-                        size="small"
-                        variant="contained"
-                        color="primary"
-                        onClick={() => props.onSelect(it.campaign)}
-                      >Select</Button>
-                    </div>
-                  </Paper>
-                )
-              })}
-            </Box>
-          </div>
-        </DialogContent>
-      </Dialog>
-    </div>
+    <Dialog open={props.open} maxWidth="sm" fullWidth onClose={props.onClose}>
+      <CloseButton onClick={props.onClose}/>
+      <DialogContent>
+        <div className={classes.content}>
+          <Typography className={classes.title}>
+            Select a campaign template
+          </Typography>
+          <Templates onSelect={props.onSelect} campaigns={templateCampaigns}/>
+          <Divider style={{ margin: '10px 0' }}/>
+          {props.campaigns.length > 0 &&
+            <>
+              <Typography className={classes.title}>or clone an existing campaign</Typography>
+              <Templates onSelect={props.onSelect} campaigns={props.campaigns.map(it => {
+
+                const clonedCampaign = JSON.parse(JSON.stringify(it))
+                delete clonedCampaign.id
+                clonedCampaign.name = `Copy of "${it.name}"`
+
+                return {
+                  name: it.name,
+                  description: it.description,
+                  campaign: clonedCampaign
+                }
+              })}/>
+            </>
+          }
+        </div>
+      </DialogContent>
+    </Dialog>
   )
 }
 
+type TemplatesProps = { campaigns: CampaignTemplate[], onSelect: (campaign: Campaign) => any };
 
-type CampaignTemplates = {
+function Templates({ campaigns, onSelect }: TemplatesProps) {
+
+  const classes = useStyles()
+
+  return (
+    <Box display="flex" flexWrap="wrap" alignContent="center" justifyContent="space-around">
+      {campaigns.map(campaign => (
+        <Paper key={campaign.name} className={classes.item} elevation={2}>
+          <Typography style={{ fontSize: '20px' }}>{campaign.name}</Typography>
+          <p className={classes.description}>{campaign.description}</p>
+          <div style={{ textAlign: 'start' }}>
+            <Button
+              size="small"
+              variant="contained"
+              color="primary"
+              onClick={() => onSelect(campaign.campaign)}
+            >Select</Button>
+          </div>
+        </Paper>
+      ))}
+    </Box>
+  )
+}
+
+type CampaignTemplate = {
   name: string,
   description: string,
   campaign: Campaign
 }
 
-const templateCampaigns: CampaignTemplates[] = [{
+const templateCampaigns: CampaignTemplate[] = [{
   name: 'New Campaign',
   description: 'Create a campaign from scratch.',
   campaign: new Campaign(

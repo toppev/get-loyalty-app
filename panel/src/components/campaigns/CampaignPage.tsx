@@ -92,6 +92,7 @@ export default function () {
       />
       <CampaignTemplatesSelector
         open={templateSelectorOpen}
+        campaigns={campaigns}
         onClose={() => setTemplateSelectorOpen(false)}
         onSelect={campaign => {
           setTemplateSelectorOpen(false)
