@@ -19,7 +19,7 @@ import CategorySelector from "../categories/CategorySelector"
 import ProductSelector from "../products/ProductSelector"
 import SaveIcon from "@material-ui/icons/Save"
 import IdText from "../common/IdText"
-import { KeyboardDateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers"
+import { MuiPickersUtilsProvider } from "@material-ui/pickers"
 import Reward from "../rewards/Reward"
 import DateFnsUtils from "@date-io/date-fns"
 import SelectProductsButton from "../products/button/SelectProductsButton"
@@ -29,7 +29,6 @@ import RetryButton from "../common/button/RetryButton"
 import { createCampaign, updateCampaign } from "../../services/campaignService"
 import { isAlphanumeric } from "../../util/validate"
 import RewardManager from "../rewards/RewardManager"
-import { styled } from '@material-ui/styles'
 import CustomDatePicker from "../common/CustomDatePicker"
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -223,7 +222,15 @@ export default function ({ initialCampaign, onSubmitted }: CampaignFormProps) {
 
             <Typography variant="h6" className={classes.typography}>End Rewards</Typography>
 
-            <RewardManager rewards={endRewards} setRewards={setEndRewards}/>
+            <RewardManager
+              rewards={endRewards}
+              setRewards={rewards => {
+                const count = endRewards.length
+                if (count <= 2 || window.confirm(`The campaign already has ${count} rewards. Consider creating a separate campaign instead. Do you still want to add the reward?`)) {
+                  setEndRewards(rewards)
+                }
+              }}
+            />
 
             <div className={classes.catProdDiv}>
               <p className={classes.tip}>
