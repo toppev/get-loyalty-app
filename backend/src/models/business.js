@@ -93,6 +93,10 @@ const planSchema = new Schema({
       type: Number,
       default: 3
     },
+    customersTotal: {
+      type: Number,
+      default: 10_000
+    },
     pushNotificationsTotal: {
       type: Number,
       default: 5
