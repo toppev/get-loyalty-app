@@ -199,7 +199,6 @@ async function searchCustomers(limit, search = "") {
     users = await User.find()
       .populate(userPopulateSchema)
   }
-  console.log({ users, limit, search })
   return Promise.all(users.map(u => getCustomerInfo(u)))
 }
 
