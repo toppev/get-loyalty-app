@@ -77,7 +77,6 @@ export default function (props: RequirementSelectorProps) {
       </div>
       <div>
         {requirements.map(req => {
-          console.log(`edit_${req.type}`)
           return (
             <RequirementEditor
               key={`edit_${req.type}`}
