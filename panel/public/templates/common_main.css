@@ -1,8 +1,14 @@
 /* Import custom fonts here */
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@600&display=fallback');
 
 :root {
-  --backgroundImage: url(https://images.unsplash.com/photo-1525193612562-0ec53b0e5d7c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1470&q=80);
+  /*noinspection CssUnknownTarget*/
+  --backgroundImage:
+          /* For custom background image */
+          url(/api/page/common/static/background.png),
+          /* Fall back to the default image */
+          /* FIXME: use some better CDN */
+          url(https://images.unsplash.com/photo-1525193612562-0ec53b0e5d7c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1470&q=80);
 }
 
 body {
