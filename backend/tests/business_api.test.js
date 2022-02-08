@@ -150,7 +150,7 @@ describe('Logged in user can', () => {
   })
 
   it('get icon (not logged in)', async () => {
-    const res = await api
+    await api
       .get(`/business/icon?size=32`)
       .expect(200)
   })

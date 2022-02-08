@@ -125,7 +125,6 @@ async function getIcon(prefSize) {
   for (let fileName of fileNames) {
     const upload = await fileService.getUpload(fileName)
     if (upload?.data || upload?.externalSource) {
-      console.log(upload)
       return upload
     }
   }
