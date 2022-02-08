@@ -79,7 +79,7 @@ declare interface Reward {
   categories: Category[]
   // Linked campaign (i.e the campaign that rewarded the customer)
   campaign: Campaign
-  itemDiscount: string
+  itemDiscount?: string
   customerPoints: number
   requirement?: string
   expires: Date

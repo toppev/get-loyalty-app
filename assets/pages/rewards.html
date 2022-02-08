@@ -37,10 +37,12 @@
                                 </span>
                             </div>
                             <div class="flex py-2">
+                                {{#if itemDiscount}}
                                 <!-- The discount label e.g., "50% OFF" -->
                                 <p class="bg-gray-200 p-1 px-2 mr-2 rounded-full text-xs font-medium text-gray-900">
                                     {{itemDiscount}}
                                 </p>
+                                {{/if}}
                                 <div class="flex justify-between item-center">
                                     <div class="flex items-center">
                                         <!-- Customer points -->
@@ -120,10 +122,12 @@
                                 </span>
                             </div>
                             <div class="flex py-2">
+                                {{#if itemDiscount}}
                                 <!-- The discount label e.g., "50% OFF" -->
                                 <p class="bg-gray-200 p-1 px-2 mr-2 rounded-full text-xs font-medium text-gray-900">
                                     {{reward.itemDiscount}}
                                 </p>
+                                {{/if}}
                                 <div class="flex justify-between item-center">
                                     <div class="flex items-center">
                                         <!-- Customer points -->

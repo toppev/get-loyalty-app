@@ -8,7 +8,7 @@ export interface IReward {
   // The campaign that rewarded this reward
   campaign: Schema.Types.ObjectId
   // Value e.g "-20%", "2€", "free"
-  itemDiscount: string
+  itemDiscount: string|undefined
   // Or/and just points
   customerPoints: number
   // The business decides
@@ -51,7 +51,6 @@ const rewardSchema = new Schema<RewardDocument>({
   // Value e.g "-20%", "2€", "free"
   itemDiscount: {
     type: String,
-    required: true
   },
   // Or/and just points
   customerPoints: {

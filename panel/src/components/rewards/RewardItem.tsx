@@ -54,7 +54,7 @@ export default function (props: RewardRowProps) {
           Description: <b>{reward.description}</b>
         </Grid>}
         <Grid item>
-          Discount: <b>{reward.itemDiscount}</b>
+          Discount: <b>{reward.itemDiscount || '(not specified)'}</b>
         </Grid>
         <Grid item>
           Customer Points: <b>{reward.customerPoints && (<span>{reward.customerPoints}</span>)}</b>

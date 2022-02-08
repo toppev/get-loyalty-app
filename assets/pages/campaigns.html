@@ -24,9 +24,11 @@
                     {{#each endReward}}
                     <div class="mb-2">
                         <div class="reward-title">
+                            {{#if itemDiscount}}
                             <p class="w-max bg-gray-200 p-1 px-2 mr-2 -ml-1 rounded-full text-xs font-medium text-gray-900">
                                 {{itemDiscount}}
                             </p>
+                            {{/if}}
                             <p>{{name}}</p>
                         </div>
                         <p class="text-gray-600">{{description}}</p>

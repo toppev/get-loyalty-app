@@ -191,9 +191,6 @@ function validate(values: Reward): FormikErrors<Reward> {
   if (!values.name.trim()) {
     errors.name = 'Name is required'
   }
-  if (!values.itemDiscount.trim()) {
-    errors.itemDiscount = 'Discount must be specified. Examples: -50%, Free Coffee or a burger for 7€'
-  }
   if (values.categories?.length > 5) {
     errors.categories = 'Too many categories. Keep it simple: either specify a few categories or none at all'
   }
