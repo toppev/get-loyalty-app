@@ -23,12 +23,16 @@ mongoose.connect(process.env.MONGO_URI, {
     const pageId = readlineSync.question('Toggle template (ID): ')
 
     Page.findById(pageId).then(page => {
-      page.template = !page.template
-      page.save().then(() => {
-        // eslint-disable-next-line no-unused-vars
-        const { gjs, ...stuff } = page.toObject()
-        console.log('Saved:', stuff)
-      })
+      if (!page) {
+        console.log("Page not found")
+      } else {
+        page.template = !page.template
+        page.save().then(() => {
+          // eslint-disable-next-line no-unused-vars
+          const { gjs, ...stuff } = page.toObject()
+          console.log('Saved:', stuff)
+        })
+      }
     })
 
   })

@@ -24,6 +24,8 @@ export interface IPage {
 }
 
 export interface PageDocument extends IPage, Document {
+  createdAt: Date
+  updatedAt: Date
 }
 
 const PageDataSchema = new Schema<PageDocument>({
