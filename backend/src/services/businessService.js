@@ -121,7 +121,7 @@ async function getPublicInformation() {
 }
 
 async function getIcon(prefSize) {
-  const fileNames = prefSize ? [`icons/icon-${prefSize}.png`, `icons/icon.png`, `icons/favicon.ico`] : [`icons/favicon.ico`]
+  const fileNames = [`icons/icon-${prefSize}.png`, `icons/icon.png`]
   for (let fileName of fileNames) {
     const upload = await fileService.getUpload(fileName)
     if (upload?.data || upload?.externalSource) {
@@ -133,11 +133,6 @@ async function getIcon(prefSize) {
 
 async function uploadIcon(icon) {
   const path = await fileService.upload('icons/icon.png', icon)
-  await iconService.resizeToPNG(icon, [180, 192, 512], 'icons', 'icon')
-
-  const faviconSource = await getIcon(192)
-  if (!faviconSource) throw new StatusError('Failed to generate the favicon. The other icons may still work.')
-  await iconService.generateFavicon(faviconSource.data, 'icons/favicon.ico')
-
+  await iconService.resizeToPNG(icon, [32, 180, 192, 512], 'icons', 'icon')
   return { path }
 }

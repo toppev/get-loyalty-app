@@ -149,16 +149,10 @@ describe('Logged in user can', () => {
       .expect(200)
   })
 
-  it('get icon (favicon.ico) (not logged in)', async () => {
+  it('get icon (not logged in)', async () => {
     const res = await api
-      .get(`/business/icon`)
+      .get(`/business/icon?size=32`)
       .expect(200)
-
-    expect(res.headers['content-type']).toBe('image/vnd.microsoft.icon')
-
-    const buf = await fs.promises.readFile('testresources/converted-favicon.ico')
-    expect(res.body).toEqual(buf)
-
   })
 
   it('get icon 512x512', async () => {

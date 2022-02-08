@@ -111,7 +111,7 @@ function App() {
       <AppContext.Provider value={contextState}>
         <div className="App">
           <Helmet>
-            <link id="favicon" rel="icon" href={`${BASE_URL}/business/icon`} type="image/x-icon"/>
+            <link id="favicon" rel="icon" href={`${BASE_URL}/business/icon?size=32`} type="image/x-icon"/>
           </Helmet>
 
           {anyError && <p className="ErrorMessage">{anyError}</p>}
