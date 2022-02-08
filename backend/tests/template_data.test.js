@@ -31,7 +31,10 @@ describe('page templates', () => {
     page = await pageService.createPage({ name: 'test page', stage: 'published', template: true })
     const fileData = await fs.promises.readFile('testresources/main.js')
     await pageService.uploadStaticFile(page.id, fileData, 'main.js', {})
-    await (new FileUpload({ _id: 'page_common/somefile.txt' })).save()
+    await (new FileUpload({
+      _id: 'page_common/somefile.txt',
+      data: 'some text here'
+    })).save()
     expect((await FileUpload.find({})).length).toBe(2)
   })
 
