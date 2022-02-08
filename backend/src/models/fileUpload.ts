@@ -2,14 +2,16 @@ import mongoose from "mongoose"
 
 const { Schema } = mongoose
 
-interface FileUpload {
+export interface IFileUpload {
   id: any
   _id: any
-  data: Buffer
+  data: Buffer | undefined
+  /** I.e., a link to the resource */
+  externalSource: string | undefined
   visibility: 'public' | 'private'
 }
 
-interface FileUploadDocument extends FileUpload, Document {
+interface FileUploadDocument extends IFileUpload, Document {
 }
 
 const fileSchema = new Schema({
@@ -19,6 +21,9 @@ const fileSchema = new Schema({
   },
   data: {
     type: Buffer,
+  },
+  externalSource: {
+    type: String
   },
   contentType: {
     type: String,

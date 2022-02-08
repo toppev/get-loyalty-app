@@ -1,5 +1,6 @@
 import { Router } from "express"
 import pageService from "../../services/pageService"
+import fileService from "../../services/fileService"
 import permit from "../../middlewares/permitMiddleware"
 import validation from "../../helpers/bodyFilter"
 import Busboy from "busboy"
@@ -86,7 +87,7 @@ function getPlaceholderContext(req, res, next) {
   pageService.getPageContext(req.user)
     .then(data => {
       // Return formatted JSON
-      res.header("Content-Type",'application/json')
+      res.header("Content-Type", 'application/json')
       res.send(JSON.stringify(data, null, 4))
     })
     .catch(err => next(err))
@@ -148,21 +149,13 @@ async function getStaticFile(req, res, next) {
   const pageId = req.params.pageId
   const { fileName } = req.params
   pageService.getStaticFile(pageId, fileName)
-    .then(file => serveStatic(res, file))
+    .then(file => fileService.serveFile(res, file))
     .catch(err => next(err))
 }
 
 function getThumbnail(req, res, next) {
   const pageId = req.params.pageId
   pageService.getThumbnail(pageId)
-    .then(file => serveStatic(res, file))
+    .then(file => fileService.serveFile(res, file))
     .catch(err => next(err))
-}
-
-function serveStatic(res, file) {
-  if (!file) res.sendStatus(404)
-  else {
-    res.contentType(file.contentType)
-    res.send(file.data)
-  }
 }

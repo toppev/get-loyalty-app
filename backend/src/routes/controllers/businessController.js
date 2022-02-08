@@ -5,6 +5,7 @@ import customerService from "../../services/customerService"
 import campaignService from "../../services/campaignService"
 import permit from "../../middlewares/permitMiddleware"
 import validation from "../../helpers/bodyFilter"
+import fileService from "../../services/fileService"
 
 const router = Router()
 const businessValidator = validation.validate(validation.businessValidator)
@@ -60,11 +61,7 @@ function getPublicInformation(req, res, next) {
 function getIcon(req, res, next) {
   businessService.getIcon(req.query.size)
     .then(file => {
-      if (!file) res.sendStatus(404)
-      else {
-        res.contentType(file.contentType)
-        res.send(file.data)
-      }
+      fileService.serveFile(res, file)
     })
     .catch(err => next(err))
 }

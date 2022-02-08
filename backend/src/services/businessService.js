@@ -120,11 +120,12 @@ async function getPublicInformation() {
   return Business.findOne().select('public config.userRegistration.dialogEnabled')
 }
 
-async function getIcon(size) {
-  const fileNames = size ? [`icons/icon-${size}.png`, `icons/icon.png`, `icons/favicon.ico`] : [`icons/favicon.ico`]
+async function getIcon(prefSize) {
+  const fileNames = prefSize ? [`icons/icon-${prefSize}.png`, `icons/icon.png`, `icons/favicon.ico`] : [`icons/favicon.ico`]
   for (let fileName of fileNames) {
     const upload = await fileService.getUpload(fileName)
-    if (upload?.data) {
+    if (upload?.data || upload?.externalSource) {
+      console.log(upload)
       return upload
     }
   }
@@ -133,9 +134,10 @@ async function getIcon(size) {
 async function uploadIcon(icon) {
   const path = await fileService.upload('icons/icon.png', icon)
   await iconService.resizeToPNG(icon, [180, 192, 512], 'icons', 'icon')
-  await iconService.generateFavicon(
-    (await fileService.getUpload('icons/icon-192.png')).data,
-    'icons/favicon.ico'
-  )
+
+  const faviconSource = await getIcon(192)
+  if (!faviconSource) throw new StatusError('Failed to generate the favicon. The other icons may still work.')
+  await iconService.generateFavicon(faviconSource.data, 'icons/favicon.ico')
+
   return { path }
 }
