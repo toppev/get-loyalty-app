@@ -25,7 +25,7 @@ export function YesNo({ state }: YesNoProps) {
 }
 
 interface ExpiredProps {
-  date?: Date|string
+  date?: Date | string
   alt?: string
 }
 
@@ -40,7 +40,13 @@ export function DateExpired({ date, alt }: ExpiredProps) {
 
   const expired = date && now > date
 
-  return expired ? (<span className={classes.expired}>{date?.toDateString()} (expired)</span>)
+
+  if (isNaN(date.getTime())) {
+    return <span>{alt}</span>
+  }
+
+  return expired ?
+    (<span className={classes.expired}>{date?.toDateString()} (expired)</span>)
     : (<span>{date?.toDateString() || alt}</span>)
 }
 
