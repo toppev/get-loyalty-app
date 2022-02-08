@@ -20,19 +20,19 @@ async function getUpload(name, { visibility } = defaultOptions) {
   }
 }
 
-async function upload(name, data, options = { ...defaultOptions, contentType: mime.lookup(name) || ''}) {
+async function upload(name, data, options = { ...defaultOptions, contentType: mime.lookup(name) || '' }) {
   return FileUpload.findOneAndUpdate({ _id: name }, {
     _id: name,
     data: data,
-    contentType: options.contentType || mime.lookup(name),
-    visibility: options.visibility || 'public'
+    contentType: options.contentType || mime.lookup(name) || undefined,
+    visibility: options.visibility === 'private' ? 'private' : 'public'
   }, { upsert: true })
 }
 
 async function getUploads(dir, { visibility } = defaultOptions) {
   return FileUpload.find({
     _id: new RegExp(`^${dir}/`),
-    visibility: visibility || 'public'
+    visibility: visibility === 'private' ? 'private' : 'public'
   })
 }
 

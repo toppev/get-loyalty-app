@@ -2,6 +2,16 @@ import mongoose from "mongoose"
 
 const { Schema } = mongoose
 
+interface FileUpload {
+  id: any
+  _id: any
+  data: Buffer
+  visibility: 'public' | 'private'
+}
+
+interface FileUploadDocument extends FileUpload, Document {
+}
+
 const fileSchema = new Schema({
   _id: {
     type: String,
@@ -20,4 +30,4 @@ const fileSchema = new Schema({
   }
 })
 
-export default mongoose.model('FileUpload', fileSchema)
+export default mongoose.model<FileUploadDocument>('FileUpload', fileSchema)

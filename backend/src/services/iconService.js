@@ -1,6 +1,6 @@
 import sharp from "sharp"
 import toIco from "to-ico"
-import fileService from "../services/fileService"
+import fileService from "./fileService"
 
 /**
  *

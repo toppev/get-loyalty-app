@@ -1,6 +1,7 @@
 import pageService from "./pageService"
 import logger from "../util/logger"
 import axios from "axios"
+import { IPage } from "../models/page"
 
 const PAGE_API_URL = 'https://demo.getloyalty.app/api/page'
 
@@ -11,8 +12,8 @@ logger.info(`Template (default) page IDs (${DEFAULT_PAGES.length}): ${DEFAULT_PA
 async function loadDefaultTemplates(pageIds = DEFAULT_PAGES) {
   try {
     const templateData = await getTemplateData()
-    let { templates, common } = templateData
-    if (!Array.isArray(templates)) templates = []
+    if (!templateData) return
+    const { templates, common } = templateData
 
     // Pages
     await Promise.all(templates.map(async template => {
@@ -34,14 +35,25 @@ async function loadDefaultTemplates(pageIds = DEFAULT_PAGES) {
 /**
  * Fetch all templates from the API. Returns empty list if it fails
  */
-async function getTemplateData() {
+async function getTemplateData(): Promise<TemplateData | undefined> {
   try {
     const res = await axios.get(`${PAGE_API_URL}/templates`)
     return res.data
   } catch (err) {
     logger.error("Error getting templates", err)
   }
-  return []
+}
+
+interface TemplateData {
+  templates: Template[]
+  common: {
+    uploads: any[]
+  }
+}
+
+interface Template {
+  page: IPage
+  uploads: []
 }
 
 export {

@@ -1,12 +1,32 @@
-// @ts-nocheck
-// FIXME: correct typing
-import mongoose from "mongoose"
-
-const { Schema } = mongoose
+import mongoose, { Document, Schema } from "mongoose"
 
 const UNNAMED_PAGE = 'unnamed'
 
-const PageDataSchema = new Schema({
+export interface IPage {
+  id?: any
+  name: string
+  pathname: string
+  description: string
+  stage: 'unpublished' | 'published' | 'discarded'
+  template: boolean
+  fromTemplate: Schema.Types.ObjectId
+  /** HTML */
+  icon: string
+  externalPage: {
+    url: string
+    urlType: null | 'iframe' | 'external_link'
+  }
+  pageIndex: number
+  gjs: {
+    "gjs-components": string
+    "gjs-styles": string
+  }
+}
+
+export interface PageDocument extends IPage, Document {
+}
+
+const PageDataSchema = new Schema<PageDocument>({
   name: {
     type: String
   },
@@ -31,11 +51,6 @@ const PageDataSchema = new Schema({
   },
   fromTemplate: {
     type: Schema.Types.ObjectId,
-  },
-  // Whether this page should be automatically updated when the template is changed
-  autoUpdate: {
-    type: Boolean,
-    default: true
   },
   // the html icon of this page
   icon: {
@@ -85,5 +100,5 @@ PageDataSchema.pre('save', async function () {
   }
 })
 
-const PageData = mongoose.model('PageData', PageDataSchema)
+const PageData = mongoose.model<PageDocument>('PageData', PageDataSchema)
 export default PageData

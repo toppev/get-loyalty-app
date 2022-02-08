@@ -50,6 +50,7 @@ async function createPage(templatePage) {
 
 async function savePage(id, pageData, gjsOnly) {
   const oldPage = await PageData.findById(id)
+  if (!oldPage) throw new Error(`Page ${id} does not exist`)
   // Whether we save the entire document or just what's under 'gjs' key
   if (gjsOnly && gjsOnly !== 'false') {
     // In this case the pageData has gjs-components and gjs-style (root) keys (only what is under 'gjs').
@@ -58,19 +59,13 @@ async function savePage(id, pageData, gjsOnly) {
     Object.assign(oldPage, pageData)
   }
 
-  // Disable updating gjs if the page is manually modified
-  if ((gjsOnly || pageData.gjs) && oldPage.autoUpdate) {
-    logger.important(`Automatically disabled page auto-updates of ${id}/${oldPage.name} because the page was manually modified`)
-    oldPage.autoUpdate = false
-  }
-
   return oldPage.save()
 }
 
 async function loadPage(id, gjsOnly) {
   const page = await PageData.findById(id)
   // Whether we load the entire document or just what's under 'gjs' key
-  if (gjsOnly && gjsOnly !== 'false') {
+  if (page && gjsOnly && gjsOnly !== 'false') {
     return page.gjs
   }
   return page

@@ -1,6 +1,6 @@
 import Business from "../models/business"
 import User from "../models/user"
-import fileService from "../services/fileService"
+import fileService from "./fileService"
 import StatusError from "../util/statusError"
 import * as templateService from "./templateService"
 import iconService from "./iconService"
