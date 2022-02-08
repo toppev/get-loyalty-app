@@ -24,11 +24,13 @@ services:
     container_name: loyalty-panel
     build:
       context: panel
+      # dockerfile: Dockerfile # for prod version
       dockerfile: dev.Dockerfile
       args:
         NPM_TOKEN: ${NPM_TOKEN}
     ports:
       - '3002:3002'
+      #- '3002:80' # for prod version
     stdin_open: true
     volumes:
       - ./panel:/usr/src/app
