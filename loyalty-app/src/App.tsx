@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import './App.css'
 import { getPageHtml, getPages } from "./services/pageService"
-import Page, { EMPTY_PAGE_HTML, ERROR_HTML } from "./model/Page"
+import Page, { EMPTY_PAGE_HTML, ERROR_HTML, LOADING_HTML } from "./model/Page"
 import { BrowserRouter as Router } from "react-router-dom"
 import { BASE_URL } from "./config/axios"
 import { AxiosResponse } from "axios"
@@ -15,6 +15,7 @@ import { LoginData, useLoginHook } from "./hooks/useLoginHook"
 import Pages from "./components/page/Pages"
 import { isRegistrationFormEnabled } from "./services/businessService"
 import RegisterForm from "./components/user/RegisterForm"
+import { usePageUpdates } from "./modules/pageUpdate"
 
 function App() {
 
@@ -98,11 +99,16 @@ function App() {
       page.html = res.data || EMPTY_PAGE_HTML
     } catch (err) {
       console.log(err)
-      page.html = ERROR_HTML
+      // Do not show error if it just failed to update (i.e., lost internet)
+      if (page.html === LOADING_HTML) {
+        page.html = ERROR_HTML
+      }
     } finally {
       updatePage(page)
     }
   }
+
+  usePageUpdates(refreshHtmlPages)
 
   const anyError = error || loginError
 
