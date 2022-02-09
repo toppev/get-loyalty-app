@@ -20,6 +20,8 @@ services:
     image: mongo
     volumes:
       - dbdata:/data/db
+    ports:
+      - '27017:27017'
   panel:
     container_name: loyalty-panel
     build:
