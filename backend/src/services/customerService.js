@@ -183,7 +183,7 @@ async function rewardAllCustomers(reward) {
  * @param sort sort by the given attribute
  * @param search the string to search, if not specified first 100 are returned
  */
-async function searchCustomers(limit, sort, search = "") {
+async function searchCustomers(limit, sort = "", search = "") {
   limit = Number(limit)
   sort = typeof sort === "string" && sort ? sort : "-lastVisit"
   let users

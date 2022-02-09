@@ -73,7 +73,7 @@ async function sendPushNotification(notificationParam) {
   if (expires) {
     throw new StatusError(`You're still on cooldown. You can send next push notification ${expires.toUTCString()}`, 400)
   }
-  let users = await customerService.searchCustomers(0)
+  let users = await User.find({})
   users = users.filter(u => {
     const pn = u.customerData.pushNotifications
     return pn && pn.endpoint // good enough
