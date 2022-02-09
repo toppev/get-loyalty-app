@@ -135,9 +135,10 @@ describe('Logged in user can', () => {
       .set('Cookie', cookie)
       .expect(200)
     expect(res.body.customers.length).toBe(2)
-    expect(res.body.customers[0].email).toBe(userParams.email)
-    expect(res.body.customers[0].customerData.rewards.length).toBe(1)
-    expect(res.body.customers[0].customerData.rewards[0].name).toBe(testReward.name)
+    const customer2 = res.body.customers[1]
+    expect(customer2.email).toBe(userParams.email)
+    expect(customer2.customerData.rewards.length).toBe(1)
+    expect(customer2.customerData.rewards[0].name).toBe(testReward.name)
   })
 
   it('upload icon', async () => {
