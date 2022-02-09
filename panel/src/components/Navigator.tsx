@@ -8,13 +8,13 @@ import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 import AppsIcon from '@material-ui/icons/Apps'
-import CloseIcon from '@material-ui/icons/Close'
 import HomeIcon from '@material-ui/icons/Home'
 import PhoneIcon from '@material-ui/icons/MobileFriendly'
 import PagesIcon from '@material-ui/icons/Pages'
 import PeopleIcon from '@material-ui/icons/People'
 import PermMediaOutlinedIcon from '@material-ui/icons/PhotoSizeSelectActual'
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive'
+import QrCodeScannerIcon from '@material-ui/icons/CropFree' // TODO: use QrCodeScanner after migration to mui v5 icons
 import RedeemIcon from '@material-ui/icons/Redeem'
 import SettingsIcon from '@material-ui/icons/Settings'
 import FeedbackIcon from '@material-ui/icons/Feedback'
@@ -55,6 +55,7 @@ const categories = [
   {
     id: 'Other',
     children: [
+      { id: 'QR Scanner', icon: <QrCodeScannerIcon/>, to: `https://scan.${DOMAIN_HOME_PAGE}` },
       { id: 'Data & Charts', icon: <TrendingUpIcon/>, to: '/data-and-charts' },
       { id: 'Feedback', icon: <FeedbackIcon/>, to: '/feedback' },
       { id: 'Help & Support', icon: <HelpIcon/>, to: `https://support.${DOMAIN_HOME_PAGE}` },
@@ -233,7 +234,7 @@ export default function Navigator(props: NavigatorProps) {
                   </ListItemIcon>
                   <ListItemText classes={{ primary: classes.itemPrimary }}>{childId}</ListItemText>
                   {external &&
-                  <OpenInNewIcon fontSize="small" style={{ fontSize: '14px', marginLeft: '8px' }}/>}
+                    <OpenInNewIcon fontSize="small" style={{ fontSize: '14px', marginLeft: '8px' }}/>}
                 </ListItem>
               )
             })}
@@ -270,11 +271,6 @@ export default function Navigator(props: NavigatorProps) {
             }}
             open={props.open}
           >
-            <IconButton
-              onClick={props.handleDrawerToggle}
-              className={classes.closeMenuButton}>
-              <CloseIcon/>
-            </IconButton>
             {drawer}
           </Drawer>
         </Hidden>
