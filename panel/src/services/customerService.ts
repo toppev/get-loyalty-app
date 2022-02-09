@@ -2,10 +2,10 @@ import { get, patch, post, remove } from "../config/axios"
 import Reward from "../components/rewards/Reward"
 import Customer from "../components/customers/Customer"
 
-function listCustomers(search?: string, limit?: number) {
-  let subUrl = `/business/customers`
-  if (search) subUrl += `?search=${search}`
-  if (limit) subUrl += `?limit=${limit}`
+function listCustomers(search?: string, limit?: number, sort?: string) {
+  let subUrl = `/business/customers?limit=${limit || 100}`
+  if (search) subUrl += `&search=${search}`
+  if (sort) subUrl += `&sort=${sort}`
   return get(subUrl)
 }
 

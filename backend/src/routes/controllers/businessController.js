@@ -83,9 +83,8 @@ function uploadIcon(req, res, next) {
 }
 
 function listCustomers(req, res, next) {
-  const limit = req.query.limit || 50
-  const searchStr = req.query.search
-  customerService.searchCustomers(limit, searchStr)
+  const { search, sort, limit } = req.query
+  customerService.searchCustomers(limit, sort, search)
     .then(data => res.json({ customers: data }))
     .catch(err => next(err))
 }

@@ -180,9 +180,12 @@ async function rewardAllCustomers(reward) {
 /**
  * List customers of the business
  * @param limit maximum number of customers to return
+ * @param sort sort by the given attribute
  * @param search the string to search, if not specified first 100 are returned
  */
-async function searchCustomers(limit, search = "") {
+async function searchCustomers(limit, sort, search = "") {
+  limit = Number(limit)
+  sort = typeof sort === "string" && sort ? sort : "-lastVisit"
   let users
   if (search?.trim().length) {
     const regex = new RegExp(search.split(" ").join("|"), "gi")
@@ -194,9 +197,13 @@ async function searchCustomers(limit, search = "") {
           { "customerData.rewards.name": regex },
         ]
       })
+      .sort(sort)
+      .limit(limit)
       .populate(userPopulateSchema)
   } else {
     users = await User.find()
+      .sort(sort)
+      .limit(limit)
       .populate(userPopulateSchema)
   }
   return Promise.all(users.map(u => getCustomerInfo(u)))

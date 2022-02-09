@@ -12,7 +12,7 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TableRow,
+  TableRow, TableSortLabel,
   Theme
 } from "@material-ui/core"
 import Customer from "./Customer"
@@ -68,13 +68,14 @@ export default function () {
   const renderLimit = 100
 
   const { search, setSearch } = useSearch()
+  const [orderBy, setOrderBy] = useState("-lastVisit")
   const { error, loading, response, performRequest } = useRequest()
 
-  const execSearch = useCallback(debounce((searchStr?: string) => {
-    performRequest(() => listCustomers(searchStr))
+  const execSearch = useCallback(debounce((searchStr?: string, sort?: string) => {
+    performRequest(() => listCustomers(searchStr, 100, sort))
   }, 500, { leading: true }), [])
 
-  useEffect(() => execSearch(search), [execSearch, search])
+  useEffect(() => execSearch(search, orderBy), [execSearch, search, orderBy])
 
   const [customers] = useResponseState<Customer[]>(response, [], (res) => {
     return res.data.customers?.map((it: any) => new Customer(it)) || []
@@ -112,7 +113,7 @@ export default function () {
             setRewardAllSelector(false)
             performRequest(
               () => rewardAllCustomers(reward),
-              () => performRequest(() => listCustomers(search))
+              () => performRequest(() => listCustomers(search, 100, orderBy))
             )
           }
         }}
@@ -124,12 +125,12 @@ export default function () {
         <Table>
           <TableHead className={classes.head}>
             <TableRow>
-              <TableCell>Show/Hide</TableCell>
-              <TableCell>Email</TableCell>
+              <TableCell>Expand</TableCell>
+              <SortableCell label="Email" orderId="email" orderBy={orderBy} setOrderBy={setOrderBy}/>
               <TableCell>Rewards</TableCell>
-              <TableCell>Points</TableCell>
-              <TableCell>Last website visit</TableCell>
-              <TableCell>Role</TableCell>
+              <SortableCell label="Points" orderId="customerData.properties.points" orderBy={orderBy} setOrderBy={setOrderBy}/>
+              <SortableCell label="Last app visit" orderId="lastVisit" orderBy={orderBy} setOrderBy={setOrderBy}/>
+              <SortableCell label="Role" orderId="role" orderBy={orderBy} setOrderBy={setOrderBy}/>
               <TableCell/>
             </TableRow>
           </TableHead>
@@ -148,6 +149,26 @@ export default function () {
   )
 }
 
+function SortableCell({ label, orderId, orderBy, setOrderBy }: any) {
+
+  const orderActive = orderId === orderBy || `-${orderId}` === orderBy
+  const isDesc = orderBy[0] === '-'
+
+  return (
+    <TableCell>
+      <TableSortLabel
+        active={orderActive}
+        direction={isDesc ? 'desc' : 'asc'}
+        onClick={() => setOrderBy(isDesc ? orderId : `-${orderId}`)}
+      >
+        {label}
+        {orderBy === orderId ? (
+          <Box component="span"/>
+        ) : null}
+      </TableSortLabel>
+    </TableCell>
+  )
+}
 
 interface CustomerRowProps {
   customer: Customer
