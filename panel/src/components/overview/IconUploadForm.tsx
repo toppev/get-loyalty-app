@@ -23,7 +23,7 @@ export default function () {
   const [icon, setIcon] = useState<File | undefined>()
   const [uploading, setUploading] = useState(false)
 
-  const [uploaded, setUploaded] = useState(false)
+  const [message, setMessage] = useState<undefined | { message: string, severity: "error" | "success" }>()
 
   const classes = useStyles()
 
@@ -31,8 +31,7 @@ export default function () {
     <div>
       <div className={classes.selectDiv}>
         <p className={classes.text}>Upload your icon</p>
-        <img src={icon ? URL.createObjectURL(icon) : `${backendURL}/business/icon`} alt="(no icon)"
-          width="100px"/>
+        <img src={icon ? URL.createObjectURL(icon) : `${backendURL}/business/icon`} alt="(no icon)" width="100px"/>
       </div>
       <form
         onSubmit={e => e.preventDefault()}>
@@ -45,28 +44,35 @@ export default function () {
           }}
         />
       </form>
-      {uploaded ? <Alert style={{ marginTop: '10px', maxWidth: '250px' }} severity="success">Icon uploaded successfully!</Alert>
-        : icon ?
-          <Button
-            disabled={uploading}
-            className={classes.upload}
-            color="primary"
-            size="small"
-            variant="contained"
-            onClick={() => {
-              setUploading(true)
-              setBusinessIcon(icon).then(() => {
-                setUploading(false)
+      {message && <Alert style={{ marginTop: '10px', maxWidth: '250px' }} severity={message.severity}>{message.message}</Alert>}
+
+      {icon &&
+        <Button
+          disabled={uploading}
+          className={classes.upload}
+          color="primary"
+          size="small"
+          variant="contained"
+          onClick={() => {
+            setUploading(true)
+            setBusinessIcon(icon)
+              .then(() => {
+                setMessage({ message: "Icon uploaded successfully!", severity: "success" })
                 setIcon(undefined)
-                setUploaded(true)
                 setTimeout(() => {
-                  setIcon(undefined)
-                  setUploaded(false)
+                  setMessage(undefined)
                 }, 5000)
               })
-            }}
-          >Upload Icon</Button> : <p style={{ fontSize: '12px' }}>PNG (.png) file recommended</p>
+              .catch(err => {
+                setMessage({ message: `Error: ${err?.data?.message || "please try a .png file"}`, severity: "error" })
+              })
+              .finally(() => {
+                setUploading(false)
+              })
+          }}
+        >Upload Icon</Button>
       }
+      <p style={{ fontSize: '12px' }}>PNG (.png) file recommended</p>
     </div>
   )
 }

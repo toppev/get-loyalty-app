@@ -39,6 +39,7 @@ import { listPages } from "../../services/pageService"
 import useResponseState from "../../hooks/useResponseState"
 import { Page } from "../pages/Page"
 import { ServerStatusBar } from "../common/ServerStatusBar"
+import { useIsMounted } from "../common/hooks/useIsMounter"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -252,12 +253,14 @@ const askNotificationOptions: NotificationValues = {
 }
 
 function ServerSettingsForm() {
+
   const classes = useStyles()
   const context = useContext(AppContext)
+  const [popupOpen, setPopupOpen] = useState(false)
+  const { isMounted } = useIsMounted()
 
   const updateRequest = useRequest(undefined, {
-    errorMessage: 'Update request might have failed. ' +
-      'If something broke, please wait a few minutes and contact support if the problems continue!'
+    errorMessage: 'Update request might have failed. If something broke, please wait a few minutes and contact support if the problems continue!'
   })
   // Select components don't want to work well with formik :(
   const [askNotifications, setAskNotifications] = useState<string>('disabled')
@@ -267,7 +270,6 @@ function ServerSettingsForm() {
     (res) => setAskNotifications(res.data?.website?.askNotifications)
   )
 
-  const [popupOpen, setPopupOpen] = useState(false)
 
   const loading = serverInfo.loading || updateRequest.loading
   const error = serverInfo.error || updateRequest.error
@@ -275,18 +277,8 @@ function ServerSettingsForm() {
 
   // Needed for askNotifications menu
   const pageRequest = useRequest(listPages)
-
   // If used for anything else it is recommended to use a custom parser to map the pages to real page instances (it's ok here)
   const [pages] = useResponseState<Page[]>(pageRequest.response, [], res => res.data.map((it: any) => new Page(it)))
-
-  const validateForm = (settings: ServerSettings) => {
-    const errors: FormikErrors<ServerSettings> = {}
-    if (settings.appAddress && !isURL(settings.appAddress)) {
-      errors.appAddress = 'Invalid URL'
-    }
-    return errors
-  }
-
 
   return (
     <div>
@@ -326,9 +318,11 @@ function ServerSettingsForm() {
                   // Make sure everything is up
                   setTimeout(() => {
                     actions.setSubmitting(false)
-                    setPopupOpen(false)
                     // IDEA: Trigger an update in the ServerStatusBar instead of reloading?
-                    window.location.reload()
+                    if (popupOpen && isMounted) {
+                      window.location.reload()
+                    }
+                    setPopupOpen(false)
                   }, 60 * 1000)
                 },
                 () => {
@@ -424,7 +418,7 @@ function ServerSettingsForm() {
                       if (!hasDomainChanged(initialValues.appAddress, values.appAddress) || window.confirm(
                         "WARNING! Changing the domain will log out all users! Your customers may lose their data (e.g points, rewards etc)"
                       )) {
-                        submitForm()
+                        submitForm().then()
                       }
                     }}
                   >Update & Restart</Button>
@@ -436,6 +430,15 @@ function ServerSettingsForm() {
       }
     </div>
   )
+}
+
+
+const validateForm = (settings: ServerSettings) => {
+  const errors: FormikErrors<ServerSettings> = {}
+  if (settings.appAddress && !isURL(settings.appAddress)) {
+    errors.appAddress = 'Invalid URL'
+  }
+  return errors
 }
 
 /** Compare the URLs and return if the domain is different. */
