@@ -191,7 +191,7 @@ export default function PagesPage() {
             open={templateSelectorOpen}
             onClose={() => setTemplateSelectorOpen(false)}
             onSelect={page => {
-              if (pages.some(it => it.name === page.name)) {
+              if (pages.some(it => it.name === page.name && !it.isDiscarded())) {
                 if (!window.confirm(`You already have page "${page.name}". Are you sure you want to add another?`)) {
                   return
                 }
