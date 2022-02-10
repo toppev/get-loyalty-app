@@ -56,7 +56,7 @@ function GrapesPageEditor(props) {
       // TODO: handle failures
       const { data } = await client.get(`${url}/${pageId}/?gjsOnly=true`)
       const getHtml = async () => {
-        const res = await client.get(`${url}/${pageId}/html`)
+        const res = await client.get(`${url}/${pageId}/static/index.html`)
         return res.data
       }
 
