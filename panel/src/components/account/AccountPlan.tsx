@@ -1,4 +1,4 @@
-import { Divider, Link, Paper, Typography } from "@material-ui/core"
+import { Divider, Link, Paper, Typography } from "@mui/material"
 import React, { useContext } from "react"
 import { useStyles } from "./AccountPage"
 import AppContext from "../../context/AppContext"

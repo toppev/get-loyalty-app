@@ -1,5 +1,7 @@
 import React, { Fragment } from "react"
-import { Box, createStyles, Divider, LinearProgress, makeStyles, Theme, Typography } from "@material-ui/core"
+import { Box, Divider, LinearProgress, Theme, Typography } from "@mui/material"
+import createStyles from '@mui/styles/createStyles'
+import makeStyles from '@mui/styles/makeStyles'
 import useRequest from "../../hooks/useRequest"
 import { listCustomers } from "../../services/customerService"
 import RetryButton from "../common/button/RetryButton"

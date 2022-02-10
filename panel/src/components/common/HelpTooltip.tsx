@@ -1,12 +1,12 @@
-import Tooltip from "@material-ui/core/Tooltip"
+import Tooltip from "@mui/material/Tooltip"
 import React from "react"
-import { Typography } from "@material-ui/core"
-import HelpIcon from "@material-ui/icons/Help"
+import { Typography } from "@mui/material"
+import HelpIcon from "@mui/icons-material/Help"
 
 interface SimpleTooltipProps {
   title: string,
   text: string
-  size?: "default" | "small" | "large"
+  size?: 'inherit' | 'large' | 'medium' | 'small',
 }
 
 export default function HelpTooltip({ title, text, size }: SimpleTooltipProps) {
@@ -23,7 +23,7 @@ export default function HelpTooltip({ title, text, size }: SimpleTooltipProps) {
         </React.Fragment>
       }
     >
-      <HelpIcon fontSize={size || "small"} style={{marginLeft: '10px'}}/>
+      <HelpIcon fontSize={size || "small"} style={{ marginLeft: '10px' }}/>
     </Tooltip>
   )
 }

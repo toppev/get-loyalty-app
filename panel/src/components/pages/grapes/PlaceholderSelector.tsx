@@ -1,8 +1,18 @@
 import React from "react"
 import { placeholders } from "./Placeholders"
-import { Button, createStyles, Table, TableBody, TableCell, TableContainer, TableRow, Theme, Typography } from "@material-ui/core"
-import Tooltip from "@material-ui/core/Tooltip"
-import { makeStyles } from "@material-ui/core/styles"
+import {
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+  Theme,
+  Typography,
+} from "@mui/material"
+import createStyles from '@mui/styles/createStyles'
+import Tooltip from "@mui/material/Tooltip"
+import makeStyles from '@mui/styles/makeStyles'
 import { usePlaceholderContext } from "./placeholderContext"
 
 

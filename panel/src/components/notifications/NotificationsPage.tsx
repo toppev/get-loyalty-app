@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react"
-import { Box, createStyles, Theme, Typography } from "@material-ui/core"
-import { makeStyles } from "@material-ui/core/styles"
+import { Box, Theme, Typography } from "@mui/material"
+import createStyles from '@mui/styles/createStyles'
+import makeStyles from '@mui/styles/makeStyles'
 import NotificationForm from "./NotificationForm"
 import { PushNotification } from "./PushNotification"
 import AppContext from "../../context/AppContext"

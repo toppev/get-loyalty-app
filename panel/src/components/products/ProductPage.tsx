@@ -1,16 +1,16 @@
 import {
   Box,
-  createStyles,
   LinearProgress,
-  makeStyles,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Theme
-} from '@material-ui/core'
+  Theme,
+} from '@mui/material'
+import createStyles from '@mui/styles/createStyles'
+import makeStyles from '@mui/styles/makeStyles'
 import React, { useState } from 'react'
 import RetryButton from '../common/button/RetryButton'
 import ImportProducts from './importer/ImportProducts'
@@ -132,8 +132,8 @@ export default function () {
 
           <p className={classes.noProducts}>
             {filteredProducts.length === 0 && (products.length === 0
-                ? "You don't have any products"
-                : "No products found"
+              ? "You don't have any products"
+              : "No products found"
             )}
           </p>
 

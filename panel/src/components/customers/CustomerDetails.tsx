@@ -2,8 +2,9 @@ import React, { useState } from "react"
 import RewardItem, { RemoveEditRewardActions } from "../rewards/RewardItem"
 import Customer from "./Customer"
 import Reward from "../rewards/Reward"
-import { Button, createStyles, Divider, Grid, LinearProgress, Typography } from "@material-ui/core"
-import { makeStyles } from "@material-ui/core/styles"
+import { Button, Divider, Grid, LinearProgress, Typography } from "@mui/material"
+import createStyles from '@mui/styles/createStyles'
+import makeStyles from '@mui/styles/makeStyles'
 import { YesNo } from "../common/StringUtils"
 import RetryButton from "../common/button/RetryButton"
 import { addCustomerReward, revokeCustomerReward, updateCustomerReward } from "../../services/customerService"

@@ -1,6 +1,8 @@
 import { SketchPicker } from "react-color"
 import React, { useState } from "react"
-import { createStyles, Dialog, DialogContent, makeStyles } from "@material-ui/core"
+import { Dialog, DialogContent } from "@mui/material"
+import createStyles from '@mui/styles/createStyles'
+import makeStyles from '@mui/styles/makeStyles'
 import CloseButton from "./button/CloseButton"
 
 

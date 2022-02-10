@@ -1,6 +1,16 @@
-import { Button, createStyles, Dialog, DialogContent, FormControlLabel, Radio, RadioGroup, TextField, Theme } from "@material-ui/core"
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+  TextField,
+  Theme,
+} from "@mui/material"
+import createStyles from '@mui/styles/createStyles'
 import CloseButton from "../common/button/CloseButton"
-import { makeStyles } from "@material-ui/core/styles"
+import makeStyles from '@mui/styles/makeStyles'
 import React, { useState } from "react"
 import { isDomain } from "../../util/validate"
 import HelpTooltip from "../common/HelpTooltip"
@@ -62,7 +72,7 @@ export default function (props: URLSelectorDialogProps) {
             placeholder="https://example.com/mybusiness"
             multiline
             rows={1}
-            rowsMax={5}
+            maxRows={5}
             variant="outlined"
             onChange={(e) => setUrl(e.target.value)}
           />

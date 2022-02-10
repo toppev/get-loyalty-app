@@ -1,6 +1,7 @@
 import React, { useState } from "react"
-import { createStyles, Dialog, DialogContent, Grid, LinearProgress, Theme } from "@material-ui/core"
-import { makeStyles } from "@material-ui/core/styles"
+import { Dialog, DialogContent, Grid, LinearProgress, Theme } from "@mui/material"
+import createStyles from '@mui/styles/createStyles'
+import makeStyles from '@mui/styles/makeStyles'
 import { Campaign } from "./Campaign"
 import CampaignPaper from "./CampaignPaper"
 import NewButton from "../common/button/NewButton"

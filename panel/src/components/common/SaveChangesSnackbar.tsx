@@ -1,6 +1,8 @@
-import { Button, createStyles, Grid, makeStyles, Snackbar, SnackbarContent, Theme } from '@material-ui/core'
-import SaveIcon from '@material-ui/icons/Save'
-import WarningIcon from '@material-ui/icons/Warning'
+import { Button, Grid, Snackbar, SnackbarContent, Theme } from '@mui/material'
+import createStyles from '@mui/styles/createStyles'
+import makeStyles from '@mui/styles/makeStyles'
+import SaveIcon from '@mui/icons-material/Save'
+import WarningIcon from '@mui/icons-material/Warning'
 import React from 'react'
 import { Prompt } from 'react-router-dom'
 

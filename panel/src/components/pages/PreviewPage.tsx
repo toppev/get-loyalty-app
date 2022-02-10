@@ -1,4 +1,6 @@
-import { createStyles, Dialog, DialogContent, Link, makeStyles } from "@material-ui/core"
+import { Dialog, DialogContent, Link } from "@mui/material"
+import createStyles from '@mui/styles/createStyles'
+import makeStyles from '@mui/styles/makeStyles'
 import React from "react"
 import CloseButton from "../common/button/CloseButton"
 import { Page } from "./Page"

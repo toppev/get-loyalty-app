@@ -1,10 +1,11 @@
 import React, { useState } from "react"
 import CloseButton from "../../common/button/CloseButton"
-import { Button, Collapse, createStyles, Dialog, Divider, Grid, Paper, TextField, Theme } from "@material-ui/core"
-import { makeStyles } from "@material-ui/core/styles"
+import { Button, Collapse, Dialog, Divider, Grid, Paper, TextField, Theme } from "@mui/material"
+import createStyles from '@mui/styles/createStyles'
+import makeStyles from '@mui/styles/makeStyles'
 import SVGIcons from "./SVGIcons"
-import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp"
-import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown"
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp"
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown"
 import PageIcon from "../PageIcon"
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -99,7 +100,7 @@ export default function (props: IconSelectorProps) {
                 label="Insert your custom HTML here"
                 multiline
                 rows={2}
-                rowsMax={8}
+                maxRows={8}
                 variant="outlined"
                 defaultValue={html}
                 onChange={(e) => setHtml(e.target.value)}

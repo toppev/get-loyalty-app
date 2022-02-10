@@ -1,7 +1,8 @@
-import { Button, ButtonProps, createStyles, Theme } from "@material-ui/core"
-import AddIcon from "@material-ui/icons/Add"
+import { Button, ButtonProps, Theme } from "@mui/material"
+import createStyles from '@mui/styles/createStyles'
+import AddIcon from "@mui/icons-material/Add"
 import React from "react"
-import { makeStyles } from "@material-ui/core/styles"
+import makeStyles from '@mui/styles/makeStyles'
 
 
 const useStyles = makeStyles((theme: Theme) =>

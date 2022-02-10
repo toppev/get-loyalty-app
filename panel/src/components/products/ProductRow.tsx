@@ -1,11 +1,13 @@
-import { Button, Collapse, createStyles, IconButton, makeStyles, TableCell, TableRow, Theme } from '@material-ui/core'
-import EditIcon from '@material-ui/icons/Edit'
+import { Button, Collapse, IconButton, TableCell, TableRow, Theme } from '@mui/material'
+import createStyles from '@mui/styles/createStyles'
+import makeStyles from '@mui/styles/makeStyles'
+import EditIcon from '@mui/icons-material/Edit'
 import React, { useState } from 'react'
 import Product from './Product'
 import useRequest from "../../hooks/useRequest"
 import { deleteProduct } from "../../services/productService"
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown'
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import IdText from "../common/IdText"
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -25,12 +27,12 @@ const useStyles = makeStyles((theme: Theme) =>
       margin: '5px',
     },
     itemDesc: {
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         display: 'none',
       },
     },
     categories: {
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         display: 'none',
       },
     },
@@ -65,47 +67,43 @@ export default function (props: ProductRowProps) {
 
   const [viewing, setViewing] = useState(false)
 
-  return (
-    <>
-      <TableRow className={classes.rowDiv}>
+  return <>
+    <TableRow className={classes.rowDiv}>
 
-        <TableCell>
-          <IconButton
-            onClick={() => setViewing(!viewing)}
-          >{viewing ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>}</IconButton>
-        </TableCell>
-        <TableCell>
-          {product.name}
-        </TableCell>
-        <TableCell>
-          {product.description}
-        </TableCell>
-        <TableCell>
-          {product.price}
-        </TableCell>
-        <TableCell>
-          {product.categories.map(c => c.name).join(", ")}
-        </TableCell>
-        <TableCell>
-          {props.CustomActions || <EditDeleteActions {...props} />}
-        </TableCell>
-        <TableCell>
-          <IdText id={product.id} text={false}/>
-        </TableCell>
-      </TableRow>
-      <TableRow className={classes.root}>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
-          <Collapse in={viewing} timeout="auto" unmountOnExit>
-            <div className={classes.root}>
-              <div>
-                There's nothing here (work in progress)
-              </div>
+      <TableCell>
+        <IconButton onClick={() => setViewing(!viewing)} size="large">{viewing ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>}</IconButton>
+      </TableCell>
+      <TableCell>
+        {product.name}
+      </TableCell>
+      <TableCell>
+        {product.description}
+      </TableCell>
+      <TableCell>
+        {product.price}
+      </TableCell>
+      <TableCell>
+        {product.categories.map(c => c.name).join(", ")}
+      </TableCell>
+      <TableCell>
+        {props.CustomActions || <EditDeleteActions {...props} />}
+      </TableCell>
+      <TableCell>
+        <IdText id={product.id} text={false}/>
+      </TableCell>
+    </TableRow>
+    <TableRow className={classes.root}>
+      <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
+        <Collapse in={viewing} timeout="auto" unmountOnExit>
+          <div className={classes.root}>
+            <div>
+              There's nothing here (work in progress)
             </div>
-          </Collapse>
-        </TableCell>
-      </TableRow>
-    </>
-  )
+          </div>
+        </Collapse>
+      </TableCell>
+    </TableRow>
+  </>
 }
 
 function EditDeleteActions(props: ProductRowProps) {

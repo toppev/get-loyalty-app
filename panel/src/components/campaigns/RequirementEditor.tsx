@@ -1,5 +1,6 @@
-import { makeStyles } from "@material-ui/core/styles"
-import { createStyles, FormControlLabel, Radio, RadioGroup, TextField, Theme } from "@material-ui/core"
+import makeStyles from '@mui/styles/makeStyles'
+import { FormControlLabel, Radio, RadioGroup, TextField, Theme } from "@mui/material"
+import createStyles from '@mui/styles/createStyles'
 import { getRequirementName, Requirement } from "./Campaign"
 import React, { useEffect } from "react"
 import allRequirements from "@toppev/getloyalty-campaigns"

@@ -1,6 +1,8 @@
-import { Box, Button, createStyles, Divider, IconButton, LinearProgress, makeStyles, Theme } from '@material-ui/core'
-import EditIcon from '@material-ui/icons/Edit'
-import WebIcon from '@material-ui/icons/Web'
+import { Box, Button, Divider, IconButton, LinearProgress, Theme } from '@mui/material'
+import createStyles from '@mui/styles/createStyles'
+import makeStyles from '@mui/styles/makeStyles'
+import EditIcon from '@mui/icons-material/Edit'
+import WebIcon from '@mui/icons-material/Web'
 import React, { Suspense, useState } from 'react'
 import { backendURL } from '../../config/axios'
 import RetryButton from '../common/button/RetryButton'
@@ -9,8 +11,8 @@ import useRequest from "../../hooks/useRequest"
 import useResponseState from "../../hooks/useResponseState"
 import { createPage, deletePage, listPages, updatePage } from "../../services/pageService"
 import URLSelectorDialog from "./URLSelectorDialog"
-import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft'
-import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight'
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft'
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import PageSettings from './PageSettings'
 import { EditFileButton, FileEditor } from "./FileEditor"
 import PageCard from './PageCard'
@@ -51,7 +53,6 @@ export const usePageStyles = makeStyles((theme: Theme) =>
       color: 'darkgray'
     },
     editPageNameBtn: {},
-    pageNameField: {},
     unpublished: {
       color: theme.palette.grey[500],
     },
@@ -129,7 +130,7 @@ export const usePageStyles = makeStyles((theme: Theme) =>
     }
   }))
 
-export default function () {
+export default function PagesPage() {
 
   const classes = usePageStyles()
 
@@ -296,7 +297,7 @@ export default function () {
                       className="show-on-hover"
                       disabled={page === sortedPages[0]}
                       onClick={() => movePage(page, "left")}
-                    ><KeyboardArrowLeftIcon/></IconButton>
+                      size="large"><KeyboardArrowLeftIcon/></IconButton>
                     <Button
                       disabled={isActive}
                       className={classes.actionButton}
@@ -327,7 +328,7 @@ export default function () {
                       className="show-on-hover"
                       disabled={page === sortedPages[sortedPages.length - 1]}
                       onClick={() => movePage(page, "right")}
-                    >
+                      size="large">
                       <KeyboardArrowRightIcon/>
                     </IconButton>
                   </>

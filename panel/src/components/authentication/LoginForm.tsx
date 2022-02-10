@@ -2,21 +2,21 @@ import {
   Avatar,
   Button,
   Container,
-  createStyles,
   FormControlLabel,
   LinearProgress,
   Link,
-  makeStyles,
   Theme,
   Typography,
-} from '@material-ui/core'
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
+} from '@mui/material'
+import createStyles from '@mui/styles/createStyles'
+import makeStyles from '@mui/styles/makeStyles'
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import { Formik, FormikErrors, FormikHelpers } from 'formik'
 import { Checkbox, TextField } from 'formik-material-ui'
 import React, { useContext, useRef, useState } from 'react'
 
-import NavigateNextIcon from '@material-ui/icons/NavigateNext'
-import AddIcon from '@material-ui/icons/Add'
+import NavigateNextIcon from '@mui/icons-material/NavigateNext'
+import AddIcon from '@mui/icons-material/Add'
 import PasswordResetRequestDialog from "./PasswordResetRequestDialog"
 import AppContext from "../../context/AppContext"
 import { loginRequest, onLoginOrAccountCreate, registerRequest } from '../../services/authenticationService'

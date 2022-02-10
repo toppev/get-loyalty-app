@@ -1,5 +1,5 @@
-import { Button, ButtonProps } from "@material-ui/core"
-import EditIcon from "@material-ui/icons/Edit"
+import { Button, ButtonProps } from "@mui/material"
+import EditIcon from "@mui/icons-material/Edit"
 import React, { Suspense, useCallback } from "react"
 import { getPageStaticFileOrTemplate, STATIC_FILE_TEMPLATE_URL, uploadPageStaticFile } from "../../services/pageService"
 import { usePageStyles } from "./PagesPage"

@@ -1,4 +1,6 @@
-import { Box, createStyles, LinearProgress, makeStyles, Paper, Theme, Typography, useMediaQuery, useTheme } from "@material-ui/core"
+import { Box, LinearProgress, Paper, Theme, Typography, useMediaQuery, useTheme } from "@mui/material"
+import createStyles from '@mui/styles/createStyles'
+import makeStyles from '@mui/styles/makeStyles'
 import { Form, Formik, FormikErrors } from "formik"
 import _ from 'lodash'
 import React, { useContext, useState } from "react"

@@ -1,12 +1,14 @@
 import React, { useState } from "react"
 import GrapesPageEditor from "./GrapesPageEditor"
-import { createStyles, Dialog, DialogContent, Link, makeStyles, Theme, Typography, useMediaQuery, useTheme } from "@material-ui/core"
-import Button from "@material-ui/core/Button"
+import { Dialog, DialogContent, Link, Theme, Typography, useMediaQuery, useTheme } from "@mui/material"
+import createStyles from '@mui/styles/createStyles'
+import makeStyles from '@mui/styles/makeStyles'
+import Button from "@mui/material/Button"
 import { Page } from "../Page"
 import { SelectPlaceholderCallback } from "./blocks/placeholderBlock"
 import PlaceholderSelector from "./PlaceholderSelector"
 import CloseButton from "../../common/button/CloseButton"
-import Alert from "@material-ui/lab/Alert"
+import Alert from '@mui/material/Alert'
 import Tip from "../../common/Tip"
 
 

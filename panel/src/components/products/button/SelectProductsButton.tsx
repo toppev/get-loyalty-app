@@ -1,7 +1,9 @@
-import { Button, ButtonProps } from "@material-ui/core"
-import FastfoodIcon from "@material-ui/icons/Fastfood"
+import { Button, ButtonProps } from "@mui/material"
+import FastfoodIcon from "@mui/icons-material/Fastfood"
 import React from "react"
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
+import { Theme } from '@mui/material/styles'
+import createStyles from '@mui/styles/createStyles'
+import makeStyles from '@mui/styles/makeStyles'
 import Product from "../Product"
 
 const useStyles = makeStyles((theme: Theme) =>

@@ -1,5 +1,7 @@
 import React from "react"
-import { Box, Button, createStyles, Dialog, DialogContent, Divider, makeStyles, Paper, Theme, Typography } from "@material-ui/core"
+import { Box, Button, Dialog, DialogContent, Divider, Paper, Theme, Typography } from "@mui/material"
+import createStyles from '@mui/styles/createStyles'
+import makeStyles from '@mui/styles/makeStyles'
 import CloseButton from "../common/button/CloseButton"
 import { Campaign } from "./Campaign"
 

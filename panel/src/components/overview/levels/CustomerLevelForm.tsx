@@ -1,5 +1,7 @@
 import { CustomerLevel } from "../../../context/AppContext"
-import { Button, createStyles, Dialog, DialogContent, makeStyles, Theme, Typography } from "@material-ui/core"
+import { Button, Dialog, DialogContent, Theme, Typography } from "@mui/material"
+import createStyles from '@mui/styles/createStyles'
+import makeStyles from '@mui/styles/makeStyles'
 import React, { useState } from "react"
 import CloseButton from "../../common/button/CloseButton"
 import { Formik, FormikErrors } from "formik"

@@ -1,15 +1,17 @@
-import { createStyles, makeStyles, Theme } from "@material-ui/core"
+import { Theme } from "@mui/material"
+import createStyles from '@mui/styles/createStyles'
+import makeStyles from '@mui/styles/makeStyles'
 import React from "react"
 
 interface IdTextProps {
-  id: string
+  id: string | undefined
   text?: string | boolean
 }
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     itemId: {
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         display: 'none',
       },
       color: 'rgba(0,0,0,0.5)',
@@ -19,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   }))
 
-export default function ({ id, text }: IdTextProps) {
+export default function IdText({ id, text }: IdTextProps) {
 
   const classes = useStyles()
 

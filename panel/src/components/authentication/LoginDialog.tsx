@@ -1,8 +1,11 @@
-import Dialog from '@material-ui/core/Dialog'
-import DialogContent from '@material-ui/core/DialogContent'
+import Dialog from '@mui/material/Dialog'
+import DialogContent from '@mui/material/DialogContent'
 import React from 'react'
 import LoginForm from './LoginForm'
-import { createStyles, makeStyles, Theme } from '@material-ui/core'
+import { Theme } from '@mui/material'
+
+import createStyles from '@mui/styles/createStyles'
+import makeStyles from '@mui/styles/makeStyles'
 
 interface LoginDialogProps {
   open: boolean
@@ -11,7 +14,7 @@ interface LoginDialogProps {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     dialogRoot: {
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         minWidth: '95%'
       }
     },

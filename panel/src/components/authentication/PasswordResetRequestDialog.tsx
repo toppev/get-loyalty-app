@@ -1,23 +1,23 @@
 import React, { useEffect, useRef, useState } from "react"
 import {
   Button,
-  createStyles,
   Dialog,
   DialogContent,
   InputAdornment,
-  makeStyles,
   TextField,
   Theme,
   Typography,
-  useTheme
-} from "@material-ui/core"
+  useTheme,
+} from "@mui/material"
+import createStyles from '@mui/styles/createStyles'
+import makeStyles from '@mui/styles/makeStyles'
 import CloseButton from "../common/button/CloseButton"
-import EmailIcon from '@material-ui/icons/Email'
+import EmailIcon from '@mui/icons-material/Email'
 import { post, validBackendURL } from "../../config/axios"
 import { isEmail } from "../../util/validate"
 import { ensureServerAPI } from "../../services/serverService"
-import SendIcon from "@material-ui/icons/Send"
-import ReCAPTCHA from "react-google-recaptcha";
+import SendIcon from "@mui/icons-material/Send"
+import ReCAPTCHA from "react-google-recaptcha"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

@@ -75,7 +75,7 @@ function GrapesPageEditor(props) {
           grapesjsTouch,
           grapesjsTuiImageEditor
         ],
-        components: data['gjs-components'] || await getHtml(),
+        components: data['gjs-components'] || (await getHtml()),
         style: data['gjs-styles'],
         storageManager: {
           type: 'remote',

@@ -1,7 +1,9 @@
 import RewardItem, { RemoveEditRewardActions } from "./RewardItem"
 import RewardFormDialog from "./RewardFormDialog"
-import { Button, createStyles, makeStyles, Theme } from "@material-ui/core"
-import AddIcon from "@material-ui/icons/Add"
+import { Button, Theme } from "@mui/material"
+import createStyles from '@mui/styles/createStyles'
+import makeStyles from '@mui/styles/makeStyles'
+import AddIcon from "@mui/icons-material/Add"
 import RewardSelector from "./RewardSelector"
 import React, { useState } from "react"
 import Reward from "./Reward"

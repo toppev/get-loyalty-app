@@ -1,7 +1,7 @@
 import React, { useState } from "react"
-import { Button, Collapse } from "@material-ui/core"
-import VisibilityOffIcon from "@material-ui/icons/VisibilityOff"
-import VisibilityIcon from "@material-ui/icons/Visibility"
+import { Button, Collapse } from "@mui/material"
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff"
+import VisibilityIcon from "@mui/icons-material/Visibility"
 
 interface RenderListProps<T> {
   title?: string

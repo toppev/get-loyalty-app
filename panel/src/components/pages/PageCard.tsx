@@ -1,10 +1,11 @@
-import { Card, CardActions, CardContent, CardProps, IconButton, TextField, Tooltip, Typography } from "@material-ui/core"
+import { Card, CardActions, CardContent, CardProps, IconButton, TextField, Tooltip, Typography } from "@mui/material"
 import { Page } from "./Page"
 import React, { useState } from "react"
 import { backendURL, post } from "../../config/axios"
-import EditIcon from "@material-ui/icons/Edit"
+import EditIcon from "@mui/icons-material/Edit"
 import IdText from "../common/IdText"
 import { usePageStyles } from "./PagesPage"
+import { styled } from "@mui/material/styles"
 
 interface PageCardProps extends CardProps {
   page: Page
@@ -42,9 +43,8 @@ export default function PageCard(props: PageCardProps) {
       <div className={classes.cardContentDiv}>
         <div className={classes.backgroundImage} style={backgroundImageCss}/>
         <CardContent className={`${classes.cardContent} ${classes.center}`}>
-          <TextField
+          <PageTitleField
             disabled={!editing}
-            className={classes.pageNameField}
             defaultValue={page.name}
             margin="dense"
             name="name"
@@ -68,6 +68,7 @@ export default function PageCard(props: PageCardProps) {
                     <IconButton
                       className={classes.editPageNameBtn}
                       onClick={() => editing ? submitNameChange() : setEditing(true)}
+                      size="large"
                     >
                       <EditIcon/>
                     </IconButton>
@@ -91,13 +92,20 @@ export default function PageCard(props: PageCardProps) {
       <CardActions className={`${classes.cardActions} hoverable`}>
         {<p style={{ color: 'grey' }}>{page.template ? "Template page" : ""}</p>}
         {displayStage &&
-        <Typography variant="h6">
-          Stage:
-          <span className={page.isPublished() ? classes.published : classes.unpublished}> {page.getStageDisplayName()}</span>
-        </Typography>}
+          <Typography variant="h6">
+            Stage:
+            <span className={page.isPublished() ? classes.published : classes.unpublished}> {page.getStageDisplayName()}</span>
+          </Typography>}
         {actions}
         {displayId && <IdText id={page._id}/>}
       </CardActions>
     </Card>
   )
 }
+
+const PageTitleField = styled(TextField)(() => ({
+  ".MuiInputBase-input.Mui-disabled": {
+    WebkitTextFillColor: "#3b3b3b",
+    color: "#3b3b3b"
+  }
+}))

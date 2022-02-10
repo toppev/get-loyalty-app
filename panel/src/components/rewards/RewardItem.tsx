@@ -1,9 +1,11 @@
-import { Button, createStyles, makeStyles, Theme } from '@material-ui/core'
-import Grid from '@material-ui/core/Grid'
+import { Button, Theme } from '@mui/material'
+import createStyles from '@mui/styles/createStyles'
+import makeStyles from '@mui/styles/makeStyles'
+import Grid from '@mui/material/Grid'
 import React from 'react'
 import Reward from './Reward'
 import { DateExpired } from "../common/StringUtils"
-import EditIcon from "@material-ui/icons/Edit"
+import EditIcon from "@mui/icons-material/Edit"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -21,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) =>
       margin: '5px',
     },
     noMobile: {
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         display: 'none',
       },
     },

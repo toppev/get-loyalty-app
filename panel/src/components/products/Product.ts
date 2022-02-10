@@ -2,7 +2,7 @@ import Category from "../categories/Category"
 
 export default class Product {
 
-  public id: string
+  public id?: string
   public name: string
   public description: string = ""
   public price: string = ""

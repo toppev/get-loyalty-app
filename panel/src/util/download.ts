@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Stolen from https://gist.github.com/dreamyguy/6b4ab77d2f118adb8a63c4a03fba349d
 
 export function downloadFile(data: any, filename: string, mime?: string) {

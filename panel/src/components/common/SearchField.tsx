@@ -1,8 +1,9 @@
-import { createStyles, InputAdornment, TextField, Theme } from "@material-ui/core"
-import SearchIcon from "@material-ui/icons/Search"
+import { InputAdornment, TextField, Theme } from "@mui/material"
+import createStyles from '@mui/styles/createStyles'
+import SearchIcon from "@mui/icons-material/Search"
 import React from "react"
-import { StandardTextFieldProps } from "@material-ui/core/TextField/TextField"
-import { makeStyles } from "@material-ui/core/styles"
+import { StandardTextFieldProps } from "@mui/material/TextField/TextField"
+import makeStyles from '@mui/styles/makeStyles'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

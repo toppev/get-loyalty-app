@@ -1,7 +1,7 @@
 import Reward from "../rewards/Reward"
 
 export default class Customer {
-  id!: string;
+  id!: string
   email: string
   role: string
   birthday?: Date
@@ -9,7 +9,7 @@ export default class Customer {
   hasPassword?: boolean
   authentication?: CustomerAuthentication
   customerData!: CustomerData
-  createdAt: Date;
+  createdAt: Date
 
   constructor(data: any) {
     this.id = data.id

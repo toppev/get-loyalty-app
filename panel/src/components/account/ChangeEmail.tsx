@@ -1,16 +1,16 @@
-import AppContext, { User } from "../../context/AppContext";
-import React, { useContext, useState } from "react";
-import { Form, Formik, FormikErrors } from "formik";
-import { isEmail } from "../../util/validate";
-import useRequest from "../../hooks/useRequest";
-import { updateServerOwner } from "../../services/serverService";
-import { updateUser } from "../../services/userService";
-import { Button, LinearProgress, Paper } from "@material-ui/core";
-import clsx from "clsx";
-import { TextField } from "formik-material-ui";
-import RetryButton from "../common/button/RetryButton";
-import MailOutlineIcon from "@material-ui/icons/MailOutline";
-import { useStyles } from "./AccountPage";
+import AppContext, { User } from "../../context/AppContext"
+import React, { useContext, useState } from "react"
+import { Form, Formik, FormikErrors } from "formik"
+import { isEmail } from "../../util/validate"
+import useRequest from "../../hooks/useRequest"
+import { updateServerOwner } from "../../services/serverService"
+import { updateUser } from "../../services/userService"
+import { Button, LinearProgress, Paper } from "@mui/material"
+import clsx from "clsx"
+import { TextField } from "formik-material-ui"
+import RetryButton from "../common/button/RetryButton"
+import MailOutlineIcon from "@mui/icons-material/MailOutline"
+import { useStyles } from "./AccountPage"
 
 interface EmailFormProps {
   user: User

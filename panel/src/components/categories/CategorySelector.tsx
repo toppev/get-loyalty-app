@@ -1,5 +1,5 @@
-import { StandardTextFieldProps, TextField } from "@material-ui/core"
-import Autocomplete from '@material-ui/lab/Autocomplete'
+import { StandardTextFieldProps, TextField } from "@mui/material"
+import Autocomplete from '@mui/material/Autocomplete'
 import React, { useEffect, useState } from "react"
 import Category from "./Category"
 import { createCategories, getAllCategories } from "../../services/categoryService"

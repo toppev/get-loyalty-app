@@ -1,8 +1,17 @@
-import { Button, createStyles, Dialog, DialogContent, DialogContentText, LinearProgress, Theme, Typography } from "@material-ui/core"
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogContentText,
+  LinearProgress,
+  Theme,
+  Typography,
+} from "@mui/material"
+import createStyles from '@mui/styles/createStyles'
 import React, { useState } from "react"
 import ProductRow from "./ProductRow"
 import Product from "./Product"
-import { makeStyles } from "@material-ui/core/styles"
+import makeStyles from '@mui/styles/makeStyles'
 import CloseButton from "../common/button/CloseButton"
 import useRequest from "../../hooks/useRequest"
 import { listProducts } from "../../services/productService"

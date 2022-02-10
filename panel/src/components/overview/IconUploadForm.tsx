@@ -1,8 +1,10 @@
 import React, { useState } from "react"
 import { setBusinessIcon } from '../../services/businessService'
-import { Button, createStyles, makeStyles, Theme } from "@material-ui/core"
+import { Button, Theme } from "@mui/material"
+import createStyles from '@mui/styles/createStyles'
+import makeStyles from '@mui/styles/makeStyles'
 import { backendURL } from "../../config/axios"
-import { Alert } from "@material-ui/lab"
+import { Alert } from '@mui/material'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

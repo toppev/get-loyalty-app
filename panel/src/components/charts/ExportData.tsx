@@ -1,6 +1,8 @@
-import { Box, Button, createStyles, FormControlLabel, makeStyles, Paper, Radio, RadioGroup, Theme, Typography } from "@material-ui/core"
+import { Box, Button, FormControlLabel, Paper, Radio, RadioGroup, Theme, Typography } from "@mui/material"
+import createStyles from '@mui/styles/createStyles'
+import makeStyles from '@mui/styles/makeStyles'
 import React from "react"
-import DownloadIcon from '@material-ui/icons/GetApp'
+import DownloadIcon from '@mui/icons-material/GetApp'
 import { backendURL, get } from "../../config/axios"
 import { downloadFile } from "../../util/download"
 

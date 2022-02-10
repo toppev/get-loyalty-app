@@ -1,4 +1,4 @@
-import { Box, Paper, TextField, Typography, useMediaQuery, useTheme } from "@material-ui/core"
+import { Box, Paper, TextField, Typography, useMediaQuery, useTheme } from "@mui/material"
 import StageSelector from "./StageSelector"
 import { Page, PUBLISHED } from "./Page"
 import { updatePage } from "../../services/pageService"
@@ -19,7 +19,7 @@ interface PageSettingsProps {
 export default function ({ pageOpen, requests }: PageSettingsProps) {
 
   const theme = useTheme()
-  const smallScreen = useMediaQuery(theme.breakpoints.down('sm'))
+  const smallScreen = useMediaQuery(theme.breakpoints.down('md'))
   const classes = usePageStyles()
 
   const [fileContent, setFileContent] = useState<string | undefined>()

@@ -1,5 +1,7 @@
-import { Box, Button, createStyles, Link, makeStyles, Theme, Typography, useMediaQuery, useTheme } from "@material-ui/core"
-import LinkIcon from "@material-ui/icons/Link"
+import { Box, Button, Link, Theme, Typography, useMediaQuery, useTheme } from "@mui/material"
+import createStyles from '@mui/styles/createStyles'
+import makeStyles from '@mui/styles/makeStyles'
+import LinkIcon from "@mui/icons-material/Link"
 import QRCode from "qrcode.react"
 import React from "react"
 import CopyToClipboard from '../../common/CopyToClipboard'

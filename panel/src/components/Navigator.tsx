@@ -1,27 +1,29 @@
-import { Badge, Link } from '@material-ui/core'
-import Drawer from '@material-ui/core/Drawer'
-import Hidden from '@material-ui/core/Hidden'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListItemText from '@material-ui/core/ListItemText'
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
-import AppsIcon from '@material-ui/icons/Apps'
-import HomeIcon from '@material-ui/icons/Home'
-import PhoneIcon from '@material-ui/icons/MobileFriendly'
-import PagesIcon from '@material-ui/icons/Pages'
-import PeopleIcon from '@material-ui/icons/People'
-import PermMediaOutlinedIcon from '@material-ui/icons/PhotoSizeSelectActual'
-import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive'
-import QrCodeScannerIcon from '@material-ui/icons/CropFree' // TODO: use QrCodeScanner after migration to mui v5 icons
-import RedeemIcon from '@material-ui/icons/Redeem'
-import SettingsIcon from '@material-ui/icons/Settings'
-import FeedbackIcon from '@material-ui/icons/Feedback'
-import HelpIcon from '@material-ui/icons/Help'
-import OpenInNewIcon from '@material-ui/icons/OpenInNew'
+import { Badge, Link } from '@mui/material'
+import Drawer from '@mui/material/Drawer'
+import Hidden from '@mui/material/Hidden'
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import ListItemText from '@mui/material/ListItemText'
+import { Theme } from '@mui/material/styles'
+import createStyles from '@mui/styles/createStyles'
+import makeStyles from '@mui/styles/makeStyles'
+import AppsIcon from '@mui/icons-material/Apps'
+import HomeIcon from '@mui/icons-material/Home'
+import PhoneIcon from '@mui/icons-material/MobileFriendly'
+import PagesIcon from '@mui/icons-material/Pages'
+import PeopleIcon from '@mui/icons-material/People'
+import PermMediaOutlinedIcon from '@mui/icons-material/PhotoSizeSelectActual'
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive'
+import QrCodeScannerIcon from '@mui/icons-material/CropFree' // TODO: use QrCodeScanner after migration to mui v5 icons
+import RedeemIcon from '@mui/icons-material/Redeem'
+import SettingsIcon from '@mui/icons-material/Settings'
+import FeedbackIcon from '@mui/icons-material/Feedback'
+import HelpIcon from '@mui/icons-material/Help'
+import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import clsx from 'clsx'
 import React from 'react'
-import TrendingUpIcon from '@material-ui/icons/TrendingUp'
+import TrendingUpIcon from '@mui/icons-material/TrendingUp'
 import { NavLink } from "react-router-dom"
 import { AccountNotificationValues } from './account/AccountNotifications'
 
@@ -273,7 +275,7 @@ export default function Navigator(props: NavigatorProps) {
             {drawer}
           </Drawer>
         </Hidden>
-        <Hidden xsDown implementation="css">
+        <Hidden smDown implementation="css">
           <Drawer
             className={classes.drawer}
             variant="permanent"

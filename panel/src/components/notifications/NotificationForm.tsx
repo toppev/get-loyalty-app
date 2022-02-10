@@ -1,8 +1,9 @@
-import { Button, createStyles, LinearProgress, Paper, Theme, Typography } from "@material-ui/core"
-import { makeStyles } from "@material-ui/core/styles"
+import { Button, LinearProgress, Paper, Theme, Typography } from "@mui/material"
+import createStyles from '@mui/styles/createStyles'
+import makeStyles from '@mui/styles/makeStyles'
 import { Form, Formik, FormikErrors } from "formik"
 import RetryButton from "../common/button/RetryButton"
-import SendIcon from "@material-ui/icons/Send"
+import SendIcon from "@mui/icons-material/Send"
 import React from "react"
 import { PushNotification } from "./PushNotification"
 import useRequest from "../../hooks/useRequest"

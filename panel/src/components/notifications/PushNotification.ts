@@ -5,7 +5,7 @@ export class PushNotification {
   link: string
   sent?: Date
   receivers?: number
-  id: string = `new_notification${Math.random()}`
+  id?: string = `new_notification${Math.random()}`
 
   constructor(data: any) {
     this.title = data.title

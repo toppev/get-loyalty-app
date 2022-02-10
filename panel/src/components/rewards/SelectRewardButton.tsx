@@ -1,5 +1,7 @@
-import { Button, createStyles, makeStyles, Theme } from "@material-ui/core"
-import EditIcon from '@material-ui/icons/Edit'
+import { Button, Theme } from "@mui/material"
+import createStyles from '@mui/styles/createStyles'
+import makeStyles from '@mui/styles/makeStyles'
+import EditIcon from '@mui/icons-material/Edit'
 import React from "react"
 import Reward from "./Reward"
 

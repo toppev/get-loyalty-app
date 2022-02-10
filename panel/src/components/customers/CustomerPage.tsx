@@ -3,18 +3,19 @@ import {
   Box,
   Button,
   Collapse,
-  createStyles,
   IconButton,
   LinearProgress,
-  makeStyles,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
-  TableRow, TableSortLabel,
-  Theme
-} from "@material-ui/core"
+  TableRow,
+  TableSortLabel,
+  Theme,
+} from "@mui/material"
+import createStyles from '@mui/styles/createStyles'
+import makeStyles from '@mui/styles/makeStyles'
 import Customer from "./Customer"
 import RetryButton from "../common/button/RetryButton"
 import SearchField from "../common/SearchField"
@@ -25,8 +26,8 @@ import useResponseState from "../../hooks/useResponseState"
 import { Link } from "react-router-dom"
 import RewardSelector from "../rewards/RewardSelector"
 import IdText from "../common/IdText"
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown'
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import CustomerDetails from "./CustomerDetails"
 import { debounce } from "lodash"
 
@@ -184,45 +185,41 @@ function CustomerRow(props: CustomerRowProps) {
 
   const [viewing, setViewing] = useState(false)
 
-  return (
-    <>
-      <TableRow className={classes.root}>
-        <TableCell>
-          <IconButton
-            onClick={() => setViewing(!viewing)}
-          >{viewing ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>}</IconButton>
-        </TableCell>
-        <TableCell>
-          {customer.email}
-        </TableCell>
-        <TableCell>
-          {rewards.length} rewards
-        </TableCell>
-        <TableCell>
-          {properties.points} points
-        </TableCell>
-        <TableCell>
-          {customer.lastVisit?.toLocaleString()}
-        </TableCell>
-        <TableCell>
-          { /* Might change the default role from user to customer later */}
-          {role !== 'user' && role !== 'customer' ? role : ""}
-        </TableCell>
-        <TableCell>
-          <IdText id={customer.id} text={false}/>
-        </TableCell>
-      </TableRow>
-      <TableRow className={classes.root}>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
-          <Collapse in={viewing} timeout="auto" unmountOnExit>
-            <div className={classes.root}>
-              <CustomerDetails initialCustomer={customer}/>
-            </div>
-          </Collapse>
-        </TableCell>
-      </TableRow>
-    </>
-  )
+  return <>
+    <TableRow className={classes.root}>
+      <TableCell>
+        <IconButton onClick={() => setViewing(!viewing)} size="large">{viewing ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>}</IconButton>
+      </TableCell>
+      <TableCell>
+        {customer.email}
+      </TableCell>
+      <TableCell>
+        {rewards.length} rewards
+      </TableCell>
+      <TableCell>
+        {properties.points} points
+      </TableCell>
+      <TableCell>
+        {customer.lastVisit?.toLocaleString()}
+      </TableCell>
+      <TableCell>
+        { /* Might change the default role from user to customer later */}
+        {role !== 'user' && role !== 'customer' ? role : ""}
+      </TableCell>
+      <TableCell>
+        <IdText id={customer.id} text={false}/>
+      </TableCell>
+    </TableRow>
+    <TableRow className={classes.root}>
+      <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
+        <Collapse in={viewing} timeout="auto" unmountOnExit>
+          <div className={classes.root}>
+            <CustomerDetails initialCustomer={customer}/>
+          </div>
+        </Collapse>
+      </TableCell>
+    </TableRow>
+  </>
 }
 
 

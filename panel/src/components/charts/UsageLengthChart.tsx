@@ -1,4 +1,4 @@
-import { Card } from "@material-ui/core"
+import { Card } from "@mui/material"
 import { Bar } from "react-chartjs-2"
 import React from "react"
 import { ChartProps, COMMON_LINE_CHART_OPTIONS, useChartStyles } from "./ChartConsts"

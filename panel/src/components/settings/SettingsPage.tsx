@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  createStyles,
   Dialog,
   DialogContent,
   Divider,
@@ -19,16 +18,17 @@ import {
   Theme,
   Typography,
   useMediaQuery,
-  useTheme
-} from "@material-ui/core"
+  useTheme,
+} from "@mui/material"
+import createStyles from '@mui/styles/createStyles'
 import React, { useContext, useState } from "react"
-import { makeStyles } from "@material-ui/core/styles"
+import makeStyles from '@mui/styles/makeStyles'
 import { Form, Formik, FormikErrors } from "formik"
 import AppContext, { Business } from "../../context/AppContext"
 import _ from "lodash"
 import { TextField } from "formik-material-ui"
 import { updateBusiness } from "../../services/businessService"
-import { Alert } from "@material-ui/lab"
+import { Alert } from '@mui/material'
 import { backendURL } from "../../config/axios"
 import useRequest from "../../hooks/useRequest"
 import SaveChangesSnackbar from "../common/SaveChangesSnackbar"

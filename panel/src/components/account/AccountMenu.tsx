@@ -1,9 +1,11 @@
-import { Badge, createStyles, IconButton, Link, makeStyles, Menu, MenuItem, Theme } from "@material-ui/core"
+import { Badge, IconButton, Link, Menu, MenuItem, Theme } from "@mui/material"
+import createStyles from '@mui/styles/createStyles'
+import makeStyles from '@mui/styles/makeStyles'
 import React, { useState } from "react"
 import { AccountNotificationValues } from "./AccountNotifications"
-import AccountBox from '@material-ui/icons/AccountBox'
-import AccountCircleIcon from '@material-ui/icons/AccountCircle'
-import ExitToAppIcon from '@material-ui/icons/ExitToApp'
+import AccountBox from '@mui/icons-material/AccountBox'
+import AccountCircleIcon from '@mui/icons-material/AccountCircle'
+import ExitToAppIcon from '@mui/icons-material/ExitToApp'
 import { logout } from "../../services/authenticationService"
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -48,7 +50,7 @@ export default function (props: AccountButtonProps) {
 
   return (
     <div className={classes.wrapperDiv}>
-      <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
+      <IconButton onClick={(e) => setAnchorEl(e.currentTarget)} size="large">
         <Badge classes={{ root: classes.menuIcon, badge: classes.badge }} color="secondary" badgeContent={allNotifications}>
           <AccountCircleIcon className={classes.icon} fontSize="large"/>
         </Badge>

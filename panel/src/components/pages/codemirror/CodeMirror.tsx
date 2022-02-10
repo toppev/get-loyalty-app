@@ -1,7 +1,8 @@
 import { Controlled as CodeMirror } from 'react-codemirror2'
 
 import React, { useState } from "react"
-import { Button, Dialog, DialogContent, Link, makeStyles } from "@material-ui/core"
+import { Button, Dialog, DialogContent, Link } from "@mui/material"
+import makeStyles from '@mui/styles/makeStyles'
 import CloseButton from "../../common/button/CloseButton"
 import "codemirror/lib/codemirror.css"
 import "codemirror/theme/material.css"
@@ -20,7 +21,9 @@ import "codemirror/addon/fold/brace-fold"
 import "codemirror/addon/fold/comment-fold"
 import "codemirror/addon/fold/foldgutter.css"
 import './codeMirror.css'
-import { createStyles, Theme } from "@material-ui/core/styles"
+import { Theme } from "@mui/material/styles"
+
+import createStyles from '@mui/styles/createStyles'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

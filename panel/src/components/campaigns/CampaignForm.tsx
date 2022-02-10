@@ -4,20 +4,20 @@ import React, { useState } from "react"
 import {
   Box,
   Button,
-  createStyles,
   FormControlLabel,
   LinearProgress,
-  makeStyles,
   Radio,
   RadioGroup,
   Theme,
-  Typography
-} from "@material-ui/core"
+  Typography,
+} from "@mui/material"
+import createStyles from '@mui/styles/createStyles'
+import makeStyles from '@mui/styles/makeStyles'
 import { Form, Formik, FormikErrors } from "formik"
 import { TextField } from "formik-material-ui"
 import CategorySelector from "../categories/CategorySelector"
 import ProductSelector from "../products/ProductSelector"
-import SaveIcon from "@material-ui/icons/Save"
+import SaveIcon from "@mui/icons-material/Save"
 import IdText from "../common/IdText"
 import { MuiPickersUtilsProvider } from "@material-ui/pickers"
 import Reward from "../rewards/Reward"

@@ -1,4 +1,4 @@
-import { Dialog, DialogContent } from "@material-ui/core"
+import { Dialog, DialogContent } from "@mui/material"
 import React from "react"
 import ProductForm, { ProductFormProps } from "./ProductForm"
 import CloseButton from "../common/button/CloseButton"

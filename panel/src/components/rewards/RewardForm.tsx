@@ -1,5 +1,7 @@
-import { Button, createStyles, LinearProgress, makeStyles, Theme, Typography } from "@material-ui/core"
-import SaveIcon from '@material-ui/icons/Save'
+import { Button, LinearProgress, Theme, Typography } from "@mui/material"
+import createStyles from '@mui/styles/createStyles'
+import makeStyles from '@mui/styles/makeStyles'
+import SaveIcon from '@mui/icons-material/Save'
 import { Form, Formik, FormikErrors } from "formik"
 import React, { useState } from "react"
 import CategorySelector from '../categories/CategorySelector'
@@ -8,9 +10,9 @@ import ProductSelector from "../products/ProductSelector"
 import Reward from "./Reward"
 import { TextField } from "formik-material-ui"
 import SelectProductsButton from "../products/button/SelectProductsButton"
-import { MuiPickersUtilsProvider } from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
-import CustomDatePicker from "../common/CustomDatePicker";
+import { MuiPickersUtilsProvider } from "@material-ui/pickers"
+import DateFnsUtils from "@date-io/date-fns"
+import CustomDatePicker from "../common/CustomDatePicker"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

@@ -1,4 +1,4 @@
-import Tooltip, { TooltipProps } from "@material-ui/core/Tooltip"
+import Tooltip, { TooltipProps } from "@mui/material/Tooltip"
 import copy from "clipboard-copy"
 import React, { useState } from "react"
 

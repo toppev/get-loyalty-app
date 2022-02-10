@@ -1,4 +1,6 @@
-import { Button, createStyles, Divider, makeStyles, Paper, Theme, Typography } from "@material-ui/core"
+import { Button, Divider, Paper, Theme, Typography } from "@mui/material"
+import createStyles from '@mui/styles/createStyles'
+import makeStyles from '@mui/styles/makeStyles'
 import React from "react"
 import { Campaign } from "./Campaign"
 import RewardItem from "../rewards/RewardItem"

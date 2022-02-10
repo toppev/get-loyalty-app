@@ -1,10 +1,11 @@
-import { Checkbox, createStyles, Input, ListItemText, Select, Theme } from "@material-ui/core"
-import MenuItem from '@material-ui/core/MenuItem'
+import { Checkbox, Input, ListItemText, Select, SelectChangeEvent, Theme } from "@mui/material"
+import createStyles from '@mui/styles/createStyles'
+import MenuItem from '@mui/material/MenuItem'
 import React, { useEffect, useState } from "react"
 import { Requirement } from "./Campaign"
 import allRequirements from "@toppev/getloyalty-campaigns"
 import { RequirementEditor } from "./RequirementEditor"
-import { makeStyles } from "@material-ui/core/styles"
+import makeStyles from '@mui/styles/makeStyles'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -31,8 +32,9 @@ export default function (props: RequirementSelectorProps) {
 
   useEffect(() => props.onChange(requirements), [props, requirements])
 
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    const selected = event.target.value as string[]
+  const handleChange = (event: SelectChangeEvent<string[]>) => {
+    console.log(typeof event.target.value, event.target.value)
+    const selected = event.target.value as unknown as string[]
     setOpen(false)
     const values: Requirement[] = []
     selected.forEach(str => {
@@ -58,7 +60,7 @@ export default function (props: RequirementSelectorProps) {
           value={requirements.map(req => req.type)}
           onChange={handleChange}
           input={<Input/>}
-          renderValue={selected => (selected as string[]).map(s => allRequirements[s].name).join(', ')}
+          renderValue={selected => (selected as unknown as string[]).map(s => allRequirements[s].name).join(', ')}
           label="Campaign Requirements"
           inputProps={{
             name: 'requirements',

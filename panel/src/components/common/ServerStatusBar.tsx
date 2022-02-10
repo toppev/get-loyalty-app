@@ -1,7 +1,10 @@
 import { waitForServer } from "../../services/serverService"
-import { Alert } from "@material-ui/lab"
+import { Alert } from '@mui/material'
 import React, { useEffect, useState } from "react"
-import { createStyles, makeStyles, Theme } from "@material-ui/core"
+import { Theme } from "@mui/material"
+
+import createStyles from '@mui/styles/createStyles'
+import makeStyles from '@mui/styles/makeStyles'
 
 type StatusBarState = { severity: 'success' | 'info' | 'warning' | 'error', message: string }
 

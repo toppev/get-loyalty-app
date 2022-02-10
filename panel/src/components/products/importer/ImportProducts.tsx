@@ -1,19 +1,19 @@
 import {
   Button,
   ButtonProps,
-  createStyles,
   Dialog,
   DialogContent,
   DialogContentText,
   IconButton,
   LinearProgress,
-  makeStyles,
   Theme,
-  Typography
-} from '@material-ui/core'
-import CloseIcon from '@material-ui/icons/Close'
-import CloudUploadIcon from '@material-ui/icons/CloudUpload'
-import GetAppIcon from '@material-ui/icons/GetApp'
+  Typography,
+} from '@mui/material'
+import createStyles from '@mui/styles/createStyles'
+import makeStyles from '@mui/styles/makeStyles'
+import CloseIcon from '@mui/icons-material/Close'
+import CloudUploadIcon from '@mui/icons-material/CloudUpload'
+import GetAppIcon from '@mui/icons-material/GetApp'
 import React, { ReactElement, useState } from 'react'
 import { post, uploadFile } from '../../../config/axios'
 import RequestError from '../../../util/requestError'
@@ -150,7 +150,11 @@ export default function ImportProducts(props: ImportProductsProps): ReactElement
 
   return Object.keys(mappingFields).length !== 0 ? (
     <Dialog open={true} fullWidth={true}>
-      <IconButton className={classes.closeButton} aria-label="close" onClick={discardAll}>
+      <IconButton
+        className={classes.closeButton}
+        aria-label="close"
+        onClick={discardAll}
+        size="large">
         <CloseIcon/>
       </IconButton>
       <DialogContent>
@@ -170,7 +174,11 @@ export default function ImportProducts(props: ImportProductsProps): ReactElement
         >Import Products</Button>
       </div>
       <Dialog open={dialogOpen} aria-labelledby="form-dialog-title">
-        <IconButton className={classes.closeButton} aria-label="close" onClick={resetImport}>
+        <IconButton
+          className={classes.closeButton}
+          aria-label="close"
+          onClick={resetImport}
+          size="large">
           <CloseIcon/>
         </IconButton>
         <DialogContent className={classes.content}>
@@ -276,7 +284,11 @@ function ProductPreview({ open, onClickClose, initialProducts }: PreviewProps) {
 
   return (
     <Dialog open={open} fullWidth={true}>
-      <IconButton className={classes.closeButton} aria-label="close" onClick={onClickClose}>
+      <IconButton
+        className={classes.closeButton}
+        aria-label="close"
+        onClick={onClickClose}
+        size="large">
         <CloseIcon/>
       </IconButton>
       <DialogContent>
