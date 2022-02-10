@@ -15,7 +15,7 @@ import PagesIcon from '@mui/icons-material/Pages'
 import PeopleIcon from '@mui/icons-material/People'
 import PermMediaOutlinedIcon from '@mui/icons-material/PhotoSizeSelectActual'
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive'
-import QrCodeScannerIcon from '@mui/icons-material/CropFree' // TODO: use QrCodeScanner after migration to mui v5 icons
+import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner'
 import RedeemIcon from '@mui/icons-material/Redeem'
 import SettingsIcon from '@mui/icons-material/Settings'
 import FeedbackIcon from '@mui/icons-material/Feedback'

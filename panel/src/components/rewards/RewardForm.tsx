@@ -10,8 +10,8 @@ import ProductSelector from "../products/ProductSelector"
 import Reward from "./Reward"
 import { TextField } from "formik-material-ui"
 import SelectProductsButton from "../products/button/SelectProductsButton"
-import { MuiPickersUtilsProvider } from "@material-ui/pickers"
-import DateFnsUtils from "@date-io/date-fns"
+import LocalizationProvider from '@mui/lab/LocalizationProvider'
+import AdapterDateFns from '@mui/lab/AdapterDateFns'
 import CustomDatePicker from "../common/CustomDatePicker"
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -129,15 +129,13 @@ export default function (props: RewardFormProps) {
             />
 
             <div>
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <CustomDatePicker
-                  margin="normal"
                   label="Reward expires (dd/MM/yyyy)"
-                  format="dd/MM/yyyy"
                   value={expiresDate}
-                  onChange={date => date && setExpiresDate(date)}
+                  setValue={setExpiresDate}
                 />
-              </MuiPickersUtilsProvider>
+              </LocalizationProvider>
             </div>
 
             <p className={classes.typography}>

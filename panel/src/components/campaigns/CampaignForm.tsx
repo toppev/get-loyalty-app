@@ -14,14 +14,13 @@ import {
 import createStyles from '@mui/styles/createStyles'
 import makeStyles from '@mui/styles/makeStyles'
 import { Form, Formik, FormikErrors } from "formik"
-import { TextField } from "formik-material-ui"
 import CategorySelector from "../categories/CategorySelector"
 import ProductSelector from "../products/ProductSelector"
 import SaveIcon from "@mui/icons-material/Save"
 import IdText from "../common/IdText"
-import { MuiPickersUtilsProvider } from "@material-ui/pickers"
+import LocalizationProvider from '@mui/lab/LocalizationProvider'
 import Reward from "../rewards/Reward"
-import DateFnsUtils from "@date-io/date-fns"
+import AdapterDateFns from '@mui/lab/AdapterDateFns'
 import SelectProductsButton from "../products/button/SelectProductsButton"
 import RequirementSelector from "./RequirementSelector"
 import useRequest from "../../hooks/useRequest"
@@ -30,6 +29,7 @@ import { createCampaign, updateCampaign } from "../../services/campaignService"
 import { isAlphanumeric } from "../../util/validate"
 import RewardManager from "../rewards/RewardManager"
 import CustomDatePicker from "../common/CustomDatePicker"
+import { TextField } from "formik-material-ui"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -187,26 +187,22 @@ export default function ({ initialCampaign, onSubmitted }: CampaignFormProps) {
               />
             </RadioGroup>
             <Box display="flex" flexWrap="wrap" justifyContent="flex-start" style={{ gap: '25px' }}>
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <CustomDatePicker
-                  margin="normal"
                   label="Campaign start date (dd/MM/yyyy)"
-                  format="dd/MM/yyyy"
                   value={startDate}
                   showTodayButton
-                  onChange={date => date && setStartDate(date)}
+                  setValue={setStartDate}
                 />
                 <CustomDatePicker
                   disabled={!isDates}
                   disablePast={!campaign.end}
-                  margin="normal"
                   label="Campaign end date (dd/MM/yyyy)"
-                  format="dd/MM/yyyy"
-                  value={endDate}
                   showTodayButton
-                  onChange={date => date && setEndDate(date)}
+                  value={endDate}
+                  setValue={setEndDate}
                 />
-              </MuiPickersUtilsProvider>
+              </LocalizationProvider>
             </Box>
             <Typography variant="h6" className={classes.typography}>Campaign Type(s)</Typography>
             <p className={classes.tip}>
