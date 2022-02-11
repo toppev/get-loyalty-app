@@ -48,6 +48,14 @@ function GrapesPageEditor(props) {
     `${backendURL}/page/${pageId}/static/main.js`,
   ]
 
+  const safeParseJson = (json) => {
+    try {
+      return JSON.parse(json)
+    } catch (err) {
+      console.log("Failed to safe parse json", err)
+    }
+  }
+
   useEffect(() => {
     let editor
 
@@ -75,8 +83,8 @@ function GrapesPageEditor(props) {
           grapesjsTouch,
           grapesjsTuiImageEditor
         ],
-        components: data['gjs-components'] || (await getHtml()),
-        style: data['gjs-styles'],
+        components: safeParseJson(data['gjs-components']) || (await getHtml()),
+        style: safeParseJson(data['gjs-styles']),
         storageManager: {
           type: 'remote',
           // stepsBeforeSave: 5, // Doesn't work? FIXME?
