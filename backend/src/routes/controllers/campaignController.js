@@ -2,9 +2,12 @@ import { Router } from "express"
 import campaignService from "../../services/campaignService"
 import permit from "../../middlewares/permitMiddleware"
 import validation from "../../helpers/bodyFilter"
+import couponCampaigns from "./couponCampaignController"
 
 const router = Router({ mergeParams: true })
 const campaignValidator = validation.validate(validation.campaignValidator)
+
+router.use('/coupon', couponCampaigns)
 
 router.post('/', permit('campaign:create'), campaignValidator, addCampaign)
 router.patch('/:campaignId', permit('campaign:update'), campaignValidator, updateCampaign)

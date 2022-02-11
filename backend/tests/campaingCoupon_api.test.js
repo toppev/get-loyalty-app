@@ -55,7 +55,7 @@ describe('Logged in user coupons', () => {
 
   it('claim coupon rewards', async () => {
     const res = await api
-      .post(`/coupon/${couponCode.toLowerCase()}`) // Make sure lowercase works
+      .post(`/campaign/coupon/${couponCode.toLowerCase()}`) // Make sure lowercase works
       .set('Cookie', cookie)
       .expect(200)
     expect(res.body.rewards.length).toBe(1) // Enough good
@@ -63,7 +63,7 @@ describe('Logged in user coupons', () => {
 
   it('not reclaim coupon rewards', async () => {
     await api
-      .post(`/coupon/${couponCode.toUpperCase()}`) // Make sure uppercase works
+      .post(`/campaign/coupon/${couponCode.toUpperCase()}`) // Make sure uppercase works
       .set('Cookie', cookie)
       .expect(403)
     const user = await userService.getById(userId)
@@ -77,7 +77,7 @@ describe('Referral coupons', () => {
 
   it('must have purchased before', async () => {
     const res = await api
-      .post(`/coupon/referral?referrer=${referrerUserId}`)
+      .post(`/campaign/coupon/referral?referrer=${referrerUserId}`)
       .set('Cookie', cookie)
       .expect(403)
     expect(res.body.message).toContain("purchased")
@@ -87,7 +87,7 @@ describe('Referral coupons', () => {
     await customerService.addPurchase(referrerUserId, {}) // fake a purchase
     await customerService.updateRewards(userId, []) // ensure rewards are cleared
     const res = await api
-      .post(`/coupon/referral?referrer=${referrerUserId}`)
+      .post(`/campaign/coupon/referral?referrer=${referrerUserId}`)
       .set('Cookie', cookie)
       .expect(200)
     expect(res.body).toBeDefined()
@@ -103,7 +103,7 @@ describe('Referral coupons', () => {
   it('already referred (or received all)', async () => {
     // Should fail because the user was already referred
     await api
-      .post(`/coupon/referral?referrer=${referrerUserId}`)
+      .post(`/campaign/coupon/referral?referrer=${referrerUserId}`)
       .set('Cookie', cookie)
       .expect(403)
   })
@@ -118,7 +118,7 @@ describe('Referral coupons', () => {
       .send(newUserParams)
     const newCookie = login.headers['set-cookie']
     const res = await api
-      .post(`/coupon/referral?referrer=${referrerUserId}`)
+      .post(`/campaign/coupon/referral?referrer=${referrerUserId}`)
       .set('Cookie', newCookie)
       .expect(403)
     expect(res.body.message).toContain("reached the limit")
@@ -137,7 +137,7 @@ describe('refer', () => {
 
     await customerService.addPurchase(userId, {}) // fake a purchase
     const res = await api
-      .post(`/coupon/referral?referrer=${userId}`)
+      .post(`/campaign/coupon/referral?referrer=${userId}`)
       .set('Cookie', cookie)
       .expect(403)
     expect(res.body.message).toContain("yourself")
