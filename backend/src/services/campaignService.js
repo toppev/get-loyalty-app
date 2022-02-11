@@ -7,7 +7,6 @@ import campaignTypes from "@toppev/getloyalty-campaigns"
 export default {
   getAllCampaigns,
   getOnGoingCampaigns,
-  getById,
   create,
   update,
   deleteCampaign,
@@ -50,14 +49,6 @@ function isActive({ end, start }) {
 }
 
 /**
- * Get a campaign by its id
- * @param campaignId the campaign's _id field
- */
-async function getById(campaignId) {
-  return Campaign.findById(campaignId).populate('categories')
-}
-
-/**
  * Create a new campaign. The business is automatically assigned to the campaign.
  * @param {Object} campaign the campaign to create
  * @return the campaign
@@ -83,7 +74,7 @@ async function update(campaignId, updatedCampaign) {
   if (limit !== -1 && isActive(updatedCampaign) && (await getOnGoingCampaigns()).length >= limit - 1) {
     throw new StatusError('Plan limit reached', 402)
   }
-  const campaign = await getById(campaignId)
+  const campaign = await Campaign.findById(campaignId)
   Object.assign(campaign, updatedCampaign)
   checkReferralOnEdit(campaign)
   return campaign.save()

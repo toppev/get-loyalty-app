@@ -18,15 +18,9 @@ function deleteCampaign(campaign: Campaign) {
   return remove(`/campaign/${campaign?.id}`)
 }
 
-function loadCampaign(campaignId: string) {
-  return get(`/campaign/${campaignId}`)
-}
-
-
 export {
   listCampaigns,
   updateCampaign,
   createCampaign,
   deleteCampaign,
-  loadCampaign
 }

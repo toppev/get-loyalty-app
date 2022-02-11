@@ -55,15 +55,6 @@ describe('Logged in user with permissions can', () => {
     expect(res.body.name).toBe(newData.name)
   })
 
-  it('get campaign', async () => {
-    const res = await api
-      .get(`/campaign/${campaignId}`)
-      .set('Cookie', cookie)
-      .expect(200)
-    expect(res.body._id).toBe(campaignId)
-    expect(res.body.categories[0].name).toBe('test category')
-  })
-
   it('get all', async () => {
     const res = await api
       .get(`/campaign/all`)

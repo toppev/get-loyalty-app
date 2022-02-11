@@ -10,7 +10,6 @@ router.post('/', permit('campaign:create'), campaignValidator, addCampaign)
 router.patch('/:campaignId', permit('campaign:update'), campaignValidator, updateCampaign)
 router.delete('/:campaignId', permit('campaign:delete'), deleteCampaign)
 router.get('/all', permit('campaign:list'), getAll)
-router.get('/:campaignId', permit('campaign:get'), getById)
 
 function addCampaign(req, res, next) {
   campaignService.create(req.body)
@@ -29,13 +28,6 @@ function deleteCampaign(req, res, next) {
   const campaignId = req.params.campaignId
   campaignService.deleteCampaign(campaignId)
     .then(() => res.json({ success: true }))
-    .catch(err => next(err))
-}
-
-function getById(req, res, next) {
-  const campaignId = req.params.campaignId
-  campaignService.getById(campaignId)
-    .then(campaign => campaign ? res.json(campaign) : res.sendStatus(404))
     .catch(err => next(err))
 }
 
