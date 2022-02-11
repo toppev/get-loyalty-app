@@ -56,6 +56,10 @@ const rewardValidator = (reward) => {
 const campaignValidator = (campaign) => {
 }
 
+const couponValidator = (coupon) => {
+}
+
+
 const purchaseValidator = (purchase) => {
 }
 
@@ -77,6 +81,7 @@ export default {
   businessRoleValidator,
   productValidator,
   campaignValidator,
+  couponValidator,
   purchaseValidator,
   customerPropertiesValidator,
   rewardValidator,

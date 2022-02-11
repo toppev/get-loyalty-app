@@ -23,6 +23,7 @@ const roles = {
       'scan:use': true,
       'notification:*': true,
       'user:*': _ownUserOnly,
+      'coupon:*': true,
     },
   },
   user: {
