@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme: Theme) =>
     }
   }))
 
-export default function () {
+export default function PrivacyLink() {
 
   const classes = useStyles()
 

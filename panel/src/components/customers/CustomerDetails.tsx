@@ -38,7 +38,7 @@ interface CustomerDetailsProps {
   initialCustomer: Customer
 }
 
-export default function ({ initialCustomer }: CustomerDetailsProps) {
+export default function CustomerDetails({ initialCustomer }: CustomerDetailsProps) {
 
   const classes = useStyles()
   const [customer, setCustomer] = useState(initialCustomer)

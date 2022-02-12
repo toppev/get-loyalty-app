@@ -62,7 +62,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }))
 
 
-export default function () {
+export default function CustomerPage() {
 
   const classes = useStyles()
   // How many customers to render
@@ -72,6 +72,7 @@ export default function () {
   const [orderBy, setOrderBy] = useState("-lastVisit")
   const { error, loading, response, performRequest } = useRequest()
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const execSearch = useCallback(debounce((searchStr?: string, sort?: string) => {
     performRequest(() => listCustomers(searchStr, 100, sort))
   }, 500, { leading: true }), [])

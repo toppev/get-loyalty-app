@@ -1,4 +1,4 @@
-import { Controlled as CodeMirror } from 'react-codemirror2'
+import { Controlled as ReactCodeMirror } from 'react-codemirror2'
 
 import React, { useState } from "react"
 import { Button, Dialog, DialogContent, Link } from "@mui/material"
@@ -50,7 +50,7 @@ interface CodeMirrorProps {
   codeMode: "javascript" | "css"
 }
 
-export default function ({ open, onClose, initialValue, onChange, saveContent, defaultValueURL, codeMode }: CodeMirrorProps) {
+export default function CodeMirror({ open, onClose, initialValue, onChange, saveContent, defaultValueURL, codeMode }: CodeMirrorProps) {
 
   const classes = useStyles()
 
@@ -95,7 +95,7 @@ export default function ({ open, onClose, initialValue, onChange, saveContent, d
             }}
           >{saveButton}</Button>
         </div>
-        <CodeMirror
+        <ReactCodeMirror
           value={content}
           options={{
             mode: codeMode,

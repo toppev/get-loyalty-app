@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   }))
 
-export default function ({ startEditing, reward }: SelectActionProps) {
+export default function SelectRewardButton({ startEditing, reward }: SelectActionProps) {
 
   const classes = useStyles()
 

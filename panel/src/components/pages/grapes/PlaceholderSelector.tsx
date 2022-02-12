@@ -36,7 +36,7 @@ interface PlaceholderSelectorProps {
   onSelect: (placeholder: string) => any
 }
 
-export default function ({ onSelect }: PlaceholderSelectorProps) {
+export default function PlaceholderSelector({ onSelect }: PlaceholderSelectorProps) {
 
   const classes = useStyles()
   const placeholderContext = usePlaceholderContext()

@@ -40,7 +40,7 @@ interface CustomerLevelProps {
   onSubmit: (level: CustomerLevel, setSubmitting: (b: boolean) => any) => any
 }
 
-export default function ({ initialLevel, onSubmit, onClose, currentLevels }: CustomerLevelProps) {
+export default function CustomerLevelForm({ initialLevel, onSubmit, onClose, currentLevels }: CustomerLevelProps) {
 
   const [colorPickerOpen, setColorPickerOpen] = useState(false)
   const [levelColor, setLevelColor] = useState(initialLevel.color || '#aaaaaa')

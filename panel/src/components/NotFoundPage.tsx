@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   }))
 
-export default function () {
+export default function NotFoundPage() {
 
   const classes = useStyles()
 

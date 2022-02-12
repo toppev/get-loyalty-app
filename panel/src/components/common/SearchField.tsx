@@ -24,7 +24,7 @@ interface SearchFieldProps extends StandardTextFieldProps {
   textColor?: string
 }
 
-export default function ({ setSearch, textColor, ...otherProps }: SearchFieldProps) {
+export default function SearchField({ setSearch, textColor, ...otherProps }: SearchFieldProps) {
 
   const classes = useStyles()
 

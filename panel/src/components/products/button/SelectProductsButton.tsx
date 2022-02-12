@@ -23,7 +23,7 @@ interface SelectProductsButtonProps {
   products?: Product[]
 }
 
-export default function ({ buttonProps, products }: SelectProductsButtonProps) {
+export default function SelectProductsButton({ buttonProps, products }: SelectProductsButtonProps) {
 
   const classes = useStyles()
 

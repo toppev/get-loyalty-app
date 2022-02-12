@@ -40,7 +40,7 @@ interface RewardRowProps {
   actions?: JSX.Element
 }
 
-export default function (props: RewardRowProps) {
+export default function RewardItem(props: RewardRowProps) {
 
   const classes = useStyles()
 

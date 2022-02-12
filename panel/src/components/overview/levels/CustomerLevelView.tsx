@@ -16,7 +16,7 @@ const useStyles = makeStyles((_theme: Theme) =>
   }))
 
 
-export default function () {
+export default function CustomerLevelView() {
 
   const [editing, setEditing] = useState<CustomerLevel | undefined>()
 

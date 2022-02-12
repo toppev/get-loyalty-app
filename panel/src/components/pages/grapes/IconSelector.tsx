@@ -53,7 +53,7 @@ interface IconSelectorProps {
   initialIcon: string
 }
 
-export default function (props: IconSelectorProps) {
+export default function IconSelector(props: IconSelectorProps) {
 
   const classes = useStyles()
   const icons = SVGIcons

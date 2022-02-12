@@ -9,7 +9,7 @@ export interface RewardFormDialogProps extends RewardFormProps {
   onClose: (event: React.MouseEvent<HTMLElement>) => void,
 }
 
-export default function (props: RewardFormDialogProps) {
+export default function RewardFormDialog(props: RewardFormDialogProps) {
 
   return (
     <div>

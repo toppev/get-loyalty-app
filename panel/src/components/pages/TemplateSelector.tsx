@@ -29,6 +29,7 @@ export function TemplateSelectorDialog({ open, onClose, onSelect }: TemplateSele
     performInitially: false,
     errorMessage: 'Failed to load template pages'
   })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(loadTemplates, [open])
   const [templates] = useResponseState<TemplatePage[]>(
     response,

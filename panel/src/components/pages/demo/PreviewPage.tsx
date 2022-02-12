@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme: Theme) =>
     }
   }))
 
-export default function () {
+export default function PreviewPage() {
 
   const classes = useStyles()
   const notMobile = useMediaQuery(useTheme().breakpoints.up('sm'))

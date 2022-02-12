@@ -55,7 +55,7 @@ interface ProductSelectorProps {
 }
 
 
-export default function ({ open, text, onClickClose, onSubmit, limitNotification }: ProductSelectorProps) {
+export default function ProductSelector({ open, text, onClickClose, onSubmit, limitNotification }: ProductSelectorProps) {
 
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
 

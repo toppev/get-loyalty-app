@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   }))
 
-export default function () {
+export default function ProductPage() {
 
   const [formOpen, setFormOpen] = useState(false)
   const [editingProduct, setEditingProduct] = useState<Product | undefined>()

@@ -54,7 +54,7 @@ interface NotificationFormProps {
   usersSubscribed: number
 }
 
-export default function (props: NotificationFormProps) {
+export default function NotificationForm(props: NotificationFormProps) {
 
   const { setCooldownExpires, onSubmitted, notification, cooldownExpires } = props
 

@@ -16,7 +16,7 @@ interface PageSettingsProps {
   requests: RequestHandler
 }
 
-export default function ({ pageOpen, requests }: PageSettingsProps) {
+export default function PageSettings({ pageOpen, requests }: PageSettingsProps) {
 
   const theme = useTheme()
   const smallScreen = useMediaQuery(theme.breakpoints.down('md'))

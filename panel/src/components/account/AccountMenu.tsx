@@ -39,7 +39,7 @@ interface AccountButtonProps {
   notifications: AccountNotificationValues
 }
 
-export default function (props: AccountButtonProps) {
+export default function AccountMenu(props: AccountButtonProps) {
 
   const classes = useStyles()
 

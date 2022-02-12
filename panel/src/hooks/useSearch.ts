@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 
 
-export default function useSearch<T>(initialSearchString?: string) {
+export default function useSearch(initialSearchString?: string) {
 
   const [search, setSearch] = useState(initialSearchString)
 

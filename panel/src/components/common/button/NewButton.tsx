@@ -17,7 +17,7 @@ interface NewButtonProps {
   buttonProps: ButtonProps
 }
 
-export default function (props: NewButtonProps) {
+export default function NewButton(props: NewButtonProps) {
 
   const classes = useStyles()
 

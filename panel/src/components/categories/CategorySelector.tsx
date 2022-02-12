@@ -10,7 +10,7 @@ interface CategorySelectorProps extends StandardTextFieldProps {
 }
 
 
-export default function (props: CategorySelectorProps) {
+export default function CategorySelector(props: CategorySelectorProps) {
 
   const [categories, setCategories] = useState<Category[]>(props.initialCategories)
   const [allCategories, setAllCategories] = useState<Category[] | undefined>()

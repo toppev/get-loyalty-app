@@ -1,7 +1,7 @@
 import React, { HTMLProps } from "react"
 
 
-export default function (props: HTMLProps<HTMLIFrameElement>) {
+export default function PreviewIframe(props: HTMLProps<HTMLIFrameElement>) {
 
   return (
     <iframe

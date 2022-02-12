@@ -53,7 +53,7 @@ interface NotificationHistoryProps {
   error?: RequestError
 }
 
-export default function (props: NotificationHistoryProps) {
+export default function NotificationHistory(props: NotificationHistoryProps) {
 
   const { error, history, loading, newNotifications } = props
   const empty = !history.length && !newNotifications?.length

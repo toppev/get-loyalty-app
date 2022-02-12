@@ -9,7 +9,7 @@ export interface ProductFormDialogProps extends ProductFormProps {
   onClose: (event: React.MouseEvent<HTMLElement>) => void,
 }
 
-export default function (props: ProductFormDialogProps) {
+export default function ProductFormDialog(props: ProductFormDialogProps) {
 
   return (
     <div>

@@ -17,7 +17,7 @@ interface PageIconProps {
   icon: string
 }
 
-export default function ({ icon: dirtyIcon }: PageIconProps) {
+export default function PageIcon({ icon: dirtyIcon }: PageIconProps) {
 
   const classes = useStyles()
 

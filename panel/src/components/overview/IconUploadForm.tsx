@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) =>
     }
   }))
 
-export default function () {
+export default function IconUploadForm() {
 
   const [icon, setIcon] = useState<File | undefined>()
   const [uploading, setUploading] = useState(false)

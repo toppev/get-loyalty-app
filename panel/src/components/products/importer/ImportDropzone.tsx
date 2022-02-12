@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }))
 
 
-export default function (props: Props) {
+export default function ImportDropzone(props: Props) {
 
   const { getRootProps, getInputProps } = useDropzone({
     ...props.dropzoneOptions

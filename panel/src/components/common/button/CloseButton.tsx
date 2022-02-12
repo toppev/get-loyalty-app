@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }))
 
 
-export default function (props: IconButtonProps) {
+export default function CloseButton(props: IconButtonProps) {
 
   const classes = useStyles()
 

@@ -43,7 +43,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     }
   }))
 
-export default function () {
+export default function ExportDate() {
 
   const classes = useStyles()
 

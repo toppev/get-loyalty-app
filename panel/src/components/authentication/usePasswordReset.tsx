@@ -5,7 +5,7 @@ import { AxiosResponse } from "axios"
 import { profileRequest } from "../../services/authenticationService"
 
 // TODO: remove? unnecessary?
-export default function (callback?: (res: AxiosResponse) => any, onError?: (err: any) => any) {
+export default function usePasswordReset(callback?: (res: AxiosResponse) => any, onError?: (err: any) => any) {
 
   const queryParams = useQuery()
   const resetCode = queryParams.get('passwordReset')

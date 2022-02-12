@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   }))
 
-export default function (props: SaveChangesProps) {
+export default function SaveChangesSnackbar(props: SaveChangesProps) {
 
   const classes = useStyles()
 

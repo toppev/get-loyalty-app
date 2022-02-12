@@ -17,7 +17,7 @@ interface ColorPickerProps {
   onChange: (color: string) => any
 }
 
-export default function (props: ColorPickerProps) {
+export default function ColorPicker(props: ColorPickerProps) {
 
   const [color, setColor] = useState(props.initialColor)
 

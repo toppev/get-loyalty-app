@@ -37,7 +37,7 @@ export const useStyles = makeStyles((theme: Theme) =>
 // We currently calculate and build almost everything on frontend.
 // This may cause problems in the future with a lot of customers (at least I hope so)
 // But it's good enough for now
-export default function () {
+export default function DataAndChartsPage() {
 
   const classes = useStyles()
 

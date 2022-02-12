@@ -71,7 +71,6 @@ function CouponForm({ coupon, ...props }: CouponEditorProps) {
 
   // not formik fields so keep track of them here
   const [reward, setReward] = useState<Reward | undefined>(coupon.reward)
-  const [productSelectorOpen, setProductSelectorOpen] = useState(false)
 
   const { error, loading, performRequest } = useRequest()
 

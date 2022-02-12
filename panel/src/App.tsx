@@ -1,4 +1,4 @@
-import { CssBaseline, useMediaQuery, useTheme } from '@mui/material'
+import { CssBaseline, useMediaQuery } from '@mui/material'
 import React, { lazy, Suspense, useEffect, useState } from 'react'
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom"
 import './App.css'

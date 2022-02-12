@@ -32,7 +32,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     }
   }))
 
-export default function () {
+export default function AccountPage() {
 
   const { user } = useContext(AppContext)
 

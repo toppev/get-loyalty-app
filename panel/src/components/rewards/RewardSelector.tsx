@@ -55,7 +55,7 @@ interface RewardSelectorProps {
 /**
  * Dialog to select a reward
  */
-export default function (props: RewardSelectorProps) {
+export default function RewardSelector(props: RewardSelectorProps) {
 
   const classes = useStyles()
 

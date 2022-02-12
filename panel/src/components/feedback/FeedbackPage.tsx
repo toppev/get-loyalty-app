@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const EMAIL = "support@getloyalty.app"
 
-export default function () {
+export default function FeedbackPage() {
 
   const classes = useStyles()
 

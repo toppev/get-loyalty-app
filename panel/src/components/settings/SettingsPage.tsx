@@ -92,7 +92,7 @@ const useStyles = makeStyles((theme: Theme) =>
     }
   }))
 
-export default function () {
+export default function SettingsPage() {
 
   const classes = useStyles()
 

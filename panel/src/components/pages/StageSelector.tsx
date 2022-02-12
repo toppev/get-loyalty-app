@@ -20,7 +20,7 @@ interface StageSelectorProps {
   onChange: (stage: any) => boolean
 }
 
-export default function ({ stage = UNPUBLISHED, onChange }: StageSelectorProps) {
+export default function StageSelector({ stage = UNPUBLISHED, onChange }: StageSelectorProps) {
 
   const classes = useStyles()
 

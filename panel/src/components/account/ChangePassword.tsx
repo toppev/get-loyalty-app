@@ -17,7 +17,7 @@ interface ChangePasswordProps {
   highlight: boolean
 }
 
-interface ChangePassword {
+interface PasswordChange {
   password: string,
   repeatPassword: string
 }
@@ -25,8 +25,8 @@ interface ChangePassword {
 
 export function ChangePassword({ user, title, highlight }: ChangePasswordProps) {
 
-  const validate = (value: ChangePassword) => {
-    const errors: FormikErrors<ChangePassword> = {}
+  const validate = (value: PasswordChange) => {
+    const errors: FormikErrors<PasswordChange> = {}
     if (value.password && value.password.length <= 6) {
       errors.password = "Password is too weak!"
     } else if (value.repeatPassword && value.repeatPassword !== value.password) {

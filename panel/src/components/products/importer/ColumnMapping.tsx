@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   }))
 
-export default function (props: Props) {
+export default function ColumnMapping(props: Props) {
 
   const classes = useStyles()
 

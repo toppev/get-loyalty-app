@@ -54,7 +54,7 @@ const URL_TYPES: URL_TYPE[] = [{
   description: 'All sites may not work and the user usually does not get logged in.'
 }]
 
-export default function (props: URLSelectorDialogProps) {
+export default function URLSelectorDialog(props: URLSelectorDialogProps) {
 
   const [url, setUrl] = useState('')
   const [urlType, setUrlType] = useState(URL_TYPES[0].id)

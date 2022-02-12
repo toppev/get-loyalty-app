@@ -27,7 +27,7 @@ interface CustomerLevelProps {
   onDelete: () => any
 }
 
-export default function ({ level, startEditing, onDelete }: CustomerLevelProps) {
+export default function CustomerLEvelItem({ level, startEditing, onDelete }: CustomerLevelProps) {
 
   const classes = useStyles()
 

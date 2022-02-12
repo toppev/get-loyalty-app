@@ -4,7 +4,7 @@ import "./codeEditor.css"
  * Adds a code editor (to edit raw HTML/CSS) in the editor.
  */
 // Partly stolen from https://github.com/artf/grapesjs/issues/324#issuecomment-330571539
-export default function (editor) {
+export default function codeEditor(editor) {
   const stylePrefix = editor.getConfig().stylePrefix
   const { Modal: modal, Commands: commands, CodeManager: codeManager } = editor
   const codeViewer = codeManager.getViewer('CodeMirror').clone()

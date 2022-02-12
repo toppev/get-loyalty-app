@@ -56,6 +56,7 @@ export function FileEditor({ pageId, fileName, templateName, fileContent, onClos
 
   const uploadContent = (content: string) => uploadPageStaticFile(pageId, fileName, new Blob([content], { type: 'text/plain' }))
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceUpload = useCallback(debounce((content: string) => {
     uploadContent(content)
   }, 2000, { leading: true }), [uploadContent])

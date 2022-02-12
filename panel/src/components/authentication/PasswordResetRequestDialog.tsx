@@ -44,7 +44,7 @@ interface PasswordResetRequestDialogProps {
   initialEmail?: string,
 }
 
-export default function (props: PasswordResetRequestDialogProps) {
+export default function PasswordResetRequestDialog(props: PasswordResetRequestDialogProps) {
 
   const theme = useTheme()
   const classes = useStyles()

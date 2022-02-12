@@ -48,7 +48,7 @@ export interface ProductFormProps {
   onProductSubmitted: (product: Product) => void
 }
 
-export default function (props: ProductFormProps) {
+export default function ProductForm(props: ProductFormProps) {
 
   const classes = useStyles()
 

@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) =>
     }
   }))
 
-export default function ({ error: errorObject }: ButtonProps) {
+export default function RetryButton({ error: errorObject }: ButtonProps) {
 
   const classes = useStyles()
 

@@ -59,7 +59,7 @@ interface ProductRowProps {
   onDelete?: () => any
 }
 
-export default function (props: ProductRowProps) {
+export default function ProductRow(props: ProductRowProps) {
 
   const classes = useStyles()
 

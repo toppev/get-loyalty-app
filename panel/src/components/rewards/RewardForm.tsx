@@ -59,7 +59,7 @@ export interface RewardFormProps {
   onSubmitted: (reward: Reward) => void
 }
 
-export default function (props: RewardFormProps) {
+export default function RewardForm(props: RewardFormProps) {
 
   const classes = useStyles()
 

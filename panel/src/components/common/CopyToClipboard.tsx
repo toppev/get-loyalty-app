@@ -11,7 +11,7 @@ interface CopyToClipboardProps {
   children: (props: ChildProps) => React.ReactElement<any>;
 }
 
-export default function (props: CopyToClipboardProps) {
+export default function CopyToClipboard(props: CopyToClipboardProps) {
 
   const [tooltip, setTooltip] = useState(false)
 

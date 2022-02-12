@@ -23,7 +23,7 @@ interface RequirementSelectorProps {
   onChange: (values: Requirement[]) => any
 }
 
-export default function (props: RequirementSelectorProps) {
+export default function RequirementSelector(props: RequirementSelectorProps) {
 
   const classes = useStyles()
 
