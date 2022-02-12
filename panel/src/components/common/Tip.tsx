@@ -3,7 +3,7 @@ import createStyles from '@mui/styles/createStyles'
 import makeStyles from '@mui/styles/makeStyles'
 import React from "react"
 
-interface TipProps {
+interface TipProps extends React.HTMLProps<HTMLDivElement> {
   children: React.ReactNode
   /**
    * Whether to automatically add "TIP:".
@@ -27,14 +27,14 @@ const useStyles = makeStyles((theme: Theme) =>
     }
   }))
 
-export default function (props: TipProps) {
+export default function Tip({ insertTip, children, ...props }: TipProps) {
 
   const classes = useStyles()
 
   return (
-    <div className={classes.paper}>
-      {props.insertTip !== false && <span className={classes.tip}>TIP: </span>}
-      {props.children}
+    <div className={classes.paper} {...props}>
+      {insertTip !== false && <span className={classes.tip}>TIP: </span>}
+      {children}
     </div>
   )
 }

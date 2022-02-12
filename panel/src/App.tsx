@@ -17,13 +17,15 @@ import { ThemeProvider, Theme, StyledEngineProvider, createTheme } from '@mui/ma
 
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface DefaultTheme extends Theme {}
+  interface DefaultTheme extends Theme {
+  }
 }
 
 
 // Lazy Pages
 const OverviewPage = lazy(() => import('./components/overview/OverviewPage'))
 const ProductPage = lazy(() => import('./components/products/ProductPage'))
+const CouponsPage = lazy(() => import('./components/coupons/CouponsPage'))
 const CampaignPage = lazy(() => import('./components/campaigns/CampaignPage'))
 const CustomerPage = lazy(() => import('./components/customers/CustomerPage'))
 const NotificationsPage = lazy(() => import('./components/notifications/NotificationsPage'))
@@ -185,6 +187,9 @@ export default function App() {
                         </Route>
                         <Route path="/campaigns">
                           <CampaignPage/>
+                        </Route>
+                        <Route path="/coupons">
+                          <CouponsPage/>
                         </Route>
                         <Route path="/customers">
                           <CustomerPage/>

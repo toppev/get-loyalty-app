@@ -74,7 +74,7 @@ export interface CampaignFormProps {
 
 const emptyCampaign = new Campaign({ id: "new_campaign", name: "", description: "" })
 
-export default function ({ initialCampaign, onSubmitted }: CampaignFormProps) {
+export default function CampaignForm({ initialCampaign, onSubmitted }: CampaignFormProps) {
 
   const classes = useStyles()
 

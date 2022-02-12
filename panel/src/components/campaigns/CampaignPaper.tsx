@@ -61,7 +61,7 @@ interface CampaignPaperProps {
   showRewards?: boolean
 }
 
-export default function (props: CampaignPaperProps) {
+export default function CampaignPaper(props: CampaignPaperProps) {
 
   const classes = useStyles()
 
@@ -98,14 +98,14 @@ export default function (props: CampaignPaperProps) {
                 <b>{req.type}</b>
                 {req.question && <p>Question: <i>{format(req.question, req.values)}</i></p>}
                 {req.values.length !== 0 &&
-                <div>
-                  {req.values.map((val, index) => {
-                    const valueTypes = allRequirements[req.type].valueDescriptions || []
-                    return (
-                      <p key={val}>{valueTypes[index]?.name || 'unknown'}: <b>{val}</b></p>
-                    )
-                  })}
-                </div>}
+                  <div>
+                    {req.values.map((val, index) => {
+                      const valueTypes = allRequirements[req.type].valueDescriptions || []
+                      return (
+                        <p key={val}>{valueTypes[index]?.name || 'unknown'}: <b>{val}</b></p>
+                      )
+                    })}
+                  </div>}
               </li>
             ))}
           </ul>

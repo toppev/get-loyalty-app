@@ -16,9 +16,10 @@ const useStyles = makeStyles((theme: Theme) =>
 interface RewardManagerProps {
   rewards: Reward[]
   setRewards: (reward: Reward[]) => any
+  maxRewards?: number
 }
 
-export default function ({ rewards, setRewards }: RewardManagerProps) {
+export default function RewardManager({ rewards, setRewards, maxRewards }: RewardManagerProps) {
 
   const [editReward, setEditReward] = useState<Reward | undefined>()
   const [rewardSelectorOpen, setRewardSelectorOpen] = useState(false)
@@ -53,12 +54,14 @@ export default function ({ rewards, setRewards }: RewardManagerProps) {
           setRewards(rewards.map(r => r.id === reward.id ? reward : r))
         }}
       />
-      <Button
-        className={classes.newRewardBtn}
-        variant="contained"
-        startIcon={(<AddIcon/>)}
-        onClick={() => setRewardSelectorOpen(true)}
-      >Add Reward</Button>
+      {(maxRewards === undefined || rewards.length < maxRewards) &&
+        <Button
+          className={classes.newRewardBtn}
+          variant="contained"
+          startIcon={(<AddIcon/>)}
+          onClick={() => setRewardSelectorOpen(true)}
+        >Add Reward</Button>
+      }
 
       {rewardSelectorOpen && <RewardSelector
         open={rewardSelectorOpen}

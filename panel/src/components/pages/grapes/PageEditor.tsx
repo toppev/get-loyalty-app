@@ -48,7 +48,7 @@ interface PageEditorProps {
   page: Page
 }
 
-export default function ({ page }: PageEditorProps) {
+export default function PageEditor({ page }: PageEditorProps) {
 
   const classes = useStyles()
 
@@ -81,7 +81,7 @@ export default function ({ page }: PageEditorProps) {
     </div>
   ) : (
     <div>
-      <Tip>Open <Link href="/demo" target="_blank" rel="noopener noreferrer">demo page</Link> in another tab/window to see
+      <Tip>Open <Link href="/preview" target="_blank" rel="noopener noreferrer">prevew page</Link> in another tab/window to see
         changes.</Tip>
       <div className={classes.saveChangesDiv}>
         <span className={classes.savedText}>Changes are automatically saved</span>

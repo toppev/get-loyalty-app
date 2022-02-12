@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) =>
     }
   }))
 
-export default function () {
+export default function CampaignPage() {
 
   const classes = useStyles()
 
