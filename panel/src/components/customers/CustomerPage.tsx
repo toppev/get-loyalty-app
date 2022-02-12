@@ -66,7 +66,7 @@ export default function CustomerPage() {
 
   const classes = useStyles()
   // How many customers to render
-  const renderLimit = 100
+  const renderLimit = 50
 
   const { search, setSearch } = useSearch()
   const [orderBy, setOrderBy] = useState("-lastVisit")
@@ -74,7 +74,7 @@ export default function CustomerPage() {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const execSearch = useCallback(debounce((searchStr?: string, sort?: string) => {
-    performRequest(() => listCustomers(searchStr, 100, sort))
+    performRequest(() => listCustomers(searchStr, renderLimit, sort))
   }, 500, { leading: true }), [])
 
   useEffect(() => execSearch(search, orderBy), [execSearch, search, orderBy])
@@ -115,7 +115,7 @@ export default function CustomerPage() {
             setRewardAllSelector(false)
             performRequest(
               () => rewardAllCustomers(reward),
-              () => performRequest(() => listCustomers(search, 100, orderBy))
+              () => performRequest(() => listCustomers(search, renderLimit, orderBy))
             )
           }
         }}
@@ -189,7 +189,8 @@ function CustomerRow(props: CustomerRowProps) {
   return <>
     <TableRow className={classes.root}>
       <TableCell>
-        <IconButton onClick={() => setViewing(!viewing)} size="large">{viewing ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>}</IconButton>
+        <IconButton onClick={() => setViewing(!viewing)} size="large">{viewing ? <KeyboardArrowUpIcon/> :
+          <KeyboardArrowDownIcon/>}</IconButton>
       </TableCell>
       <TableCell>
         {customer.email}
