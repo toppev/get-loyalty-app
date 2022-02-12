@@ -55,7 +55,7 @@ function startSubscribeTask() {
 }
 
 const _vapidKey = process.env.REACT_APP_PUBLIC_VAPID_KEY
-const convertedVapidKey = _vapidKey && urlBase64ToUint8Array(_vapidKey)
+const convertedVapidKey = urlBase64ToUint8Array(_vapidKey)
 
 // Call this function to ask for the permission to show notifications
 async function subscribeUser() {
@@ -90,10 +90,10 @@ function hideNotificationClasses() {
   const style = document.createElement('style')
   // language=CSS
   style.textContent = `
-      ${hideNotificationSelector} {
-        display: none !important;
-      }
-    `
+    ${hideNotificationSelector} {
+      display: none !important;
+    }
+  `
   document.head.append(style)
 }
 
@@ -120,14 +120,19 @@ function sendSubscription(subscription) {
 
 // Edited from https://github.com/GoogleChromeLabs/web-push-codelab/issues/46#issuecomment-429273981
 function urlBase64ToUint8Array(base64String) {
-  const padding = '='.repeat((4 - base64String.length % 4) % 4)
-  const base64 = (base64String + padding)
-    .replace(/-/g, '+')
-    .replace(/_/g, '/')
-  const rawData = window.atob(base64)
-  const outputArray = new Uint8Array(rawData.length)
-  for (let i = 0; i < rawData.length; ++i) {
-    outputArray[i] = rawData.charCodeAt(i)
+  try {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4)
+    const base64 = (base64String + padding)
+      .replace(/-/g, '+')
+      .replace(/_/g, '/')
+    const rawData = window.atob(base64)
+    const outputArray = new Uint8Array(rawData.length)
+    for (let i = 0; i < rawData.length; ++i) {
+      outputArray[i] = rawData.charCodeAt(i)
+    }
+    return outputArray
+  } catch (err) {
+    console.log(`Failed to decode vapid key (${base64String}): ${err}`)
+    hideNotificationClasses()
   }
-  return outputArray
 }

@@ -3,9 +3,13 @@
  */
 export function usePageUpdates(refreshPages: () => any) {
 
+  /*
+  FIXME
+
   setTimeout(() => {
     // Can be improved in the future, enough good for now
     refreshPages()
   }, 1000 * 60 * 5)
+   */
 
 }
