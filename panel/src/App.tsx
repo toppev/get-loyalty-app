@@ -31,7 +31,7 @@ const CustomerPage = lazy(() => import('./components/customers/CustomerPage'))
 const NotificationsPage = lazy(() => import('./components/notifications/NotificationsPage'))
 
 const PagesPage = lazy(() => import('./components/pages/PagesPage'))
-const DemoPage = lazy(() => import('./components/pages/demo/DemoPage'))
+const DemoPage = lazy(() => import('./components/pages/preview/PreviewPage'))
 const SettingsPage = lazy(() => import('./components/settings/SettingsPage'))
 
 const AccountPage = lazy(() => import('./components/account/AccountPage'))
