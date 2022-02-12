@@ -11,9 +11,12 @@ echo "Replacing env vars: $REACT_VARS"
 
 cd $(mktemp -d)
 cp -rpf $appDir .
+cd html
 
 # e.g. "$REACT_APP_API_URL" anywhere in the static files is replaced with "REACT_APP_API_URL" environment variable
-printenv | grep '^REACT_APP' | sed 's;=.*;;' | xargs -I@ find * -type f -exec sh -c "envsubst '\$"@"' < {} > /dev/stdin $appDir{}" \;
+# First greps REACT_APP* env vars, joins with ",\$" then it finds all files in the temp dir and calls envsubst with them (\$var1,\$var2)
+# and saves the new file in the nginx public dir
+printenv | grep '^REACT_APP' | sed 's;=.*;;' | paste -sd ",\$" - | xargs -I@ find * -type f -exec sh -c "envsubst '\$"@"' < {} > $appDir{}" \;
 
 echo "Replaced variables"
 
