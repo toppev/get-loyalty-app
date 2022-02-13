@@ -52,7 +52,6 @@ jobs:
       - name: Deploy to S3 bucket
         run: |
           aws s3 sync ./build s3://panel-getloyaltyapp --delete
-          aws s3 cp ./build/service-worker.js s3://panel-getloyaltyapp/service-worker.js --metadata-directive REPLACE --cache-control max-age=0, no-cache,no-store,must-revalidate --content-type application/javascript --acl public-read
         working-directory: panel
   push-docker-dev:
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/develop'
