@@ -7,12 +7,13 @@ import {
   Link,
   Theme,
   Typography,
+  Checkbox
 } from '@mui/material'
 import createStyles from '@mui/styles/createStyles'
 import makeStyles from '@mui/styles/makeStyles'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import { Formik, FormikErrors, FormikHelpers } from 'formik'
-import { Checkbox, TextField } from 'formik-material-ui'
+import { TextField } from 'formik-material-ui'
 import React, { useContext, useRef, useState } from 'react'
 
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
@@ -98,7 +99,9 @@ export default function LoginForm() {
   // Whether we are logging or creating a new account
   // Not really clean solution but does the job
   const [creatingAccount, setCreatingAccount] = useState(false)
+  const [termsAccepted, setTermsAccepted] = useState(false)
   const [message, setMessage] = useState('')
+
 
   const onSuccess = (res: AxiosResponse<any>) => {
     try {
@@ -140,6 +143,7 @@ export default function LoginForm() {
   }
 
   const onFormSubmit = (values: FormValues, actions: FormikHelpers<FormValues>) => {
+    values.acceptAll = termsAccepted
     setMessage("Verifying...")
     const getToken = async () => creatingAccount ? await getCaptchaToken() : "" // token not required when logging in
     getToken().then(token => {
@@ -240,7 +244,13 @@ export default function LoginForm() {
 
                   <div style={{ textAlign: 'center' }}>
                     <FormControlLabel
-                      control={<Checkbox name="acceptAll" size="small"/>}
+                      control={
+                        <Checkbox
+                          checked={termsAccepted}
+                          onChange={e => setTermsAccepted(e.target.checked)}
+                          size="small"
+                        />
+                      }
                       label={<p style={{ fontSize: '14px' }}>
                         Accept
                         <Link
@@ -267,7 +277,7 @@ export default function LoginForm() {
                     <Button
                       type="submit"
                       className={classes.submitButton}
-                      variant={values.acceptAll ? "outlined" : "contained"}
+                      variant={termsAccepted ? "outlined" : "contained"}
                       color="primary"
                       disabled={isSubmitting}
                       startIcon={<NavigateNextIcon/>}
@@ -280,7 +290,7 @@ export default function LoginForm() {
                       className={classes.submitButton}
                       variant="contained"
                       color="primary"
-                      disabled={isSubmitting || !values.acceptAll}
+                      disabled={isSubmitting || !termsAccepted}
                       startIcon={<AddIcon/>}
                       onClick={() => {
                         setCreatingAccount(true)
