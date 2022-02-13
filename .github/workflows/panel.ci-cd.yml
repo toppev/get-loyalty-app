@@ -50,9 +50,10 @@ jobs:
         run: npm ci && npm run build
         working-directory: panel
       - name: Deploy to S3 bucket
-        run: |
-          aws s3 sync ./build s3://panel-getloyaltyapp --delete
+        run: aws s3 sync ./build s3://panel-getloyaltyapp --delete
         working-directory: panel
+      - name: Invalidate cloudfront cache
+        run: aws cloudfront create-invalidation --distribution-id ${{ secrets.DISTRIBUTION_ID }} --paths '/*'
   push-docker-dev:
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/develop'
     needs: test
