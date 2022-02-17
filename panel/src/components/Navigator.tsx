@@ -58,7 +58,7 @@ const categories = [
   {
     id: 'Other',
     children: [
-      { id: 'QR Scanner', icon: <QrCodeScannerIcon/>, to: `/scanner` },
+      { id: 'QR Scanner', icon: <QrCodeScannerIcon/>, to: `https://scan.${DOMAIN_HOME_PAGE}` },
       { id: 'Data & Charts', icon: <TrendingUpIcon/>, to: '/data-and-charts' },
       { id: 'Feedback', icon: <FeedbackIcon/>, to: '/feedback' },
       { id: 'Help & Support', icon: <HelpIcon/>, to: `https://support.${DOMAIN_HOME_PAGE}` },

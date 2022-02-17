@@ -37,7 +37,6 @@ const SettingsPage = lazy(() => import('./components/settings/SettingsPage'))
 const AccountPage = lazy(() => import('./components/account/AccountPage'))
 const LoginPage = lazy(() => import('./components/authentication/LoginPage'))
 
-const ScannerPage = lazy(() => import('./components/scanner/EmbeddedScannerPage'))
 const FeedbackPage = lazy(() => import('./components/feedback/FeedbackPage'))
 const DataAndChartsPage = lazy(() => import('./components/charts/DataAndChartsPage'))
 const NotFoundPage = lazy(() => import('./components/NotFoundPage'))
@@ -203,14 +202,11 @@ export default function App() {
                         <Route path="/pages">
                           <PagesPage/>
                         </Route>
-                        <Route path={["/preview", "/demo"]}>
+                        <Route path="/demo">
                           <DemoPage/>
                         </Route>
                         <Route path="/settings">
                           <SettingsPage/>
-                        </Route>
-                        <Route path="/scanner">
-                          <ScannerPage/>
                         </Route>
 
                         {/* User */}

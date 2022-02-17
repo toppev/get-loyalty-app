@@ -219,7 +219,7 @@ export default function LoginForm() {
           validate={validate}
         >
           {props => {
-            const { isSubmitting, submitForm, handleSubmit, values } = props
+            const { isSubmitting, submitForm, handleSubmit } = props
             return (
               <>
                 <form className={classes.form} onSubmit={handleSubmit}>
