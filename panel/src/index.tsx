@@ -6,6 +6,11 @@ import * as serviceWorker from './serviceWorker'
 
 ReactDOM.render(<App/>, document.getElementById('root'))
 
+serviceWorker.unregister()
+/*
+FIXME: cache not invalidated or something?
+Enable after fixing
+
 serviceWorker.register({
   onUpdate: async registration => {
     if (registration && registration.waiting) {
@@ -15,3 +20,4 @@ serviceWorker.register({
     }
   },
 })
+ */
