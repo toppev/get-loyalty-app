@@ -5,6 +5,7 @@ import React from "react"
 import makeStyles from "@mui/styles/makeStyles"
 import createStyles from "@mui/styles/createStyles"
 import { PaperProps } from "@mui/material/Paper/Paper"
+import { plural } from "../common/StringUtils";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -29,10 +30,19 @@ export default function CouponCard({ coupon, onEdit, onDelete, ...props }: Coupo
 
   const classes = useStyles()
 
+  const minDays = coupon.expiration.min / (1000 * 60 * 60 * 24)
+  const maxDays = coupon.expiration.max / (1000 * 60 * 60 * 24)
+
   return (
-    <Paper key={coupon.id} {...props}>
+    <Paper {...props}>
       <div className={classes.inner}>
-        <RewardItem reward={coupon.reward!!}/>
+        {coupon.reward && <RewardItem reward={coupon.reward}/>}
+
+        <div style={{ margin: '10px' }}>
+          About <b>{coupon.probabilityModifier * 100}%</b> probability to receive
+          <br/>
+          Expires in <b>{minDays}-{maxDays} days</b> after receiving
+        </div>
 
         <div className={classes.buttonsDiv}>
           <Button

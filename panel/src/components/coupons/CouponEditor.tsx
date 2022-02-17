@@ -1,5 +1,16 @@
 import { Coupon } from "./Coupon"
-import { Button, Dialog, DialogContent, LinearProgress, Theme, Typography } from "@mui/material"
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  LinearProgress, Radio,
+  RadioGroup, Slider, Stack,
+  Theme,
+  Typography
+} from "@mui/material"
 import CloseButton from "../common/button/CloseButton"
 import React, { useState } from "react"
 import makeStyles from "@mui/styles/makeStyles"
@@ -13,6 +24,7 @@ import { Campaign } from "../campaigns/Campaign"
 import useRequest from "../../hooks/useRequest"
 import Reward from "../rewards/Reward"
 import { createCoupon, updateCoupon } from "../../services/couponService"
+import { plural } from "../common/StringUtils"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -20,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) =>
       margin: '10px'
     },
     paper: {
-      marginTop: theme.spacing(8),
+      marginTop: theme.spacing(1),
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
@@ -40,7 +52,13 @@ const useStyles = makeStyles((theme: Theme) =>
       margin: '40px 0px 8px 0px',
       color: theme.palette.grey[900]
     },
+    field: {
+      width: '80%',
+      margin: '10px 0px'
+    },
   }))
+
+const DAY_MS = 1000 * 60 * 60 * 24
 
 interface CouponEditorProps {
   open: boolean
@@ -92,6 +110,16 @@ function CouponForm({ coupon, ...props }: CouponEditorProps) {
     return newCoupon
   }
 
+  const expirationText = (min: number, max: number) => {
+    const minDays = min / DAY_MS
+    const maxDays = max / DAY_MS
+    const isSameValue = minDays === maxDays
+    if (isSameValue) {
+      return "Always " + minDays + plural(" day", minDays)
+    }
+    return "Random from " + minDays + " to " + maxDays + "days"
+  }
+
   return (
     <div className={classes.paper}>
       <Typography color="primary" component="h1" variant="h4">{title}</Typography>
@@ -109,82 +137,101 @@ function CouponForm({ coupon, ...props }: CouponEditorProps) {
           )
         }}
       >
-        {({ submitForm, isSubmitting }) => (
-          <Form className={classes.form}>
-            {/*
-            <TextField
-              className={classes.field}
-              name=""
-              type="text"
-              label="Name of this campaign"
-              placeholder="Birthday cake!"
-            />
+        {({ submitForm, isSubmitting, values, setFieldValue }) => {
+          return (
+            <Form className={classes.form}>
 
-              * Might use this later, don't delete
-            <Typography variant="h6" className={classes.typography}>Duration & Dates</Typography>
-            <RadioGroup name="Dates" value={isDates} onChange={(e, val) => setIsDates(val === "true")}>
-              <FormControlLabel
-                value="true"
-                control={<Radio/>}
-                checked={isDates}
-                label={<span style={{ color: '#636363' }}>Temporary campaign (ends automatically)</span>}
-              />
-              <FormControlLabel
-                value="false"
-                control={<Radio/>}
-                checked={!isDates}
-                label={<span style={{ color: '#636363' }}>Continuous (no end date)</span>}
-              />
-            </RadioGroup>
+              <FormControl component="fieldset">
+                <FormLabel component="legend">Status</FormLabel>
+                <RadioGroup
+                  name="status"
+                  value={values.status?.toString() || "active"}
+                  onChange={e => setFieldValue("status", e.target.value)}
+                >
+                  <FormControlLabel value="active" control={<Radio/>} label={(<>Active</>)}/>
+                  <FormControlLabel value="paused" control={<Radio/>} label={(<>Paused</>)}/>
+                </RadioGroup>
+                <div style={{ fontSize: '12px', color: 'gray', margin: '10px 0' }}>
+                  <b>Paused </b>coupons are not immediately revoked. Instead, the system will wait for their expiration and will no longer
+                  select these coupons.
+                </div>
+              </FormControl>
 
-            <Box display="flex" flexWrap="wrap" justifyContent="flex-start" style={{ gap: '25px' }}>
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <CustomDatePicker
-                  label="Coupon start date (dd/MM/yyyy)"
-                  value={startDate}
-                  showTodayButton
-                  setValue={setStartDate}
+              <Typography variant="h6" className={classes.typography}>Probability Modifier</Typography>
+
+              <Stack spacing={2} direction="row" sx={{ mb: 1 }} alignItems="center">
+                <span>Low Probability</span>
+                <Slider
+                  step={0.01}
+                  min={0.01}
+                  max={1}
+                  value={values.probabilityModifier}
+                  valueLabelDisplay="auto"
+                  onChange={(e, v) => setFieldValue("probabilityModifier", v)}
                 />
-                <CustomDatePicker
-                  disabled={!isDates}
-                  disablePast={!campaign.end}
-                  label="Coupon end date (dd/MM/yyyy)"
-                  showTodayButton
-                  value={endDate}
-                  setValue={setEndDate}
-                />
-              </LocalizationProvider>
-            </Box>
-               */
-            }
+                <span>High Probability</span>
+              </Stack>
 
-            <Typography variant="h6" className={classes.typography}>Reward</Typography>
+              <Typography variant="h6" className={classes.typography}>Expiration Range</Typography>
 
-            <RewardManager
-              maxRewards={1}
-              rewards={reward ? [reward] : []}
-              setRewards={rewards => {
-                setReward(rewards[0])
-              }}
-            />
+              <Slider
+                step={DAY_MS}
+                min={DAY_MS}
+                max={DAY_MS * 40}
+                valueLabelFormat={(millis, i) => {
+                  const days = millis / (DAY_MS)
+                  const isSameValue = values.expiration.min === values.expiration.max
+                  const prefix = i === 0 ? "from " : "to "
+                  return (isSameValue ? "always " : prefix) + days.toFixed() + plural(" day", days)
+                }}
+                value={[values.expiration.min, values.expiration.max]}
+                valueLabelDisplay="auto"
+                onChange={(e, v) => {
+                  const [min, max] = v as number[]
+                  // Always min <= max
+                  setFieldValue("expiration.min", min)
+                  setFieldValue("expiration.max", max)
+                }}
+                marks={[
+                  { value: DAY_MS, label: "24 hours" },
+                  { value: DAY_MS * 7, label: "7 days" },
+                  { value: DAY_MS * 14, label: "14 days" },
+                  { value: DAY_MS * 30, label: "30 days" }
+                ]}
+              />
 
-            <RetryButton error={error}/>
+              <div>
+                {expirationText(values.expiration.min, values.expiration.max)}
+              </div>
 
-            <div className={classes.submitDiv}>
-              <Button
-                className={classes.submitButton}
-                variant="contained"
-                color="primary"
-                disabled={loading}
-                startIcon={(<SaveIcon/>)}
-                onClick={submitForm}
-              >Save</Button>
-              {loading && <LinearProgress/>}
-            </div>
+              <Typography variant="h6" className={classes.typography}>Reward</Typography>
 
-            <IdText id={coupon.id}/>
-          </Form>
-        )}
+              <RewardManager
+                maxRewards={1}
+                rewards={reward ? [reward] : []}
+                setRewards={rewards => {
+                  setReward(rewards[0])
+                }}
+              />
+
+              <RetryButton error={error}/>
+
+              <div className={classes.submitDiv}>
+                <Button
+                  className={classes.submitButton}
+                  variant="contained"
+                  color="primary"
+                  disabled={loading || !reward}
+                  startIcon={(<SaveIcon/>)}
+                  onClick={submitForm}
+                >Save</Button>
+                {loading && <LinearProgress/>}
+              </div>
+
+              <IdText id={coupon.id}/>
+            </Form>
+          );
+        }}
       </Formik>
     </div>
   )

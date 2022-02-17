@@ -1,8 +1,8 @@
-import coupon, { CouponDocument } from "../models/coupon"
+import Coupon, { CouponDocument } from "../models/coupon"
 import Business from "../models/business"
 import StatusError from "../util/statusError"
-import Coupon from "../models/coupon"
 import { IReward } from "../models/reward"
+import { IUser } from "../models/user";
 
 export default {
   getAllCoupons,
@@ -13,7 +13,7 @@ export default {
 }
 
 async function getAllCoupons(): Promise<CouponDocument[]> {
-  return coupon.find({ status: { $ne: "deleted" } })
+  return Coupon.find({ status: { $ne: "deleted" } })
     .populate('products categories endReward.categories endReward.products')
 }
 
@@ -21,7 +21,7 @@ async function getAllCoupons(): Promise<CouponDocument[]> {
  * Get all rewards from the business's coupons
  */
 async function getAllRewards(): Promise<IReward[]> {
-  const rewards = await coupon.find({})
+  const rewards = await Coupon.find({})
     .populate('endReward.categories endReward.products')
     .select('endReward')
   // @ts-ignore
@@ -60,4 +60,9 @@ async function update(couponId, updatedCoupon) {
  */
 async function deleteCoupon(couponId) {
   return await Coupon.findByIdAndUpdate(couponId, { status: "deleted" })
+}
+
+async function refreshCoupons(user: IUser) {
+  const available = await Coupon.find({ status: 'active' })
+  // TODO
 }

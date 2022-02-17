@@ -17,7 +17,7 @@ import PermMediaOutlinedIcon from '@mui/icons-material/PhotoSizeSelectActual'
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive'
 import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner'
 import RedeemIcon from '@mui/icons-material/Redeem'
-// import LoyaltyIcon from '@mui/icons-material/Loyalty'
+import LoyaltyIcon from '@mui/icons-material/Loyalty'
 import SettingsIcon from '@mui/icons-material/Settings'
 import FeedbackIcon from '@mui/icons-material/Feedback'
 import HelpIcon from '@mui/icons-material/Help'
@@ -41,8 +41,7 @@ const categories = [
     children: [
       { id: 'Overview', icon: <AppsIcon/>, to: '/' },
       { id: 'Campaigns', icon: <RedeemIcon/>, to: '/campaigns' },
-      // hidden until it's 100% done
-      // { id: 'Coupons', icon: <LoyaltyIcon/>, to: '/coupons' },
+      { id: 'Coupons', icon: <LoyaltyIcon/>, to: '/coupons' },
       { id: 'Products', icon: <PermMediaOutlinedIcon/>, to: '/products' },
       { id: 'Customers', icon: <PeopleIcon/>, to: '/customers' },
       { id: 'Notifications', icon: <NotificationsActiveIcon/>, to: '/notifications' },

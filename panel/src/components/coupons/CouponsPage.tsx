@@ -55,7 +55,7 @@ export default function CouponsPage() {
         name="New Coupon"
         buttonProps={{
           onClick: () => {
-            setFormCoupon({})
+            setFormCoupon(defaultCoupon)
             setEditorOpen(true)
           }
         }}
@@ -71,6 +71,7 @@ export default function CouponsPage() {
         <Box display="flex" flexWrap="wrap">
           {coupons.map(coupon => (
             <CouponCard
+              key={coupon.id}
               className={classes.coupon}
               coupon={coupon}
               onEdit={() => {
@@ -88,7 +89,7 @@ export default function CouponsPage() {
 
         <CouponEditor
           open={editorOpen}
-          coupon={formCoupon || {}}
+          coupon={formCoupon || defaultCoupon}
           onClose={() => setEditorOpen(false)}
           onSubmitted={() => {
             setEditorOpen(false)
@@ -98,4 +99,12 @@ export default function CouponsPage() {
       </div>
     </div>
   )
+}
+
+const defaultCoupon: Coupon = {
+  probabilityModifier: 0.5,
+  expiration: {
+    min: 1000 * 60 * 60 * 24,
+    max: 1000 * 60 * 60 * 24,
+  }
 }

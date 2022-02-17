@@ -3,8 +3,13 @@ import Reward from "../rewards/Reward"
 export interface Coupon {
   id?: string
   start?: Date
-  expirationMillis?: number
+  expiration: {
+    min: number
+    max: number
+  },
+  probabilityModifier: number
   reward?: Reward
-  status?: "active" | "deleted"
+  status?: "active" | "paused" | "deleted"
+  mediaUrls?: string[]
 }
 

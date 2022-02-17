@@ -135,8 +135,8 @@ export default function ImportProducts(props: ImportProductsProps): ReactElement
                   setPreviewProducts(products)
                 }
               }).catch(_err => {
-                setErrorMessage(`Failed to parse products. Is the file a valid CSV file?`)
-              }).finally(() => setSubmitting(false))
+              setErrorMessage(`Failed to parse products. Is the file a valid CSV file?`)
+            }).finally(() => setSubmitting(false))
           }}/>
         <ProductPreview
           open={previewOpen}
@@ -186,14 +186,15 @@ export default function ImportProducts(props: ImportProductsProps): ReactElement
           <DialogContentText id="alert-dialog-description">
             Select the file to import. We currently only support CSV files
           </DialogContentText>
-          <ProductsDropzone dropzoneOptions={{
-            multiple: false,
-            accept: '.csv',
-            onDropAccepted: (files, _event) => {
-              // Only accepting one file
-              setFile(files[0])
-            }
-          }}/>
+          <ProductsDropzone
+            dropzoneOptions={{
+              multiple: false,
+              accept: '.csv',
+              onDropAccepted: (files, _event) => {
+                // Only accepting one file
+                setFile(files[0])
+              }
+            }}/>
         </DialogContent>
 
         <FileInfo file={file}/>
@@ -214,10 +215,10 @@ export default function ImportProducts(props: ImportProductsProps): ReactElement
                       setError({})
                     }
                   }).catch(err => {
-                    setErrorMessage(`Failed to send the file. ${err}`)
-                  }).finally(() => {
-                    setSubmitting(false)
-                  })
+                  setErrorMessage(`Failed to send the file. ${err}`)
+                }).finally(() => {
+                  setSubmitting(false)
+                })
               }}
             className={classes.submitButton}
             color="secondary"
@@ -299,7 +300,7 @@ function ProductPreview({ open, onClickClose, initialProducts }: PreviewProps) {
 
         {products.map((item, index) => (
           <ProductRow key={index} product={item}
-            startEditing={(product) => setEditingProduct(product)}/>
+                      startEditing={(product) => setEditingProduct(product)}/>
         ))}
 
         <ProductFormDialog

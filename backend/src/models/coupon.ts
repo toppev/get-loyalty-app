@@ -5,9 +5,14 @@ const { Schema } = mongoose
 
 export interface ICoupon {
   start?: Date
-  expirationMillis?: number
+  expiration: {
+    min: number
+    max: number
+  },
+  probabilityModifier: number
   reward?: IReward
   status?: "active" | "deleted"
+  mediaUrls?: string[]
 }
 
 export interface CouponDocument extends ICoupon, Document {
@@ -18,13 +23,27 @@ const campaignSchema = new Schema<CouponDocument>({
     type: Date,
     default: Date.now
   },
-  expirationMillis: {
+  expiration: {
+    min: {
+      type: Number,
+      default: 1000 * 60 * 60 * 24 // 24h
+    },
+    max: {
+      type: Number,
+      default: 1000 * 60 * 60 * 24 * 7 // 1 week
+    },
+  },
+  probabilityModifier: {
     type: Number,
-    default: 1000 * 60 * 60 * 24 // 24h
+    default: 0.2
   },
   status: {
     type: String,
-    enum: ["active", "deleted", undefined]
+    enum: ["active", "paused", "deleted", undefined],
+    default: "active",
+  },
+  mediaUrls: {
+    type: [String],
   },
   reward: rewardSchema,
 }, {

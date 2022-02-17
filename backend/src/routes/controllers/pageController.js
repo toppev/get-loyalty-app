@@ -131,7 +131,9 @@ function uploadStaticFile(req, res, next) {
   const fileSizeLimit = 4 // MB
   const busboy = new Busboy({ headers: req.headers, limits: { fileSize: (1024 * 1024 * fileSizeLimit) } })
   busboy.on('file', (fieldName, file, filename, encoding, mimetype) => {
-    file.on('limit', () => res.status(400).json({ message: `Max file size: ${fileSizeLimit}MB` }))
+    file.on('limit', () => {
+      res.status(400).json({ message: `Max file size: ${fileSizeLimit}MB` })
+    })
     file.on('data', (data) => {
       const pageId = req.params.pageId
       pageService.uploadStaticFile(pageId, data, req.query.fileName, { contentType: mimetype })
