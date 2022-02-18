@@ -64,8 +64,15 @@ function GrapesPageEditor(props) {
       // TODO: handle failures
       const { data } = await client.get(`${url}/${pageId}/?gjsOnly=true`)
       const getHtml = async () => {
-        const res = await client.get(`${url}/${pageId}/static/index.html`)
-        return res.data
+        try {
+          const res = await client.get(`${url}/${pageId}/static/index.html`)
+          return res.data
+        } catch (err) {
+          if (err.response.status === 404) {
+            return ""
+          }
+          throw err
+        }
       }
 
       editor = GrapesJS.init({
@@ -84,7 +91,7 @@ function GrapesPageEditor(props) {
           grapesjsTuiImageEditor
         ],
         components: safeParseJson(data['gjs-components']) || (await getHtml()),
-        style: safeParseJson(data['gjs-styles']),
+        style: safeParseJson(data['gjs-styles']) || {},
         storageManager: {
           type: 'remote',
           // stepsBeforeSave: 5, // Doesn't work? FIXME?
