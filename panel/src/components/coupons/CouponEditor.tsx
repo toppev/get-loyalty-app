@@ -230,7 +230,7 @@ function CouponForm({ coupon, ...props }: CouponEditorProps) {
 
               <IdText id={coupon.id}/>
             </Form>
-          );
+          )
         }}
       </Formik>
     </div>

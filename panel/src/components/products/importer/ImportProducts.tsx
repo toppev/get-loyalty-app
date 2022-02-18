@@ -135,8 +135,8 @@ export default function ImportProducts(props: ImportProductsProps): ReactElement
                   setPreviewProducts(products)
                 }
               }).catch(_err => {
-              setErrorMessage(`Failed to parse products. Is the file a valid CSV file?`)
-            }).finally(() => setSubmitting(false))
+                setErrorMessage(`Failed to parse products. Is the file a valid CSV file?`)
+              }).finally(() => setSubmitting(false))
           }}/>
         <ProductPreview
           open={previewOpen}
@@ -215,10 +215,10 @@ export default function ImportProducts(props: ImportProductsProps): ReactElement
                       setError({})
                     }
                   }).catch(err => {
-                  setErrorMessage(`Failed to send the file. ${err}`)
-                }).finally(() => {
-                  setSubmitting(false)
-                })
+                    setErrorMessage(`Failed to send the file. ${err}`)
+                  }).finally(() => {
+                    setSubmitting(false)
+                  })
               }}
             className={classes.submitButton}
             color="secondary"
@@ -300,7 +300,7 @@ function ProductPreview({ open, onClickClose, initialProducts }: PreviewProps) {
 
         {products.map((item, index) => (
           <ProductRow key={index} product={item}
-                      startEditing={(product) => setEditingProduct(product)}/>
+            startEditing={(product) => setEditingProduct(product)}/>
         ))}
 
         <ProductFormDialog
