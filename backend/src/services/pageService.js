@@ -228,7 +228,7 @@ async function getPageContext(user) {
       .map(it => {
         return {
           ...it,
-          expires: it.expires?.toLocaleDateString(undefined, dateOpts)
+          expires: it.expires ? new Date(it.expires)?.toLocaleDateString(undefined, dateOpts) : undefined
           // expiresHours: TODO
         }
       })
