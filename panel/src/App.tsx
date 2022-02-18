@@ -202,7 +202,7 @@ export default function App() {
                         <Route path="/pages">
                           <PagesPage/>
                         </Route>
-                        <Route path="/demo">
+                        <Route path={["/preview","/demo"]}>
                           <DemoPage/>
                         </Route>
                         <Route path="/settings">
