@@ -9,6 +9,7 @@ import product from "./product"
 // Because of circular dependencies
 // FIXME?
 import role from "./role"
+import couponSchema, { ICoupon } from "./coupon"
 
 logger.debug(`Making sure ${Category.baseModelName} is loaded before user schema`)
 
@@ -36,7 +37,11 @@ export interface IUser {
   termsAccepted: Date | undefined
   privacyPolicyAccepted: Date | undefined
   customerData: {
-    purchases: PurchaseDocument[] // TODO: type
+    purchases: PurchaseDocument[]
+    coupons: {
+      coupon: ICoupon
+      expires: Date
+    }[]
     rewards: any[] // TODO: type
     usedRewards: {
       dateUsed: Date
@@ -172,6 +177,16 @@ const userSchema = new Schema<UserDocument>({
   customerData: {
     purchases: [purchaseSchema],
     rewards: [rewardSchema],
+    coupons: [{
+      expires: {
+        type: Date,
+      },
+      coupon: {
+        type: Schema.Types.ObjectId,
+        ref: 'Category',
+        required: true
+      }
+    }],
     usedRewards: [{
       dateUsed: {
         type: Date,
@@ -261,6 +276,8 @@ const autoPopulate = function (this: UserDocument, next) {
   this
     .populate("customerData.rewards.categories")
     .populate("customerData.rewards.products")
+    // .populate("customerData.coupons.coupon")
+    .populate("customerData.coupons.coupon.reward")
   next()
 }
 

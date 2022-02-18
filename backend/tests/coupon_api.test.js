@@ -57,7 +57,9 @@ describe('Coupon API', () => {
       .get(`/coupon/list`)
       .set('Cookie', cookie)
       .expect(200)
-    expect(res.body[0].expirationMillis).toBe(172800000)
+    expect(res.body.length).toBeGreaterThanOrEqual(1)
+    expect(res.body[0].expiration.min).toBe(86400000)
+    expect(res.body[0].expiration.max).toBe(604800000)
   })
 
 

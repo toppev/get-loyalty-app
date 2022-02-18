@@ -5,7 +5,6 @@ import React from "react"
 import makeStyles from "@mui/styles/makeStyles"
 import createStyles from "@mui/styles/createStyles"
 import { PaperProps } from "@mui/material/Paper/Paper"
-import { plural } from "../common/StringUtils";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

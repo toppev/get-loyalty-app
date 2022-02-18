@@ -35,7 +35,8 @@ const categorySchema = new Schema({
     validate: {
       validator: function (value, cb) {
         return validator.isURL(value, { protocols: ['http', 'https'] })
-      }, message: 'Invalid URL.',
+      },
+      message: 'Invalid URL.',
     },
   }],
 }, {

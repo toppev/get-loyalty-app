@@ -4,6 +4,8 @@ import rewardSchema, { IReward } from "./reward"
 const { Schema } = mongoose
 
 export interface ICoupon {
+  _id?: any
+  id?: any
   start?: Date
   expiration: {
     min: number
@@ -18,7 +20,7 @@ export interface ICoupon {
 export interface CouponDocument extends ICoupon, Document {
 }
 
-const campaignSchema = new Schema<CouponDocument>({
+const couponSchema = new Schema<CouponDocument>({
   start: {
     type: Date,
     default: Date.now
@@ -52,4 +54,4 @@ const campaignSchema = new Schema<CouponDocument>({
   toObject: { virtuals: true }
 })
 
-export default mongoose.model<CouponDocument>('Coupon', campaignSchema)
+export default mongoose.model<CouponDocument>('Coupon', couponSchema)

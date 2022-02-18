@@ -195,6 +195,7 @@ async function searchCustomers(limit, sort = "", search = "") {
           { "email": regex },
           { "role": regex },
           { "customerData.rewards.name": regex },
+          { "customerData.coupons.coupon.reward.name": regex },
         ]
       })
       .sort(sort)

@@ -254,7 +254,7 @@ async function useScan(scanStr, data) {
 function _sendRewardsMessage(userId, business, newRewards) {
   const translations = business.config.translations
   const rewardNames = newRewards.map(it => it.name).join(', ')
-  const message = format(newRewards.length === 1 ? translations.newReward.singular : translations.newReward.plural, rewardNames)
+  const message = format(newRewards.length === 1 ? translations.newReward.singular : translations.newReward.plural, [rewardNames])
   pollingService.sendToUser(userId, { message: message, refresh: true }, POLLING_IDENTIFIERS.REWARD_GET)
 }
 

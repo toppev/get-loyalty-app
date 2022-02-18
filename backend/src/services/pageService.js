@@ -14,6 +14,7 @@ import { validateHandlebars } from "../helpers/handlebars"
 import logger from "../util/logger"
 import mongoose from "mongoose"
 import mime from "mime-types"
+import couponService from "./couponService";
 
 export default {
   createPage,
@@ -157,6 +158,7 @@ async function getTemplates() {
 
 async function getPageContext(user) {
   const business = await Business.findOne().lean()
+  user = await couponService.checkRefreshCoupons(user)
   if (business) {
     //
     // Add all page placeholders somewhere below here
@@ -217,8 +219,16 @@ async function getPageContext(user) {
     })
     const { config } = business
     const { translations } = config
-    const points = customerData.properties.points
-    userInfo.points = points // alias
+    const { points, coupons } = customerData.properties
+    // some aliases
+    userInfo.points = points
+    userInfo.coupons = (coupons || []).map(it => {
+      return {
+        ...it,
+        expires: it.expires?.toLocaleDateString(undefined, dateOpts)
+        // expiresHours: TODO
+      }
+    })
     let customerLevels = business.public.customerLevels
     const currentLevel = customerService.getCurrentLevel(customerLevels, points)
     customerLevels = customerLevels

@@ -1,4 +1,4 @@
-const DEBUG_ENABLED = process.env.LOG_LEVEL?.toLowerCase() === "debug"
+const DEBUG_ENABLED = process.env.LOG_LEVEL?.toLowerCase() === "debug" || process.env.NODE_ENV === "test"
 
 const dateStr = () => {
   const date = new Date()

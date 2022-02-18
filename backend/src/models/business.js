@@ -54,6 +54,16 @@ const configSchema = new Schema({
         type: String,
         default: 'You got new rewards: {0}'
       }
+    },
+    couponUsed: {
+      singular: {
+        type: String,
+        default: 'You used the coupon: {0}'
+      },
+      plural: {
+        type: String,
+        default: 'You used the coupons: {0}'
+      }
     }
   }
 })
