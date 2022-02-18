@@ -85,7 +85,7 @@ async function checkRefreshCoupons(user: UserDocument) {
   } else {
 
     const hasCoupon = (coupon: CouponDocument) => {
-      if (currentCoupons.some(it => it.coupon._id == coupon._id)) {
+      if (currentCoupons.some(it => it.coupon._id.equals(coupon._id))) {
         logger.debug(`User ${user.id} already has coupon ${coupon._id}`)
         return true
       }

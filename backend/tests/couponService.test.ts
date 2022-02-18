@@ -55,6 +55,13 @@ describe('coupon refresh', () => {
     expect(coupon1.coupon).toBeDefined()
     expect(new Date(coupon1.expires).getTime()).toBeGreaterThan(Date.now() + DAY_MS)
     expect(new Date(coupon1.expires).getTime()).toBeLessThanOrEqual(Date.now() + DAY_MS * 5)
+
+
+    // Cannot receive multiple of same
+    expect(coupons.length).toBe(1)
+    const newUser = await couponService.checkRefreshCoupons(user)
+    expect(newUser.customerData.coupons.length).toBe(1)
+
   })
 
 })

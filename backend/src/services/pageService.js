@@ -220,10 +220,10 @@ async function getPageContext(user) {
     })
     const { config } = business
     const { translations } = config
-    const { points, coupons } = customerData.properties
+    const points = customerData.properties
     // some aliases
     userInfo.points = points
-    userInfo.coupons = (coupons || []).map(it => {
+    userInfo.coupons = (customerData.coupons || []).map(it => {
       return {
         ...it,
         expires: it.expires?.toLocaleDateString(undefined, dateOpts)
