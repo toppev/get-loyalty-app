@@ -1,15 +1,17 @@
+<!-- Perhaps this page could be merged with rewards? -->
+
 <h1 class="page-title">Your Coupons
     <span class="page-title-amount"><!-- Maybe add something like on rewards page ({{customerCoupons.unused}}) -->/</span></h1>
 <div class="page-content">
     <div class="page-text">Activate coupons and show the QR code.</div>
     <div id="no-coupons">
-        {{#unless user.coupons}}
+        {{#unless user.availableCoupons}}
         <b>You don&#039;t have any coupons.</b>
         {{/unless}}
     </div>
 
     <div>
-        {{#each user.coupons}}
+        {{#each user.availableCoupons}}
         <div>
             <div class="w-full h-full py-5 flex justify-center items-center">
                 <div class="relative shadow-md pl-1 bg-transparent flex justify-center rounded-xl hover:scale-110 duration-500 transform transition cursor-pointer">

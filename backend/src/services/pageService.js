@@ -223,13 +223,15 @@ async function getPageContext(user) {
     const points = customerData.properties
     // some aliases
     userInfo.points = points
-    userInfo.coupons = (customerData.coupons || []).map(it => {
-      return {
-        ...it,
-        expires: it.expires?.toLocaleDateString(undefined, dateOpts)
-        // expiresHours: TODO
-      }
-    })
+    userInfo.availableCoupons = (customerData.coupons || [])
+      .filter(it => !it.expires || new Date(it.expires).getTime() > Date.now())
+      .map(it => {
+        return {
+          ...it,
+          expires: it.expires?.toLocaleDateString(undefined, dateOpts)
+          // expiresHours: TODO
+        }
+      })
     let customerLevels = business.public.customerLevels
     const currentLevel = customerService.getCurrentLevel(customerLevels, points)
     customerLevels = customerLevels
