@@ -5,13 +5,14 @@ import bcrypt from "bcrypt"
 import campaigns from "@toppev/getloyalty-campaigns"
 import rewardSchema from "./reward"
 import product from "./product"
+import Coupon, { ICoupon } from "./coupon"
 
 // Because of circular dependencies
 // FIXME?
 import role from "./role"
-import couponSchema, { ICoupon } from "./coupon"
 
 logger.debug(`Making sure ${Category.baseModelName} is loaded before user schema`)
+logger.debug(`Making sure ${Coupon.baseModelName} is loaded before user schema`)
 
 export interface IUser {
   email?: string
