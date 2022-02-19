@@ -1,7 +1,7 @@
 <!-- Perhaps this page could be merged with rewards? -->
 
-<h1 class="page-title">Your Coupons
-    <span class="page-title-amount"><!-- Maybe add something like on rewards page ({{customerCoupons.unused}}) -->/</span></h1>
+<h1 class="page-title">Available Coupons
+    <span class="page-title-amount"><!-- Maybe add something like on rewards page ({{customerCoupons.unused}}) --></span></h1>
 <div class="page-content">
     <div class="page-text">Activate coupons and show the QR code.</div>
     <div id="no-coupons">
@@ -22,6 +22,7 @@
                     <div class="top-0 left-0 h-2 md:h-3 mt-6 pl-5 rounded-3xl absolute z-0 bg-green-600"></div>
                     <div class="w-80 pb-2 bg-white rounded-xl shadow-xl z-10">
                         <div class="relative">
+                            <!-- FIXME: use the image here, add a button to activate, probs will do the same with rewards -->
                             <div data-qrcode="coupon:{{coupon.id}}" class="w-56 m-auto p-3"></div>
                             <div class="-bottom-2 right-0 mb-2 mr-2 px-2 rounded-lg absolute bg-yellow-500 text-gray-100 text-xs font-medium">
                                 Your coupon
@@ -86,7 +87,7 @@
                                     <!-- The coupon expiration. The reward expiration is not really useful with coupons at all. -->
                                     {{#if expires}}
                                     <p>
-                                        Coupon Expires <span>{{expires}}</span>
+                                        Expires <span>{{expires}}</span>
                                     </p>
                                     {{/if}}
                                 </div>
