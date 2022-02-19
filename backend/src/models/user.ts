@@ -277,7 +277,14 @@ const autoPopulate = function (this: UserDocument, next) {
   this
     .populate("customerData.rewards.categories")
     .populate("customerData.rewards.products")
-    .populate("customerData.coupons.coupon")
+    .populate([{
+      path: "customerData.coupons.coupon",
+      populate: [{
+        path: "reward.categories",
+      }, {
+        path: "reward.products"
+      }]
+    }])
   next()
 }
 
