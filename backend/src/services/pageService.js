@@ -220,7 +220,7 @@ async function getPageContext(user) {
     })
     const { config } = business
     const { translations } = config
-    const points = customerData.properties
+    const points = customerData.properties.points
     // some aliases
     userInfo.points = points
     userInfo.availableCoupons = (customerData.coupons || [])
