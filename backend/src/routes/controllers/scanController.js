@@ -18,7 +18,7 @@ export default router
 
 function getScan(req, res, next) {
   const { scan } = req.params
-  scanService.getScan(scan)
+  scanService.getScanInfo(scan)
     .then(data => res.json(data))
     .catch(err => {
       next(err)

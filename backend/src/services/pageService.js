@@ -2,19 +2,18 @@ import PageData from "../models/page"
 import fileService from "./fileService"
 import pageScreenshot from "./pageScreenshot"
 import Business from "../models/business"
-import handlebars from "handlebars"
 import StatusError from "../util/statusError"
 import customerService from "./customerService"
 import campaignService from "./campaignService"
 import productService from "./productService"
 import scanService from "./scanService"
 import pollingService from "./pollingService"
-import { validateHandlebars } from "../helpers/handlebars"
+import handlebars, { validateHandlebars } from "../helpers/handlebars"
 
 import logger from "../util/logger"
 import mongoose from "mongoose"
 import mime from "mime-types"
-import couponService from "./couponService";
+import couponService from "./couponService"
 
 export default {
   createPage,
@@ -173,7 +172,7 @@ async function getPageContext(user) {
     userInfo.customerData.rewards
       .map(reward => {
         return {
-          scanCode: scanService.toScanCode(user, reward),
+          scanCode: scanService.toScanCode(user, reward, undefined),
           ...reward,
         }
       })
@@ -229,7 +228,8 @@ async function getPageContext(user) {
         return {
           ...it,
           // FIXME: better/local format
-          expires: it.expires ? new Date(it.expires)?.toLocaleDateString() : undefined
+          expires: it.expires ? new Date(it.expires)?.toLocaleDateString() : undefined,
+          scanCode: scanService.toScanCode(user, undefined, it),
           // expiresHours: TODO
         }
       })

@@ -58,25 +58,27 @@ class Question {
 
 class UseScan {
   String message;
-  /// New rewards the customer get from participating (i.e., enough stamps, new customer level)
-  List<Map<String, Object> > newRewards;
-  /// The reward that was used (confirmed GetScan), nullable
-  Map<String, Object> usedReward;
 
-  UseScan(this.message, this.newRewards, this.usedReward);
+  /// New rewards the customer get from participating (i.e., enough stamps, new customer level)
+  List<Map<String, Object>> newRewards;
+
+  /// The reward that was used (confirmed GetScan), nullable
+  List<Map<String, Object>> usedRewards;
+
+  UseScan(this.message, this.newRewards, this.usedRewards);
 
   factory UseScan.fromJson(Map<String, dynamic> json) {
     return UseScan(
       json['message'],
       json['newRewards'],
-      json['usedReward'],
+      json['usedRewards'],
     );
   }
 
   Map<String, dynamic> toJson() => {
         'message': message,
         'newRewards': newRewards,
-        'usedReward': usedReward,
+        'usedRewards': usedRewards,
       };
 }
 
@@ -86,7 +88,7 @@ class ScanService {
   ScanService(this.sessionService);
 
   /// Used to get information of the scanned string (i.e., the questions)
-  Future<GetScan> getScan(String scan) async {
+  Future<GetScan> getScanInfo(String scan) async {
     var url = '$backendUrl/scan/$scan';
     print('#getScan called. Sending request to $url');
     final response = await sessionService.get(url);

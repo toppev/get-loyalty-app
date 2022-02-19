@@ -41,7 +41,7 @@ class _ScannerPageState extends State<ScannerPage> {
                 scale: 0.8,
                 child: ScannerWidget(
                   key: globalKey,
-                  onScan: _onScan,
+                  onScan: _onScanInfo,
                   onScanToggle: _updateToggleButton,
                 )),
           ),
@@ -87,17 +87,18 @@ class _ScannerPageState extends State<ScannerPage> {
     });
   }
 
-  void _onScan(GetScan data) {
+  void _onScanInfo(GetScan data) {
     var scanService = Provider.of<ScanService>(context, listen: false);
     print('Scan get result: $data');
     showDialog(
       context: context,
       builder: (BuildContext context) => QuestionDialogWidget(
           onSubmit: (res) {
+            // Confirmed submission
             scanService.useScan(data.scannedString, res).then((result) {
               print('Scan used. Response: ${result.toJson()}');
               Navigator.of(context).pop();
-              _onScanSubmitted(result, data);
+              _onScanUsed(result, data);
             }).catchError((e) {
               print(e);
               showError(context, message: "Please check connection", error: e.toString());
@@ -109,57 +110,60 @@ class _ScannerPageState extends State<ScannerPage> {
   }
 
   // TODO: clean up to separate parts
-  _onScanSubmitted(UseScan result, GetScan scannedData) {
+  _onScanUsed(UseScan result, GetScan scannedData) {
     // If null, the customer did not scan a reward (and did not use one)
     // Nothing to open so start scanning again
-    if (result.usedReward != null) {
-      var reward = result.usedReward;
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            final height = MediaQuery.of(context).size.height;
-            final width = MediaQuery.of(context).size.width;
+    if (result.usedRewards.isNotEmpty) {
+      result.usedRewards.forEach((reward) {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              final height = MediaQuery.of(context).size.height;
+              final width = MediaQuery.of(context).size.width;
+              final scanType = scannedData.scannedString.contains("coupon") ? "coupon" : "reward";
+              final title = "The customer used ${scanType}: ${reward['name']}";
 
-            return AlertDialog(
-                title: Text(
-                  "The customer wants to use reward: ${reward['name']}",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 24, color: Colors.black54),
-                ),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                content: DefaultTextStyle(
-                  style: TextStyle(fontSize: 28, color: Colors.black87),
-                  child: Container(
-                    width: width * 0.7,
-                    height: height * 0.5,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 24.0),
-                      child: Column(
-                        children: <Widget>[
-                          Text("Name: ${reward['name']}"),
-                          Text("Discount: ${reward['description']}"),
-                          Text(reward['requirement'] != null ? "Note: ${reward['requirement']}" : ""),
-                          Text(reward['description']),
-                        ],
+              return AlertDialog(
+                  title: Text(
+                    title,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 24, color: Colors.black54),
+                  ),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                  content: DefaultTextStyle(
+                    style: TextStyle(fontSize: 28, color: Colors.black87),
+                    child: Container(
+                      width: width * 0.7,
+                      height: height * 0.5,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 24.0),
+                        child: Column(
+                          children: <Widget>[
+                            Text("Name: ${reward['name']}"),
+                            Text("Discount: ${reward['description']}"),
+                            Text(reward['requirement'] != null ? "Note: ${reward['requirement']}" : ""),
+                            Text(reward['description']),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-                actions: [
-                  new TextButton(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          "Close message",
-                          style: TextStyle(fontSize: 30),
+                  actions: [
+                    new TextButton(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "Close message",
+                            style: TextStyle(fontSize: 30),
+                          ),
                         ),
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        globalKey.currentState.setScanning(true);
-                      })
-                ]);
-          });
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          globalKey.currentState.setScanning(true);
+                        })
+                  ]);
+            });
+      });
     }
     if (result.newRewards.isNotEmpty) {
       // Open a dialog for each
@@ -220,10 +224,10 @@ class _ScannerPageState extends State<ScannerPage> {
                           // TODO: test this
                           // Works with "recursion", as if we scanned this id
                           final scanData = "${scannedData.user['id']}:${reward['id']}"; // TODO: get this somehow
-                          scanService.getScan(scanData).then((result) {
+                          scanService.getScanInfo(scanData).then((result) {
                             Navigator.of(context).pop();
                             print('Handling request result: ${result.toJson()}');
-                            _onScan(result);
+                            _onScanInfo(result);
                           }).catchError((e) {
                             Navigator.of(context).pop();
                             print(e);

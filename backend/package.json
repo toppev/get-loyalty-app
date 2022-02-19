@@ -24,6 +24,7 @@
     "express": "^4.17.1",
     "express-unless": "^0.5.0",
     "handlebars": "^4.7.7",
+    "handlebars-helpers": "^0.10.0",
     "jsonwebtoken": "^8.5.1",
     "juice": "^7.0.0",
     "lodash": "^4.17.21",

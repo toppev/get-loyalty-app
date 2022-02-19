@@ -1,8 +1,14 @@
 import handlebars from "handlebars"
+import helpers from "handlebars-helpers"
+
+handlebars.registerHelper(helpers())
+
+export default handlebars
 
 export {
-  validateHandlebars
+  validateHandlebars,
 }
+
 
 async function validateHandlebars(html) {
   try {
@@ -13,3 +19,4 @@ async function validateHandlebars(html) {
   }
   return true
 }
+

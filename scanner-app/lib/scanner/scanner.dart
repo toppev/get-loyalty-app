@@ -68,7 +68,7 @@ class ScannerWidgetState extends State<ScannerWidget> {
           stateText = "INVALID QR code text: \"$stateText\". Not a loyalty QR code?";
         } else {
           setScanning(false);
-          scanService.getScan(scanData).then((result) {
+          scanService.getScanInfo(scanData).then((result) {
             print('Handling request result: ${result.toJson()}');
             widget.onScan(result);
           }).catchError((e) {

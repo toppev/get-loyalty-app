@@ -4,6 +4,7 @@ import Business from "../models/business"
 import customerService from "./customerService"
 import campaignService from "./campaignService"
 import pollingService from "./pollingService"
+import couponService from "./couponService"
 import { format } from "../util/stringUtils"
 import { asyncFilter } from "../util/asyncFilter"
 
@@ -21,70 +22,68 @@ const IDENTIFIERS = {
   }
 }
 
-/**
- * Parse the scanned string
- * @param scanStr the string to parse, values separated with ":"
- * @return {Promise<{rewardId: string, user: *, userId: string}>}
- */
-async function parseScanString(scanStr) {
-  const split = scanStr.split(":")
-  if (split.length === 0 || split.length > 2) {
-    throw new StatusError('Invalid code', 400)
-  }
-  const userId = split[0]
+
+// TODO: make it support multiple reward/coupon uses at once
+
+async function parseScanCode(scanStr) {
+  const { user: userId, reward: rewardId, coupon: couponId } = JSON.parse(scanStr)
   const user = await userService.getById(userId)
-  if (!user) {
-    throw new StatusError('User not found', 404)
-  }
-  const rewardId = split[1]
-  return { user, userId, rewardId }
+  if (!user) throw new StatusError('User not found', 404)
+  return { user, userId, rewardId, couponId }
 }
 
-/**
- *
- * @param user the user object or ID of the user. (Required)
- * @param reward the reward or its ID or null/undefined
- * @return string
- */
-function toScanCode(user, reward) {
-  const userId = user.id || user
-  const rewardId = reward.id || reward
-  return rewardId ? `${userId}:${rewardId}` : userId
+function toScanCode(user, reward, coupon) {
+  const data = {
+    user: user.id,
+    ...(reward && { reward: reward.id }),
+    ...(coupon && { coupon: coupon.id }),
+  }
+  return JSON.stringify(data)
 }
 
 /**
  * Validate that the reward exists in the given customerData
- * @param rewardId
- * @param customerData
  */
 async function validateReward(rewardId, customerData) {
   if (rewardId) {
     // The reward is the entire object, not only the id
     const reward = customerData.rewards.find(r => r._id.equals(rewardId))
-    if (!reward) {
-      throw new StatusError('Customer selected reward but the reward was not found.')
-    }
+    if (!reward) throw new StatusError('A reward selected by the customer was not found.')
     if (reward.expires && new Date(reward.expires).getTime() < Date.now()) {
-      throw new StatusError(`The reward expired (${new Date(reward.expires).toUTCString()}). You can still let them use the reward (without the loyalty app).`)
+      throw new StatusError(`The reward expired (${new Date(reward.expires).toUTCString()}). You can still let them use it (without the loyalty app).`)
     }
     return reward
+  }
+}
+
+async function validateCoupon(couponId, customerData) {
+  if (couponId) {
+    // The coupon is the entire object, not only the id
+    const coupon = customerData.coupons.find(c => c.coupon._id.equals(couponId))
+    if (!coupon) throw new StatusError('A coupon selected by the customer was not found.')
+    if (coupon.expires && new Date(coupon.expires).getTime() < Date.now()) {
+      throw new StatusError(`The coupon expired (${new Date(coupon.expires).toUTCString()}). You can still let them use it (without the loyalty app).`)
+    }
+    return coupon
   }
 }
 
 /**
  * Get data from the scan
  */
-async function getScan(scanStr) {
-  const { user, userId, rewardId } = await parseScanString(scanStr)
+async function getScanInfo(scanStr) {
+  const { user, userId, rewardId, couponId } = await parseScanCode(scanStr)
   const { customerData } = user
   const questions = []
 
   const userInfo = await customerService.getCustomerInfo(user)
   const reward = await validateReward(rewardId, customerData)
+  const coupon = await validateCoupon(couponId, customerData)
 
-  const otherData = {
+  const response = {
     user: userInfo,
     reward: reward,
+    coupon: coupon,
   }
 
   if (reward) {
@@ -93,7 +92,12 @@ async function getScan(scanStr) {
       categoryQuestion: 'Reward only applies to these categories'
     })
     questions.push({ id: 'success', question: `Use reward "${reward.name}"?`, options: ['Yes', 'No'] })
-    otherData.reward = reward
+  } else if (coupon) {
+    addQuestions(questions, coupon.categories, coupon.products, [], {
+      productQuestion: 'Coupon only applies to these products',
+      categoryQuestion: 'Coupon only applies to these categories'
+    })
+    questions.push({ id: 'success', question: `Use coupon "${coupon.coupon.reward.name}"?`, options: ['Yes', 'No'] })
   } else {
     const currentCampaigns = await campaignService.getOnGoingCampaigns(true)
     // Campaigns the user can (possibly) receive. I.e has not received and the campaign limits haven't been reached
@@ -103,7 +107,7 @@ async function getScan(scanStr) {
           if (err && err.name !== 'StatusError') throw err
         })
     })
-    otherData.campaigns = campaigns
+    response.campaigns = campaigns
 
     const categories = [].concat(...campaigns.map(c => c.categories))
     const products = [].concat(...campaigns.map(c => c.products))
@@ -129,7 +133,7 @@ async function getScan(scanStr) {
     vibrate: [200]
   }, POLLING_IDENTIFIERS.SCAN)
 
-  return { questions, ...otherData }
+  return { questions, ...response }
 }
 
 
@@ -166,11 +170,13 @@ function addQuestions(questions, categories, products, requirements, options = {
 }
 
 async function useScan(scanStr, data) {
-  const { user, userId, rewardId } = await parseScanString(scanStr)
+  const { user, userId, rewardId, couponId } = await parseScanCode(scanStr)
   const customerData = user.customerData
-  const reward = await validateReward(rewardId, customerData)
   const business = await Business.findOne()
   const translations = business.config.translations
+
+  const reward = await validateReward(rewardId, customerData)
+  const coupon = await validateCoupon(couponId, customerData)
 
   // e.g [{ id: "questionId", options: ["someAnswer"], question: "asd?"}]
   const { answers } = data
@@ -184,70 +190,75 @@ async function useScan(scanStr, data) {
   }
 
   let responseMessage
+  const newRewards = []
 
   if (reward) {
     await customerService.useReward(user, customerData, reward)
     responseMessage = translations.rewardUsed.singular
     pollingService.sendToUser(userId, { message: responseMessage, refresh: true }, POLLING_IDENTIFIERS.REWARD_USE)
   }
+  if (coupon) {
+    await couponService.useCoupon(user, coupon.id)
+  } else {
 
-  const productQuestion = answers.find(e => e.id === IDENTIFIERS.PRODUCTS)
-  const products = productQuestion ? productQuestion.options || [] : []
+    const products = answers.find(e => e.id === IDENTIFIERS.PRODUCTS)?.options || []
+    const categories = answers.find(e => e.id === IDENTIFIERS.CATEGORIES)?.options || []
 
-  const categoryQuestion = answers.find(e => e.id === IDENTIFIERS.CATEGORIES)
-  const categories = categoryQuestion ? categoryQuestion.options || [] : []
+    // Function that returns true if the given requirement/requirement type got truthy answer (from the human/cashier)
+    const isTruthyAnswer = (requirement) => {
+      const reqId = IDENTIFIERS.REQUIREMENT(requirement.type || requirement)
+      const answer = answers.find(e => e.id === reqId)
+      // It should just be 'no' or 'yes' but make sure if we change it, it will still work
+      return answer && answer.toLowerCase() === 'yes'
+    }
 
-  // Function that returns true if the given requirement/requirement type got truthy answer (from the human/cashier)
-  const isTruthyAnswer = (requirement) => {
-    const reqId = IDENTIFIERS.REQUIREMENT(requirement.type || requirement)
-    const answer = answers.find(e => e.id === reqId)
-    // It should just be 'no' or 'yes' but make sure if we change it, it will still work
-    return answer && answer.toLowerCase() === 'yes'
-  }
-
-  await customerService.addPurchase(userId, { products, categories })
-
-  let newRewards = []
-  const campaigns = await campaignService.getOnGoingCampaigns(true)
-  for (const campaign of campaigns) {
-    // May throw (status)errors, catch them so it won't affect the response status
-    try {
-      // FIXME: campaign products and categories are ignored
-      if (await campaignService.isEligible(user, campaign, isTruthyAnswer)) {
-        if (await campaignService.canReceiveCampaignRewards(userId, campaign, isTruthyAnswer)) {
-          const rewards = await customerService.addCampaignRewards(user, campaign)
-          newRewards.push(...rewards)
+    await customerService.addPurchase(userId, { products, categories })
+    const campaigns = await campaignService.getOnGoingCampaigns(true)
+    for (const campaign of campaigns) {
+      // May throw (status)errors, catch them so it won't affect the response status
+      try {
+        // FIXME: campaign products and categories are ignored
+        if (await campaignService.isEligible(user, campaign, isTruthyAnswer)) {
+          if (await campaignService.canReceiveCampaignRewards(userId, campaign, isTruthyAnswer)) {
+            const rewards = await customerService.addCampaignRewards(user, campaign)
+            newRewards.push(...rewards)
+          }
+          // transactionPoints are always given if the user is eligible for the campaign
+          if (campaign.transactionPoints) {
+            customerData.properties.points += campaign.transactionPoints
+          }
         }
-        // transactionPoints are always given if the user is eligible for the campaign
-        if (campaign.transactionPoints) {
-          customerData.properties.points += campaign.transactionPoints
+      } catch (err) {
+        if (err instanceof Error && err.name !== 'StatusError') {
+          logger.error(`User not eligible to participate in a campaign because an error occurred`, err)
         }
+        // IDEA: should we return reasons why the customer was not eligible?
       }
-    } catch (err) {
-      if (err instanceof Error && err.name !== 'StatusError') {
-        logger.error(`User not eligible to participate in a campaign because an error occurred`, err)
-      }
-      // IDEA: should we return reasons why the customer was not eligible?
+    }
+
+    // Campaigns may reward with customer points so recalculate customer level and add the customer level
+    // rewards (if any) in the new rewards array so the user will be notified of them too
+    // FIXME: we are ignoring customer points they may receive from the customer level rewards.
+    //  Probably fine to ignore as there's no point rewarding with points when the user reaches X points
+    const customerLevel = await customerService.updateCustomerLevel(user, business)
+    newRewards.push(...customerLevel.newRewards)
+
+    if (newRewards.length) {
+      _sendRewardsMessage(userId, business, newRewards)
+    } else {
+      pollingService.sendToUser(userId, {
+        message: translations.scanRegistered.singular,
+        refresh: true
+      }, POLLING_IDENTIFIERS.SCAN_GET)
     }
   }
 
-  // Campaigns may reward with customer points so recalculate customer level and add the customer level
-  // rewards (if any) in the new rewards array so the user will be notified of them too
-  // FIXME: we are ignoring customer points they may receive from the customer level rewards.
-  //  Probably fine to ignore as there's no point rewarding with points when the user reaches X points
-  const customerLevel = await customerService.updateCustomerLevel(user, business)
-  newRewards.push(...customerLevel.newRewards)
-
-  if (newRewards.length) {
-    _sendRewardsMessage(userId, business, newRewards)
-  } else {
-    pollingService.sendToUser(userId, {
-      message: translations.scanRegistered.singular,
-      refresh: true
-    }, POLLING_IDENTIFIERS.SCAN_GET)
-  }
   await user.save() // Save unsaved changes
-  return { message: responseMessage, newRewards, usedReward: reward }
+  return {
+    message: responseMessage,
+    newRewards,
+    usedRewards: [reward, coupon.reward].filter(Boolean)
+  }
 }
 
 
@@ -260,7 +271,7 @@ function _sendRewardsMessage(userId, business, newRewards) {
 
 
 export default {
-  getScan,
+  getScanInfo,
   useScan,
   toScanCode
 }
