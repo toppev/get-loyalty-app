@@ -183,7 +183,7 @@ const userSchema = new Schema<UserDocument>({
       },
       coupon: {
         type: Schema.Types.ObjectId,
-        ref: 'Category',
+        ref: 'Coupon',
         required: true
       }
     }],
@@ -276,8 +276,7 @@ const autoPopulate = function (this: UserDocument, next) {
   this
     .populate("customerData.rewards.categories")
     .populate("customerData.rewards.products")
-    // .populate("customerData.coupons.coupon")
-    .populate("customerData.coupons.coupon.reward")
+    .populate("customerData.coupons.coupon")
   next()
 }
 
