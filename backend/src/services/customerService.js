@@ -94,7 +94,7 @@ async function addReward(userParam, reward, save) {
   if (save !== false) {
     await user.save()
   }
-  logger.info(`User ${user.id}/${user.email} got a new reward: ${reward}`)
+  logger.info(`User ${user.id}/${user.email} got a new reward: ${JSON.stringify(reward)}}`)
   return data.rewards
 }
 

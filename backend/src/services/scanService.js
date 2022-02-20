@@ -25,7 +25,7 @@ const IDENTIFIERS = {
 
 // TODO: make it support multiple reward/coupon uses at once
 
-async function parseScanCode(scanStr) {
+async function fromScanCode(scanStr) {
   const { user: userId, reward: rewardId, coupon: couponId } = JSON.parse(scanStr)
   const user = await userService.getById(userId)
   if (!user) throw new StatusError('User not found', 404)
@@ -33,11 +33,13 @@ async function parseScanCode(scanStr) {
 }
 
 function toScanCode(user, reward, coupon) {
+  console.log({user, reward, coupon})
   const data = {
-    user: user.id,
-    ...(reward && { reward: reward.id }),
-    ...(coupon && { coupon: coupon.id }),
+    user: user._id || user,
+    ...(reward && { reward: reward._id || reward }),
+    ...(coupon && { coupon: coupon._id || coupon }),
   }
+  console.log({data})
   return JSON.stringify(data)
 }
 
@@ -72,7 +74,7 @@ async function validateCoupon(couponId, customerData) {
  * Get data from the scan
  */
 async function getScanInfo(scanStr) {
-  const { user, userId, rewardId, couponId } = await parseScanCode(scanStr)
+  const { user, userId, rewardId, couponId } = await fromScanCode(scanStr)
   const { customerData } = user
   const questions = []
 
@@ -170,7 +172,7 @@ function addQuestions(questions, categories, products, requirements, options = {
 }
 
 async function useScan(scanStr, data) {
-  const { user, userId, rewardId, couponId } = await parseScanCode(scanStr)
+  const { user, userId, rewardId, couponId } = await fromScanCode(scanStr)
   const customerData = user.customerData
   const business = await Business.findOne()
   const translations = business.config.translations
@@ -257,7 +259,7 @@ async function useScan(scanStr, data) {
   return {
     message: responseMessage,
     newRewards,
-    usedRewards: [reward, coupon.reward].filter(Boolean)
+    usedRewards: [reward, coupon?.reward].filter(Boolean)
   }
 }
 

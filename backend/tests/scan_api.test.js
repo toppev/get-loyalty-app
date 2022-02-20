@@ -9,6 +9,7 @@ import User from "../src/models/user"
 import Campaign from "../src/models/campaign"
 import app from "../app"
 import supertest from "supertest"
+import scanService from "../src/services/scanService"
 
 const api = supertest(app)
 
@@ -39,7 +40,7 @@ describe('Logged in user can', () => {
     const reward = { name: 'Free items', itemDiscount: 'Free!', categories: [category1] }
     const rewards = await customerService.addReward(userId, reward)
     const rewardId = rewards[0]._id
-    const scan = `${userId}:${rewardId}`
+    const scan = scanService.toScanCode(userId, rewardId, undefined)
     const res = await api
       .get(`/scan/${scan}`)
       .set('Cookie', cookie)
@@ -87,7 +88,7 @@ describe('Logged in user can', () => {
     await campaignService.create(campaign2)
     await campaignService.create(campaign3)
     await campaignService.create(campaign4)
-    const scan = userId
+    const scan = scanService.toScanCode(userId)
     const res = await api
       .get(`/scan/${scan}`)
       .set('Cookie', cookie)
@@ -110,7 +111,7 @@ describe('Logged in user can', () => {
     // Delete all campaigns so we won't receive anything we shouldn't
     await Campaign.deleteMany({})
     const rewardId = rewards[0]._id
-    const scan = `${userId}:${rewardId}`
+    const scan = scanService.toScanCode(userId, rewardId)
     const answers = [{ id: 'confirm', options: ['Yes'] }]
     const res = await api
       .post(`/scan/${scan}`)
@@ -128,7 +129,7 @@ describe('Logged in user can', () => {
     await campaignService.create(campaign)
 
     const answers = [{ id: 'confirm', options: ['Yes'] }]
-    const scan = userId
+    const scan = scanService.toScanCode(userId)
     const res = await api
       .post(`/scan/${scan}`)
       .set('Cookie', cookie)
