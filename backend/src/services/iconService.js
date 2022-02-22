@@ -8,11 +8,14 @@ import fileService from "./fileService"
  * @param outputDir
  * @param name
  */
-async function resizeToPNG(input, sizes, outputDir, name) {
+async function resizeToPNG(input, sizes, outputDir, name, { keepName }) {
   const tasks = sizes
-    .map(size => sharp(input).resize(size, size)
+    .map(size => sharp(input).resize(size.width || size, size.height || size)
       .toBuffer()
-      .then(it => fileService.upload(`${outputDir}/${name}-${size}.png`, it)))
+      .then(it => {
+        const suffix = keepName ? ".png" : `-${size}.png`
+        return fileService.upload(`${outputDir}/${name}${suffix}`, it)
+      }))
   return Promise.all(tasks)
 }
 

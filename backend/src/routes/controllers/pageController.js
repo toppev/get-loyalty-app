@@ -4,6 +4,8 @@ import fileService from "../../services/fileService"
 import permit from "../../middlewares/permitMiddleware"
 import validation from "../../helpers/bodyFilter"
 import Busboy from "busboy"
+import StatusError from "../../util/statusError"
+import logger from "../../util/logger"
 
 const router = Router({ mergeParams: true })
 const pageValidator = validation.validate(validation.pageValidator)
@@ -99,21 +101,12 @@ async function getHtml(req, res, next) {
 
     // Used in the screenshot/example
     const exampleReward = {
-      name: 'Example Reward',
-      description: 'An example reward!',
-      itemDiscount: '100%',
-      customerPoints: 100,
-      expires: Date.now()
+      name: 'Example Reward', description: 'An example reward!', itemDiscount: '100%', customerPoints: 100, expires: Date.now()
     }
     const exampleUser = {
-      isBirthday: true,
-      customerData: {
-        purchases: [],
-        rewards: [exampleReward],
-        usedRewards: [exampleReward],
-        properties: { points: 200 }
-      },
-      authentication: {}
+      isBirthday: true, customerData: {
+        purchases: [], rewards: [exampleReward], usedRewards: [exampleReward], properties: { points: 200 }
+      }, authentication: {}
     }
 
     const user = req.user || exampleUser
@@ -128,15 +121,29 @@ async function getHtml(req, res, next) {
 }
 
 function uploadStaticFile(req, res, next) {
+  const pageId = req.params.pageId
+  const toWidth = Number(req.query.toWidth)
+  const toHeight = Number(req.query.toHeight)
+  if (toWidth > 1000 || toHeight > 1000) {
+    throw new StatusError(`invalid sizes (${toWidth} x ${toHeight}`, 400)
+  }
+
   const fileSizeLimit = 4 // MB
-  const busboy = new Busboy({ headers: req.headers, limits: { fileSize: (1024 * 1024 * fileSizeLimit) } })
-  busboy.on('file', (fieldName, file, filename, encoding, mimetype) => {
+  const busboy = Busboy({ headers: req.headers, limits: { fileSize: (1024 * 1024 * fileSizeLimit) } })
+
+  busboy.on('file', (fieldName, file, fileInfo) => {
     file.on('limit', () => {
-      res.status(400).json({ message: `Max file size: ${fileSizeLimit}MB` })
+      res.status(400).json({ message: `Max file size: ${fileSizeLimit}KB` })
     })
-    file.on('data', (data) => {
-      const pageId = req.params.pageId
-      pageService.uploadStaticFile(pageId, data, req.query.fileName, { contentType: mimetype })
+
+    let fileData
+    file.on('data', data => {
+      if (!fileData) fileData = data
+      else fileData = Buffer.concat([fileData, data])
+    })
+    file.on('close', () => {
+      logger.info('Page media upload finished')
+      pageService.uploadStaticFile(pageId, fileData, req.query.fileName, { contentType: fileInfo.mimeType, toWidth, toHeight })
         .then(fileId => {
           const fileURL = `${process.env.PUBLIC_URL}/page/${pageId}/static/${fileId}`
           res.json({ success: true, data: [fileURL] })

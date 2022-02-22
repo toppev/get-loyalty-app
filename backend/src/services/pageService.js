@@ -14,6 +14,7 @@ import logger from "../util/logger"
 import mongoose from "mongoose"
 import mime from "mime-types"
 import couponService from "./couponService"
+import iconService from "./iconService";
 
 export default {
   createPage,
@@ -281,18 +282,30 @@ async function renderPageView(pageId, user) {
   return template(context)
 }
 
-async function uploadStaticFile(pageId, data, fileName, { contentType }) {
+async function uploadStaticFile(pageId, data, fileName, options) {
+  const { contentType, toWidth, toHeight } = options
   if (!fileName) {
     fileName = new mongoose.mongo.ObjectId()
   }
   const dir = `page_${pageId}/`
-  await fileService.upload(
-    dir + fileName, data,
-    // @ts-ignore
-    { contentType: mime.lookup(fileName) || contentType }
-  )
+  if (toWidth && toHeight && false) {
+    await iconService.resizeToPNG(
+      data,
+      [{ width: toWidth, height: toHeight }],
+      dir,
+      fileName,
+      { keepName: true }
+    )
+  } else {
+    await fileService.upload(
+      dir + fileName, data,
+      // @ts-ignore
+      { contentType: mime.lookup(fileName) || contentType }
+    )
+  }
   // Refresh the page for the page owner to automatically see changes
   await pollingService.refreshOwner({ message: '[Editor]\nChanges detected' })
+  fileName = fileName.replace("/", "%2F")
   return fileName
 }
 

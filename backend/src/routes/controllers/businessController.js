@@ -6,6 +6,7 @@ import campaignService from "../../services/campaignService"
 import permit from "../../middlewares/permitMiddleware"
 import validation from "../../helpers/bodyFilter"
 import fileService from "../../services/fileService"
+import logger from "../../util/logger"
 
 const router = Router()
 const businessValidator = validation.validate(validation.businessValidator)
@@ -68,13 +69,20 @@ function getIcon(req, res, next) {
 
 function uploadIcon(req, res, next) {
   const fileSizeLimit = 32 // KB
-  const busboy = new Busboy({ headers: req.headers, limits: { fileSize: (1024 * fileSizeLimit) } })
-  busboy.on('file', function (fieldName, file, filename, encoding, mimetype) {
-    file.on('limit', function () {
+  const busboy = Busboy({ headers: req.headers, limits: { fileSize: (1024 * fileSizeLimit) } })
+  busboy.on('file', (fieldName, file, fileInfo) => {
+    file.on('limit', () => {
       res.status(400).json({ message: `Max file size: ${fileSizeLimit}KB` })
     })
-    file.on('data', function (data) {
-      businessService.uploadIcon(data)
+
+    let fileData
+    file.on('data', data => {
+      if (!fileData) fileData = data
+      else fileData = Buffer.concat([fileData, data])
+    })
+    file.on('close', () => {
+      logger.info('Business icon upload finished')
+      businessService.uploadIcon(fileData)
         .then(() => res.json({ success: true }))
         .catch(err => next(err))
     })
