@@ -84,3 +84,11 @@ body::before {
 .user-form-disabled-item {
   background-color: #505050 !important
 }
+
+/* Hidden QR code in <summary> and <details> tags */
+.details-qr-code {
+  transition: height 200ms ease;
+  width: fit-content;
+}
+.details-qr-code:not([open]) { height: 1.25em; }
+.details-qr-code[open] { height: 250px; }

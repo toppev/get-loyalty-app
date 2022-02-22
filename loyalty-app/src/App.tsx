@@ -118,6 +118,13 @@ function App() {
         <div className="App">
           <Helmet>
             <link id="favicon" rel="icon" href={`${BASE_URL}/business/icon?size=32`} type="image/x-icon"/>
+
+            {window.location.hostname === "localhost" &&
+              <link rel="stylesheet" href="http://localhost:3001/page/common/static/main.css"/>
+            }
+            {window.location.hostname === "localhost" &&
+              <script src="http://localhost:3001/page/common/static/main.js"></script>
+            }
           </Helmet>
 
           {anyError && <p className="ErrorMessage">{anyError}</p>}
