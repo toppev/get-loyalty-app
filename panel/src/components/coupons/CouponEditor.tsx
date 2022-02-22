@@ -200,7 +200,7 @@ function CouponForm({ coupon, ...props }: CouponEditorProps) {
               <ImageSelectorButton
                 name="Select Image"
                 prefix="coupon_media"
-                toSize={{ width: 400, height: 400 }}
+                toSize={{ width: 320, height: 120 }}
                 currentPreviewUrl={values.mediaUrls?.[0]}
                 onSelect={url => {
                   setFieldValue('mediaUrls', [url])

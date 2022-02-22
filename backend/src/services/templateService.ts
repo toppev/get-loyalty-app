@@ -11,6 +11,8 @@ logger.info(`Template (default) page IDs (${DEFAULT_PAGES.length}): ${DEFAULT_PA
 
 async function loadDefaultTemplates(pageIds = DEFAULT_PAGES) {
   try {
+    logger.important(`Loading default template pages: ${pageIds}`)
+
     const templateData = await getTemplateData()
     if (!templateData) return
     const { templates, common } = templateData

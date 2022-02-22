@@ -16,6 +16,7 @@ async function getUpload(name, { visibility } = defaultOptions) {
 }
 
 async function upload(name, data, options = { ...defaultOptions, contentType: mime.lookup(name) || '' }) {
+  logger.info(`Uploading a new file ${name}`)
   const uploadsCountLimit = 100
   if (await FileUpload.countDocuments({}) > uploadsCountLimit) {
     const err = "Max uploads reached. Contact support."

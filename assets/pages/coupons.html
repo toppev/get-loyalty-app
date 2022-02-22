@@ -1,6 +1,6 @@
 <!-- Perhaps this page could be merged with rewards? -->
 
-<h1 class="page-title">Available Coupons
+<h1 class="page-title">Your Coupons
     <span class="page-title-amount"><!-- Maybe add something like on rewards page ({{customerCoupons.unused}}) --></span></h1>
 <div class="page-content">
     <div class="page-text">Activate coupons and show the QR code.</div>
@@ -24,7 +24,7 @@
                         <div class="relative">
                             <div>
                                 <!-- Include first image only for now -->
-                                <img src="{{mediaUrls.[0]}}" class="w-56 m-auto p-3" alt=""/>
+                                <img src="{{coupon.mediaUrls.[0]}}" width="100%" class="object-cover m-auto p-2 rounded-xl h-32" alt=""/>
                             </div>
 
                             <div class="-bottom-2 right-0 mb-2 mr-2 px-2 rounded-lg absolute bg-yellow-500 text-gray-100 text-xs font-medium">
