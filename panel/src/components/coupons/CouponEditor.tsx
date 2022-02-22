@@ -12,7 +12,7 @@ import {
   Typography
 } from "@mui/material"
 import CloseButton from "../common/button/CloseButton"
-import React, { useState } from "react"
+import React from "react"
 import makeStyles from "@mui/styles/makeStyles"
 import createStyles from "@mui/styles/createStyles"
 import { Form, Formik, FormikErrors } from "formik"
@@ -22,10 +22,9 @@ import SaveIcon from "@mui/icons-material/Save"
 import IdText from "../common/IdText"
 import { Campaign } from "../campaigns/Campaign"
 import useRequest from "../../hooks/useRequest"
-import Reward from "../rewards/Reward"
 import { createCoupon, updateCoupon } from "../../services/couponService"
 import { plural } from "../common/StringUtils"
-import ImageSelector, { ImageSelectorButton } from "../common/ImageSelector";
+import { ImageSelectorButton } from "../common/ImageSelector"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
