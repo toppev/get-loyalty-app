@@ -33,13 +33,11 @@ async function fromScanCode(scanStr) {
 }
 
 function toScanCode(user, reward, coupon) {
-  console.log({user, reward, coupon})
   const data = {
     user: user._id || user,
     ...(reward && { reward: reward._id || reward }),
     ...(coupon && { coupon: coupon._id || coupon }),
   }
-  console.log({data})
   return JSON.stringify(data)
 }
 

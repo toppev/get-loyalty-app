@@ -78,7 +78,6 @@ async function checkRefreshCoupons(user: UserDocument) {
   })
 
   const currentCoupons = user.customerData.coupons
-  console.log({currentCoupons})
   const maxNewCoupons = 5 - currentCoupons.length // make configurable later
 
   if (maxNewCoupons <= 0) {
