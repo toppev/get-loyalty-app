@@ -25,6 +25,7 @@ import useRequest from "../../hooks/useRequest"
 import Reward from "../rewards/Reward"
 import { createCoupon, updateCoupon } from "../../services/couponService"
 import { plural } from "../common/StringUtils"
+import ImageSelector, { ImageSelectorButton } from "../common/ImageSelector";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -87,28 +88,10 @@ function CouponForm({ coupon, ...props }: CouponEditorProps) {
 
   const classes = useStyles()
 
-  // not formik fields so keep track of them here
-  const [reward, setReward] = useState<Reward | undefined>(coupon.reward)
-
   const { error, loading, performRequest } = useRequest()
 
   const isEditing = coupon?.id?.length === 24 // if valid id, then we are editing and not creating
   const title = isEditing ? 'Edit Coupon' : 'Create Coupon'
-
-  const mergeCoupons = (newCoupon: Coupon) => {
-    // Update categories and other stuff here
-    Object.assign(newCoupon, { reward })
-    /*
-    if (isDates) {
-      newCampaign.start = startDate
-      newCampaign.end = endDate
-    } else {
-      newCampaign.start = undefined
-      newCampaign.end = undefined
-    }
-     */
-    return newCoupon
-  }
 
   const expirationText = (min: number, max: number) => {
     const minDays = min / DAY_MS
@@ -127,7 +110,6 @@ function CouponForm({ coupon, ...props }: CouponEditorProps) {
         initialValues={coupon}
         validate={validate}
         onSubmit={(coupon, actions) => {
-          mergeCoupons(coupon)
           performRequest(
             () => isEditing ? updateCoupon(coupon) : createCoupon(coupon),
             () => {
@@ -137,7 +119,8 @@ function CouponForm({ coupon, ...props }: CouponEditorProps) {
           )
         }}
       >
-        {({ submitForm, isSubmitting, values, setFieldValue }) => {
+        {formik => {
+          const { submitForm, isSubmitting, values, setFieldValue } = formik
           return (
             <Form className={classes.form}>
 
@@ -208,9 +191,19 @@ function CouponForm({ coupon, ...props }: CouponEditorProps) {
 
               <RewardManager
                 maxRewards={1}
-                rewards={reward ? [reward] : []}
+                rewards={values.reward ? [values.reward] : []}
                 setRewards={rewards => {
-                  setReward(rewards[0])
+                  setFieldValue('reward', rewards[0])
+                }}
+              />
+
+              <ImageSelectorButton
+                name="Select Image"
+                prefix="coupon_media"
+                toSize={{ width: 400, height: 400 }}
+                currentPreviewUrl={values.mediaUrls?.[0]}
+                onSelect={url => {
+                  setFieldValue('mediaUrls', [url])
                 }}
               />
 
@@ -221,7 +214,7 @@ function CouponForm({ coupon, ...props }: CouponEditorProps) {
                   className={classes.submitButton}
                   variant="contained"
                   color="primary"
-                  disabled={loading || !reward}
+                  disabled={loading || !values.reward}
                   startIcon={(<SaveIcon/>)}
                   onClick={submitForm}
                 >Save</Button>

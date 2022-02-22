@@ -87,7 +87,7 @@ body::before {
 
 /* Hidden QR code in <summary> and <details> tags */
 .details-qr-code {
-  transition: height 200ms ease;
+  transition: height 100ms ease;
 }
 .details-qr-code:not([open]) { height: 2.5em; }
 .details-qr-code[open] { height: 250px; }

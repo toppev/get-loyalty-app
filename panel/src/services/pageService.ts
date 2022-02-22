@@ -40,10 +40,15 @@ function getPageStaticFile(pageId: any, fileName: string) {
   return get(`${subUrl}/${pageId}/static/${fileName}?nocache=1`) // We can ignore Cloudflare cache if query parameters exists
 }
 
-function uploadPageStaticFile(pageId: any, fileName: string, file: any) {
+function uploadPageStaticFile(pageId: any, fileName: string, file: any, options?: any) {
   const formData = new FormData()
   formData.append('file', file)
-  return multipartPost(`/page/${pageId}/upload-static/?fileName=${fileName}`, formData)
+  let query = `?fileName=${fileName}`
+  if (options?.toSize) {
+    query += "&toWidth=" + options.toSize.width
+    query += "&toHeight=" + options.toSize.height
+  }
+  return multipartPost(`/page/${pageId}/upload-static/${query}`, formData)
 }
 
 /**

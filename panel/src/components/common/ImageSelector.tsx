@@ -1,13 +1,14 @@
 import React, { useState } from 'react'
 import { useDropzone } from "react-dropzone"
 import { uploadPageStaticFile } from "../../services/pageService"
-import { Dialog, DialogContent, LinearProgress, Theme } from "@mui/material"
+import { Button, Dialog, DialogContent, LinearProgress, Theme } from "@mui/material"
 import CloudUploadIcon from "@mui/icons-material/CloudUpload"
 import makeStyles from "@mui/styles/makeStyles"
 import createStyles from "@mui/styles/createStyles"
 import CloseButton from "./button/CloseButton"
 import RetryButton from "./button/RetryButton"
 import useRequest from "../../hooks/useRequest"
+import { backendURL } from "../../config/axios";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -26,6 +27,7 @@ interface ImageSelectorProps {
   open: boolean
   onClose: () => any
   onSelect: (url: String) => any
+  toSize: { width: number, height: number }
 }
 
 const acceptedFiles = [".png"]
@@ -41,9 +43,11 @@ export default function ImageSelector(props: ImageSelectorProps) {
     accept: acceptedFiles,
     onDropAccepted: ([file], _event) => {
       performRequest(
-        () => uploadPageStaticFile("common", `${props.prefix}/upload_${Date.now()}`, file),
+        () => uploadPageStaticFile("common", `${props.prefix}/upload_${Date.now()}`, file, { toSize: props.toSize }),
         res => {
-          const [url] = res.data
+          const { data } = res.data
+          const [url] = data
+          props.onClose()
           props.onSelect(url)
         })
     }
@@ -60,8 +64,8 @@ export default function ImageSelector(props: ImageSelectorProps) {
           <div className={classes.dropzone} {...getRootProps()}>
             <input {...getInputProps()} />
             <p>Click or drop a file to upload ({acceptedFiles.join(", ")})</p>
+            <CloudUploadIcon/>
           </div>
-          <CloudUploadIcon/>
         </div>
         <div>
           <RetryButton error={error}/>
@@ -71,4 +75,35 @@ export default function ImageSelector(props: ImageSelectorProps) {
     </Dialog>
   )
 
+}
+
+interface ImageSelectorButtonProps extends Omit<ImageSelectorProps, "open" | "onClose"> {
+  name: string
+  currentPreviewUrl?: string
+}
+
+export function ImageSelectorButton(props: ImageSelectorButtonProps) {
+
+  const [open, setOpen] = useState(false)
+
+  return (
+    <div>
+
+      <div>
+        <img src={props.currentPreviewUrl} alt="(no media)" width="100px"/>
+      </div>
+
+      <Button
+        color="primary"
+        variant="contained"
+        onClick={() => setOpen(true)}
+      >{props.name}</Button>
+
+      <ImageSelector
+        open={open}
+        onClose={() => setOpen(false)}
+        {...props}
+      />
+    </div>
+  )
 }
