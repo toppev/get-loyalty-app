@@ -286,6 +286,8 @@ async function uploadStaticFile(pageId, data, fileName, options) {
   const { contentType, toWidth, toHeight } = options
   if (!fileName) {
     fileName = new mongoose.mongo.ObjectId()?.toString()
+  } else {
+    fileName = fileName.replace("/", "%2F")
   }
   const dir = `page_${pageId}`
   if (toWidth && toHeight) {
@@ -304,8 +306,7 @@ async function uploadStaticFile(pageId, data, fileName, options) {
     )
   }
   // Refresh the page for the page owner to automatically see changes
-  await pollingService.refreshOwner({ message: '[Editor]\nChanges detected' })
-  fileName = fileName.replace("/", "%2F")
+  pollingService.refreshOwner({ message: '[Editor]\nChanges detected' }).then()
   return fileName
 }
 
