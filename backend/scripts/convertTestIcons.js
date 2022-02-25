@@ -1,13 +1,17 @@
 /**
  * Creates testresources/converted-icon-512x512.png from testresources/icon-192x192.png
  *
+ * Run with "node scripts/convertTestIcons.js"
  * Check the new icons manually!
+ *
  */
 
 const sharp = require("sharp")
 
 async function resizeToPNG(input, sizes, outputDir, name) {
-  const tasks = sizes.map(size => sharp(input).resize(size, size).toFile(`${outputDir}/${name}-${size}.png`))
+  const tasks = sizes.map(size => sharp(input)
+    .resize(size, size)
+    .toFile(`${outputDir}/${name}-${size}.png`))
   return Promise.all(tasks)
 }
 

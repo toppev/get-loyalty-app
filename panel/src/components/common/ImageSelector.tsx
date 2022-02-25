@@ -8,7 +8,6 @@ import createStyles from "@mui/styles/createStyles"
 import CloseButton from "./button/CloseButton"
 import RetryButton from "./button/RetryButton"
 import useRequest from "../../hooks/useRequest"
-import { backendURL } from "../../config/axios"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

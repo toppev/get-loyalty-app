@@ -119,7 +119,7 @@ function CouponForm({ coupon, ...props }: CouponEditorProps) {
         }}
       >
         {formik => {
-          const { submitForm, isSubmitting, values, setFieldValue } = formik
+          const { submitForm, values, setFieldValue } = formik
           return (
             <Form className={classes.form}>
 

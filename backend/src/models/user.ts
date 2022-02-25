@@ -11,8 +11,8 @@ import Coupon, { ICoupon } from "./coupon"
 // FIXME?
 import role from "./role"
 
-logger.debug(`Making sure ${Category.baseModelName} is loaded before user schema`)
-logger.debug(`Making sure ${Coupon.baseModelName} is loaded before user schema`)
+logger.debug(`Making sure ${Category.modelName} is loaded before user schema`)
+logger.debug(`Making sure ${Coupon.modelName} is loaded before user schema`)
 
 export interface IUser {
   email?: string

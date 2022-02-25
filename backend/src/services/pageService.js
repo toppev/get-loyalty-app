@@ -285,7 +285,7 @@ async function renderPageView(pageId, user) {
 async function uploadStaticFile(pageId, data, fileName, options) {
   const { contentType, toWidth, toHeight } = options
   if (!fileName) {
-    fileName = new mongoose.mongo.ObjectId()
+    fileName = new mongoose.mongo.ObjectId()?.toString()
   }
   const dir = `page_${pageId}`
   if (toWidth && toHeight) {

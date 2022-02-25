@@ -126,6 +126,8 @@ async function getIcon(prefSize) {
     const upload = await fileService.getUpload(fileName)
     if (upload?.data || upload?.externalSource) {
       return upload
+    } else {
+      logger.debug(fileName + ' was not found')
     }
   }
 }

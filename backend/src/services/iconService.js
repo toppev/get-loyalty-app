@@ -9,7 +9,8 @@ import logger from "../util/logger"
  * @param outputDir
  * @param name
  */
-async function resizeToPNG(input, sizes, outputDir, name, { keepName }) {
+async function resizeToPNG(input, sizes, outputDir, name, options = {}) {
+  const { keepName } = options
   const tasks = sizes
     .map(size => sharp(input).resize(size.width || size, size.height || size)
       .toBuffer()
