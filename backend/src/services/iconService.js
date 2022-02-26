@@ -20,7 +20,12 @@ async function resizeToPNG(input, sizes, outputDir, name, options = {}) {
         logger.info(`Resizing ${name} to ${uploadName} (${JSON.stringify(size)})`)
         return fileService.upload(uploadName, data, { contentType: "image/png", visibility: 'public' })
       }))
-  return Promise.all(tasks)
+  try {
+    await Promise.all(tasks)
+    logger.info("All resizes done")
+  } catch (err) {
+    logger.error("Failed to resize (some) images", err)
+  }
 }
 
 export default {
