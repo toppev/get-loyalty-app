@@ -15,6 +15,7 @@ import mongoose from "mongoose"
 import mime from "mime-types"
 import couponService from "./couponService"
 import iconService from "./iconService"
+import { toFancyTimeLeft } from "../util/stringUtils";
 
 export default {
   createPage,
@@ -231,7 +232,7 @@ async function getPageContext(user) {
           // FIXME: better/local format
           expires: it.expires ? new Date(it.expires)?.toLocaleDateString() : undefined,
           scanCode: scanService.toScanCode(user, undefined, it),
-          // expiresHours: TODO
+          timeLeft: toFancyTimeLeft(it.expires)
         }
       })
     let customerLevels = business.public.customerLevels

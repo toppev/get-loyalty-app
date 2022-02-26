@@ -44,7 +44,7 @@ describe('Coupon API', () => {
   })
 
   it('update coupon', async () => {
-    const newData = { expirationMillis: 1000 * 60 * 60 * 48 }
+    const newData = { expiration: { min: 1000 * 60 * 60 * 48 } }
     await api
       .patch(`/coupon/${couponId}`)
       .set('Cookie', cookie)
