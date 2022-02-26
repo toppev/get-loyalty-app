@@ -1,7 +1,5 @@
-import mongoose from "mongoose"
+import { Document, Schema, model } from "mongoose"
 import rewardSchema, { IReward } from "./reward"
-
-const { Schema } = mongoose
 
 export interface ICoupon {
   _id?: any
@@ -54,4 +52,14 @@ const couponSchema = new Schema<CouponDocument>({
   toObject: { virtuals: true }
 })
 
-export default mongoose.model<CouponDocument>('Coupon', couponSchema)
+const autoPopulate = function (this: CouponDocument, next) {
+  this
+    .populate("reward.categories")
+    .populate("reward.products")
+  next()
+}
+
+couponSchema.pre(/findOne/, autoPopulate)
+couponSchema.pre(/find/, autoPopulate)
+
+export default model<CouponDocument>('Coupon', couponSchema)

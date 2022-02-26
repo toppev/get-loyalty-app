@@ -39,7 +39,6 @@ export default function CategorySelector(props: CategorySelectorProps) {
         }
       }}
       onChange={(event, values: any[]) => {
-        console.log(values)
         const newValues = values.map(value => {
           return typeof value === 'string' ? new Category({ id: `${Math.random()}`, name: value }) : value
         })
