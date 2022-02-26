@@ -42,7 +42,7 @@ export default function ImageSelector(props: ImageSelectorProps) {
     accept: acceptedFiles,
     onDropAccepted: ([file], _event) => {
       performRequest(
-        () => uploadPageStaticFile("common", `${props.prefix}/upload_${Date.now()}`, file, { toSize: props.toSize }),
+        () => uploadPageStaticFile("common", `${props.prefix}-upload_${Date.now()}`, file, { toSize: props.toSize }),
         res => {
           const { data } = res.data
           const [url] = data

@@ -10,6 +10,7 @@ const defaultOptions = {
 
 async function getUpload(name, { visibility } = defaultOptions) {
   const res = await FileUpload.findById(name)
+  logger.info(`Upload ${name} found: ${!!res}`)
   if (res?.visibility === (visibility || 'public')) {
     return res
   }
