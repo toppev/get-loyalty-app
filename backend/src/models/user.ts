@@ -39,6 +39,7 @@ export interface IUser {
   privacyPolicyAccepted: Date | undefined
   customerData: {
     purchases: PurchaseDocument[]
+    couponsChecked: Date
     coupons: {
       coupon: ICoupon
       expires: Date
@@ -178,6 +179,9 @@ const userSchema = new Schema<UserDocument>({
   customerData: {
     purchases: [purchaseSchema],
     rewards: [rewardSchema],
+    couponsChecked: {
+      type: Date
+    },
     coupons: [{
       expires: {
         type: Date,

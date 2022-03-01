@@ -77,44 +77,50 @@ async function checkRefreshCoupons(user: UserDocument) {
     return true
   })
 
+  const DAY_MS = 1000 * 60 * 60 * 24
   const currentCoupons = user.customerData.coupons
   const maxNewCoupons = 5 - currentCoupons.length // make configurable later
 
-  if (maxNewCoupons <= 0) {
-    logger.debug(`User ${user.id} has max coupons already`)
+  // Roll a die every 24 hours for new coupons (but limit with maxNewCoupons)
+  if (user.customerData.couponsChecked && new Date(user.customerData.couponsChecked).getTime() + DAY_MS > Date.now()) {
+    logger.debug(`User ${user.id} coupons were last checked ${(Date.now() - new Date(user.customerData.couponsChecked).getTime()) / 1000 / 60} minutes ago`)
   } else {
+    user.customerData.couponsChecked = new Date()
 
-    const hasCoupon = (coupon: CouponDocument) => {
-      if (currentCoupons.some(it => it.coupon._id.equals(coupon._id))) {
-        logger.debug(`User ${user.id} already has coupon ${coupon._id}`)
-        return true
-      }
-      return false
-    }
+    if (maxNewCoupons <= 0) {
+      logger.debug(`User ${user.id} has max coupons already`)
+    } else {
 
-    const available = await Coupon.find({ status: 'active' })
-    const newCoupons: { coupon: ICoupon, expires: Date }[] = []
-
-    available.filter(it => it.reward)
-      .forEach((coupon: CouponDocument) => {
-        if (newCoupons.length < maxNewCoupons && !hasCoupon(coupon)) {
-          if (coupon.probabilityModifier > Math.random()) {
-            const DAY_MS = 1000 * 60 * 60 * 24
-            const min = Math.floor(coupon.expiration.min / DAY_MS)
-            const max = Math.ceil(coupon.expiration.max / DAY_MS)
-            const days = Math.floor(Math.random() * (max - min + 1)) + min
-            const expires = new Date((Date.now() + days * DAY_MS))
-            logger.info(`User ${user.id} won a new coupon ${coupon?.reward?.name} for ${days} (expires ${expires}`)
-            newCoupons.push({ coupon, expires })
-          } else {
-            logger.debug(`User ${user.id} did not win coupon ${coupon?.reward?.name}`)
-          }
+      const hasCoupon = (coupon: CouponDocument) => {
+        if (currentCoupons.some(it => it.coupon._id.equals(coupon._id))) {
+          logger.debug(`User ${user.id} already has coupon ${coupon._id}`)
+          return true
         }
-      })
+        return false
+      }
 
-    logger.debug({ currentCoupons, newCoupons })
+      const available = await Coupon.find({ status: 'active' })
+      const newCoupons: { coupon: ICoupon, expires: Date }[] = []
 
-    user.customerData.coupons = [...currentCoupons, ...newCoupons]
+      available.filter(it => it.reward)
+        .forEach((coupon: CouponDocument) => {
+          if (newCoupons.length < maxNewCoupons && !hasCoupon(coupon)) {
+            if (coupon.probabilityModifier > Math.random()) {
+              const min = Math.floor(coupon.expiration.min / DAY_MS)
+              const max = Math.ceil(coupon.expiration.max / DAY_MS)
+              const days = Math.floor(Math.random() * (max - min + 1)) + min
+              const expires = new Date((Date.now() + days * DAY_MS))
+              logger.info(`User ${user.id} won a new coupon ${coupon?.reward?.name} for ${days} (expires ${expires}`)
+              newCoupons.push({ coupon, expires })
+            } else {
+
+              logger.debug(`User ${user.id} did not win coupon ${coupon?.reward?.name}`)
+            }
+          }
+        })
+      logger.debug({ currentCoupons, newCoupons })
+      user.customerData.coupons = [...currentCoupons, ...newCoupons]
+    }
   }
 
   return user.save()

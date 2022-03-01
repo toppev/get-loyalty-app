@@ -159,7 +159,6 @@ async function getTemplates() {
 
 async function getPageContext(user) {
   const business = await Business.findOne().lean()
-  // TODO: throttle, now reloading may give more coupons
   user = await couponService.checkRefreshCoupons(user)
   if (business) {
     //
