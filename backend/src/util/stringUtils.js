@@ -4,10 +4,13 @@ function format(text, args = []) {
 
 function toFancyTimeLeft(date) {
   const ms = new Date(date).getTime() - Date.now()
-  const totalMins = ms / 1000 / 60
-  const hours = Math.floor(totalMins / 60)
-  const mins = totalMins % 60
-  return `${hours}h ${Math.ceil(mins)}m`
+  const minutes = ms / 1000 / 60
+  const hours = Math.floor(minutes / 60)
+  const days = Math.floor(hours / 24)
+  if (hours >= 24) {
+    return `${days}d ${Math.ceil(hours % 24)}h`
+  }
+  return `${hours}h ${Math.ceil(minutes % 60)}m`
 }
 
 export {
