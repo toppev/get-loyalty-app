@@ -90,4 +90,4 @@ body::before {
   transition: height 100ms ease;
 }
 .details-qr-code:not([open]) { height: 2.5em; }
-.details-qr-code[open] { height: 250px; }
+.details-qr-code[open] { height: 290px; }
