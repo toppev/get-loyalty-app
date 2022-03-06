@@ -3,6 +3,7 @@ const ERROR_HTML = `<h1 class="ErrorMessage">Couldn't load the page. An error oc
 const EMPTY_PAGE_HTML = `<h1 class="ErrorMessage">Oops.. The page looks empty.</h1>`
 
 interface Page {
+  name: string;
   _id: string
   hidden: boolean
   pathname: string

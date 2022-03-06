@@ -87,7 +87,7 @@ async function getBusinessPages() {
 async function getPublicPage() {
   return PageData.find({
     stage: 'published',
-  }).sort('pageIndex').select('_id icon pathname')
+  }).sort('pageIndex').select('_id icon pathname name')
 }
 
 /**

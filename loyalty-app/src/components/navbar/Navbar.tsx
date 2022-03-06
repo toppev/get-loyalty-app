@@ -38,6 +38,7 @@ export default function Navbar(props: NavbarProps) {
           onClick={() => setCurrentPage(page)}
         >
           <PageIcon page={page} style={{ margin: 'auto' }}/>
+          <p className={`text-xs text-gray-${isActive(page) ? '200' : '50'} relative bottom-1`}>{page.name}</p>
         </button>
       ))}
     </nav>
