@@ -4,7 +4,7 @@ Loyalty app setup with (progressive web) app, backend, management panel and a sc
 
 The solution for building versatile loyalty apps easier with a WYSIWYG editor.
 
-This documentation will be updated later. Also, the entire project is still under development.
+This project is no longer maintained. Feel free to use this as an example or for your next project :)
 
 ### [Screenshots](screenshots.md)
 The screenshots are from the development version and will be updated later.
